@@ -11,8 +11,8 @@
 import React from 'react';
 import i18next from 'i18next';
 
-import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
-import { MacroPicker, Checkbox } from '../../common';
+import { useAppState, useMenuSettings, getSelectedChild } from '../state';
+import { MacroPicker, Checkbox } from '../components/common';
 import { ItemData } from '../../../../common/item-types/macro-item-type';
 
 /**

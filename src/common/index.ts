@@ -10,6 +10,7 @@
 
 export * from './settings-schemata';
 export * from './typed-event-emitter';
+export * from './action-type-registry';
 
 import { AchievementStats, Menu } from './settings-schemata';
 

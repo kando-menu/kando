@@ -12,7 +12,6 @@ import { KeySequence, SimulateHotkeyAction } from '../../common';
 import { KandoApp } from '../app';
 import { DeepReadonly } from '../settings';
 
-/** This action simulates key presses. It can be used to simulate hotkeys. */
 /**
  * Simulates key presses for a configured hotkey. It first presses all keys and then
  * releases them again.

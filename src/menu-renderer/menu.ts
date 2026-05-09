@@ -395,7 +395,7 @@ export class Menu extends EventEmitter {
       if (
         type === SelectionType.eSubmenuOnly &&
         item &&
-        item.type === 'submenu' &&
+        (item.type === 'submenu' || item.type === 'root') &&
         this.latestInput.distance > this.settings.centerDeadZone
       ) {
         this.selectItem(item, source, coords);

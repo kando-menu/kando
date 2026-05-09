@@ -177,6 +177,10 @@ export default interface Resources {
           "un-inhibit-shortcuts": "Re-enable shortcuts"
       },
       "menu-actions": {
+          "delay": {
+              "description": "Pauses the workflow for a specified duration.",
+              "name": "Delay"
+          },
           "execute-command": {
               "description": "Launch apps or scripts.",
               "name": "Run Command"
@@ -253,6 +257,8 @@ export default interface Resources {
               "tip-1": "This item type opens the Kando settings window."
           },
           "submenu": {
+              "description": "Contains other menu items.",
+              "name": "Submenu",
               "tip-1": "Submenus can be used to group items.",
               "tip-2": "You can also nest submenus inside of submenus.",
               "tip-3": "Submenus can be used to create complex menu structures.",

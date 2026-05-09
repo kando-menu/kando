@@ -16,7 +16,7 @@ import { execSync } from 'child_process';
 import { isexe } from 'isexe';
 
 import { Backend } from '../backend';
-import { MenuItem, AppDescription, WORKFLOW_ACTION_TYPE_META } from '../../../common';
+import { MenuItem, AppDescription, ActionTypeRegistry } from '../../../common';
 
 /**
  * This generic Linux backend class provides the basic functionality for all Linux
@@ -192,11 +192,12 @@ export abstract class LinuxBackend extends Backend {
     // For any other executable file, we create a command item.
     const isExe = await isexe(path);
     if (isExe) {
+      const actionInfo = ActionTypeRegistry.getInstance().getMetadata('execute-command');
       return {
         type: 'button',
         name,
-        icon: WORKFLOW_ACTION_TYPE_META['execute-command'].icon,
-        iconTheme: WORKFLOW_ACTION_TYPE_META['execute-command'].iconTheme,
+        icon: actionInfo.icon,
+        iconTheme: actionInfo.iconTheme,
         selectWorkflow: {
           waitForFadeout: false,
           inhibitShortcuts: false,

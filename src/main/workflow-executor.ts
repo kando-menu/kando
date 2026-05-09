@@ -13,32 +13,31 @@ import {
   SelectWorkflow,
   WorkflowAction,
   WorkflowActionType,
-} from '../../common';
-import { KandoApp } from '../app';
-import { Notification } from '../utils/notification';
-import { DeepReadonly } from '../settings';
+} from '../common';
+import { KandoApp } from './app';
+import { Notification } from './utils/notification';
+import { DeepReadonly } from './settings';
 
-import { execute as executeCommand } from './execute-command';
-import { execute as executeMacro } from './execute-macro';
-import { execute as openFile } from './open-file';
-import { execute as openMenu } from './open-menu';
-import { execute as openSettings } from './open-settings';
-import { execute as openURI } from './open-uri';
-import { execute as setClipboard } from './set-clipboard';
-import { execute as simulateHotkey } from './simulate-hotkey';
+import { execute as executeCommand } from './actions/execute-command';
+import { execute as executeMacro } from './actions/execute-macro';
+import { execute as openFile } from './actions/open-file';
+import { execute as openMenu } from './actions/open-menu';
+import { execute as openSettings } from './actions/open-settings';
+import { execute as openURI } from './actions/open-uri';
+import { execute as setClipboard } from './actions/set-clipboard';
+import { execute as simulateHotkey } from './actions/simulate-hotkey';
+import { execute as delay } from './actions/delay';
 
 type WorkflowActionExecutor<T extends WorkflowActionType> = (
   action: DeepReadonly<Extract<WorkflowAction, { type: T }>>,
   app: KandoApp
 ) => Promise<void>;
 
-type WorkflowActionExecutorMap = {
-  [T in WorkflowActionType]: WorkflowActionExecutor<T>;
-};
-
-const ACTION_EXECUTOR_ENTRIES: Array<
-  [WorkflowActionType, WorkflowActionExecutor<WorkflowActionType>]
-> = [
+const ACTION_EXECUTORS = new Map<
+  WorkflowActionType,
+  WorkflowActionExecutor<WorkflowActionType>
+>([
+  ['delay', delay],
   ['execute-command', executeCommand],
   ['execute-macro', executeMacro],
   ['open-file', openFile],
@@ -47,19 +46,15 @@ const ACTION_EXECUTOR_ENTRIES: Array<
   ['open-uri', openURI],
   ['set-clipboard', setClipboard],
   ['simulate-hotkey', simulateHotkey],
-];
-
-const ACTION_EXECUTORS = Object.fromEntries(
-  ACTION_EXECUTOR_ENTRIES
-) as WorkflowActionExecutorMap;
+]);
 
 /**
- * This singleton class is a registry for all available actions. It is used to execute the
- * action of a menu item. This class can be used only in the backend process.
+ * This singleton class is responsible for executing the workflows of menu items. It
+ * provides a method to execute the select- and hover-workflows of a menu item.
  */
-export class ActionRegistry {
+export class WorkflowExecutor {
   /** The singleton instance of this class. */
-  private static instance: ActionRegistry = null;
+  private static instance: WorkflowExecutor = null;
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
@@ -72,11 +67,11 @@ export class ActionRegistry {
    *
    * @returns The singleton instance of this class.
    */
-  public static getInstance(): ActionRegistry {
-    if (ActionRegistry.instance === null) {
-      ActionRegistry.instance = new ActionRegistry();
+  public static getInstance(): WorkflowExecutor {
+    if (WorkflowExecutor.instance === null) {
+      WorkflowExecutor.instance = new WorkflowExecutor();
     }
-    return ActionRegistry.instance;
+    return WorkflowExecutor.instance;
   }
 
   /**
@@ -145,7 +140,8 @@ export class ActionRegistry {
     action: DeepReadonly<WorkflowAction>,
     app: KandoApp
   ): Promise<void> {
-    const executor = ACTION_EXECUTORS[action.type] as WorkflowActionExecutor<
+    console.debug(`Executing action of type ${action.type}`);
+    const executor = ACTION_EXECUTORS.get(action.type) as WorkflowActionExecutor<
       typeof action.type
     >;
     return executor(action, app);

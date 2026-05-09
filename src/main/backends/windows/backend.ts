@@ -18,7 +18,7 @@ import {
   KeySequence,
   MenuItem,
   AppDescription,
-  WORKFLOW_ACTION_TYPE_META,
+  ActionTypeRegistry,
 } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 
@@ -157,14 +157,13 @@ export class WindowsBackend extends Backend {
     if (path.endsWith('.lnk') || (await isexe(path, { ignoreErrors: true }))) {
       const appName = name.slice(0, name.lastIndexOf('.'));
       const app = this.installedApps.find((app) => app.name === appName);
+      const actionInfo = ActionTypeRegistry.getInstance().getMetadata('execute-command');
 
       return {
         type: 'button',
-        name: app ? app.name : WORKFLOW_ACTION_TYPE_META['execute-command'].name,
-        icon: app ? app.name : WORKFLOW_ACTION_TYPE_META['execute-command'].icon,
-        iconTheme: app
-          ? 'system'
-          : WORKFLOW_ACTION_TYPE_META['execute-command'].iconTheme,
+        name: appName,
+        icon: app ? app.name : actionInfo.icon,
+        iconTheme: app ? 'system' : actionInfo.iconTheme,
         selectWorkflow: {
           waitForFadeout: false,
           inhibitShortcuts: false,

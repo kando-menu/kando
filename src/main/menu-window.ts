@@ -23,7 +23,7 @@ import {
   RootMenuItem,
 } from '../common';
 import { IPCCallbacks } from '../common/ipc';
-import { ActionRegistry } from './actions/action-registry';
+import { WorkflowExecutor } from './workflow-executor';
 import { KandoApp } from './app';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -702,7 +702,7 @@ export class MenuWindow extends BrowserWindow {
         if (target === InteractionTarget.eSubmenu) {
           const submenu = item as DeepReadonly<SubmenuMenuItem>;
           if (submenu.openWorkflow) {
-            ActionRegistry.getInstance().executeHoverWorkflow(
+            WorkflowExecutor.getInstance().executeHoverWorkflow(
               submenu.openWorkflow,
               this.kando
             );
@@ -715,7 +715,7 @@ export class MenuWindow extends BrowserWindow {
         if (target === InteractionTarget.eItem && item.type === 'button') {
           // If the action is not delayed, we execute it immediately.
           if (item.selectWorkflow && !item.selectWorkflow.waitForFadeout) {
-            ActionRegistry.getInstance().executeSelectWorkflow(
+            WorkflowExecutor.getInstance().executeSelectWorkflow(
               item.selectWorkflow,
               this.kando
             );
@@ -725,7 +725,7 @@ export class MenuWindow extends BrowserWindow {
           this.hideWindow().then(() => {
             // If the action is delayed, we execute it after the window is hidden.
             if (item.selectWorkflow?.waitForFadeout) {
-              ActionRegistry.getInstance().executeSelectWorkflow(
+              WorkflowExecutor.getInstance().executeSelectWorkflow(
                 item.selectWorkflow,
                 this.kando
               );
@@ -797,7 +797,10 @@ export class MenuWindow extends BrowserWindow {
       }
 
       if ('hoverWorkflow' in item) {
-        ActionRegistry.getInstance().executeHoverWorkflow(item.hoverWorkflow, this.kando);
+        WorkflowExecutor.getInstance().executeHoverWorkflow(
+          item.hoverWorkflow,
+          this.kando
+        );
       }
 
       this.ipcCallbacks.onHover(target, this.pathToArray(path));

@@ -69,7 +69,7 @@ export default function FooterButton(props: Props) {
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}
         onDragEnd={() => setDragging(false)}
         onDragStart={(event) => {
-          event.dataTransfer.setData('kando/item-type', props.id);
+          event.dataTransfer.setData('kando/new-item-type', props.id);
           setDragging(true);
           setIsPopoverOpen(false);
         }}>

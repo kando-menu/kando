@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IPCShowMenuClient } from '../../common/ipc/ipc-show-menu-client';
-import { InteractionTarget, SubmenuMenuItem } from '../../common';
+import { InteractionTarget, RootMenuItem } from '../../common';
 
 export type IPCButtonAction = {
   name: string;
@@ -56,8 +56,8 @@ export class IPCMenuManager {
     actions: IPCButtonAction[]
   ): void {
     this.lastActions = actions;
-    const menu: SubmenuMenuItem = {
-      type: 'submenu',
+    const menu: RootMenuItem = {
+      type: 'root',
       name,
       icon,
       iconTheme,

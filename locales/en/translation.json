@@ -362,7 +362,9 @@
             "tip-4": "You should avoid adding more than twelve items to a submenu. Eight is a good number.",
             "tip-5": "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
             "tip-6": "You can reorder items by dragging them in the preview.",
-            "tip-7": "You can delete a menu or a menu item with the trash icon below."
+            "tip-7": "You can delete a menu or a menu item with the trash icon below.",
+            "name": "Submenu",
+            "description": "Contains other menu items."
         },
         "text": {
             "placeholder": "Insert any text…",
@@ -591,6 +593,10 @@
         "execute-macro": {
             "name": "Execute Macro",
             "description": "Types a keyboard macro."
+        },
+        "delay": {
+            "name": "Delay",
+            "description": "Pauses the workflow for a specified duration."
         }
     }
 }

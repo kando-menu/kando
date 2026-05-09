@@ -21,6 +21,7 @@ import {
   Menu,
   MenuItem,
   SubmenuMenuItem,
+  RootMenuItem,
 } from '../../common';
 
 // The menu settings state object allows access, modification, and change notification of
@@ -247,8 +248,15 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
             const { parent, item } = getMenuItem(state.menus[menuIndex].root, itemPath);
             const updatedItem = callback(item);
 
+            if (item.type !== updatedItem.type) {
+              console.warn(
+                'Changing the type of a menu item is not supported. This may lead to unexpected behavior.'
+              );
+              return;
+            }
+
             // If the parent is null, we are editing the root item.
-            if (parent === null) {
+            if (updatedItem.type === 'root') {
               state.menus[menuIndex].root = updatedItem;
             } else {
               parent.children[itemPath[itemPath.length - 1]] = updatedItem;
@@ -267,6 +275,7 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
               console.warn(
                 'Deleting the root item is not supported. This should not happen.'
               );
+              return;
             } else {
               parent.children.splice(itemPath[itemPath.length - 1], 1);
             }
@@ -278,9 +287,7 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
           produce((state) => {
             const { parent, item } = getMenuItem(state.menus[menuIndex].root, itemPath);
 
-            // If the parent is null, we are attempting to duplicate the root item. This
-            // should not happen for now.
-            if (parent === null) {
+            if (item.type === 'root') {
               console.warn(
                 'Duplicating the root item is not supported. This should not happen.'
               );
@@ -310,6 +317,13 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
               index: fromIndex,
               parent: fromParent,
             } = getMenuItem(fromMenu.root, fromPath);
+
+            if (fromItem.type === 'root') {
+              console.warn(
+                'Moving the root item is not supported. This should not happen.'
+              );
+              return;
+            }
 
             const toSubmenuPath = toPath.slice(0, toPath.length - 1);
             let toIndex = toPath[toPath.length - 1];
@@ -457,16 +471,17 @@ export function useMappedCollectionProperties<U>(
  *   empty, the root item is returned and both index and parent are null.
  */
 function getMenuItem(
-  root: MenuItem,
+  root: RootMenuItem,
   itemPath: number[]
 ): {
   item: MenuItem;
   index: number | null;
-  parent: SubmenuMenuItem | null;
+  parent: SubmenuMenuItem | RootMenuItem | null;
 } {
-  let item = root;
+  let item: MenuItem = root;
   let index = null;
-  let parent = null;
+  let parent: RootMenuItem | SubmenuMenuItem | null = null;
+
   for (let i = 0; i < itemPath.length; i++) {
     parent = item as SubmenuMenuItem;
     index = itemPath[i];

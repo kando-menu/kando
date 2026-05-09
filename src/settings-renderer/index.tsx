@@ -123,11 +123,7 @@ Promise.all([
 
       // Make sure that the selected child path is valid.
       if (selectedMenu >= 0) {
-        const selectedItem = getSelectedChild(
-          menus,
-          selectedMenu,
-          selectedChildPath
-        ).selectedItem;
+        const selectedItem = getSelectedChild(menus, selectedMenu, selectedChildPath);
 
         if (!selectedItem) {
           selectParent();

@@ -20,8 +20,11 @@ export type {
   OpenURIActionV2 as OpenURIAction,
   SetClipboardActionV2 as SetClipboardAction,
   SimulateHotkeyActionV2 as SimulateHotkeyAction,
+  DelayActionV2 as DelayAction,
   MenuConditionsV2 as MenuConditions,
+  MacroEventV2 as MacroEvent,
   MenuItemV2 as MenuItem,
+  MenuItemTypeV2 as MenuItemType,
   RootMenuItemV2 as RootMenuItem,
   ChildMenuItemV2 as ChildMenuItem,
   SubmenuMenuItemV2 as SubmenuMenuItem,
@@ -37,7 +40,6 @@ export type {
 export {
   MENU_SETTINGS_SCHEMA_V2 as MENU_SETTINGS_SCHEMA,
   MENU_ITEM_SCHEMA_V2 as MENU_ITEM_SCHEMA,
-  WORKFLOW_ACTION_TYPE_META_V2 as WORKFLOW_ACTION_TYPE_META,
   ROOT_MENU_ITEM_SCHEMA_V2 as ROOT_MENU_ITEM_SCHEMA,
 } from './menu-settings-v2';
 

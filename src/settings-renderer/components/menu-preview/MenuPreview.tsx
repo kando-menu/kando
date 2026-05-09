@@ -19,7 +19,13 @@ import * as classes from './MenuPreview.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import { AchievementStatsNumberKeys } from '../../../common';
+import {
+  AchievementStatsNumberKeys,
+  ChildMenuItem,
+  RootMenuItem,
+  SubmenuMenuItem,
+  ActionTypeRegistry,
+} from '../../../common';
 import * as math from '../../../common/math';
 import * as utils from './utils';
 
@@ -120,7 +126,7 @@ export default function MenuPreview() {
   // is selected). If the selection path is empty, the root menu is the center item. We
   // also store the index of the selected leaf child if it is not a submenu. If the center
   // is selected, the index is -1.
-  let centerItem = menu.root;
+  let centerItem: RootMenuItem | SubmenuMenuItem = menu.root;
   let selectedChild = -1;
   let showingRootMenu = true;
   let childAngles = math.computeItemAngles(centerItem.children);
@@ -129,9 +135,8 @@ export default function MenuPreview() {
 
   for (let i = 0; i < selectedChildPath.length; i++) {
     const childIndex = selectedChildPath[i];
-    const child = centerItem.children[childIndex];
-    const type = ActionRegistry.getInstance().getType(child.type);
-    if (type?.hasChildren) {
+    const child = centerItem.children[childIndex] as ChildMenuItem;
+    if (child.type === 'submenu') {
       showingRootMenu = false;
       parentAngle = utils.getParentAngle(childAngles[childIndex]);
       centerItem = child;
@@ -322,8 +327,7 @@ export default function MenuPreview() {
     // the key of the CSSTransition component.
     if (doAnimation) {
       const child = centerItem.children[which];
-      const type = ActionRegistry.getInstance().getType(child.type);
-      if (type?.hasChildren) {
+      if (child.type === 'submenu') {
         setTransitionPing(!transitionPing);
         setTransitionAngle(childAngles[which]);
       }
@@ -354,13 +358,15 @@ export default function MenuPreview() {
   };
 
   // Assembles a list of divs for the grandchild items of the given child item.
-  const renderGrandchildren = (child: RenderedMenuItem, angle: number) => {
-    if (!centerItem.children || !centerItem.children[child.index]?.children) {
+  const renderGrandchildren = (renderedChild: RenderedMenuItem, angle: number) => {
+    const child = centerItem.children[renderedChild.index];
+
+    if (child.type !== 'submenu') {
       return null;
     }
 
     const grandchildAngles = math.computeItemAngles(
-      centerItem.children[child.index].children,
+      child.children,
       utils.getParentAngle(angle)
     );
 
@@ -481,7 +487,7 @@ export default function MenuPreview() {
             angleDragMayStart = false;
 
             // If the angle was changed, we need to update the item in the menu.
-            editMenuItem(selectedMenu, centerItemPath, (center) => {
+            editMenuItem(selectedMenu, centerItemPath, (center: SubmenuMenuItem) => {
               center.children.forEach((item, i) => {
                 item.angle = renderedChildren[i].angle;
               });
@@ -523,7 +529,7 @@ export default function MenuPreview() {
           // done by removing the angle from the item or setting it to the current angle
           // of the item.
           const itemPath = centerItemPath.concat(index);
-          editMenuItem(selectedMenu, itemPath, (item) => {
+          editMenuItem(selectedMenu, itemPath, (item: ChildMenuItem) => {
             if (item.angle !== undefined) {
               delete item.angle;
             } else {
@@ -562,10 +568,9 @@ export default function MenuPreview() {
 
     // Compile a list of potential drop targets.
     const children = centerItem.children.map((child) => {
-      const type = ActionRegistry.getInstance().getType(child.type);
       return {
         angle: child.angle,
-        dropTarget: type?.hasChildren,
+        dropTarget: child.type === 'submenu',
       };
     });
 
@@ -620,7 +625,7 @@ export default function MenuPreview() {
                 // we create a temporary dragged item which will be used as a "drop
                 // indicator" item.
                 if (tempItem === null && dragIndex === null) {
-                  const supported = ActionRegistry.getInstance().hasSupportedDataType(
+                  const supported = ActionTypeRegistry.getInstance().hasSupportedDataType(
                     event.dataTransfer
                   );
 
@@ -685,7 +690,7 @@ export default function MenuPreview() {
                     }
                   }
                 } else {
-                  const item = await ActionRegistry.getInstance().createItem(
+                  const item = await ActionTypeRegistry.getInstance().createItem(
                     event.dataTransfer
                   );
 
@@ -707,30 +712,45 @@ export default function MenuPreview() {
                     if (dropIndex === -1 && dropInto) {
                       // Create new item in parent.
                       const parentPath = centerItemPath.slice(0, -1);
-                      editMenuItem(selectedMenu, parentPath, (parent) => {
-                        parent.children.push(item);
-                        addAchievementStats(parentPath.length, parent.children.length);
-                        return parent;
-                      });
+                      editMenuItem(
+                        selectedMenu,
+                        parentPath,
+                        (parent: SubmenuMenuItem) => {
+                          parent.children.push(item);
+                          addAchievementStats(parentPath.length, parent.children.length);
+                          return parent;
+                        }
+                      );
                     } else if (dropIndex >= 0 && dropInto) {
                       // Create new item in submenu.
                       const submenuPath = centerItemPath.concat(dropIndex);
-                      editMenuItem(selectedMenu, submenuPath, (submenu) => {
-                        submenu.children.push(item);
-                        addAchievementStats(submenuPath.length, submenu.children.length);
-                        return submenu;
-                      });
+                      editMenuItem(
+                        selectedMenu,
+                        submenuPath,
+                        (submenu: SubmenuMenuItem) => {
+                          submenu.children.push(item);
+                          addAchievementStats(
+                            submenuPath.length,
+                            submenu.children.length
+                          );
+                          return submenu;
+                        }
+                      );
                     } else if (dropIndex >= 0) {
                       // Create new item among siblings and select it.
-                      editMenuItem(selectedMenu, centerItemPath, (center) => {
-                        center.children.splice(dropIndex, 0, item);
-                        addAchievementStats(
-                          centerItemPath.length,
-                          center.children.length
-                        );
+                      editMenuItem(
+                        selectedMenu,
+                        centerItemPath,
+                        (center: SubmenuMenuItem) => {
+                          center.children.splice(dropIndex, 0, item);
+                          addAchievementStats(
+                            centerItemPath.length,
+                            center.children.length
+                          );
 
-                        return center;
-                      });
+                          return center;
+                        }
+                      );
                       selectChildPath(centerItemPath.concat(dropIndex));
                     }
                   }

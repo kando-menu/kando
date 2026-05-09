@@ -15,12 +15,28 @@ import * as classes from './PreviewFooter.module.scss';
 
 import FooterButton from './FooterButton';
 
+import { ActionTypeRegistry } from '../../../common';
+
 /**
  * This component encapsules the list of item types which can be dragged to the menu
  * preview.
  */
+
 export default function PreviewFooter() {
-  const allItemTypes = Array.from(ItemTypeRegistry.getInstance().getAllTypes());
+  const workflowItemTypes = [
+    ...ActionTypeRegistry.getInstance().getAllMetadata().entries(),
+  ].map(([key, meta]) => ({ key, ...meta }));
+
+  const allItemTypes = [
+    {
+      key: 'submenu',
+      name: i18next.t('menu-items.submenu.name'),
+      icon: 'submenu-item.svg',
+      iconTheme: 'kando',
+      description: i18next.t('menu-items.submenu.description'),
+    },
+    ...workflowItemTypes.filter((type) => type.key !== 'delay'),
+  ];
 
   return (
     <div className={classes.itemArea}>
@@ -31,18 +47,16 @@ export default function PreviewFooter() {
       </div>
       <div className={classes.shadow} />
       <div className={classes.newItems}>
-        {allItemTypes
-          .filter(([, type]) => type.isUserSelectable)
-          .map(([name, type]) => (
-            <FooterButton
-              key={name}
-              description={type.genericDescription}
-              icon={type.defaultIcon}
-              iconTheme={type.defaultIconTheme}
-              id={name}
-              name={type.defaultName}
-            />
-          ))}
+        {allItemTypes.map((type) => (
+          <FooterButton
+            key={type.key}
+            description={type.description}
+            icon={type.icon}
+            iconTheme={type.iconTheme}
+            id={type.name}
+            name={type.name}
+          />
+        ))}
       </div>
     </div>
   );

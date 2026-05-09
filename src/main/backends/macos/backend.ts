@@ -17,7 +17,7 @@ import {
   KeySequence,
   AppDescription,
   MenuItem,
-  WORKFLOW_ACTION_TYPE_META,
+  ActionTypeRegistry,
 } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 
@@ -143,11 +143,12 @@ export class MacosBackend extends Backend {
 
     // If an executable file was dropped, create a menu item for it.
     if (await isexe(path, { ignoreErrors: true })) {
+      const actionInfo = ActionTypeRegistry.getInstance().getMetadata('execute-command');
       return {
         type: 'button',
         name: appName,
-        icon: WORKFLOW_ACTION_TYPE_META['execute-command'].icon,
-        iconTheme: WORKFLOW_ACTION_TYPE_META['execute-command'].iconTheme,
+        icon: actionInfo.icon,
+        iconTheme: actionInfo.iconTheme,
         selectWorkflow: {
           waitForFadeout: false,
           inhibitShortcuts: false,

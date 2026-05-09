@@ -26,9 +26,10 @@ import {
   Scrollbox,
   TextInput,
 } from '../common';
-import { getConfigComponent, getItemTips } from './item-configs';
+import { getConfigComponent, getItemTips } from '../../actions';
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
+import { ChildMenuItem } from '../../../common';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the
@@ -61,11 +62,8 @@ export default function Properties() {
   }
 
   // Get the currently selected menu item and whether it is the root item or not.
-  const { selectedItem, isRoot } = getSelectedChild(
-    menus,
-    selectedMenu,
-    selectedChildPath
-  );
+  const selectedItem = getSelectedChild(menus, selectedMenu, selectedChildPath);
+  const isRoot = selectedItem.type === 'root';
 
   const itemIndex =
     selectedChildPath.length > 0 ? selectedChildPath[selectedChildPath.length - 1] : -1;
@@ -193,10 +191,14 @@ export default function Properties() {
                   recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
                   useModifiers={false}
                   onChange={(shortcut) => {
-                    editMenuItem(selectedMenu, selectedChildPath, (item) => {
-                      item.quickSelectKey = shortcut;
-                      return item;
-                    });
+                    editMenuItem(
+                      selectedMenu,
+                      selectedChildPath,
+                      (item: ChildMenuItem) => {
+                        item.quickSelectKey = shortcut;
+                        return item;
+                      }
+                    );
                   }}
                 />
               ) : null

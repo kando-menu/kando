@@ -8,13 +8,20 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import i18next from 'i18next';
 import * as z from 'zod';
 import { version } from './../../../package.json';
 
 // ------------------------------------------------------------------------------------ //
 // #region                        Workflow Actions
 // ------------------------------------------------------------------------------------ //
+
+/** This action will simply wait for a specified amount of time when triggered. */
+export const DELAY_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('delay'),
+
+  /** The amount of time to wait in seconds. */
+  duration: z.number(),
+});
 
 /** This action will execute a command when triggered. */
 export const EXECUTE_COMMAND_ACTION_SCHEMA_V2 = z.object({
@@ -38,18 +45,23 @@ export const EXECUTE_COMMAND_ACTION_SCHEMA_V2 = z.object({
   isolated: z.boolean().default(false),
 });
 
+/** Macros are composed of these events. */
+export const MACRO_EVENT_SCHEMA_V2 = z.object({
+  type: z.enum(['keyDown', 'keyUp']),
+
+  /** The delay before executing this event in milliseconds. */
+  delay: z.number().default(0),
+
+  /** The key for this event. This can be a single character or a special key like 'Enter'. */
+  key: z.string(),
+});
+
 /** This action will trigger a complex macro when triggered. */
 export const EXECUTE_MACRO_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('execute-macro'),
 
   /** The macro to trigger. */
-  macro: z.array(
-    z.object({
-      type: z.enum(['keyDown', 'keyUp']),
-      delay: z.number().default(0),
-      key: z.string(),
-    })
-  ),
+  macro: z.array(MACRO_EVENT_SCHEMA_V2),
 });
 
 /** This action will open a file when triggered. */
@@ -99,6 +111,7 @@ export const SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
 
 /** This type describes the possible actions that can be performed in a workflow. */
 export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
+  DELAY_ACTION_SCHEMA_V2,
   EXECUTE_COMMAND_ACTION_SCHEMA_V2,
   EXECUTE_MACRO_ACTION_SCHEMA_V2,
   OPEN_FILE_ACTION_SCHEMA_V2,
@@ -358,110 +371,6 @@ export const MENU_SETTINGS_SCHEMA_V2 = z.object({
 });
 
 // ------------------------------------------------------------------------------------ //
-// #region                        Action Meta Info
-// ------------------------------------------------------------------------------------ //
-
-/** This type describes meta information for a workflow action type. */
-type WorkflowActionTypeMetaV2 = {
-  /** The default name for new actions of this kind. */
-  name: string;
-
-  /** The default icon for new actions of this kind. */
-  icon: string;
-
-  /** The default icon theme for new actions of this kind. */
-  iconTheme: string;
-
-  /** A human-readable description of this kind of action. */
-  description: string;
-};
-
-const WORKFLOW_ACTION_TYPE_META_ENTRIES_V2: Array<
-  [WorkflowActionTypeV2, WorkflowActionTypeMetaV2]
-> = [
-  [
-    'execute-command',
-    {
-      name: i18next.t('menu-actions.execute-command.name'),
-      icon: 'command-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.execute-command.description'),
-    },
-  ],
-  [
-    'execute-macro',
-    {
-      name: i18next.t('menu-actions.execute-macro.name'),
-      icon: 'macro-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.execute-macro.description'),
-    },
-  ],
-  [
-    'open-file',
-    {
-      name: i18next.t('menu-actions.open-file.name'),
-      icon: 'file-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.open-file.description'),
-    },
-  ],
-  [
-    'open-menu',
-    {
-      name: i18next.t('menu-actions.open-menu.name'),
-      icon: 'redirect-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.open-menu.description'),
-    },
-  ],
-  [
-    'open-settings',
-    {
-      name: i18next.t('menu-actions.open-settings.name'),
-      icon: 'settings-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.open-settings.description'),
-    },
-  ],
-  [
-    'open-uri',
-    {
-      name: i18next.t('menu-actions.open-uri.name'),
-      icon: 'uri-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.open-uri.description'),
-    },
-  ],
-  [
-    'set-clipboard',
-    {
-      name: i18next.t('menu-actions.set-clipboard.name'),
-      icon: 'clipboard-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.set-clipboard.description'),
-    },
-  ],
-  [
-    'simulate-hotkey',
-    {
-      name: i18next.t('menu-actions.simulate-hotkey.name'),
-      icon: 'hotkey-item.svg',
-      iconTheme: 'kando',
-      description: i18next.t('menu-actions.simulate-hotkey.description'),
-    },
-  ],
-];
-
-/** Meta information for all available workflow action types. */
-export const WORKFLOW_ACTION_TYPE_META_V2: Readonly<
-  Record<WorkflowActionTypeV2, WorkflowActionTypeMetaV2>
-> = Object.fromEntries(WORKFLOW_ACTION_TYPE_META_ENTRIES_V2) as Record<
-  WorkflowActionTypeV2,
-  WorkflowActionTypeMetaV2
->;
-
-// ------------------------------------------------------------------------------------ //
 // #region                        Type Exports
 // ------------------------------------------------------------------------------------ //
 
@@ -471,6 +380,9 @@ export type SelectWorkflowV2 = z.infer<typeof SELECT_WORKFLOW_SCHEMA_V2>;
 export type HoverWorkflowV2 = z.infer<typeof HOVER_WORKFLOW_SCHEMA_V2>;
 export type WorkflowActionV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>;
 export type WorkflowActionTypeV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>['type'];
+export type MenuItemTypeV2 = z.infer<typeof MENU_ITEM_SCHEMA_V2>['type'];
+
+export type MacroEventV2 = z.infer<typeof MACRO_EVENT_SCHEMA_V2>;
 
 export type ExecuteCommandActionV2 = z.infer<typeof EXECUTE_COMMAND_ACTION_SCHEMA_V2>;
 export type ExecuteMacroActionV2 = z.infer<typeof EXECUTE_MACRO_ACTION_SCHEMA_V2>;
@@ -480,6 +392,7 @@ export type OpenSettingsActionV2 = z.infer<typeof OPEN_SETTINGS_ACTION_SCHEMA_V2
 export type OpenURIActionV2 = z.infer<typeof OPEN_URI_ACTION_SCHEMA_V2>;
 export type SetClipboardActionV2 = z.infer<typeof SET_CLIPBOARD_ACTION_SCHEMA_V2>;
 export type SimulateHotkeyActionV2 = z.infer<typeof SIMULATE_HOTKEY_ACTION_SCHEMA_V2>;
+export type DelayActionV2 = z.infer<typeof DELAY_ACTION_SCHEMA_V2>;
 
 export type RootMenuItemV2 = z.infer<typeof ROOT_MENU_ITEM_SCHEMA_V2>;
 export type ButtonMenuItemV2 = z.infer<typeof BUTTON_MENU_ITEM_SCHEMA_V2>;
