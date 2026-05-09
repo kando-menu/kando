@@ -53,7 +53,7 @@ export default function PreviewFooter() {
             description={type.description}
             icon={type.icon}
             iconTheme={type.iconTheme}
-            id={type.name}
+            id={type.key}
             name={type.name}
           />
         ))}

@@ -140,7 +140,6 @@ export class WorkflowExecutor {
     action: DeepReadonly<WorkflowAction>,
     app: KandoApp
   ): Promise<void> {
-    console.debug(`Executing action of type ${action.type}`);
     const executor = ACTION_EXECUTORS.get(action.type) as WorkflowActionExecutor<
       typeof action.type
     >;

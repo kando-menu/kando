@@ -359,6 +359,12 @@ export default function MenuPreview() {
 
   // Assembles a list of divs for the grandchild items of the given child item.
   const renderGrandchildren = (renderedChild: RenderedMenuItem, angle: number) => {
+    // The drop indicator for dropping into a submenu is rendered as a "ghost" child item
+    // with index -1.
+    if (renderedChild.index < 0 || renderedChild.index >= centerItem.children.length) {
+      return null;
+    }
+
     const child = centerItem.children[renderedChild.index];
 
     if (child.type !== 'submenu') {

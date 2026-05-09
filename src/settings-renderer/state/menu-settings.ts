@@ -177,7 +177,7 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
       addMenu: (tags: string[]) =>
         set(
           produce((state) => {
-            state.menus.push({
+            const newMenu: Menu = {
               shortcut: '',
               shortcutID: '',
               centered: false,
@@ -185,13 +185,14 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
               hoverMode: false,
               tags,
               root: {
-                type: 'submenu',
+                type: 'root',
                 name: 'New Menu',
                 icon: 'apps',
                 iconTheme: 'material-symbols-rounded',
                 children: [],
               },
-            });
+            };
+            state.menus.push(newMenu);
           })
         ),
 
@@ -350,12 +351,13 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
       addCollection: () =>
         set(
           produce((state) => {
-            state.collections.push({
+            const newCollection: MenuCollection = {
               name: 'New Collection',
               icon: 'sell',
               iconTheme: 'material-symbols-rounded',
               tags: [],
-            });
+            };
+            state.collections.push(newCollection);
           })
         ),
 
@@ -434,7 +436,7 @@ export function useMappedMenuProperties<U>(mapFn: (menu: Menu) => U): U[] {
  * the names of the collections, you can use this hook to map the collections to their
  * names and only re-render when the names change.
  *
- * @param mapFn - Mapping function to extract relevant properties from each menu.
+ * @param mapFn - Mapping function to extract relevant properties from each collection.
  */
 export function useMappedCollectionProperties<U>(
   mapFn: (menu: MenuCollection) => U
