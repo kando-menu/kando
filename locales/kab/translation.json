@@ -442,10 +442,6 @@
             "name": "Serwes anegzum n unasiw",
             "description": "Sit ɣef usuddes n tsura."
         },
-        "set-clipboard": {
-            "name": "Senṭeḍ aḍris",
-            "description": "Ad iger aḍris i d-ittunefken."
-        },
         "execute-macro": {
             "name": "Selkem amakṛu",
             "description": "Aru amakṛu n unasiw."

@@ -501,10 +501,6 @@
             "name": "Simuloi pikanäppäin",
             "description": "Painaa näppäinyhdistelmää."
         },
-        "set-clipboard": {
-            "name": "Liitä teksti",
-            "description": "Syöttää annetun tekstin."
-        },
         "execute-macro": {
             "name": "Suorita makro",
             "description": "Kirjoittaa näppäimistömakron."

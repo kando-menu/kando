@@ -396,10 +396,6 @@
             "name": "Simuler Hurtigtast",
             "description": "Trykker en tastekombinasjon."
         },
-        "set-clipboard": {
-            "name": "Lim Inn Tekst",
-            "description": "Limer inn den valgte teksten."
-        },
         "execute-macro": {
             "name": "Kjør Makro",
             "description": "Trykker en tastaturmakro."

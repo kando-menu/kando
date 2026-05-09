@@ -204,10 +204,6 @@
             "name": "Atverti URI",
             "description": "Atveria failus ar internetines svetaines."
         },
-        "set-clipboard": {
-            "name": "Įdėti tekstą",
-            "description": "Įdeda nurodytą tekstą."
-        },
         "open-menu": {
             "description": "Atveria kitą meniu."
         }

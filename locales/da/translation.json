@@ -241,10 +241,6 @@
         "open-uri": {
             "name": "Åben URI",
             "description": "Åbner hjemmesider og meget mere."
-        },
-        "set-clipboard": {
-            "name": "Indsæt tekst",
-            "description": "Indsætter den givne tekst."
         }
     }
 }

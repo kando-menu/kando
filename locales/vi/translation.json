@@ -561,10 +561,6 @@
             "name": "Mô phỏng phím tắt",
             "description": "Nhấn tổ hợp phím."
         },
-        "set-clipboard": {
-            "name": "Dán văn bản",
-            "description": "Chèn văn bản đã cho."
-        },
         "execute-macro": {
             "name": "Thực thi macro",
             "description": "Nhập macro bàn phím."

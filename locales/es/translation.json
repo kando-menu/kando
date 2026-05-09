@@ -302,10 +302,6 @@
             "name": "Simular atajo",
             "description": "Presiona una combinación de teclas."
         },
-        "set-clipboard": {
-            "name": "Pegar texto",
-            "description": "Inserta el texto indicado."
-        },
         "open-menu": {
             "description": "Abre otro menú."
         },

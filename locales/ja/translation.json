@@ -521,10 +521,6 @@
             "name": "ショートカットキーをシミュレート",
             "description": "キーの組み合わせを押します。"
         },
-        "set-clipboard": {
-            "name": "テキストの貼り付け",
-            "description": "指定されたテキストを挿入します。"
-        },
         "execute-macro": {
             "name": "マクロを実行",
             "description": "キーボードマクロを入力します。"

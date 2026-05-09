@@ -440,10 +440,6 @@
             "name": "Simular atalho de teclado",
             "description": "Pressione uma combinação de teclas."
         },
-        "set-clipboard": {
-            "name": "Pasta texto",
-            "description": "Insere o texto fornecido."
-        },
         "execute-macro": {
             "name": "Simular Macro",
             "description": "Digita um macro de teclado."

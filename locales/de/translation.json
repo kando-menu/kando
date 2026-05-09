@@ -601,10 +601,6 @@
             "name": "Hotkey Simulieren",
             "description": "Drückt eine Tastenkombination."
         },
-        "set-clipboard": {
-            "name": "Text Einfügen",
-            "description": "Fügt den gegebenen Text ein."
-        },
         "execute-macro": {
             "name": "Makro Ausführen",
             "description": "Führt ein Tastaturmakro aus."

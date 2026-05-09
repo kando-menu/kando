@@ -587,10 +587,6 @@
             "name": "模擬快捷鍵",
             "description": "按下組合鍵。"
         },
-        "set-clipboard": {
-            "name": "貼上文字",
-            "description": "插入指定的文字。"
-        },
         "execute-macro": {
             "name": "執行巨集",
             "description": "輸入一段鍵盤巨集。"

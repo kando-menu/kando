@@ -438,10 +438,6 @@
             "name": "단축키 실행하기",
             "description": "키 조합을 입력해요."
         },
-        "set-clipboard": {
-            "name": "텍스트 붙여넣기",
-            "description": "지정된 텍스트를 삽입해요."
-        },
         "execute-macro": {
             "name": "매크로 실행하기",
             "description": "키보드 매크로를 실행해요."

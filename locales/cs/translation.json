@@ -580,10 +580,6 @@
             "name": "Simulovat klávesovou zkratku",
             "description": "Stiskněte kombinaci kláves."
         },
-        "set-clipboard": {
-            "name": "Vložit text",
-            "description": "Vloží zadaný text."
-        },
         "execute-macro": {
             "name": "Simulovat makro",
             "description": "Použije sled kláves."

@@ -189,10 +189,6 @@
             "name": "Kısayol Tuşu Simüle Et",
             "description": "Bir kısayol tuşuna basar."
         },
-        "set-clipboard": {
-            "name": "Metin Yapıştır",
-            "description": "Belirtilen metni ekler."
-        },
         "execute-macro": {
             "name": "Makro Simüle Et",
             "description": "Bir klavye makrosu yazar."

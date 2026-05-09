@@ -596,10 +596,6 @@
             "name": "模拟按键",
             "description": "按下一套组合键。"
         },
-        "set-clipboard": {
-            "name": "粘贴文本",
-            "description": "插入给定文本。"
-        },
         "execute-macro": {
             "name": "模拟宏",
             "description": "执行一系列按键。"

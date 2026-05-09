@@ -459,10 +459,6 @@
             "name": "Simula una scorciatoia da tastiera",
             "description": "Preme una combinazione di tasti."
         },
-        "set-clipboard": {
-            "name": "Incolla il testo",
-            "description": "Inserisci il testo fornito."
-        },
         "execute-macro": {
             "name": "Simula una Macro",
             "description": "Digita una macro."

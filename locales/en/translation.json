@@ -587,8 +587,8 @@
             "description": "Presses a key combination."
         },
         "set-clipboard": {
-            "name": "Paste Text",
-            "description": "Inserts the given text."
+            "name": "Set Clipboard",
+            "description": "Writes content to the clipboard."
         },
         "execute-macro": {
             "name": "Execute Macro",

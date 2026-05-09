@@ -598,10 +598,6 @@
             "name": "Simuler une touche de raccourci",
             "description": "Exécute un raccourci clavier."
         },
-        "set-clipboard": {
-            "name": "Coller le texte",
-            "description": "Insère un texte donné."
-        },
         "execute-macro": {
             "name": "Simuler une Macro",
             "description": "Exécute une macro clavier."

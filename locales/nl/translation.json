@@ -398,10 +398,6 @@
             "name": "Hotkey simuleren",
             "description": "Klikt op een knopcombinatie."
         },
-        "set-clipboard": {
-            "name": "Tekst plakken",
-            "description": "Voegt de gegeven tekst in."
-        },
         "execute-macro": {
             "name": "Macro uitvoeren",
             "description": "Typt een toetsenbord macro."
