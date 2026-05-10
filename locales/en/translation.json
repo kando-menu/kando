@@ -317,6 +317,24 @@
             "countdown_one": "Selecting in {{count}} second…",
             "countdown_other": "Selecting in {{count}} seconds…",
             "confirm": "Use this value"
+        },
+      
+        "action-no-config": "This action has no configuration.",
+        "delete-action": "Delete Action",
+        "workflow-editor": {
+            "add-action": "Add Action",
+            "select-workflow": {
+                "tooltip": "This workflow will be executed when the item is selected.",
+                "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button below to add actions to the selection workflow!"
+            },
+            "hover-workflow": {
+                "tooltip": "This workflow will be executed when the item is hovered.",
+                "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button below to add actions to the hover workflow!"
+            },
+            "open-workflow": {
+                "tooltip": "This workflow will be executed when the submenu is opened.",
+                "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button below to add actions to the open workflow!"
+            }
         }
     },
     "menu-items": {
@@ -384,6 +402,16 @@
             "delayed-option": "Wait for fade-out animation",
             "inhibit-shortcuts-info": "Disables all Kando shortcuts while the hotkey or macro is being simulated. This prevents the simulated input from accidentally triggering other menu shortcuts.",
             "inhibit-shortcuts": "Disable shortcuts"
+        },
+        "set-clipboard": {
+            "placeholder": "menu-items.set-clipboard.placeholder"
+        },
+        "open-settings": {
+            "description": "menu-items.open-settings.description"
+        },
+        "delay": {
+            "duration-info": "menu-items.delay.duration-info",
+            "duration-label": "menu-items.delay.duration-label"
         }
     },
     "achievements": {

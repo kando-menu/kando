@@ -1,0 +1,38 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+.workflowEditor {
+  padding-top: 24px;
+  display: flex;
+  position: relative;
+  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.workflowSelector {
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.workflowContainer {
+  overflow: hidden;
+}
+
+.workflowSlider {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.workflow {
+  width: 100%;
+}

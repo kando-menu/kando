@@ -111,7 +111,7 @@ export default function MenuList() {
   // If a drag is in progress, we need to move the dragged menu to the position of the
   // menu we are currently hovering over. This is done by removing the dragged menu
   // from the list and inserting it at the position of the hovered menu.
-  if (dragIndex !== null && dropIndex !== null) {
+  if (dragIndex !== null && dropIndex !== null && dragIndex !== dropIndex) {
     const draggedMenu = renderedMenus.splice(dragIndex, 1)[0];
     renderedMenus.splice(dropIndex, 0, draggedMenu);
   }

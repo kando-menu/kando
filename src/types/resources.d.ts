@@ -206,8 +206,8 @@ export default interface Resources {
               "name": "Open URI"
           },
           "set-clipboard": {
-              "description": "Inserts the given text.",
-              "name": "Paste Text"
+              "description": "Writes content to the clipboard.",
+              "name": "Set Clipboard"
           },
           "simulate-hotkey": {
               "description": "Presses a key combination.",
@@ -235,6 +235,10 @@ export default interface Resources {
               "inhibit-shortcuts": "Disable shortcuts",
               "inhibit-shortcuts-info": "Disables all Kando shortcuts while the hotkey or macro is being simulated. This prevents the simulated input from accidentally triggering other menu shortcuts."
           },
+          "delay": {
+              "duration-info": "menu-items.delay.duration-info",
+              "duration-label": "menu-items.delay.duration-label"
+          },
           "file": {
               "placeholder": "Choose a file or folder…",
               "tip-1": "You can use this item type to open files or folders."
@@ -252,6 +256,12 @@ export default interface Resources {
               "recording-placeholder": "Press any keys…",
               "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
               "tip-2": "You can edit the macro also by hand. This is useful if you want to adjust the timing of the keys."
+          },
+          "open-settings": {
+              "description": "menu-items.open-settings.description"
+          },
+          "set-clipboard": {
+              "placeholder": "menu-items.set-clipboard.placeholder"
           },
           "settings": {
               "tip-1": "This item type opens the Kando settings window."
@@ -304,6 +314,7 @@ export default interface Resources {
               "title": "Achievements",
               "xp": "XP"
           },
+          "action-no-config": "This action has no configuration.",
           "add-collection-tooltip": "Create a new menu collection. Use collections to group your menus by tags!",
           "add-menu-item-hint": "Drag this item to add it to the menu above!",
           "add-menu-items": "Add Menu Items",
@@ -331,6 +342,7 @@ export default interface Resources {
           "centered-mode": "Centered Mode",
           "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
           "create-menu-button": "New menu",
+          "delete-action": "Delete Action",
           "delete-menu": "Delete menu",
           "delete-menu-item": "Delete menu item",
           "duplicate-menu": "Duplicate menu",
@@ -599,6 +611,21 @@ export default interface Resources {
               "restart-countdown": "Start countdown again",
               "result": "You selected \"{{name}}\".",
               "start-countdown": "Start countdown"
+          },
+          "workflow-editor": {
+              "add-action": "settings.workflow-editor.add-action",
+              "hover-workflow": {
+                  "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button below to add actions to the hover workflow!",
+                  "tooltip": "This workflow will be executed when the item is hovered."
+              },
+              "open-workflow": {
+                  "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button below to add actions to the open workflow!",
+                  "tooltip": "This workflow will be executed when the submenu is opened."
+              },
+              "select-workflow": {
+                  "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button below to add actions to the selection workflow!",
+                  "tooltip": "This workflow will be executed when the item is selected."
+              }
           }
       }
   }

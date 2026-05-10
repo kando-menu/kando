@@ -21,14 +21,13 @@ import {
   IconChooserButton,
   TagInput,
   ShortcutPicker,
-  RandomTip,
   Swirl,
   Scrollbox,
   TextInput,
 } from '../common';
-import { getConfigComponent, getItemTips } from './actions';
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
+import WorkflowEditor from './WorkflowEditor';
 import { ChildMenuItem } from '../../../common';
 
 /**
@@ -172,11 +171,6 @@ export default function Properties() {
               ) : null
             }
             {
-              // For all other items, we show the config component that is specific to the
-              // item type.
-              !isRoot && selectedItem ? getConfigComponent(selectedItem.type) : null
-            }
-            {
               // Also, each menu item has the quick-select key. The default value for this
               // is the menu item's number.
               !isRoot && selectedItem ? (
@@ -203,11 +197,10 @@ export default function Properties() {
                 />
               ) : null
             }
+
             {
-              // Finally, we show the tips for the currently selected item type.
-              !isRoot && selectedItem ? (
-                <RandomTip marginTop={50} tips={getItemTips(selectedItem.type)} />
-              ) : null
+              // For all other items, we show the workflow editor.
+              !isRoot && selectedItem ? <WorkflowEditor /> : null
             }
           </div>
         </Scrollbox>

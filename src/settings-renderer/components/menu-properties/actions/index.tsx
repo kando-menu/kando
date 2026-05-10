@@ -12,9 +12,12 @@ import React from 'react';
 
 import { getSubmenuMenuItemTips } from './submenu-item-config';
 import { CommandItemConfig, getCommandItemTips } from './command-item-config';
+import { DelayActionConfig } from './delay-action-config';
 import { FileItemConfig, getFileItemTips } from './file-item-config';
 import { HotkeyItemConfig, getHotkeyItemTips } from './hotkey-item-config';
 import { MacroItemConfig, getMacroItemTips } from './macro-item-config';
+import { OpenSettingsActionConfig } from './open-settings-action-config';
+import { SetClipboardActionConfig } from './set-clipboard-action-config';
 import { TextItemConfig, getTextItemTips } from './text-item-config';
 import { UriItemConfig, getUriItemTips } from './uri-item-config';
 import { RedirectItemConfig } from './redirect-item-config';
@@ -31,12 +34,15 @@ export function getConfigComponent(type: string): React.ReactElement {
 
   const components: Record<string, React.ReactElement> = {
     command: <CommandItemConfig />,
+    delay: <DelayActionConfig />,
     file: <FileItemConfig />,
     hotkey: <HotkeyItemConfig />,
     macro: <MacroItemConfig />,
     text: <TextItemConfig />,
     uri: <UriItemConfig />,
     redirect: <RedirectItemConfig />,
+    ['open-settings']: <OpenSettingsActionConfig />,
+    ['set-clipboard']: <SetClipboardActionConfig />,
   };
 
   return components[type] || null;
