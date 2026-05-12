@@ -8,6 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use 'sass:color';
+
+@use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
 .actionListContainer {
@@ -15,12 +18,71 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
+}
 
-  padding: 8px;
+.actionList {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 16px;
+
+  &:has(.dragging) .actionItem * {
+    pointer-events: none;
+  }
 }
 
 .actionItem {
-  @include raised-button;
+  @include background-transition;
 
-  padding: 10px;
+  position: relative;
+  background-color: light-dark(
+    color.adjust($base-light, $lightness: -5%),
+    color.adjust($base-dark, $lightness: 5%)
+  );
+  border-radius: 8px;
+  padding: 0 3px 3px 3px;
+
+  box-shadow: 0 2px 4px light-dark(rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.2));
+  border: 1.5px solid
+    light-dark(
+      color.adjust($base-light, $lightness: -5%),
+      color.adjust($base-dark, $lightness: -5%)
+    );
+
+  // A low opacity seems to be required. Setting it to zero hides also the dragged copy
+  // at the pointer.
+  &.dragging {
+    opacity: 0.001;
+  }
+
+  // Add small triangle at the bottom pointing downwards.
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 12px;
+    border-style: solid;
+    border-color: $widget-normal transparent transparent transparent;
+  }
+}
+
+.actionItemHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  font-size: 0.9em;
+
+  padding: 6px;
+}
+
+.actionItemContent {
+  padding: 8px;
+  border-radius: 6px;
+
+  background-color: $window-background;
 }

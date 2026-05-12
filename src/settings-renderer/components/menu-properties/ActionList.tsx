@@ -9,15 +9,23 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import i18next from 'i18next';
 
 import * as classes from './ActionList.module.scss';
+const cx = classNames.bind(classes);
 
-import { Button, Note } from '../common';
-import { TbPlus } from 'react-icons/tb';
-import { SelectWorkflow, HoverWorkflow, WorkflowAction } from '../../../common';
+import { Button, Note, ThemedIcon } from '../common';
+import { TbPlus, TbTrash } from 'react-icons/tb';
+import {
+  SelectWorkflow,
+  HoverWorkflow,
+  WorkflowAction,
+  ActionTypeRegistry,
+} from '../../../common';
 import ActionPicker from './ActionPicker';
+import { ensureUniqueKeys } from '../../utils';
 
 type Props = {
   /** The empty hint text to display when the workflow has no actions. */
@@ -43,10 +51,18 @@ export default function ActionList(props: Props) {
   const actions = props.workflow?.actions || [];
 
   // Apply drag reordering to the display.
-  const displayActions = [...actions];
+  const displayedActions = actions.map((action, index) => ({
+    action,
+    index,
+    key: `action-${action.type}`,
+  }));
+
+  // Ensure that all keys are unique.
+  ensureUniqueKeys(displayedActions);
+
   if (dragIndex !== null && dropIndex !== null && dragIndex !== dropIndex) {
-    const [draggedAction] = displayActions.splice(dragIndex, 1);
-    displayActions.splice(dropIndex, 0, draggedAction);
+    const [draggedAction] = displayedActions.splice(dragIndex, 1);
+    displayedActions.splice(dropIndex, 0, draggedAction);
   }
 
   // Called when the delete button of an action is clicked. Removes the action from the
@@ -69,6 +85,27 @@ export default function ActionList(props: Props) {
     } as SelectWorkflow | HoverWorkflow);
   };
 
+  // Called when an action starts being dragged. Sets the dragIndex to the index of the
+  // dragged action, which will cause the display to update and show the dragged action
+  // in a "dragging" style.
+  const handleDragStart = (index: number) => {
+    setDragIndex(index);
+    setDropIndex(index);
+  };
+
+  // Called when an action is dragged over another action. Updates the dropIndex to the
+  // index of the action being dragged over, which will cause the display to update and
+  // show the dragged action in the new position.
+  const handleDragEnter = (index: number) => {
+    if (dragIndex !== null && dragIndex !== index) {
+      if (dragIndex < index) {
+        setDropIndex(dropIndex >= index ? index - 1 : index);
+      } else {
+        setDropIndex(dropIndex <= index ? index + 1 : index);
+      }
+    }
+  };
+
   // Called when a drag operation ends (either by dropping or cancelling). If dropped, it
   // updates the action order based on dragIndex and dropIndex, then resets both indices.
   const handleDragEnd = () => {
@@ -87,42 +124,47 @@ export default function ActionList(props: Props) {
     setDropIndex(null);
   };
 
+  const renderAction = (actionWrapper: {
+    action: WorkflowAction;
+    key: string;
+    index: number;
+  }) => {
+    const { action, index, key } = actionWrapper;
+    const typeMeta = ActionTypeRegistry.getInstance().getMetadata(action.type);
+    return (
+      <div
+        key={key}
+        draggable
+        className={cx({
+          actionItem: true,
+          dragging: dragIndex === index,
+        })}
+        onDragEnd={handleDragEnd}
+        onDragEnter={() => handleDragEnter(index)}
+        onDragOver={(event) => event.preventDefault()}
+        onDragStart={() => handleDragStart(index)}>
+        <div className={classes.actionItemHeader}>
+          <ThemedIcon name={typeMeta.icon} size={16} theme={typeMeta.iconTheme} />
+          <div style={{ flexGrow: 1 }}>{typeMeta.name}</div>
+          <Button
+            icon={<TbTrash />}
+            size="small"
+            variant="floating"
+            onClick={() => handleDeleteAction(index)}
+          />
+        </div>
+        <div className={classes.actionItemContent}>Content</div>
+      </div>
+    );
+  };
+
   return (
     <div className={classes.actionListContainer}>
       <div ref={animatedList} className={classes.actionList}>
-        {displayActions.length === 0 && <Note isCentered>{props.emptyHint}</Note>}
-
-        {/* {displayActions.map((action, index) => {
-          const actionKey = `action-${action.type}-${index}`;
-          return (
-            <ActionItem
-              key={`${index}-${action.type}`}
-              action={action}
-              index={index}
-              isDragging={dragIndex === index}
-              onDelete={() => handleDeleteAction(index)}
-              onDragEnd={handleDragEnd}
-              onDragEnter={() => {
-                if (dragIndex !== null && dragIndex !== index) {
-                  setDropIndex(index);
-                }
-              }}
-              onDragStart={() => setDragIndex(index)}
-            />
-          );
-        })} */}
-
-        {displayActions.map((action, index) => {
-          const actionKey = `action-${action.type}-${index}`;
-          return (
-            <div key={actionKey} className={classes.actionItem}>
-              <div>{action.type}</div>
-            </div>
-          );
-        })}
+        {displayedActions.length === 0 && <Note isCentered>{props.emptyHint}</Note>}
+        {displayedActions.map((action) => renderAction(action))}
       </div>
 
-      {/* Add action button */}
       <Button
         icon={<TbPlus />}
         label={i18next.t('settings.workflow-editor.add-action')}
@@ -130,7 +172,6 @@ export default function ActionList(props: Props) {
         onClick={() => setActionPickerVisible(true)}
       />
 
-      {/* Action type picker modal */}
       <ActionPicker
         isVisible={actionPickerVisible}
         onClose={() => setActionPickerVisible(false)}

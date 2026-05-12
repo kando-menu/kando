@@ -35,7 +35,7 @@ export default function WorkflowEditor() {
   const selectedItem = getSelectedChild(menus, selectedMenu, selectedChildPath);
 
   // State to track which workflow is currently selected.
-  const [selectedWorkflowType, setSelectedWorkflowType] = React.useState<number>(0);
+  const [selectedWorkflow, setSelectedWorkflow] = React.useState<number>(0);
 
   // Sanity check - should not render if no item is selected.
   if (!selectedItem || selectedItem.type === 'root') {
@@ -118,35 +118,34 @@ export default function WorkflowEditor() {
           <Button
             key={workflowType}
             icon={workflowMeta[workflowType].icon}
-            isPressed={selectedWorkflowType === index}
+            isPressed={selectedWorkflow === index}
             size="large"
             tooltip={workflowMeta[workflowType].tooltip}
             variant="floating"
-            onClick={() => setSelectedWorkflowType(index)}
+            onClick={() => setSelectedWorkflow(index)}
           />
         ))}
       </div>
 
       {/* Workflow content - sliding panel style */}
-      <div className={classes.workflowContainer}>
-        <div
-          className={classes.workflowSlider}
-          style={{
-            width: 100 * workflowTypes.length + '%',
-            transform: `translateX(-${selectedWorkflowType * (100 / workflowTypes.length)}%)`,
-          }}>
-          {workflowTypes.map((workflowType) => (
-            <div key={`workflow-${workflowType}`} className={classes.workflow}>
-              <ActionList
-                emptyHint={workflowMeta[workflowType].emptyHint}
-                workflow={getCurrentWorkflowForItem(selectedItem, workflowType)}
-                onUpdateWorkflow={(updatedWorkflow) => {
-                  updateWorkflow(workflowType, updatedWorkflow);
-                }}
-              />
-            </div>
-          ))}
-        </div>
+      <div
+        className={classes.workflowSlider}
+        style={{
+          width: `calc(100% * ${workflowTypes.length} + ${50 * (workflowTypes.length - 1)}px)`, // Account for gap between items
+          gap: '50px',
+          transform: `translateX(calc(-${selectedWorkflow * (100 / workflowTypes.length)}% - ${(selectedWorkflow * 50) / 2}px))`, // Account for gap between items
+        }}>
+        {workflowTypes.map((workflowType) => (
+          <div key={`workflow-${workflowType}`} className={classes.workflow}>
+            <ActionList
+              emptyHint={workflowMeta[workflowType].emptyHint}
+              workflow={getCurrentWorkflowForItem(selectedItem, workflowType)}
+              onUpdateWorkflow={(updatedWorkflow) => {
+                updateWorkflow(workflowType, updatedWorkflow);
+              }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

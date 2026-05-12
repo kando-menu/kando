@@ -12,7 +12,17 @@
 
 @use './variables.scss' as *;
 
+@mixin background-transition {
+  transition: background-color 0.3s;
+
+  &:hover {
+    transition: background-color 0.1s;
+  }
+}
+
 @mixin text-input {
+  @include background-transition;
+
   color: $text-normal;
   background-color: $widget-normal;
 
@@ -31,14 +41,14 @@
 }
 
 @mixin normal-button {
+  @include background-transition;
+
   color: $text-normal;
   background-color: $widget-normal;
 
   border-radius: 8px;
   box-sizing: border-box;
   border: none;
-
-  transition: background-color 0.15s;
 
   &.pressed {
     background-color: $widget-normal-active;
