@@ -53,6 +53,11 @@ type Props = {
  * @returns A settings-row element.
  */
 export default function SettingsRow(props: Props) {
+  // If there is no label or info, we can just return the widget without the row wrapper.
+  if (!props.label && !props.info) {
+    return props.children;
+  }
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const Element = props.isLabelClickable ? 'label' : 'div';
 

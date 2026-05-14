@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 
 import * as classes from './ActionPicker.module.scss';
-import { Modal, ThemedIcon, Scrollbox } from '../common';
+import { Modal, ThemedIcon, Scrollbox, Swirl, Note } from '../common';
 import { WorkflowAction, WorkflowActionType } from '../../../common';
 import { ActionTypeRegistry } from '../../../common/action-type-registry';
 

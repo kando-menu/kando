@@ -9,12 +9,14 @@
 // SPDX-License-Identifier: MIT
 
 .workflowEditor {
+  min-height: 0px; // This is important to make the scrollboxes work.
   padding-top: 24px;
   display: flex;
   position: relative;
   gap: 8px;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
 }
 
 .workflowSelector {
@@ -23,11 +25,13 @@
 }
 
 .workflowSlider {
+  min-height: 0px; // This is important to make the scrollboxes work.
   display: flex;
   transition: transform 0.3s ease-in-out;
 }
 
 .workflow {
+  min-height: 0px; // This is important to make the scrollboxes work.
   min-width: 100%;
   margin-top: 16px;
   display: flex;

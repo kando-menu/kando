@@ -14,18 +14,23 @@
   position: relative;
   flex-grow: 1;
   background-color: $window-background;
-  padding: 8px;
   display: flex;
   flex-direction: column;
   min-height: 0px; // This is important to make the scrollboxes work.
   border-top: $area-border;
 }
 
-.properties {
+.menuProperties {
+  min-height: 0px; // This is important to make the scrollboxes work.
+  padding: 8px;
   display: flex;
   gap: 5px;
   flex-direction: column;
   padding-bottom: 60px;
+}
+
+.itemProperties {
+  padding: 0 18px;
 }
 
 .icon {
@@ -48,6 +53,7 @@
 .name {
   font-size: 1.3rem;
   margin: 0 8px;
+  padding: 0 8px;
 }
 
 .floatingButton {

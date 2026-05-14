@@ -215,6 +215,9 @@ export default interface Resources {
           }
       },
       "menu-items": {
+          "clipboard": {
+              "placeholder": "menu-items.clipboard.placeholder"
+          },
           "command": {
               "choose-app": "Choose an app…",
               "detached": "Run detached",
@@ -231,13 +234,13 @@ export default interface Resources {
           },
           "common": {
               "delayed-option": "Wait for fade-out animation",
-              "delayed-option-info": "Useful if the action targets a window that needs to be focused.",
+              "delayed-option-info": "Useful if the workflow targets a window that needs to be focused.",
               "inhibit-shortcuts": "Disable shortcuts",
-              "inhibit-shortcuts-info": "Disables all Kando shortcuts while the hotkey or macro is being simulated. This prevents the simulated input from accidentally triggering other menu shortcuts."
+              "inhibit-shortcuts-info": "Disables all Kando shortcuts while this workflow is being executed. This prevents any simulated key events from accidentally triggering other menu shortcuts."
           },
           "delay": {
-              "duration-info": "menu-items.delay.duration-info",
-              "duration-label": "menu-items.delay.duration-label"
+              "duration-info": "The workflow execution will be delayed by this amount of time.",
+              "duration-label": "Seconds"
           },
           "file": {
               "placeholder": "Choose a file or folder…",
@@ -257,12 +260,6 @@ export default interface Resources {
               "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
               "tip-2": "You can edit the macro also by hand. This is useful if you want to adjust the timing of the keys."
           },
-          "open-settings": {
-              "description": "menu-items.open-settings.description"
-          },
-          "set-clipboard": {
-              "placeholder": "menu-items.set-clipboard.placeholder"
-          },
           "settings": {
               "tip-1": "This item type opens the Kando settings window."
           },
@@ -278,7 +275,6 @@ export default interface Resources {
               "tip-7": "You can delete a menu or a menu item with the trash icon below."
           },
           "text": {
-              "placeholder": "Insert any text…",
               "tip-1": "This action uses your clipboard to paste the text. After using the action, the clipboard will contain the text."
           },
           "uri": {

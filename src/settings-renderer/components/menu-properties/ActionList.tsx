@@ -184,20 +184,21 @@ export default function ActionList(props: Props) {
   return (
     <div className={classes.actionListContainer}>
       <div ref={animatedList} className={classes.actionList}>
+        {displayedActions.map((action) => renderAction(action))}
+
+        <Button
+          icon={<TbPlus />}
+          label={i18next.t('settings.workflow-editor.add-action')}
+          variant="secondary"
+          onClick={() => setActionPickerVisible(true)}
+        />
+
         {displayedActions.length === 0 && (
           <Note isCentered marginTop={16}>
             {props.emptyHint}
           </Note>
         )}
-        {displayedActions.map((action) => renderAction(action))}
       </div>
-
-      <Button
-        icon={<TbPlus />}
-        label={i18next.t('settings.workflow-editor.add-action')}
-        variant="secondary"
-        onClick={() => setActionPickerVisible(true)}
-      />
 
       <ActionPicker
         isVisible={actionPickerVisible}

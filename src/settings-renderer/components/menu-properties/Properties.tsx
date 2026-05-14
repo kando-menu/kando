@@ -138,97 +138,75 @@ export default function Properties() {
           />
         </div>
         <Swirl marginBottom={10} marginTop={10} variant="2" width="min(250px, 80%)" />
-        <Scrollbox>
-          <div className={classes.properties}>
-            {
-              // Show the hotkey selector for the root menu.
-              isRoot ? getShortcutPicker() : null
-            }
-            {
-              // If the selected item is the root of the menu, we show the tag editor.
-              isRoot ? (
-                <TagInput
-                  info={i18next.t('settings.tags-info')}
-                  label={i18next.t('settings.tags')}
-                  tags={menuTags}
-                  onChange={(newTags) => {
-                    editMenu(selectedMenu, (menu) => {
-                      menu.tags = newTags;
-                      return menu;
-                    });
-                    setMenuTags(newTags);
-                  }}
-                />
-              ) : null
-            }
-            {
-              // We also show the sections for the menu behavior and conditions.
-              isRoot ? (
-                <>
-                  <MenuBehavior />
-                  <MenuConditions />
-                </>
-              ) : null
-            }
-            {
-              // Also, each menu item has the quick-select key. The default value for this
-              // is the menu item's number.
-              !isRoot && selectedItem ? (
-                <ShortcutPicker
-                  info={i18next.t('settings.quick-select-key-info')}
-                  initialValue={selectedItem.quickSelectKey || ''}
-                  label={i18next.t('settings.quick-select-key-label')}
-                  mode="key-names"
-                  placeholder={
-                    itemIndex < 9 ? `${itemIndex + 1}` : i18next.t('settings.not-bound')
-                  }
-                  recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
-                  useModifiers={false}
-                  onChange={(shortcut) => {
-                    editMenuItem(
-                      selectedMenu,
-                      selectedChildPath,
-                      (item: ChildMenuItem) => {
-                        item.quickSelectKey = shortcut;
-                        return item;
-                      }
-                    );
-                  }}
-                />
-              ) : null
-            }
 
-            {
-              // For all other items, we show the workflow editor.
-              !isRoot && selectedItem ? <WorkflowEditor /> : null
-            }
-          </div>
-        </Scrollbox>
-        {!isRoot && (
-          <div className={classes.floatingButton}>
-            <Button
-              isGrouped
-              icon={<TbCopy />}
-              size="large"
-              tooltip={i18next.t('settings.duplicate-menu-item')}
-              variant="floating"
-              onClick={() => {
-                duplicateMenuItem(selectedMenu, selectedChildPath);
-              }}
-            />
-            <Button
-              isGrouped
-              icon={<TbTrash />}
-              size="large"
-              tooltip={i18next.t('settings.delete-menu-item')}
-              variant="floating"
-              onClick={() => {
-                deleteMenuItem(selectedMenu, selectedChildPath);
-                selectParent();
-              }}
-            />
-          </div>
-        )}
+        {isRoot ? (
+          <Scrollbox>
+            <div className={classes.menuProperties}>
+              {getShortcutPicker()}
+              <TagInput
+                info={i18next.t('settings.tags-info')}
+                label={i18next.t('settings.tags')}
+                tags={menuTags}
+                onChange={(newTags) => {
+                  editMenu(selectedMenu, (menu) => {
+                    menu.tags = newTags;
+                    return menu;
+                  });
+                  setMenuTags(newTags);
+                }}
+              />
+              <MenuBehavior />
+              <MenuConditions />
+            </div>
+          </Scrollbox>
+        ) : null}
+        {!isRoot && selectedItem ? (
+          <>
+            <div className={classes.itemProperties}>
+              <ShortcutPicker
+                info={i18next.t('settings.quick-select-key-info')}
+                initialValue={selectedItem.quickSelectKey || ''}
+                label={i18next.t('settings.quick-select-key-label')}
+                mode="key-names"
+                placeholder={
+                  itemIndex < 9 ? `${itemIndex + 1}` : i18next.t('settings.not-bound')
+                }
+                recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
+                useModifiers={false}
+                onChange={(shortcut) => {
+                  editMenuItem(selectedMenu, selectedChildPath, (item: ChildMenuItem) => {
+                    item.quickSelectKey = shortcut;
+                    return item;
+                  });
+                }}
+              />
+            </div>
+            <WorkflowEditor />
+            <div className={classes.floatingButton}>
+              <Button
+                isGrouped
+                icon={<TbCopy />}
+                size="large"
+                tooltip={i18next.t('settings.duplicate-menu-item')}
+                variant="floating"
+                onClick={() => {
+                  duplicateMenuItem(selectedMenu, selectedChildPath);
+                }}
+              />
+              <Button
+                isGrouped
+                icon={<TbTrash />}
+                size="large"
+                tooltip={i18next.t('settings.delete-menu-item')}
+                variant="floating"
+                onClick={() => {
+                  deleteMenuItem(selectedMenu, selectedChildPath);
+                  selectParent();
+                }}
+              />
+            </div>
+          </>
+        ) : null}
       </div>
     </>
   );

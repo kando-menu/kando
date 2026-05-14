@@ -382,7 +382,6 @@
             "description": "Contains other menu items."
         },
         "text": {
-            "placeholder": "Insert any text…",
             "tip-1": "This action uses your clipboard to paste the text. After using the action, the clipboard will contain the text."
         },
         "uri": {
@@ -400,15 +399,12 @@
             "inhibit-shortcuts-info": "Disables all Kando shortcuts while this workflow is being executed. This prevents any simulated key events from accidentally triggering other menu shortcuts.",
             "inhibit-shortcuts": "Disable shortcuts"
         },
-        "set-clipboard": {
-            "placeholder": "menu-items.set-clipboard.placeholder"
-        },
-        "open-settings": {
-            "description": "menu-items.open-settings.description"
-        },
         "delay": {
             "duration-info": "The workflow execution will be delayed by this amount of time.",
             "duration-label": "Seconds"
+        },
+        "clipboard": {
+            "placeholder": "Insert any text…"
         }
     },
     "achievements": {
@@ -596,7 +592,7 @@
             "description": "Launch apps or scripts."
         },
         "open-menu": {
-            "name": "Redirect",
+            "name": "Open Menu",
             "description": "Opens another menu."
         },
         "open-settings": {
