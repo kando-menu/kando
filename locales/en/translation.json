@@ -322,15 +322,15 @@
             "add-action": "Add Action",
             "select-workflow": {
                 "tooltip": "This workflow will be executed when the item is selected.",
-                "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button below to add actions to the selection workflow!"
+                "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to the selection workflow!"
             },
             "hover-workflow": {
                 "tooltip": "This workflow will be executed when the item is hovered.",
-                "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button below to add actions to the hover workflow!"
+                "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to the hover workflow!"
             },
             "open-workflow": {
                 "tooltip": "This workflow will be executed when the submenu is opened.",
-                "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button below to add actions to the open workflow!"
+                "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button above to add actions to the open workflow!"
             }
         }
     },
@@ -394,7 +394,7 @@
             "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
         },
         "common": {
-            "delayed-option-info": "Useful if the workflow targets a window that needs to be focused.",
+            "delayed-option-info": "The workflow will only start after the menu is hidden. This is useful if the workflow targets a window that needs to be focused.",
             "delayed-option": "Wait for fade-out animation",
             "inhibit-shortcuts-info": "Disables all Kando shortcuts while this workflow is being executed. This prevents any simulated key events from accidentally triggering other menu shortcuts.",
             "inhibit-shortcuts": "Disable shortcuts"

@@ -16,7 +16,7 @@ import { TbClick, TbPointer } from 'react-icons/tb';
 import * as classes from './WorkflowEditor.module.scss';
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 
-import { Button, Checkbox, Scrollbox } from '../common';
+import { Button, Scrollbox } from '../common';
 import { SelectWorkflow, HoverWorkflow, ChildMenuItem } from '../../../common';
 import ActionList from './ActionList';
 
@@ -116,32 +116,6 @@ export default function WorkflowEditor() {
     return (
       <div key={`workflow-${workflowType}`} className={classes.workflow}>
         <Scrollbox>
-          {currentWorkflow && 'waitForFadeout' in currentWorkflow ? (
-            <Checkbox
-              info={i18next.t('menu-items.common.delayed-option-info')}
-              initialValue={currentWorkflow.waitForFadeout}
-              label={i18next.t('menu-items.common.delayed-option')}
-              onChange={(value) => {
-                updateWorkflow(workflowType, {
-                  ...currentWorkflow,
-                  waitForFadeout: value,
-                });
-              }}
-            />
-          ) : null}
-          {currentWorkflow && 'inhibitShortcuts' in currentWorkflow ? (
-            <Checkbox
-              info={i18next.t('menu-items.common.inhibit-shortcuts-info')}
-              initialValue={currentWorkflow.inhibitShortcuts}
-              label={i18next.t('menu-items.common.inhibit-shortcuts')}
-              onChange={(value) => {
-                updateWorkflow(workflowType, {
-                  ...currentWorkflow,
-                  inhibitShortcuts: value,
-                });
-              }}
-            />
-          ) : null}
           <ActionList
             emptyHint={workflowMeta[workflowType].emptyHint}
             workflow={currentWorkflow}

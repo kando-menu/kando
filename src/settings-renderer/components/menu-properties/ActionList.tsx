@@ -16,7 +16,7 @@ import i18next from 'i18next';
 import * as classes from './ActionList.module.scss';
 const cx = classNames.bind(classes);
 
-import { Button, Note, ThemedIcon } from '../common';
+import { Button, Checkbox, Note, ThemedIcon } from '../common';
 import { TbPlus, TbTrash } from 'react-icons/tb';
 import {
   SelectWorkflow,
@@ -184,6 +184,45 @@ export default function ActionList(props: Props) {
   return (
     <div className={classes.actionListContainer}>
       <div ref={animatedList} className={classes.actionList}>
+        <div
+          key="workflow-options"
+          className={cx({
+            actionItem: true,
+          })}>
+          <div className={classes.actionItemHeader}>
+            {/* <ThemedIcon name={typeMeta.icon} size={16} theme={typeMeta.iconTheme} /> */}
+            <div style={{ flexGrow: 1 }}>Select Workflow</div>
+          </div>
+          <div className={classes.actionItemContent}>
+            {props.workflow && 'waitForFadeout' in props.workflow ? (
+              <Checkbox
+                info={i18next.t('menu-items.common.delayed-option-info')}
+                initialValue={props.workflow.waitForFadeout}
+                label={i18next.t('menu-items.common.delayed-option')}
+                onChange={(value) => {
+                  props.onUpdateWorkflow({
+                    ...props.workflow,
+                    waitForFadeout: value,
+                  });
+                }}
+              />
+            ) : null}
+            {props.workflow && 'inhibitShortcuts' in props.workflow ? (
+              <Checkbox
+                info={i18next.t('menu-items.common.inhibit-shortcuts-info')}
+                initialValue={props.workflow.inhibitShortcuts}
+                label={i18next.t('menu-items.common.inhibit-shortcuts')}
+                onChange={(value) => {
+                  props.onUpdateWorkflow({
+                    ...props.workflow,
+                    inhibitShortcuts: value,
+                  });
+                }}
+              />
+            ) : null}
+          </div>
+        </div>
+
         {displayedActions.map((action) => renderAction(action))}
 
         <Button
