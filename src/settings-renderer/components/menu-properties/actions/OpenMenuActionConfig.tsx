@@ -10,25 +10,31 @@
 
 import React from 'react';
 
-import { useAppState, useMenuSettings, getSelectedChild } from '../../../state';
+import { useMenuSettings } from '../../../state/menu-settings';
 import { Dropdown } from '../../common';
-import { ItemData } from '../../../../common/item-types/redirect-item-type';
+import { OpenMenuAction } from '../../../../common';
+
+type Props = {
+  /** The action to configure. */
+  readonly action: OpenMenuAction;
+
+  /** Function to call when the action changes. */
+  readonly onUpdateAction: (action: OpenMenuAction) => void;
+
+  /** Function to call when the container menu item should be modified. */
+  readonly onUpdateItem: (info: {
+    name?: string;
+    icon?: string;
+    iconTheme?: string;
+  }) => void;
+};
 
 /**
- * The configuration component for redirect items is primarily a text input field for the
- * redirect.
+ * The configuration component for open-menu actions is primarily a text input field for
+ * the redirect.
  */
-export function RedirectItemConfig() {
+export function OpenMenuActionConfig(props: Props) {
   const menus = useMenuSettings((state) => state.menus);
-  const selectedMenu = useAppState((state) => state.selectedMenu);
-  const selectedChildPath = useAppState((state) => state.selectedChildPath);
-  const editMenuItem = useMenuSettings((state) => state.editMenuItem);
-  const { selectedItem } = getSelectedChild(menus, selectedMenu, selectedChildPath);
-
-  // Sanity check. Should never happen, but just in case.
-  if (!selectedItem || selectedItem.type !== 'redirect') {
-    return null;
-  }
 
   // Assemble a list of all existing menu names.
   const menuNames = menus.map((menu) => menu.root.name);
@@ -36,20 +42,26 @@ export function RedirectItemConfig() {
     return { value: name, label: name };
   });
 
-  const data = selectedItem.data as ItemData;
-
   return (
     <Dropdown
-      initialValue={data.menu}
+      initialValue={props.action.menu}
       options={options}
       onChange={(menuName) => {
         const menu = menus.find((menu) => menu.root.name === menuName);
-        editMenuItem(selectedMenu, selectedChildPath, (item) => {
-          item.name = menu?.root.name || '';
-          item.icon = menu?.root.icon || '';
-          item.iconTheme = menu?.root.iconTheme || '';
-          (item.data as ItemData).menu = menuName;
-          return item;
+
+        if (!menu) {
+          return;
+        }
+
+        props.onUpdateAction({
+          ...props.action,
+          menu: menu.root.name,
+        });
+
+        props.onUpdateItem({
+          name: menu.root.name,
+          icon: menu.root.icon,
+          iconTheme: menu.root.iconTheme,
         });
       }}
     />

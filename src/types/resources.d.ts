@@ -314,7 +314,6 @@ export default interface Resources {
               "title": "Achievements",
               "xp": "XP"
           },
-          "action-no-config": "This action has no configuration.",
           "add-collection-tooltip": "Create a new menu collection. Use collections to group your menus by tags!",
           "add-menu-item-hint": "Drag this item to add it to the menu above!",
           "add-menu-items": "Add Menu Items",
@@ -342,7 +341,6 @@ export default interface Resources {
           "centered-mode": "Centered Mode",
           "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
           "create-menu-button": "New menu",
-          "delete-action": "Delete Action",
           "delete-menu": "Delete menu",
           "delete-menu-item": "Delete menu item",
           "duplicate-menu": "Duplicate menu",
@@ -613,7 +611,7 @@ export default interface Resources {
               "start-countdown": "Start countdown"
           },
           "workflow-editor": {
-              "add-action": "settings.workflow-editor.add-action",
+              "add-action": "Add Action",
               "hover-workflow": {
                   "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button below to add actions to the hover workflow!",
                   "tooltip": "This workflow will be executed when the item is hovered."

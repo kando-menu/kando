@@ -26,6 +26,7 @@ import {
 } from '../../../common';
 import ActionPicker from './ActionPicker';
 import { ensureUniqueKeys } from '../../utils';
+import { getConfigComponent } from './actions';
 
 type Props = {
   /** The empty hint text to display when the workflow has no actions. */
@@ -36,6 +37,13 @@ type Props = {
 
   /** Callback to update the workflow. */
   readonly onUpdateWorkflow: (workflow: SelectWorkflow | HoverWorkflow) => void;
+
+  /** Function to call when the container menu item should be modified. */
+  readonly onUpdateItem: (info: {
+    name?: string;
+    icon?: string;
+    iconTheme?: string;
+  }) => void;
 };
 
 /**
@@ -117,7 +125,7 @@ export default function ActionList(props: Props) {
       props.onUpdateWorkflow({
         ...props.workflow,
         actions: newActions,
-      } as SelectWorkflow | HoverWorkflow);
+      });
     }
 
     setDragIndex(null);
@@ -131,6 +139,19 @@ export default function ActionList(props: Props) {
   }) => {
     const { action, index, key } = actionWrapper;
     const typeMeta = ActionTypeRegistry.getInstance().getMetadata(action.type);
+
+    const configWidget = getConfigComponent(
+      action,
+      (updatedAction) => {
+        const newActions = [...actions];
+        newActions[index] = updatedAction;
+        props.onUpdateWorkflow({
+          ...props.workflow,
+          actions: newActions,
+        });
+      },
+      props.onUpdateItem
+    );
     return (
       <div
         key={key}
@@ -149,11 +170,13 @@ export default function ActionList(props: Props) {
           <Button
             icon={<TbTrash />}
             size="small"
-            variant="floating"
+            variant="invisible"
             onClick={() => handleDeleteAction(index)}
           />
         </div>
-        <div className={classes.actionItemContent}>Content</div>
+        {configWidget ? (
+          <div className={classes.actionItemContent}>{configWidget}</div>
+        ) : null}
       </div>
     );
   };
@@ -161,7 +184,11 @@ export default function ActionList(props: Props) {
   return (
     <div className={classes.actionListContainer}>
       <div ref={animatedList} className={classes.actionList}>
-        {displayedActions.length === 0 && <Note isCentered>{props.emptyHint}</Note>}
+        {displayedActions.length === 0 && (
+          <Note isCentered marginTop={16}>
+            {props.emptyHint}
+          </Note>
+        )}
         {displayedActions.map((action) => renderAction(action))}
       </div>
 

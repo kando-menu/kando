@@ -318,9 +318,6 @@
             "countdown_other": "Selecting in {{count}} seconds…",
             "confirm": "Use this value"
         },
-      
-        "action-no-config": "This action has no configuration.",
-        "delete-action": "Delete Action",
         "workflow-editor": {
             "add-action": "Add Action",
             "select-workflow": {
@@ -398,9 +395,9 @@
             "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
         },
         "common": {
-            "delayed-option-info": "Useful if the action targets a window that needs to be focused.",
+            "delayed-option-info": "Useful if the workflow targets a window that needs to be focused.",
             "delayed-option": "Wait for fade-out animation",
-            "inhibit-shortcuts-info": "Disables all Kando shortcuts while the hotkey or macro is being simulated. This prevents the simulated input from accidentally triggering other menu shortcuts.",
+            "inhibit-shortcuts-info": "Disables all Kando shortcuts while this workflow is being executed. This prevents any simulated key events from accidentally triggering other menu shortcuts.",
             "inhibit-shortcuts": "Disable shortcuts"
         },
         "set-clipboard": {
@@ -410,8 +407,8 @@
             "description": "menu-items.open-settings.description"
         },
         "delay": {
-            "duration-info": "menu-items.delay.duration-info",
-            "duration-label": "menu-items.delay.duration-label"
+            "duration-info": "The workflow execution will be delayed by this amount of time.",
+            "duration-label": "Seconds"
         }
     },
     "achievements": {

@@ -16,7 +16,7 @@ import { TbClick, TbPointer } from 'react-icons/tb';
 import * as classes from './WorkflowEditor.module.scss';
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 
-import { Button } from '../common';
+import { Button, Checkbox } from '../common';
 import { SelectWorkflow, HoverWorkflow, ChildMenuItem } from '../../../common';
 import ActionList from './ActionList';
 
@@ -110,6 +110,62 @@ export default function WorkflowEditor() {
     });
   };
 
+  const renderWorkflowContent = (workflowType: 'select' | 'hover' | 'open') => {
+    const currentWorkflow = getCurrentWorkflowForItem(selectedItem, workflowType);
+
+    return (
+      <div key={`workflow-${workflowType}`} className={classes.workflow}>
+        {currentWorkflow && 'waitForFadeout' in currentWorkflow ? (
+          <Checkbox
+            info={i18next.t('menu-items.common.delayed-option-info')}
+            initialValue={currentWorkflow.waitForFadeout}
+            label={i18next.t('menu-items.common.delayed-option')}
+            onChange={(value) => {
+              updateWorkflow(workflowType, {
+                ...currentWorkflow,
+                waitForFadeout: value,
+              });
+            }}
+          />
+        ) : null}
+        {currentWorkflow && 'inhibitShortcuts' in currentWorkflow ? (
+          <Checkbox
+            info={i18next.t('menu-items.common.inhibit-shortcuts-info')}
+            initialValue={currentWorkflow.inhibitShortcuts}
+            label={i18next.t('menu-items.common.inhibit-shortcuts')}
+            onChange={(value) => {
+              updateWorkflow(workflowType, {
+                ...currentWorkflow,
+                inhibitShortcuts: value,
+              });
+            }}
+          />
+        ) : null}
+        <ActionList
+          emptyHint={workflowMeta[workflowType].emptyHint}
+          workflow={currentWorkflow}
+          onUpdateItem={(info) => {
+            editMenuItem(selectedMenu, selectedChildPath, (item) => {
+              if (info.name) {
+                item.name = info.name;
+              }
+              if (info.icon) {
+                item.icon = info.icon;
+              }
+              if (info.iconTheme) {
+                item.iconTheme = info.iconTheme;
+              }
+              return item;
+            });
+          }}
+          onUpdateWorkflow={(updatedWorkflow) => {
+            updateWorkflow(workflowType, updatedWorkflow);
+          }}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className={classes.workflowEditor}>
       {/* Workflow type selector buttons */}
@@ -117,6 +173,7 @@ export default function WorkflowEditor() {
         {workflowTypes.map((workflowType, index) => (
           <Button
             key={workflowType}
+            isGrouped
             icon={workflowMeta[workflowType].icon}
             isPressed={selectedWorkflow === index}
             size="large"
@@ -131,21 +188,10 @@ export default function WorkflowEditor() {
       <div
         className={classes.workflowSlider}
         style={{
-          width: `calc(100% * ${workflowTypes.length} + ${50 * (workflowTypes.length - 1)}px)`, // Account for gap between items
           gap: '50px',
-          transform: `translateX(calc(-${selectedWorkflow * (100 / workflowTypes.length)}% - ${(selectedWorkflow * 50) / 2}px))`, // Account for gap between items
+          transform: `translateX(calc(-${selectedWorkflow * 100}% - ${selectedWorkflow * 50}px))`, // Account for gap between items
         }}>
-        {workflowTypes.map((workflowType) => (
-          <div key={`workflow-${workflowType}`} className={classes.workflow}>
-            <ActionList
-              emptyHint={workflowMeta[workflowType].emptyHint}
-              workflow={getCurrentWorkflowForItem(selectedItem, workflowType)}
-              onUpdateWorkflow={(updatedWorkflow) => {
-                updateWorkflow(workflowType, updatedWorkflow);
-              }}
-            />
-          </div>
-        ))}
+        {workflowTypes.map((workflowType) => renderWorkflowContent(workflowType))}
       </div>
     </div>
   );

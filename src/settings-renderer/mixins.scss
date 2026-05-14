@@ -106,13 +106,13 @@
   box-shadow: 0 2px 4px light-dark(rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.2));
   border: 1.5px solid
     light-dark(
-      color.adjust($base-light, $lightness: -5%),
-      color.adjust($base-dark, $lightness: -5%)
+      color.adjust($base-light, $lightness: -10%),
+      color.adjust($base-dark, $lightness: -10%)
     );
 
   &:not(.selected):hover {
     background-color: light-dark(
-      color.adjust($base-light, $lightness: -5%),
+      color.adjust($base-light, $lightness: -3%),
       color.adjust($base-dark, $lightness: 10%)
     );
   }

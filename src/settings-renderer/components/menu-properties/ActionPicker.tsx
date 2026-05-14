@@ -42,6 +42,40 @@ export default function ActionPicker(props: Props) {
     props.onSelect(metadata.createAction());
   };
 
+  const tips = [
+    i18next.t('menu-items.file.tip-1'),
+    i18next.t('menu-items.hotkey.tip-1'),
+    i18next.t('menu-items.hotkey.tip-2'),
+    i18next.t('menu-items.hotkey.tip-3', {
+      link: 'https://kando.menu/valid-keynames/',
+    }),
+    i18next.t('menu-items.command.tip-1'),
+    i18next.t('menu-items.command.tip-2'),
+    i18next.t('menu-items.command.tip-3'),
+    i18next.t('menu-items.command.tip-4'),
+    i18next.t('menu-items.command.tip-5'),
+    i18next.t('menu-items.command.tip-6', {
+      link: 'https://kando.menu/item-run-command/',
+    }),
+    i18next.t('menu-items.macro.tip-1'),
+    i18next.t('menu-items.macro.tip-2'),
+    i18next.t('menu-items.uri.tip-1'),
+    i18next.t('menu-items.uri.tip-2'),
+    i18next.t('menu-items.uri.tip-3'),
+    i18next.t('menu-items.uri.tip-4'),
+    i18next.t('menu-items.uri.tip-5'),
+    i18next.t('menu-items.uri.tip-6'),
+    i18next.t('menu-items.text.tip-1'),
+    i18next.t('menu-items.settings.tip-1'),
+    i18next.t('menu-items.submenu.tip-1'),
+    i18next.t('menu-items.submenu.tip-2'),
+    i18next.t('menu-items.submenu.tip-3'),
+    i18next.t('menu-items.submenu.tip-4'),
+    i18next.t('menu-items.submenu.tip-5'),
+    i18next.t('menu-items.submenu.tip-6'),
+    i18next.t('menu-items.submenu.tip-7'),
+  ];
+
   return (
     <Modal
       isVisible={props.isVisible}

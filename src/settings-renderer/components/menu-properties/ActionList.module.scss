@@ -29,26 +29,21 @@
   margin-bottom: 16px;
 
   &:has(.dragging) .actionItem * {
-    pointer-events: none;
+    pointer-events: none !important;
   }
 }
 
 .actionItem {
-  @include background-transition;
-
   position: relative;
-  background-color: light-dark(
-    color.adjust($base-light, $lightness: -5%),
-    color.adjust($base-dark, $lightness: 5%)
-  );
+  background-color: light-dark($base-light, color.adjust($base-dark, $lightness: 5%));
   border-radius: 8px;
   padding: 0 3px 3px 3px;
 
   box-shadow: 0 2px 4px light-dark(rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.2));
   border: 1.5px solid
     light-dark(
-      color.adjust($base-light, $lightness: -5%),
-      color.adjust($base-dark, $lightness: -5%)
+      color.adjust($base-light, $lightness: -10%),
+      color.adjust($base-dark, $lightness: -10%)
     );
 
   // A low opacity seems to be required. Setting it to zero hides also the dragged copy
@@ -66,7 +61,11 @@
     transform: translateX(-50%);
     border-width: 12px;
     border-style: solid;
-    border-color: $widget-normal transparent transparent transparent;
+    border-color: light-dark(
+        color.adjust($base-light, $lightness: -10%),
+        color.adjust($base-dark, $lightness: 5%)
+      )
+      transparent transparent transparent;
   }
 }
 
@@ -81,8 +80,8 @@
 }
 
 .actionItemContent {
-  padding: 8px;
-  border-radius: 6px;
-
-  background-color: $window-background;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 8px 8px 8px;
 }

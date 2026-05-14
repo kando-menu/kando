@@ -15,42 +15,29 @@ import { Spinbutton } from '../../common';
 import { DelayAction } from '../../../../common';
 
 type Props = {
-  /**
-   * The delay action to configure. If not provided, the component will use the selected
-   * menu item from the state.
-   */
-  readonly action?: DelayAction;
+  /** The action to configure. */
+  readonly action: DelayAction;
 
-  /**
-   * Function to call when the action changes. If not provided, the component will use
-   * editMenuItem from state.
-   */
-  readonly onChange?: (action: DelayAction) => void;
+  /** Function to call when the action changes. */
+  readonly onUpdateAction: (action: DelayAction) => void;
 };
 
 /**
  * The configuration component for delay actions is a spinbutton to set the duration in
  * seconds.
  */
-export function DelayActionConfig({ action, onChange }: Props) {
-  // If action and onChange are provided, use them directly (workflow context)
-  const finalAction = action || ({} as DelayAction);
-  const finalOnChange =
-    onChange ||
-    (() => {
-      // No-op fallback
-    });
-
+export function DelayActionConfig(props: Props) {
   return (
     <Spinbutton
       info={i18next.t('menu-items.delay.duration-info')}
-      initialValue={finalAction.duration || 1}
+      initialValue={props.action.duration}
       label={i18next.t('menu-items.delay.duration-label')}
+      max={60}
       min={0}
       step={0.1}
       onChange={(value) => {
-        finalOnChange({
-          ...finalAction,
+        props.onUpdateAction({
+          ...props.action,
           duration: value,
         });
       }}

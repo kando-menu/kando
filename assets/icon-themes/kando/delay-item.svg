@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
+
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   sodipodi:docname="delay-item.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.8671875"
+     inkscape:cx="-81.138075"
+     inkscape:cy="80.334728"
+     inkscape:window-width="3840"
+     inkscape:window-height="2123"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" /><defs
+     id="defs1" /><g
+     fill="#222222"
+     id="g5"
+     transform="matrix(11.57701,0,0,11.57701,35.161278,35.434183)"
+     style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.0863781;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"><path
+       d="M 8.019531,-0.00390625 C 4.660156,-0.00390625 1.652344,2.101562 0.5,5.257812 -0.648438,8.417969 0.304688,11.964844 2.875,14.125 c 2.574219,2.160156 6.234375,2.480469 9.144531,0.796875 l -1,-1.730469 C 8.832031,14.453125 6.097656,14.214844 4.160156,12.589844 2.226562,10.96875 1.515625,8.316406 2.378906,5.945312 3.246094,3.570312 5.492188,1.996094 8.019531,1.996094 Z m 0,0"
+       id="path1-3"
+       style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.0863781;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000" /><path
+       d="M 10.089844,0.269531 9.570312,2.203125 c 1.019532,0.269531 1.945313,0.804687 2.691407,1.550781 L 13.675781,2.339844 C 12.683594,1.347656 11.445312,0.632812 10.089844,0.269531 Z m 0,0"
+       id="path2"
+       style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.0863781;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000" /><path
+       d="m 8.019531,4.996094 c -0.550781,0 -1,0.449218 -1,1 v 2 c 0,0.265625 0.105469,0.519531 0.292969,0.707031 l 2,2 c 0.390625,0.390625 1.023438,0.390625 1.414062,0 0.390626,-0.390625 0.390626,-1.023437 0,-1.414063 L 9.019531,7.582031 V 5.996094 c 0,-0.550782 -0.449219,-1 -1,-1 z m 0,0"
+       id="path3"
+       style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.0863781;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000" /><path
+       d="m 14.945312,3.996094 -1.730468,1 c 0.527344,0.914062 0.804687,1.945312 0.804687,3 h 2 c 0,-1.402344 -0.371093,-2.785156 -1.074219,-4 z m 0,0"
+       id="path4"
+       style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.0863781;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000" /><path
+       d="m 13.8125,9.546875 c -0.269531,1.019531 -0.804688,1.945313 -1.550781,2.691406 l 1.414062,1.414063 c 0.992188,-0.992188 1.707031,-2.230469 2.070313,-3.585938 z m 0,0"
+       id="path5-6"
+       style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.0863781;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000" /></g></svg>

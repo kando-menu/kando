@@ -10,61 +10,78 @@
 
 import React from 'react';
 
-import { getSubmenuMenuItemTips } from './submenu-item-config';
-import { CommandItemConfig, getCommandItemTips } from './command-item-config';
-import { DelayActionConfig } from './delay-action-config';
-import { FileItemConfig, getFileItemTips } from './file-item-config';
-import { HotkeyItemConfig, getHotkeyItemTips } from './hotkey-item-config';
-import { MacroItemConfig, getMacroItemTips } from './macro-item-config';
-import { OpenSettingsActionConfig } from './open-settings-action-config';
-import { SetClipboardActionConfig } from './set-clipboard-action-config';
-import { TextItemConfig, getTextItemTips } from './text-item-config';
-import { UriItemConfig, getUriItemTips } from './uri-item-config';
-import { RedirectItemConfig } from './redirect-item-config';
-import { getSettingsItemTips } from './settings-item-config';
+import { DelayActionConfig } from './DelayActionConfig';
+import { ExecuteCommandActionConfig } from './ExecuteCommandActionConfig';
+import { ExecuteMacroActionConfig } from './ExecuteMacroActionConfig';
+import { OpenFileActionConfig } from './OpenFileActionConfig';
+import { OpenMenuActionConfig } from './OpenMenuActionConfig';
+import { OpenURIActionConfig } from './OpenURIActionConfig';
+import { SetClipboardActionConfig } from './SetClipboardActionConfig';
+import { SimulateHotkeyActionConfig } from './SimulateHotkeyActionConfig';
+import { WorkflowAction } from '../../../../common';
 
 /**
- * This method returns a config component for the given menu item type.
+ * Returns a config component for the given action.
  *
- * @param type The menu item type for which the config component should be created.
- * @returns The config component for the given menu item.
+ * @param action The action for which the config component should be created.
+ * @param onUpdateAction Callback when the action is modified.
+ * @param onUpdateItem Callback when the container menu item should be modified.
+ * @returns The config component for the given action, or null if the type is unknown.
  */
-export function getConfigComponent(type: string): React.ReactElement {
+export function getConfigComponent(
+  action: WorkflowAction,
+  onUpdateAction: (action: WorkflowAction) => void,
+  onUpdateItem: (info: { name?: string; icon?: string; iconTheme?: string }) => void
+): React.ReactElement | null {
+  if (action.type === 'delay') {
+    return <DelayActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
+  if (action.type === 'execute-command') {
+    return (
+      <ExecuteCommandActionConfig
+        action={action}
+        onUpdateAction={onUpdateAction}
+        onUpdateItem={onUpdateItem}
+      />
+    );
+  }
+
+  if (action.type === 'execute-macro') {
+    return <ExecuteMacroActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
+  if (action.type === 'open-file') {
+    return (
+      <OpenFileActionConfig
+        action={action}
+        onUpdateAction={onUpdateAction}
+        onUpdateItem={onUpdateItem}
+      />
+    );
+  }
+
+  if (action.type === 'open-menu') {
+    return (
+      <OpenMenuActionConfig
+        action={action}
+        onUpdateAction={onUpdateAction}
+        onUpdateItem={onUpdateItem}
+      />
+    );
+  }
+
+  if (action.type === 'open-uri') {
+    return <OpenURIActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
+  if (action.type === 'set-clipboard') {
+    return <SetClipboardActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
+  if (action.type === 'simulate-hotkey') {
+    return <SimulateHotkeyActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
   return null;
-
-  const components: Record<string, React.ReactElement> = {
-    command: <CommandItemConfig />,
-    delay: <DelayActionConfig />,
-    file: <FileItemConfig />,
-    hotkey: <HotkeyItemConfig />,
-    macro: <MacroItemConfig />,
-    text: <TextItemConfig />,
-    uri: <UriItemConfig />,
-    redirect: <RedirectItemConfig />,
-    ['open-settings']: <OpenSettingsActionConfig />,
-    ['set-clipboard']: <SetClipboardActionConfig />,
-  };
-
-  return components[type] || null;
-}
-
-/**
- * This method returns the tips for the given menu item type.
- *
- * @param type The menu item type for which the tips should be returned.
- * @returns The tips for the given menu item type.
- */
-export function getItemTips(type: string): string[] {
-  const tips: Record<string, string[]> = {
-    submenu: getSubmenuMenuItemTips(),
-    command: getCommandItemTips(),
-    file: getFileItemTips(),
-    hotkey: getHotkeyItemTips(),
-    macro: getMacroItemTips(),
-    text: getTextItemTips(),
-    uri: getUriItemTips(),
-    settings: getSettingsItemTips(),
-  };
-
-  return tips[type] || [];
 }
