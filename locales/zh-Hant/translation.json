@@ -142,7 +142,12 @@
             "windows-ink-workaround-info": "此選項會啟用一項相容性修正，解決在 Windows Ink 啟用時無法取得觸控筆位置的問題。將在開啟選單前增加 100 毫秒的延遲，因此若您不使用觸控筆，可停用此選項以加快選單開啟速度。",
             "windows-ink-workaround": "Windows Ink 相容性修正",
             "max-selection-radius-info": "若設為大於 0 的值，點擊此半徑以外的區域將關閉選單。預設為 0，表示不限制最大選取半徑。",
-            "max-selection-radius": "最大選取半徑"
+            "max-selection-radius": "最大選取半徑",
+            "interaction-modes": "互動模式",
+            "input-options": "輸入選項",
+            "learn-interaction-mode": "點擊[此處]({{link}})，深入了解 Kando 的互動模式！",
+            "backup-menus-note": "這將備份或還原您的所有選單。包含所有已設定的快捷鍵、選單佈局及收藏夾。",
+            "backup-settings-note": "這將備份或還原 Kando 的設定。包含所有一般設定及選單主題配置。"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 為您提供了一種獨特且高效的方式與電腦互動。",
@@ -208,7 +213,11 @@
             "preset-name-empty": "預設集名稱不可為空！",
             "preset-name-invalid": "預設集名稱只能包含英文字母、數字、連字號、底線與空格！",
             "preset-name-exists": "已存在相同名稱的預設集。",
-            "preset-name-placeholder": "例如：My Custom Colors"
+            "preset-name-placeholder": "例如：My Custom Colors",
+            "enable-menu-animations-info": "若停用，將關閉選單主題的所有轉場效果和大部分動畫。",
+            "enable-menu-animations": "選單動畫",
+            "enable-pointer-reactive-effects-info": "若停用，將關閉選單主題中根據當前指標位置產生的縮放或比例調整效果。",
+            "enable-pointer-reactive-effects": "指標互動效果"
         },
         "all-menus": "所有選單",
         "search-menus-placeholder": "搜尋選單…",

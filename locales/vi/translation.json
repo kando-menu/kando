@@ -123,7 +123,7 @@
             "gesture-pause-timeout": "Hết thời gian tạm dừng cử chỉ",
             "fixed-stroke-length-info": "Thông thường, các vật phẩm được chọn khi bạn dừng chuyển động hoặc rẽ. Nếu bạn đặt giá trị này thành giá trị lớn hơn 0, hành vi này sẽ thay đổi: Bây giờ các mục sẽ chỉ được chọn nếu bạn kéo một mục ra xa tâm. Mặc định là 0px.",
             "fixed-stroke-length": "Chiều dài hành trình cố định",
-            "backup-and-restore": "Sao lưu và Khôi phục",
+            "backup-and-restore": "Sao lưu & Khôi phục",
             "message": "Tất cả các menu và cài đặt Kando của bạn được lưu trữ trong hai tệp JSON mà bạn cũng có thể chỉnh sửa, chia sẻ hoặc sao lưu. Nhấp vào [đây]({{link}}) để mở thư mục lưu trữ các tập tin.",
             "backup-menus": "Sao lưu menu.json…",
             "backup-settings": "Sao lưu config.json…",
@@ -149,7 +149,17 @@
             "wlroots-pointer-get-timeout-default-behavior-info": "Xác định vị trí của con trỏ nếu không thể lấy được vị trí nào từ wlroots-based backends trong thời gian chờ đã định cấu hình.",
             "wlroots-pointer-get-timeout-default-behavior": "Vị trí dự phòng con trỏ",
             "center": "Trung tâm",
-            "previously-reported": "Đã báo cáo trước đây"
+            "previously-reported": "Đã báo cáo trước đây",
+            "windows-ink-workaround-info": "Điều này mang lại giải pháp thay thế cho sự cố không thể nhận được vị trí bút cảm ứng khi bật Windows Ink. Điều này gây ra độ trễ 100 mili giây trước khi mở menu, vì vậy nếu không sử dụng bút cảm ứng, bạn có thể tắt nó để mở menu nhanh hơn.",
+            "windows-ink-workaround": "Cách giải quyết của Windows-Ink",
+            "max-selection-radius-info": "Nếu được đặt thành giá trị lớn hơn 0, các nhấp chuột nằm ngoài bán kính này sẽ đóng menu. Mặc định là 0, nghĩa là không có bán kính lựa chọn tối đa.",
+            "max-selection-radius": "Bán kính lựa chọn tối đa",
+            "app-settings": "Cài đặt ứng dụng",
+            "interaction-modes": "Chế độ tương tác",
+            "input-options": "Tùy chọn đầu vào",
+            "learn-interaction-mode": "Tìm hiểu thêm về các chế độ tương tác của Kando [tại đây]({{link}})!",
+            "backup-menus-note": "Điều này sẽ sao lưu hoặc khôi phục tất cả các menu của bạn cùng một lúc. Điều này bao gồm tất cả các phím tắt, bố cục menu và bộ sưu tập menu đã định cấu hình của bạn.",
+            "backup-settings-note": "Thao tác này sẽ sao lưu hoặc khôi phục cài đặt của Kando, bao gồm tất cả cài đặt chung và cấu hình chủ đề menu của bạn."
         },
         "introduction-dialog": {
             "slide1-title": "Kando cung cấp một cách độc đáo và hiệu quả để tương tác với máy tính của bạn.",
@@ -203,7 +213,22 @@
             "get-themes-online": "Tải chủ đề trực tuyến",
             "create-your-own-themes": "Tạo chủ đề của riêng bạn",
             "open-theme-directory": "Mở thư mục chủ đề",
-            "author": "bởi {{author}}"
+            "author": "bởi {{author}}",
+            "save-preset-error-title": "Không lưu được giá trị đặt trước",
+            "save-preset-error-message": "Không lưu được màu đặt trước. Vui lòng kiểm tra xem thư mục có thể ghi được không. Lỗi: {{error}}",
+            "default-colors": "Màu mặc định",
+            "enable-menu-animations-info": "Nếu bị tắt, tất cả các chuyển đổi và hầu hết hoạt ảnh của chủ đề menu sẽ bị ngăn chặn.",
+            "enable-menu-animations": "Menu ảnh động",
+            "enable-pointer-reactive-effects-info": "Nếu bị tắt, một số hiệu ứng thu phóng hoặc chia tỷ lệ của chủ đề menu dựa trên vị trí con trỏ hiện tại sẽ bị ngăn chặn.",
+            "enable-pointer-reactive-effects": "Hiệu ứng phản ứng con trỏ",
+            "choose-preset": "Chọn cài đặt trước…",
+            "reload-presets": "Tải lại cài đặt trước",
+            "save-preset": "Lưu giá trị đặt trước",
+            "open-presets-directory": "Mở thư mục cài sẵn",
+            "preset-name-empty": "Tên đặt trước không được để trống!",
+            "preset-name-invalid": "Tên đặt trước chỉ có thể chứa các chữ cái, số, dấu gạch nối, dấu gạch dưới và dấu cách!",
+            "preset-name-exists": "Giá trị cài đặt trước có tên này đã tồn tại.",
+            "preset-name-placeholder": "ví dụ. Màu sắc tùy chỉnh của tôi"
         },
         "all-menus": "Tất cả menu",
         "search-menus-placeholder": "Tìm kiếm menu…",
@@ -292,7 +317,10 @@
         "import-menu-error-title": "Không thể nhập menu",
         "import-menu-error-message": "Không thể nhập tệp đã chọn. Nó không chứa menu xuất Kando hợp lệ.",
         "export-menu": "Xuất menu",
-        "import-menu": "Nhập menu"
+        "import-menu": "Nhập menu",
+        "quick-select-key-info": "Phím này cho phép bạn chọn nhanh mục menu.",
+        "quick-select-key-label": "Phím chọn nhanh",
+        "quick-select-key-recording": "Chọn phím…"
     },
     "menu-items": {
         "command": {
