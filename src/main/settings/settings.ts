@@ -10,6 +10,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
+import semver from 'semver';
 import chokidar, { FSWatcher } from 'chokidar';
 import lodash from 'lodash';
 
@@ -325,9 +326,33 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       // This feature was introduced in version 2.1.0, so we assume that if the version
       // field is not present, the settings file was created with an older version of
       // Kando and we need to create a backup.
-      const oldVersion = data.version || '2.0.0';
-      if (oldVersion !== version) {
+      const oldVersion = typeof data.version === 'string' ? data.version : '2.0.0';
+      const oldVersionParsed = semver.coerce(oldVersion);
+      const currentVersionParsed = semver.coerce(version);
+
+      // If parsing the version field fails for some reason, we will create a backup to
+      // be safe.
+      if (
+        !oldVersionParsed ||
+        !currentVersionParsed ||
+        semver.compare(oldVersionParsed, currentVersionParsed) !== 0
+      ) {
         this.createBackup(oldVersion, data);
+      }
+
+      // If the settings file was created with a newer version of Kando, we will not try
+      // to load it but this may fail. We show a warning notifying the user about this and
+      // try to load anyway.
+      if (
+        oldVersionParsed &&
+        currentVersionParsed &&
+        semver.compare(oldVersionParsed, currentVersionParsed) > 0
+      ) {
+        Notification.show({
+          title: `Possibly incompatible settings discovered!`,
+          message: `The ${this.options.name} file was created with a newer version of Kando. Loading may fail. A backup of the file has been created in the backups folder just to be safe.`,
+          type: 'info',
+        });
       }
 
       const { settings, didMigration } = this.options.load(data);
