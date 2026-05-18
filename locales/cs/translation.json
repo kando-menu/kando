@@ -378,7 +378,12 @@
             "open-theme-directory": "Otevřít adresář motivů",
             "no-accent-colors": "Toto téma nepodporuje zabarvení.",
             "selection-wedges-info": "Pokud povoleno a podporováno vybraným tématem, vybraná oblast menu bude zvýrazněna.",
-            "selection-wedges": "Nakreslete klín položky"
+            "selection-wedges": "Nakreslete klín položky",
+            "save-preset-error-title": "Uložení předvolby selhalo",
+            "save-preset-error-message": "Uložení předvolby barvy selhalo. Prosím zkontrolujte zda je adresář zapisovatelný. Chyba: {{error}}",
+            "default-colors": "Výchozí barvy",
+            "enable-menu-animations-info": "Pokud je zakázáno, bude zabráněno všem přechodům a většině animací menu motivu.",
+            "enable-menu-animations": "Menu Animace"
         },
         "not-bound": "Nepřiřazeno",
         "shortcut-id-label": "Zkratka ID",
