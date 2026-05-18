@@ -107,7 +107,7 @@
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.22.2",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.3",
     "typescript-plugin-css-modules": "^5.2.0",
     "ws": "^8.20.1",
