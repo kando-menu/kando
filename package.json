@@ -69,7 +69,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^17.6.0",
     "howler": "^2.2.4",
-    "i18next": "^25.8.13",
+    "i18next": "^26.2.0",
     "i18next-cli": "^1.57.0",
     "i18next-fs-backend": "^2.6.5",
     "immer": "^11.1.8",
