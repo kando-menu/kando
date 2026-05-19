@@ -443,7 +443,8 @@ export class Menu extends EventEmitter {
               ).toLocaleLowerCase();
               const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
 
-              if (quickSelectKey === eventKey) {
+              let numpadMatch = event.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD && "num" + quickSelectKey === eventKey;
+              if (quickSelectKey === eventKey || numpadMatch) {
                 this.selectItem(
                   child,
                   SelectionSource.eKeyboard,
