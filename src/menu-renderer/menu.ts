@@ -438,13 +438,18 @@ export class Menu extends EventEmitter {
           if (currentItem.children) {
             for (let i = 0; i < currentItem.children.length; i++) {
               const child = currentItem.children[i] as RenderedMenuItem;
-              const quickSelectKey = (
-                child.quickSelectKey || (i < 9 ? `${i + 1}` : '')
-              ).toLocaleLowerCase();
+
+              const selectionKeys = [];
+              if (child.quickSelectKey) {
+                selectionKeys.push(child.quickSelectKey.toLocaleLowerCase());
+              } else if (i < 9) {
+                selectionKeys.push(`${i + 1}`);
+                selectionKeys.push(`num${i + 1}`);
+              }
+
               const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
 
-              let numpadMatch = event.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD && "num" + quickSelectKey === eventKey;
-              if (quickSelectKey === eventKey || numpadMatch) {
+              if (selectionKeys.includes(eventKey)) {
                 this.selectItem(
                   child,
                   SelectionSource.eKeyboard,

@@ -31,6 +31,10 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - The styling of the settings dialog has been updated in various places to make it look more modern.
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
 
+### :bug: Fixed
+
+- Selecting menu items with the numpad keys. They now work the same as the normal number keys. Thanks to [@username1419](https://github.com/username1419) for this fix!
+
 ## [Kando 2.3.0](https://github.com/kando-menu/kando/releases/tag/v2.3.0)
 
 **Release Date:** 2026-04-18
