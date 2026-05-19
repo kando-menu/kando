@@ -12,6 +12,7 @@
   min-height: 0px; // This is important to make the scrollboxes work.
   padding-top: 24px;
   display: flex;
+  flex-grow: 1;
   position: relative;
   gap: 8px;
   flex-direction: column;
@@ -27,6 +28,7 @@
 .workflowSlider {
   min-height: 0px; // This is important to make the scrollboxes work.
   display: flex;
+  flex-grow: 1;
   transition: transform 0.3s ease-in-out;
 }
 
