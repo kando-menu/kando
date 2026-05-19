@@ -463,6 +463,27 @@ export class Menu extends EventEmitter {
         }
       }
 
+      if (
+        !keyHandled &&
+        (event.key === 'ArrowLeft' ||
+          event.key === 'ArrowUp' ||
+          event.key === 'ArrowRight' ||
+          event.key === 'ArrowDown')
+      ) {
+        this.changeHoveredItem(event.key);
+        keyHandled = true;
+      }
+
+      if (!keyHandled && event.key === 'Enter') {
+        if (this.hoveredItem) {
+          this.selectItem(
+            this.hoveredItem,
+            SelectionSource.eKeyboard,
+            this.latestInput.absolutePosition
+          );
+        }
+      }
+
       if (!keyHandled && event.key !== 'Escape') {
         this.pointerInput.onKeyDownEvent();
       }
@@ -770,6 +791,159 @@ export class Menu extends EventEmitter {
       );
     } else {
       this.cancel();
+    }
+  }
+
+  /**
+   * This will change the currently hovered item based on the given keyboard direction. It
+   * will check if there is a menu item in the given direction and hover it. If two items
+   * are at the same distance in the given direction (e.g. we are currently hovering the
+   * left-most item and press ArrowRight), we will hover the item on the other side of the
+   * menu (e.g. the right-most item).
+   *
+   * @param key The keyboard direction to change the hovered item to.
+   */
+  private changeHoveredItem(key: 'ArrowLeft' | 'ArrowUp' | 'ArrowRight' | 'ArrowDown') {
+    const currentItem = this.selectionChain[this.selectionChain.length - 1];
+    const parentItem =
+      this.selectionChain.length > 1
+        ? this.selectionChain[this.selectionChain.length - 2]
+        : null;
+
+    const direction = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowLeft: { x: -1, y: 0 },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowUp: { x: 0, y: -1 },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowRight: { x: 1, y: 0 },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowDown: { x: 0, y: 1 },
+    }[key];
+
+    // Helper lambda to move hover focus to the given item. We do this by simulating a
+    // pointer input at the position of the given item.
+    const hoverItem = (angle: number) => {
+      const centerPosition = this.getCenterItemPosition();
+      const distance = this.settings.minParentDistance;
+      const relativePosition = math.getDirection(angle, distance);
+      const absolutePosition = math.add(centerPosition, relativePosition);
+      this.latestInput = {
+        button: this.latestInput.button,
+        absolutePosition,
+        relativePosition,
+        distance,
+        angle,
+      };
+
+      console.log(this.latestInput);
+
+      this.redraw();
+    };
+
+    // Let's compile a list of selectable items. These are the child items and the parent
+    // item (if any).
+    const candidates: { item: RenderedMenuItem; angle: number; dot: number }[] = [];
+
+    if (currentItem.children) {
+      for (const child of currentItem.children) {
+        const childDir = math.getDirection(child.angle, 1);
+        const childDot = math.dot(direction, childDir);
+        candidates.push({
+          item: child as RenderedMenuItem,
+          angle: child.angle,
+          dot: childDot,
+        });
+      }
+    }
+
+    if (parentItem) {
+      const parentAngle = (currentItem.angle + 180) % 360;
+      const parentDir = math.getDirection(parentAngle, 1);
+      const parentDot = math.dot(direction, parentDir);
+      candidates.push({
+        item: parentItem,
+        angle: parentAngle,
+        dot: parentDot,
+      });
+    }
+
+    if (candidates.length === 0) {
+      return;
+    }
+
+    // Sort the items based on their angle.
+    candidates.sort((a, b) => {
+      if (a.angle < b.angle) {
+        return -1;
+      } else if (a.angle > b.angle) {
+        return 1;
+      }
+      return 0;
+    });
+
+    // First, we look for the "extreme" item in the given direction. For instance, if the
+    // direction is ArrowRight, we look for the right-most items.
+    let extremeItem = null;
+
+    for (const candidate of candidates) {
+      if (candidate.dot > Math.cos(math.toRadians(45))) {
+        if (!extremeItem) {
+          extremeItem = candidate;
+        } else {
+          const extremeDir = math.getDirection(extremeItem.angle, 1);
+          const extremeDot = math.dot(direction, extremeDir);
+
+          if (candidate.dot > extremeDot) {
+            extremeItem = candidate;
+          }
+        }
+      }
+    }
+
+    // If we have currently no hovered item or hover the center item, we simply hover the
+    // extreme item.
+    if ((!this.hoveredItem || this.hoveredItem === currentItem) && extremeItem) {
+      hoverItem(extremeItem.angle);
+      return;
+    }
+
+    // Then there is the case that we hover an item already which is mostly in the
+    // opposite direction. For instance, we hover one of the left-most items and press
+    // ArrowRight. In this case, we want to hover the right-most item.
+    if (this.hoveredItem && extremeItem) {
+      const oppositeDir = { x: -direction.x, y: -direction.y };
+      const hoveredDir = math.getDirection(this.hoveredItem.angle, 1);
+      const hoveredDot = math.dot(oppositeDir, hoveredDir);
+
+      if (hoveredDot > Math.cos(math.toRadians(20))) {
+        hoverItem(extremeItem.angle);
+        return;
+      }
+    }
+
+    // In any other case, we look for the item which is a neighbour of the currently
+    // hovered item which fits well to the given direction. There can be the case where
+    // no item matches. For instance, we hover the right-most item and press ArrowRight.
+    if (this.hoveredItem && this.hoveredItem !== currentItem && candidates.length > 1) {
+      const hoveredIndex = candidates.findIndex(({ item }) => item === this.hoveredItem);
+      const neighbourIndices = [
+        (hoveredIndex - 1 + candidates.length) % candidates.length,
+        (hoveredIndex + 1) % candidates.length,
+      ];
+
+      const neighbours = neighbourIndices.map((index) => candidates[index]);
+
+      const bestNeighbour = neighbours.reduce((best, { item, angle, dot }) => {
+        if (!best || dot > best.dot) {
+          return { item, angle, dot };
+        }
+        return best;
+      });
+
+      if (bestNeighbour.dot > candidates[hoveredIndex].dot) {
+        hoverItem(bestNeighbour.angle);
+      }
     }
   }
 

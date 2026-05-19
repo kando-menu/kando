@@ -41,6 +41,11 @@ export function getDistance(vec1: Vec2, vec2: Vec2): number {
   return getLength({ x: vec1.x - vec2.x, y: vec1.y - vec2.y });
 }
 
+/** This method returns the dot product of two vectors. */
+export function dot(vec1: Vec2, vec2: Vec2): number {
+  return vec1.x * vec2.x + vec1.y * vec2.y;
+}
+
 /** This method returns the distance of a point to a line segment defined by two points. */
 export function getDistanceToLineSegment(
   point: Vec2,
