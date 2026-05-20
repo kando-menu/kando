@@ -379,10 +379,7 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      if (
-        type === SelectionType.eParent ||
-        this.hoveredItem === this.centerItem.renderData.parent
-      ) {
+      if (type === SelectionType.eParent || this.hoveredItem === this.centerItem) {
         this.selectParent(source, coords);
         return;
       }
