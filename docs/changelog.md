@@ -23,13 +23,18 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :tada: Added
 
-- A redesigned General-Settings dialog with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
-- New options in the menu-themes dialog to disable the animation of menu items. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
+- Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
+- A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
+- New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
 
 ### :wrench: Changed
 
 - The styling of the settings dialog has been updated in various places to make it look more modern.
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
+
+### :bug: Fixed
+
+- Selecting menu items with the numpad keys. They now work the same as the normal number keys. Thanks to [@username1419](https://github.com/username1419) for this fix!
 
 ## [Kando 2.3.0](https://github.com/kando-menu/kando/releases/tag/v2.3.0)
 

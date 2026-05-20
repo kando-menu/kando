@@ -379,7 +379,10 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      if (type === SelectionType.eParent) {
+      if (
+        type === SelectionType.eParent ||
+        this.hoveredItem === this.centerItem.renderData.parent
+      ) {
         this.selectParent(source, coords);
         return;
       }
@@ -443,12 +446,18 @@ export class Menu extends EventEmitter {
           if (this.centerItem.type === 'submenu') {
             for (let i = 0; i < this.centerItem.children.length; i++) {
               const child = this.centerItem.children[i];
-              const quickSelectKey = (
-                child.quickSelectKey || (i < 9 ? `${i + 1}` : '')
-              ).toLocaleLowerCase();
+
+              const selectionKeys = [];
+              if (child.quickSelectKey) {
+                selectionKeys.push(child.quickSelectKey.toLocaleLowerCase());
+              } else if (i < 9) {
+                selectionKeys.push(`${i + 1}`);
+                selectionKeys.push(`num${i + 1}`);
+              }
+
               const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
 
-              if (quickSelectKey === eventKey) {
+              if (selectionKeys.includes(eventKey)) {
                 this.selectItem(
                   child,
                   SelectionSource.eKeyboard,
@@ -458,6 +467,40 @@ export class Menu extends EventEmitter {
                 break;
               }
             }
+          }
+        }
+      }
+
+      if (
+        !keyHandled &&
+        (event.key === 'ArrowLeft' ||
+          event.key === 'ArrowUp' ||
+          event.key === 'ArrowRight' ||
+          event.key === 'ArrowDown')
+      ) {
+        this.changeHoveredItem(event.key);
+        keyHandled = true;
+      }
+
+      if (!keyHandled && event.key === 'Enter') {
+        if (this.hoveredItem) {
+          if (this.hoveredItem === this.centerItem) {
+            // If pressing Enter on the root item, we want to close the menu. If pressing
+            // Enter on any other item which is not a leaf item, we want to select the
+            // parent item. This allows to quickly navigate back to the parent item
+            // without having to press Backspace or move the mouse.
+            if (this.hoveredItem.type === 'root') {
+              this.cancel();
+            } else {
+              const centerPosition = this.getCenterItemPosition();
+              const parentPosition = math.subtract(
+                centerPosition,
+                this.hoveredItem.renderData.position
+              );
+              this.selectParent(SelectionSource.eKeyboard, parentPosition);
+            }
+          } else {
+            this.selectItem(this.hoveredItem, SelectionSource.eKeyboard);
           }
         }
       }
@@ -602,6 +645,11 @@ export class Menu extends EventEmitter {
       }
 
       // Update the mouse info based on the newly selected item's position.
+      this.latestInput.absolutePosition = clampedPosition;
+      this.latestInput.relativePosition = { x: 0, y: 0 };
+      this.latestInput.distance = 0;
+      this.latestInput.angle = 0;
+
       this.pointerInput.setCurrentCenter(clampedPosition, this.settings.centerDeadZone);
       this.gamepadInput.setCurrentCenter(clampedPosition);
 
@@ -674,6 +722,176 @@ export class Menu extends EventEmitter {
 
     this.soundTheme.playSound(SoundType.eSelectParent);
     this.selectItem(this.centerItem.renderData.parent, source, coords);
+  }
+
+  /**
+   * This will change the currently hovered item based on the given keyboard direction. It
+   * will check if there is a menu item in the given direction and hover it. If two items
+   * are at the same distance in the given direction (e.g. we are currently hovering the
+   * left-most item and press ArrowRight), we will hover the item on the other side of the
+   * menu (e.g. the right-most item).
+   *
+   * @param key The keyboard direction to change the hovered item to.
+   */
+  private changeHoveredItem(key: 'ArrowLeft' | 'ArrowUp' | 'ArrowRight' | 'ArrowDown') {
+    const direction = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowLeft: { x: -1, y: 0 },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowUp: { x: 0, y: -1 },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowRight: { x: 1, y: 0 },
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ArrowDown: { x: 0, y: 1 },
+    }[key];
+
+    // Helper lambda to move hover focus to the given item. We do this by simulating a
+    // pointer input at the position of the given item.
+    const hoverAngle = (angle: number) => {
+      const centerPosition = this.getCenterItemPosition();
+      const distance = this.settings.minParentDistance;
+      const relativePosition = math.getDirection(angle, distance);
+      const absolutePosition = math.add(centerPosition, relativePosition);
+      this.latestInput = {
+        button: this.latestInput.button,
+        absolutePosition,
+        relativePosition,
+        distance,
+        angle,
+      };
+
+      this.redraw();
+    };
+
+    // Let's compile a list of selectable items. These are the child items and the parent
+    // item (if any).
+    const candidates: {
+      item: RenderedMenuItem;
+      // The angle towards the item, 0° means top, 90° means right, etc.
+      angle: number;
+      // The dot product of the direction to the item and the target direction.
+      dotToTarget: number;
+    }[] = [];
+
+    if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
+      for (const child of this.centerItem.children as RenderedChildMenuItem[]) {
+        const childDir = math.getDirection(child.renderData.computedAngle, 1);
+        const childDot = math.dot(direction, childDir);
+        candidates.push({
+          item: child as RenderedMenuItem,
+          angle: child.renderData.computedAngle,
+          dotToTarget: childDot,
+        });
+      }
+    }
+
+    if (this.centerItem.renderData.parent) {
+      const parentAngle = (this.centerItem.renderData.computedAngle + 180) % 360;
+      const parentDir = math.getDirection(parentAngle, 1);
+      const parentDot = math.dot(direction, parentDir);
+      candidates.push({
+        item: this.centerItem.renderData.parent,
+        angle: parentAngle,
+        dotToTarget: parentDot,
+      });
+    }
+
+    if (candidates.length === 0) {
+      return;
+    }
+
+    // First, we look for the "extreme" item in the given direction. For instance, if the
+    // direction is ArrowRight, we look for the right-most item.
+    let extremeItem = null;
+
+    for (const candidate of candidates) {
+      if (candidate.dotToTarget > Math.cos(math.toRadians(45))) {
+        if (!extremeItem) {
+          extremeItem = candidate;
+        } else {
+          const extremeDir = math.getDirection(extremeItem.angle, 1);
+          const extremeDot = math.dot(direction, extremeDir);
+
+          if (candidate.dotToTarget > extremeDot) {
+            extremeItem = candidate;
+          }
+        }
+      }
+    }
+
+    // If the hovered item is already the extreme item, we can stop here.
+    if (this.hoveredItem === extremeItem?.item) {
+      return;
+    }
+
+    // If we have currently no hovered item or hover the center item, we simply hover the
+    // extreme item. If there is no extreme item, we do not hover anything.
+    if (!this.hoveredItem || this.hoveredItem === this.centerItem) {
+      if (extremeItem) {
+        hoverAngle(extremeItem.angle);
+      }
+      return;
+    }
+
+    // In all other cases, we have a hovered item which is either a child of the center
+    // or its parent. Let's compute the direction towards the hovered item.
+    let hoveredDir;
+    let hoveredAngle;
+
+    if (this.hoveredItem === this.centerItem.renderData.parent) {
+      hoveredAngle = (this.centerItem.renderData.computedAngle + 180) % 360;
+      hoveredDir = math.getDirection(hoveredAngle, 1);
+    } else {
+      hoveredAngle = this.hoveredItem.renderData.computedAngle;
+      hoveredDir = math.getDirection(hoveredAngle, 1);
+    }
+
+    // First, there is the case that we hover an item which is mostly in the opposite
+    // direction than our target direction. For instance, we hover one of the left-most
+    // items and press ArrowRight. In this case, we want to hover the right-most item.
+    if (this.hoveredItem && extremeItem) {
+      const oppositeDir = { x: -direction.x, y: -direction.y };
+      const hoveredDot = math.dot(oppositeDir, hoveredDir);
+
+      if (hoveredDot > Math.cos(math.toRadians(20))) {
+        hoverAngle(extremeItem.angle);
+        return;
+      }
+    }
+
+    // In any other case, we look for the item which is a neighbour of the currently
+    // hovered item which gets the selection closer to the target direction.
+    if (candidates.length > 1) {
+      // True, if the target direction is clockwise from the hovered item direction.
+      const clockwise = math.isClockwise(hoveredDir, direction);
+
+      // Now look for the candidate which is also clockwise / counter-clockwise from the
+      // hovered item and has the smallest angular distance to the hovered item.
+      let bestCandidate = null;
+      let bestDistance = 360;
+
+      for (const candidate of candidates) {
+        if (candidate.item === this.hoveredItem) {
+          continue;
+        }
+        const candidateDir = math.getDirection(candidate.angle, 1);
+        const candidateCW = math.isClockwise(hoveredDir, candidateDir);
+        const candidateDot = math.dot(hoveredDir, candidateDir);
+        const angleDiff = math.getAngularDifference(hoveredAngle, candidate.angle);
+
+        if (
+          (candidateCW === clockwise || candidateDot < Math.cos(math.toRadians(160))) &&
+          angleDiff < bestDistance
+        ) {
+          bestCandidate = candidate;
+          bestDistance = angleDiff;
+        }
+      }
+
+      if (bestCandidate) {
+        hoverAngle(bestCandidate.angle);
+      }
+    }
   }
 
   /**
@@ -803,10 +1021,10 @@ export class Menu extends EventEmitter {
       if (
         !newHoveredItem ||
         this.centerItem.renderData.parent === newHoveredItem ||
-        newHoveredItem.type === 'root'
+        this.centerItem === newHoveredItem
       ) {
         this.centerText.hide();
-      } else {
+      } else if (newHoveredItem.type !== 'root') {
         const position = this.getCenterItemPosition();
         this.centerText.show(
           newHoveredItem.name,
@@ -862,18 +1080,15 @@ export class Menu extends EventEmitter {
 
   /**
    * This method computes the item which is currently hovered by the mouse. This is either
-   * one of the children of the center item or the parent of the center item. The parent
-   * will be returned if the mouse pointer is either in the parent's wedge or in the
-   * center of the menu.
+   * one of the children of the center item or the parent of the center item.
    *
    * @returns The menu item that is currently hovered by the mouse. Can be null if the
    *   center of the root menu is hovered.
    */
   private computeHoveredItem(): RenderedMenuItem {
-    // If the mouse is in the center of the menu, return the parent of the currently
-    // selected item.
+    // If the mouse is in the center of the menu, return the center item.
     if (this.latestInput.distance < this.settings.centerDeadZone) {
-      return this.centerItem.renderData.parent || this.root;
+      return this.centerItem;
     }
 
     // If we are currently not in marking mode or turbo mode and the user hovers outside
