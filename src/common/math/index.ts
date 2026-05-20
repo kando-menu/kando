@@ -46,6 +46,14 @@ export function dot(vec1: Vec2, vec2: Vec2): number {
   return vec1.x * vec2.x + vec1.y * vec2.y;
 }
 
+/**
+ * This method returns whether the second vector is in the clockwise hemisphere of the
+ * first vector.
+ */
+export function isClockwise(vec1: Vec2, vec2: Vec2): boolean {
+  return vec1.x * vec2.y - vec1.y * vec2.x < 0;
+}
+
 /** This method returns the distance of a point to a line segment defined by two points. */
 export function getDistanceToLineSegment(
   point: Vec2,
