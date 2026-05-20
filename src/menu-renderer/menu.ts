@@ -733,6 +733,11 @@ export class Menu extends EventEmitter {
       }
 
       // Update the mouse info based on the newly selected item's position.
+      this.latestInput.absolutePosition = clampedPosition;
+      this.latestInput.relativePosition = { x: 0, y: 0 };
+      this.latestInput.distance = 0;
+      this.latestInput.angle = 0;
+
       this.pointerInput.setCurrentCenter(clampedPosition, this.settings.centerDeadZone);
       this.gamepadInput.setCurrentCenter(clampedPosition);
 
@@ -839,7 +844,7 @@ export class Menu extends EventEmitter {
 
     // Helper lambda to move hover focus to the given item. We do this by simulating a
     // pointer input at the position of the given item.
-    const hoverItem = (angle: number) => {
+    const hoverAngle = (angle: number) => {
       const centerPosition = this.getCenterItemPosition();
       const distance = this.settings.minParentDistance;
       const relativePosition = math.getDirection(angle, distance);
@@ -920,7 +925,7 @@ export class Menu extends EventEmitter {
     // extreme item. If there is no extreme item, we do not hover anything.
     if (!this.hoveredItem || this.hoveredItem === centerItem) {
       if (extremeItem) {
-        hoverItem(extremeItem.angle);
+        hoverAngle(extremeItem.angle);
       }
       return;
     }
@@ -946,7 +951,7 @@ export class Menu extends EventEmitter {
       const hoveredDot = math.dot(oppositeDir, hoveredDir);
 
       if (hoveredDot > Math.cos(math.toRadians(20))) {
-        hoverItem(extremeItem.angle);
+        hoverAngle(extremeItem.angle);
         return;
       }
     }
@@ -981,7 +986,7 @@ export class Menu extends EventEmitter {
       }
 
       if (bestCandidate) {
-        hoverItem(bestCandidate.angle);
+        hoverAngle(bestCandidate.angle);
       }
     }
   }
