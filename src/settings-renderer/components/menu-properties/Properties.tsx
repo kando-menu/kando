@@ -55,7 +55,7 @@ export default function Properties() {
     return (
       <>
         <Headerbar />
-        <div className={classes.properties} />
+        <div className={classes.container} />
       </>
     );
   }

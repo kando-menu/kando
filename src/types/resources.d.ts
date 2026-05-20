@@ -195,7 +195,7 @@ export default interface Resources {
           },
           "open-menu": {
               "description": "Opens another menu.",
-              "name": "Redirect"
+              "name": "Open Menu"
           },
           "open-settings": {
               "description": "Opens the Kando settings window.",
@@ -216,7 +216,7 @@ export default interface Resources {
       },
       "menu-items": {
           "clipboard": {
-              "placeholder": "menu-items.clipboard.placeholder"
+              "placeholder": "Insert any text…"
           },
           "command": {
               "choose-app": "Choose an app…",
@@ -224,17 +224,11 @@ export default interface Resources {
               "detached-info": "This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly.",
               "isolated": "Run isolated",
               "isolated-info": "This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly.",
-              "placeholder": "Insert any command…",
-              "tip-1": "You can use the Command item type to launch applications or scripts.",
-              "tip-2": "If the path to an executable contains spaces, you should \"wrap it in quotes\".",
-              "tip-3": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
-              "tip-4": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
-              "tip-5": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened.",
-              "tip-6": "Click [here]({{link}}) to learn how to to find the commands for launching your apps."
+              "placeholder": "Insert any command…"
           },
           "common": {
               "delayed-option": "Wait for fade-out animation",
-              "delayed-option-info": "Useful if the workflow targets a window that needs to be focused.",
+              "delayed-option-info": "The workflow will only start after the menu is hidden. This is useful if the workflow targets a window that needs to be focused.",
               "inhibit-shortcuts": "Disable shortcuts",
               "inhibit-shortcuts-info": "Disables all Kando shortcuts while this workflow is being executed. This prevents any simulated key events from accidentally triggering other menu shortcuts."
           },
@@ -243,48 +237,23 @@ export default interface Resources {
               "duration-label": "Seconds"
           },
           "file": {
-              "placeholder": "Choose a file or folder…",
-              "tip-1": "You can use this item type to open files or folders."
+              "placeholder": "Choose a file or folder…"
           },
           "hotkey": {
               "hotkey": "Hotkey",
               "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
-              "recording-placeholder": "Type a hotkey…",
-              "tip-1": "When recording a hotkey, you do not have to press all keys at once. You can press them one after another.",
-              "tip-2": "If you cannot record a key because it is used by the system, try typing its name directly.",
-              "tip-3": "Click [this link]({{link}}) to see all valid key names."
+              "recording-placeholder": "Type a hotkey…"
           },
           "macro": {
               "placeholder": "Hit the record button to start recording!",
-              "recording-placeholder": "Press any keys…",
-              "tip-1": "Per default, Kando adds a 10ms delay before each key event. You can change this with the \"delay\" property.",
-              "tip-2": "You can edit the macro also by hand. This is useful if you want to adjust the timing of the keys."
-          },
-          "settings": {
-              "tip-1": "This item type opens the Kando settings window."
+              "recording-placeholder": "Press any keys…"
           },
           "submenu": {
               "description": "Contains other menu items.",
-              "name": "Submenu",
-              "tip-1": "Submenus can be used to group items.",
-              "tip-2": "You can also nest submenus inside of submenus.",
-              "tip-3": "Submenus can be used to create complex menu structures.",
-              "tip-4": "You should avoid adding more than twelve items to a submenu. Eight is a good number.",
-              "tip-5": "You can use the tiny lock icons in the preview to fix an item's position in the menu.",
-              "tip-6": "You can reorder items by dragging them in the preview.",
-              "tip-7": "You can delete a menu or a menu item with the trash icon below."
-          },
-          "text": {
-              "tip-1": "This action uses your clipboard to paste the text. After using the action, the clipboard will contain the text."
+              "name": "Submenu"
           },
           "uri": {
-              "placeholder": "Insert any URI…",
-              "tip-1": "You can use the URI item type to open a website using the http:// protocol.",
-              "tip-2": "You can use this to call custom URI schemes like slack:// or zoommtg://.",
-              "tip-3": "You can use the URI item type to open a mailto: link.",
-              "tip-4": "Use {{app_name}} to insert the name of the application which was focused when you opened the menu.",
-              "tip-5": "Use {{window_name}} to insert the name of the window which was focused when you opened the menu.",
-              "tip-6": "Use {{pointer_x}} and {{pointer_y}} to insert the pointer position where the menu was opened."
+              "placeholder": "Insert any URI…"
           }
       },
       "settings": {
@@ -609,15 +578,15 @@ export default interface Resources {
           "workflow-editor": {
               "add-action": "Add Action",
               "hover-workflow": {
-                  "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button below to add actions to the hover workflow!",
+                  "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to the hover workflow!",
                   "tooltip": "This workflow will be executed when the item is hovered."
               },
               "open-workflow": {
-                  "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button below to add actions to the open workflow!",
+                  "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button above to add actions to the open workflow!",
                   "tooltip": "This workflow will be executed when the submenu is opened."
               },
               "select-workflow": {
-                  "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button below to add actions to the selection workflow!",
+                  "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to the selection workflow!",
                   "tooltip": "This workflow will be executed when the item is selected."
               }
           }

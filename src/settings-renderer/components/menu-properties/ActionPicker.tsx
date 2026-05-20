@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 
 import * as classes from './ActionPicker.module.scss';
-import { Modal, ThemedIcon, Scrollbox, Swirl, Note } from '../common';
+import { Modal, ThemedIcon, Scrollbox } from '../common';
 import { WorkflowAction, WorkflowActionType } from '../../../common';
 import { ActionTypeRegistry } from '../../../common/action-type-registry';
 
@@ -42,44 +42,14 @@ export default function ActionPicker(props: Props) {
     props.onSelect(metadata.createAction());
   };
 
-  const tips = [
-    i18next.t('menu-items.file.tip-1'),
-    i18next.t('menu-items.hotkey.tip-1'),
-    i18next.t('menu-items.hotkey.tip-2'),
-    i18next.t('menu-items.hotkey.tip-3', {
-      link: 'https://kando.menu/valid-keynames/',
-    }),
-    i18next.t('menu-items.command.tip-1'),
-    i18next.t('menu-items.command.tip-2'),
-    i18next.t('menu-items.command.tip-3'),
-    i18next.t('menu-items.command.tip-4'),
-    i18next.t('menu-items.command.tip-5'),
-    i18next.t('menu-items.command.tip-6', {
-      link: 'https://kando.menu/item-run-command/',
-    }),
-    i18next.t('menu-items.macro.tip-1'),
-    i18next.t('menu-items.macro.tip-2'),
-    i18next.t('menu-items.uri.tip-1'),
-    i18next.t('menu-items.uri.tip-2'),
-    i18next.t('menu-items.uri.tip-3'),
-    i18next.t('menu-items.uri.tip-4'),
-    i18next.t('menu-items.uri.tip-5'),
-    i18next.t('menu-items.uri.tip-6'),
-    i18next.t('menu-items.text.tip-1'),
-    i18next.t('menu-items.settings.tip-1'),
-    i18next.t('menu-items.submenu.tip-1'),
-    i18next.t('menu-items.submenu.tip-2'),
-    i18next.t('menu-items.submenu.tip-3'),
-    i18next.t('menu-items.submenu.tip-4'),
-    i18next.t('menu-items.submenu.tip-5'),
-    i18next.t('menu-items.submenu.tip-6'),
-    i18next.t('menu-items.submenu.tip-7'),
-  ];
-
   return (
     <Modal
       isVisible={props.isVisible}
       maxWidth={500}
+      paddingBottom={5}
+      paddingLeft={0}
+      paddingRight={5}
+      paddingTop={0}
       title={i18next.t('settings.workflow-editor.add-action')}
       onClose={props.onClose}>
       <Scrollbox maxHeight="60vh">
