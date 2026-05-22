@@ -290,7 +290,7 @@
             "keep-input-focus": "Maintenir le focus sur l'application active",
             "hardware-acceleration": "Activer l'accélération matérielle",
             "hardware-acceleration-info": "Cette option peut améliorer les performances de l'application, mais peut également entraîner des artefacts de rendu. Vous devrez redémarrer Kando pour appliquer la modification.",
-            "backup-and-restore": "Sauvgarder et Restaurer",
+            "backup-and-restore": "Sauvgarder & Restaurer",
             "backup-menus": "Sauvgarder menus.json…",
             "backup-settings": "Sauvgarder config.json…",
             "restore-menus": "Restaurer menu json…",
@@ -312,7 +312,12 @@
             "windows-ink-workaround-info": "Cela permet de contourner le problème qui empêche d'obtenir la position du stylet lorsque Windows Ink est activé. Cela introduit un délai de 100 ms avant l'ouverture du menu. Si vous n'utilisez pas de stylet, vous pouvez donc désactiver cette fonctionnalité pour que le menu s'ouvre plus rapidement.",
             "windows-ink-workaround": "Contourner Windows-Ink",
             "max-selection-radius-info": "Si la valeur est supérieure à 0, les clics en dehors de ce rayon fermeront le menu. La valeur par défaut est 0, elle signifie \"aucun rayon de sélection maximal\".",
-            "max-selection-radius": "Rayon de sélection maximal"
+            "max-selection-radius": "Rayon de sélection maximal",
+            "interaction-modes": "Modes d'Interaction",
+            "input-options": "Options de saisie",
+            "learn-interaction-mode": "Pour en savoir plus sur les modes d'interaction de Kando, cliquez [ici]({{link}}) !",
+            "backup-menus-note": "Tous les menus seront restaurés ou sauvegardés en une fois. Cela inclut tous vos raccourcis configurés, la disposition de vos menus et vos collections de menus.",
+            "backup-settings-note": "Tous les paramètres de Kando seront sauvegardés ou restaurés, ce qui inclut tous vos paramètres globaux ainsi que la configuration des thèmes de menu."
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
@@ -392,7 +397,11 @@
             "preset-name-empty": "Le nom du préréglage ne peut pas être vide !",
             "preset-name-invalid": "Le nom du préréglage ne peut contenir que des lettres, des chiffres, des tirets, des tirets bas et des espaces !",
             "preset-name-exists": "Un préréglage avec ce nom existe déjà.",
-            "preset-name-placeholder": "Exemple : Mes Couleurs Personnalisés"
+            "preset-name-placeholder": "Exemple : Mes Couleurs Personnalisés",
+            "enable-menu-animations-info": "Désactiver cette option empêche toutes les transitions et la plupart des animations du thème de menu.",
+            "enable-menu-animations": "Animations de Menu",
+            "enable-pointer-reactive-effects-info": "Désactiver cette option, empéchera certains effets de zoom ou de mise à l'échelle sur le thème du menu, qui dépendent de la position actuelle du curseur.",
+            "enable-pointer-reactive-effects": "Effets Réactifs au Curseur"
         },
         "not-bound": "Non-Attribué",
         "shortcut-id-label": "ID du raccourci clavier",
