@@ -8,51 +8,9 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-@use '../../variables.scss' as *;
-@use '../../mixins.scss' as *;
-
 .container {
   display: flex;
   flex-direction: column;
   gap: 5px;
   padding: 0 10px 10px 10px;
-}
-
-.conditionInput {
-  margin-bottom: -5px;
-
-  > *:first-child {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-  }
-
-  > *:last-child {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
-
-  > * {
-    margin-bottom: 10px;
-  }
-
-  display: flex;
-
-  input {
-    @include text-input;
-
-    flex-grow: 1;
-    border-radius: 0;
-  }
-}
-
-.screenCondition {
-  input {
-    min-width: 0;
-    text-align: center;
-    padding: 4px 0px;
-
-    &::-webkit-inner-spin-button {
-      appearance: none;
-    }
-  }
 }

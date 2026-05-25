@@ -8,17 +8,25 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { DelayAction } from '../../common';
+import { InhibitShortcutsAction } from '../../common';
+import { KandoApp } from '../app';
 import { DeepReadonly } from '../settings';
 
 /**
- * Waits for a specified amount of time.
+ * This action inhibits shortcuts. It can be used in the workflows of menu items to
+ * temporarily disable Kando's menu shortcuts while the workflow is executed.
  *
- * @param action The action for which the delay should be performed.
- * @returns A promise which resolves when the specified time has elapsed.
+ * @param action The action for which the workflow is executed.
+ * @param app The app which executed the action.
+ * @returns A promise which resolves when the menu has been successfully closed.
  */
-export async function execute(action: DeepReadonly<DelayAction>) {
-  const duration = action.duration * 1000; // Convert seconds to milliseconds.
+export async function execute(
+  action: DeepReadonly<InhibitShortcutsAction>,
+  app: KandoApp
+) {
+  const inhibitionID = await app.getBackend().inhibitAllShortcuts();
 
-  await new Promise((resolve) => setTimeout(resolve, duration));
+  return async () => {
+    await app.getBackend().releaseInhibition(inhibitionID);
+  };
 }

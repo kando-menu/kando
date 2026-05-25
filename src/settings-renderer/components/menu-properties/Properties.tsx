@@ -28,7 +28,6 @@ import {
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
 import WorkflowEditor from './WorkflowEditor';
-import { ChildMenuItem } from '../../../common';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the
@@ -62,10 +61,7 @@ export default function Properties() {
 
   // Get the currently selected menu item and whether it is the root item or not.
   const selectedItem = getSelectedChild(menus, selectedMenu, selectedChildPath);
-  const isRoot = selectedItem.type === 'root';
-
-  const itemIndex =
-    selectedChildPath.length > 0 ? selectedChildPath[selectedChildPath.length - 1] : -1;
+  const isRoot = selectedItem?.type === 'root';
 
   // Returns a shortcut picker if the current backend supports shortcuts, else it will
   // return a text input for the shortcut ID.
@@ -139,8 +135,8 @@ export default function Properties() {
         </div>
         <Swirl marginBottom={10} marginTop={10} variant="2" width="min(250px, 80%)" />
 
-        {isRoot ? (
-          <Scrollbox>
+        <Scrollbox>
+          {isRoot ? (
             <div className={classes.menuProperties}>
               {getShortcutPicker()}
               <TagInput
@@ -158,54 +154,33 @@ export default function Properties() {
               <MenuBehavior />
               <MenuConditions />
             </div>
-          </Scrollbox>
-        ) : null}
+          ) : null}
+          {selectedItem ? <WorkflowEditor /> : null}
+        </Scrollbox>
         {!isRoot && selectedItem ? (
-          <>
-            <div className={classes.itemProperties}>
-              <ShortcutPicker
-                info={i18next.t('settings.quick-select-key-info')}
-                initialValue={selectedItem.quickSelectKey || ''}
-                label={i18next.t('settings.quick-select-key-label')}
-                mode="key-names"
-                placeholder={
-                  itemIndex < 9 ? `${itemIndex + 1}` : i18next.t('settings.not-bound')
-                }
-                recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
-                useModifiers={false}
-                onChange={(shortcut) => {
-                  editMenuItem(selectedMenu, selectedChildPath, (item: ChildMenuItem) => {
-                    item.quickSelectKey = shortcut;
-                    return item;
-                  });
-                }}
-              />
-            </div>
-            <WorkflowEditor />
-            <div className={classes.floatingButton}>
-              <Button
-                isGrouped
-                icon={<TbCopy />}
-                size="large"
-                tooltip={i18next.t('settings.duplicate-menu-item')}
-                variant="floating"
-                onClick={() => {
-                  duplicateMenuItem(selectedMenu, selectedChildPath);
-                }}
-              />
-              <Button
-                isGrouped
-                icon={<TbTrash />}
-                size="large"
-                tooltip={i18next.t('settings.delete-menu-item')}
-                variant="floating"
-                onClick={() => {
-                  deleteMenuItem(selectedMenu, selectedChildPath);
-                  selectParent();
-                }}
-              />
-            </div>
-          </>
+          <div className={classes.floatingButton}>
+            <Button
+              isGrouped
+              icon={<TbCopy />}
+              size="large"
+              tooltip={i18next.t('settings.duplicate-menu-item')}
+              variant="floating"
+              onClick={() => {
+                duplicateMenuItem(selectedMenu, selectedChildPath);
+              }}
+            />
+            <Button
+              isGrouped
+              icon={<TbTrash />}
+              size="large"
+              tooltip={i18next.t('settings.delete-menu-item')}
+              variant="floating"
+              onClick={() => {
+                deleteMenuItem(selectedMenu, selectedChildPath);
+                selectParent();
+              }}
+            />
+          </div>
         ) : null}
       </div>
     </>

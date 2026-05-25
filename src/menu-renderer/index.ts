@@ -127,8 +127,13 @@ Promise.all([
     settingsButton.show();
   });
 
+  // Close the current submenu when the main process requests it.
+  window.menuAPI.onCloseSubmenu(() => {
+    menu.closeSubmenu();
+  });
+
   // Hide the menu when the main process requests it.
-  window.menuAPI.onHideMenu(() => {
+  window.menuAPI.onCancelMenu(() => {
     menu.cancel();
   });
 

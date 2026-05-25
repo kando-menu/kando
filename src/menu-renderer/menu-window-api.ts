@@ -54,14 +54,24 @@ export const MENU_WINDOW_API = {
   },
 
   /**
+   * This will be called by the host process when the current submenu should be closed.
+   *
+   * @param callback This callback will be called when the current submenu should be
+   *   closed.
+   */
+  onCloseSubmenu: (func: () => void) => {
+    ipcRenderer.on('menu-window.close-submenu', func);
+  },
+
+  /**
    * This will be called by the host process when the menu should be closed. Usually, the
    * renderer will call selectItem or cancelSelection to close the menu, but sometimes the
    * host process needs to close the menu without a selection.
    *
    * @param callback This callback will be called when the menu should be closed.
    */
-  onHideMenu: (func: () => void) => {
-    ipcRenderer.on('menu-window.hide-menu', func);
+  onCancelMenu: (func: () => void) => {
+    ipcRenderer.on('menu-window.cancel-menu', func);
   },
 
   /**

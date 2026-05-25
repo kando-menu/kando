@@ -11,14 +11,12 @@
 @use 'sass:color';
 
 @use '../../variables.scss' as *;
-@use '../../mixins.scss' as *;
 
 .actionListContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 0 8px;
 }
 
 .actionList {
@@ -38,7 +36,6 @@
   position: relative;
   background-color: light-dark($base-light, color.adjust($base-dark, $lightness: 5%));
   border-radius: 8px;
-  padding: 0 3px 3px 3px;
 
   box-shadow: 0 2px 4px light-dark(rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.2));
   border: 1.5px solid
@@ -51,6 +48,14 @@
   // at the pointer.
   &.dragging {
     opacity: 0.001;
+  }
+
+  &.firstWorkflowType {
+    border-top-left-radius: 0;
+  }
+
+  &.lastWorkflowType {
+    border-top-right-radius: 0;
   }
 
   // Add small triangle at the bottom pointing downwards.
@@ -75,14 +80,18 @@
   align-items: center;
   gap: 4px;
   font-weight: bold;
-  font-size: 0.9em;
-
   padding: 6px;
+}
+
+.workflowItemHeader {
+  display: flex;
+  font-weight: bold;
+  padding: 12px 6px 4px 6px;
 }
 
 .actionItemContent {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 0 8px 8px 8px;
+  padding: 0 10px 10px 10px;
 }

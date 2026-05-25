@@ -18,6 +18,7 @@ import {
   SubmenuMenuItem,
   ButtonMenuItem,
   WorkflowAction,
+  Workflow,
 } from '.';
 
 // This file is imported by both the menu renderer and the settings renderer. This
@@ -86,6 +87,30 @@ export class ActionTypeRegistry {
   private constructor() {
     this.metadata = new Map<WorkflowActionType, WorkflowActionTypeMeta>([
       [
+        'close-menu',
+        {
+          name: i18next.t('menu-actions.close-menu.name'),
+          icon: 'close-menu-item.svg',
+          iconTheme: 'kando',
+          description: i18next.t('menu-actions.close-menu.description'),
+          prefersDelayedExecution: false,
+          prefersInhibitedShortcuts: false,
+          createAction: () => ({ type: 'close-menu' }),
+        },
+      ],
+      [
+        'close-submenu',
+        {
+          name: i18next.t('menu-actions.close-submenu.name'),
+          icon: 'close-submenu-item.svg',
+          iconTheme: 'kando',
+          description: i18next.t('menu-actions.close-submenu.description'),
+          prefersDelayedExecution: false,
+          prefersInhibitedShortcuts: false,
+          createAction: () => ({ type: 'close-submenu' }),
+        },
+      ],
+      [
         'delay',
         {
           name: i18next.t('menu-actions.delay.name'),
@@ -124,6 +149,18 @@ export class ActionTypeRegistry {
           prefersDelayedExecution: true,
           prefersInhibitedShortcuts: true,
           createAction: () => ({ type: 'execute-macro', macro: [] }),
+        },
+      ],
+      [
+        'inhibit-shortcuts',
+        {
+          name: i18next.t('menu-actions.inhibit-shortcuts.name'),
+          icon: 'inhibit-shortcuts-item.svg',
+          iconTheme: 'kando',
+          description: i18next.t('menu-actions.inhibit-shortcuts.description'),
+          prefersDelayedExecution: false,
+          prefersInhibitedShortcuts: false,
+          createAction: () => ({ type: 'inhibit-shortcuts' }),
         },
       ],
       [
@@ -303,6 +340,14 @@ export class ActionTypeRegistry {
           icon: 'submenu-item.svg',
           iconTheme: 'kando',
           children: [],
+          centerClickWorkflow: {
+            quickSelectKey: 'Backspace',
+            actions: [
+              {
+                type: 'close-submenu',
+              },
+            ],
+          },
         };
         return newItem;
       } else {
@@ -313,16 +358,36 @@ export class ActionTypeRegistry {
           return null;
         }
 
+        const selectWorkflow: Workflow = {
+          actions: [],
+        };
+
+        if (actionType.prefersInhibitedShortcuts) {
+          selectWorkflow.actions.push({
+            type: 'inhibit-shortcuts',
+          });
+        }
+
+        if (actionType.prefersDelayedExecution) {
+          selectWorkflow.actions.push({
+            type: 'close-menu',
+          });
+        }
+
+        selectWorkflow.actions.push(actionType.createAction());
+
+        if (!actionType.prefersDelayedExecution) {
+          selectWorkflow.actions.push({
+            type: 'close-menu',
+          });
+        }
+
         const newItem: ButtonMenuItem = {
           type: 'button',
           name: actionType.name,
           icon: actionType.icon,
           iconTheme: actionType.iconTheme,
-          selectWorkflow: {
-            waitForFadeout: actionType.prefersDelayedExecution,
-            inhibitShortcuts: actionType.prefersInhibitedShortcuts,
-            actions: [actionType.createAction()],
-          },
+          selectWorkflow,
         };
 
         return newItem;
@@ -341,8 +406,6 @@ export class ActionTypeRegistry {
         icon: menu.icon,
         iconTheme: menu.iconTheme,
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'open-menu',
@@ -379,12 +442,13 @@ export class ActionTypeRegistry {
         icon: uriType.icon,
         iconTheme: uriType.iconTheme,
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'open-uri',
               uri: data.get('text/uri-list') as string,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },
@@ -403,12 +467,13 @@ export class ActionTypeRegistry {
         icon: clipboardType.icon,
         iconTheme: clipboardType.iconTheme,
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'set-clipboard',
               text: data.get('text/plain') as string,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },

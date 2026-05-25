@@ -8,18 +8,15 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import {
-  HoverWorkflow,
-  SelectWorkflow,
-  WorkflowAction,
-  WorkflowActionType,
-} from '../common';
+import { Workflow, WorkflowAction, WorkflowActionType } from '../common';
 import { KandoApp } from './app';
 import { Notification } from './utils/notification';
 import { DeepReadonly } from './settings';
 
+import { execute as closeMenu } from './actions/close-menu';
 import { execute as executeCommand } from './actions/execute-command';
 import { execute as executeMacro } from './actions/execute-macro';
+import { execute as inhibitShortcuts } from './actions/inhibit-shortcuts';
 import { execute as openFile } from './actions/open-file';
 import { execute as openMenu } from './actions/open-menu';
 import { execute as openSettings } from './actions/open-settings';
@@ -31,15 +28,17 @@ import { execute as delay } from './actions/delay';
 type WorkflowActionExecutor<T extends WorkflowActionType> = (
   action: DeepReadonly<Extract<WorkflowAction, { type: T }>>,
   app: KandoApp
-) => Promise<void>;
+) => Promise<() => Promise<void>> | Promise<void>;
 
 const ACTION_EXECUTORS = new Map<
   WorkflowActionType,
   WorkflowActionExecutor<WorkflowActionType>
 >([
+  ['close-menu', closeMenu],
   ['delay', delay],
   ['execute-command', executeCommand],
   ['execute-macro', executeMacro],
+  ['inhibit-shortcuts', inhibitShortcuts],
   ['open-file', openFile],
   ['open-menu', openMenu],
   ['open-settings', openSettings],
@@ -80,18 +79,15 @@ export class WorkflowExecutor {
    * @param workflow The select-workflow to execute.
    * @param app The app which executed the action.
    */
-  public async executeSelectWorkflow(
-    workflow: DeepReadonly<SelectWorkflow>,
-    app: KandoApp
-  ) {
-    let inhibitionID = 0;
-    if (workflow.inhibitShortcuts) {
-      inhibitionID = await app.getBackend().inhibitAllShortcuts();
-    }
+  public async executeWorkflow(workflow: DeepReadonly<Workflow>, app: KandoApp) {
+    const finalizeCalls: (() => Promise<void>)[] = [];
 
     try {
       for (const action of workflow.actions) {
-        await this.executeAction(action, app);
+        const finalizeCall = await this.executeAction(action, app);
+        if (finalizeCall) {
+          finalizeCalls.push(finalizeCall);
+        }
       }
     } catch (error) {
       Notification.show({
@@ -100,32 +96,9 @@ export class WorkflowExecutor {
         type: 'error',
       });
     } finally {
-      if (workflow.inhibitShortcuts) {
-        await app.getBackend().releaseInhibition(inhibitionID);
+      for (const finalizeCall of finalizeCalls) {
+        await finalizeCall();
       }
-    }
-  }
-
-  /**
-   * Executes the hover-workflow of a menu item.
-   *
-   * @param workflow The hover-workflow to execute.
-   * @param app The app which executed the action.
-   */
-  public async executeHoverWorkflow(
-    workflow: DeepReadonly<HoverWorkflow>,
-    app: KandoApp
-  ) {
-    try {
-      for (const action of workflow.actions) {
-        await this.executeAction(action, app);
-      }
-    } catch (error) {
-      Notification.show({
-        title: 'Failed to execute workflow',
-        message: error instanceof Error ? error.message : error,
-        type: 'error',
-      });
     }
   }
 
@@ -139,7 +112,7 @@ export class WorkflowExecutor {
   private executeAction(
     action: DeepReadonly<WorkflowAction>,
     app: KandoApp
-  ): Promise<void> {
+  ): Promise<() => Promise<void>> | Promise<void> {
     const executor = ACTION_EXECUTORS.get(action.type) as WorkflowActionExecutor<
       typeof action.type
     >;

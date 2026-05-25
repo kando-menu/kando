@@ -18,19 +18,15 @@
   flex-direction: column;
   min-height: 0px; // This is important to make the scrollboxes work.
   border-top: $area-border;
+  padding: 8px;
 }
 
 .menuProperties {
   min-height: 0px; // This is important to make the scrollboxes work.
-  padding: 8px;
   display: flex;
-  gap: 5px;
+  gap: 8px;
   flex-direction: column;
-  padding-bottom: 60px;
-}
-
-.itemProperties {
-  padding: 0 18px;
+  margin-bottom: 8px;
 }
 
 .icon {

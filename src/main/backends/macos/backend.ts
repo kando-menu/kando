@@ -150,14 +150,15 @@ export class MacosBackend extends Backend {
         icon: actionInfo.icon,
         iconTheme: actionInfo.iconTheme,
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'execute-command',
               command: '"' + path + '"',
               detached: true,
               isolated: true,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },
@@ -175,14 +176,15 @@ export class MacosBackend extends Backend {
         icon: app.name,
         iconTheme: 'system',
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'execute-command',
               command: app.command,
               detached: true,
               isolated: true,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },

@@ -154,10 +154,21 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
         icon: oldItem.icon,
         iconTheme: oldItem.iconTheme,
         children: [],
+        centerClickWorkflow: {
+          quickSelectKey: 'Backspace',
+          actions: [
+            {
+              type: 'close-submenu',
+            },
+          ],
+        },
       };
 
       if (oldItem.quickSelectKey != null) {
-        newItem.quickSelectKey = oldItem.quickSelectKey;
+        newItem.selectWorkflow = {
+          actions: [],
+          quickSelectKey: oldItem.quickSelectKey,
+        };
       }
 
       if (oldItem.angle != null) {
@@ -179,10 +190,6 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
       iconTheme: oldItem.iconTheme,
     };
 
-    if (oldItem.quickSelectKey != null) {
-      newItem.quickSelectKey = oldItem.quickSelectKey;
-    }
-
     if (oldItem.angle != null) {
       newItem.angle = oldItem.angle;
     }
@@ -191,8 +198,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
     // create different actions for the select event of the new item.
     if (oldItem.type === 'command') {
       newItem.selectWorkflow = {
-        waitForFadeout: (oldItem.data as { delay?: boolean }).delay ?? true,
-        inhibitShortcuts: false,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
           {
             type: 'execute-command',
@@ -202,22 +208,34 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
           },
         ],
       };
+
+      // Depending on the old item's delay property, we want to add the close-menu action
+      // before or after the execute-command action.
+      if ((oldItem.data as { delay?: boolean }).delay) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'close-menu',
+        });
+      } else {
+        newItem.selectWorkflow.actions.push({
+          type: 'close-menu',
+        });
+      }
     } else if (oldItem.type === 'file') {
       newItem.selectWorkflow = {
-        waitForFadeout: false,
-        inhibitShortcuts: false,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
           {
             type: 'open-file',
             path: (oldItem.data as { path?: string }).path ?? '',
           },
+          {
+            type: 'close-menu',
+          },
         ],
       };
     } else if (oldItem.type === 'hotkey') {
       newItem.selectWorkflow = {
-        inhibitShortcuts:
-          (oldItem.data as { inhibitShortcuts?: boolean }).inhibitShortcuts ?? false,
-        waitForFadeout: (oldItem.data as { delay?: boolean }).delay ?? true,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
           {
             type: 'simulate-hotkey',
@@ -225,11 +243,29 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
           },
         ],
       };
+
+      // If the old item had the inhibitShortcuts property set to true, we also add an
+      // inhibit-shortcuts action at the beginning of the workflow.
+      if ((oldItem.data as { inhibitShortcuts?: boolean }).inhibitShortcuts) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'inhibit-shortcuts',
+        });
+      }
+
+      // Depending on the old item's delay property, we want to add the close-menu action
+      // before or after the execute-command action.
+      if ((oldItem.data as { delay?: boolean }).delay) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'close-menu',
+        });
+      } else {
+        newItem.selectWorkflow.actions.push({
+          type: 'close-menu',
+        });
+      }
     } else if (oldItem.type === 'macro') {
       newItem.selectWorkflow = {
-        inhibitShortcuts:
-          (oldItem.data as { inhibitShortcuts?: boolean }).inhibitShortcuts ?? false,
-        waitForFadeout: (oldItem.data as { delay?: boolean }).delay ?? true,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
           {
             type: 'execute-macro',
@@ -247,11 +283,35 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
           },
         ],
       };
+      // If the old item had the inhibitShortcuts property set to true, we also add an
+      // inhibit-shortcuts action at the beginning of the workflow.
+      if ((oldItem.data as { inhibitShortcuts?: boolean }).inhibitShortcuts) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'inhibit-shortcuts',
+        });
+      }
+
+      // Depending on the old item's delay property, we want to add the close-menu action
+      // before or after the execute-command action.
+      if ((oldItem.data as { delay?: boolean }).delay) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'close-menu',
+        });
+      } else {
+        newItem.selectWorkflow.actions.push({
+          type: 'close-menu',
+        });
+      }
     } else if (oldItem.type === 'text') {
       newItem.selectWorkflow = {
-        waitForFadeout: true,
-        inhibitShortcuts: true,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
+          {
+            type: 'inhibit-shortcuts',
+          },
+          {
+            type: 'close-menu',
+          },
           {
             type: 'set-clipboard',
             text: (oldItem.data as { text?: string }).text ?? '',
@@ -264,33 +324,39 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
       };
     } else if (oldItem.type === 'uri') {
       newItem.selectWorkflow = {
-        waitForFadeout: false,
-        inhibitShortcuts: false,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
           {
             type: 'open-uri',
             uri: (oldItem.data as { uri?: string }).uri ?? '',
           },
+          {
+            type: 'close-menu',
+          },
         ],
       };
     } else if (oldItem.type === 'redirect') {
       newItem.selectWorkflow = {
-        waitForFadeout: false,
-        inhibitShortcuts: false,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
           {
             type: 'open-menu',
             menu: (oldItem.data as { menu?: string }).menu ?? '',
           },
+          {
+            type: 'close-menu',
+          },
         ],
       };
     } else if (oldItem.type === 'settings') {
       newItem.selectWorkflow = {
-        waitForFadeout: false,
-        inhibitShortcuts: false,
+        quickSelectKey: oldItem.quickSelectKey,
         actions: [
           {
             type: 'open-settings',
+          },
+          {
+            type: 'close-menu',
           },
         ],
       };
@@ -307,6 +373,14 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
       name: oldMenu.root.name,
       icon: oldMenu.root.icon,
       iconTheme: oldMenu.root.iconTheme,
+      centerClickWorkflow: {
+        quickSelectKey: 'Backspace',
+        actions: [
+          {
+            type: 'close-menu',
+          },
+        ],
+      },
       children: [],
     };
 

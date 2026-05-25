@@ -35,7 +35,13 @@ export default function PreviewFooter() {
       iconTheme: 'kando',
       description: i18next.t('menu-items.submenu.description'),
     },
-    ...workflowItemTypes.filter((type) => type.key !== 'delay'),
+    ...workflowItemTypes.filter(
+      (type) =>
+        type.key !== 'delay' &&
+        type.key !== 'close-menu' &&
+        type.key !== 'close-submenu' &&
+        type.key !== 'inhibit-shortcuts'
+    ),
   ];
 
   return (

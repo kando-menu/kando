@@ -19,6 +19,7 @@ import {
   SoundType,
   SelectionSource,
   InteractionTarget,
+  ChildMenuItem,
 } from '../common';
 import {
   RenderedChildMenuItem,
@@ -341,6 +342,16 @@ export class Menu extends EventEmitter {
   }
 
   /**
+   * This method closes the current submenu. If the current center item is the root item,
+   * nothing happens.
+   */
+  public closeSubmenu() {
+    if (this.centerItem && this.centerItem.type !== 'root') {
+      this.selectParent(SelectionSource.eKeyboard);
+    }
+  }
+
+  /**
    * This method closes the menu in case the selection should be canceled. This should be
    * called if nothing is selected but the menu should be closed.
    */
@@ -431,37 +442,66 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      let keyHandled = false;
       const anyModifierPressed =
         event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 
       if (!anyModifierPressed) {
+        // Backspace should select the parent item.
         if (event.key === 'Backspace') {
           this.selectParent(SelectionSource.eKeyboard);
-          keyHandled = true;
-        } else {
-          if (this.centerItem.type === 'submenu') {
-            for (let i = 0; i < this.centerItem.children.length; i++) {
-              const child = this.centerItem.children[i];
+          return;
+        }
 
-              const selectionKeys = [];
-              if (child.quickSelectKey) {
-                selectionKeys.push(child.quickSelectKey.toLocaleLowerCase());
-              } else if (i < 9) {
-                selectionKeys.push(`${i + 1}`);
-                selectionKeys.push(`num${i + 1}`);
-              }
+        const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
 
-              const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
+        // Then we check whether the center-click-workflow of the center item got triggered.
+        if (
+          this.centerItem.type === 'submenu' &&
+          this.centerItem.centerClickWorkflow?.quickSelectKey
+        ) {
+          if (
+            this.centerItem.centerClickWorkflow.quickSelectKey.toLocaleLowerCase() ===
+            eventKey
+          ) {
+            console.log('Quick select key for center item triggered');
+            return;
+          }
+        }
 
-              if (selectionKeys.includes(eventKey)) {
-                this.selectItem(
-                  child,
-                  SelectionSource.eKeyboard,
-                  this.getCenterItemPosition()
-                );
-                keyHandled = true;
-                break;
+        // Then we check whether any select-workflow of the menu items got triggered by
+        // the quick select key.
+        if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
+          for (let i = 0; i < this.centerItem.children.length; i++) {
+            const child = this.centerItem.children[i];
+
+            const selectionKeys = [];
+            if (child.selectWorkflow?.quickSelectKey) {
+              selectionKeys.push(child.selectWorkflow.quickSelectKey.toLocaleLowerCase());
+            } else if (i < 9) {
+              selectionKeys.push(`${i + 1}`);
+              selectionKeys.push(`num${i + 1}`);
+            }
+
+            if (selectionKeys.includes(eventKey)) {
+              this.selectItem(
+                child,
+                SelectionSource.eKeyboard,
+                this.getCenterItemPosition()
+              );
+              return;
+            }
+          }
+        }
+
+        // Finally, we check whether any hover-workflow of the menu items got triggered.
+        if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
+          for (let i = 0; i < this.centerItem.children.length; i++) {
+            const child = this.centerItem.children[i];
+
+            if (child.hoverWorkflow?.quickSelectKey) {
+              if (child.hoverWorkflow.quickSelectKey.toLocaleLowerCase() === eventKey) {
+                console.log('Quick select key for hover workflow of item triggered');
+                return;
               }
             }
           }
@@ -469,17 +509,16 @@ export class Menu extends EventEmitter {
       }
 
       if (
-        !keyHandled &&
-        (event.key === 'ArrowLeft' ||
-          event.key === 'ArrowUp' ||
-          event.key === 'ArrowRight' ||
-          event.key === 'ArrowDown')
+        event.key === 'ArrowLeft' ||
+        event.key === 'ArrowUp' ||
+        event.key === 'ArrowRight' ||
+        event.key === 'ArrowDown'
       ) {
         this.changeHoveredItem(event.key);
-        keyHandled = true;
+        return;
       }
 
-      if (!keyHandled && event.key === 'Enter') {
+      if (event.key === 'Enter') {
         if (this.hoveredItem) {
           if (this.hoveredItem === this.centerItem) {
             // If pressing Enter on the root item, we want to close the menu. If pressing
@@ -499,10 +538,12 @@ export class Menu extends EventEmitter {
           } else {
             this.selectItem(this.hoveredItem, SelectionSource.eKeyboard);
           }
+
+          return;
         }
       }
 
-      if (!keyHandled && event.key !== 'Escape') {
+      if (event.key !== 'Escape') {
         this.pointerInput.onKeyDownEvent();
       }
     });
@@ -1026,7 +1067,7 @@ export class Menu extends EventEmitter {
         this.centerText.show(
           newHoveredItem.name,
           position,
-          newHoveredItem.quickSelectKey
+          this.getQuickSelectKey(newHoveredItem)
         );
       }
     }
@@ -1476,5 +1517,32 @@ export class Menu extends EventEmitter {
     }
 
     return this.showMenuOptions.mousePosition;
+  }
+
+  /**
+   * Returns the primary quick-select key for a given item. It prioritizes the
+   * select-workflow over the hover-workflow over the center-click-workflow. This is used
+   * to determine which quick-select key to show in the center text when hovering an
+   * item.
+   *
+   * @param item The menu item to get the quick-select key for.
+   * @returns The primary quick-select key for the given item, or null if there is no
+   *   quick-select key.
+   */
+  private getQuickSelectKey(item: ChildMenuItem): string | null {
+    if (item.type === 'button') {
+      return (
+        item.selectWorkflow?.quickSelectKey || item.hoverWorkflow?.quickSelectKey || null
+      );
+    } else if (item.type === 'submenu') {
+      return (
+        item.selectWorkflow?.quickSelectKey ||
+        item.hoverWorkflow?.quickSelectKey ||
+        item.centerClickWorkflow?.quickSelectKey ||
+        null
+      );
+    }
+
+    return null;
   }
 }

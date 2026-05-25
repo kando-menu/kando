@@ -189,6 +189,14 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
                 name: 'New Menu',
                 icon: 'apps',
                 iconTheme: 'material-symbols-rounded',
+                centerClickWorkflow: {
+                  quickSelectKey: 'Backspace',
+                  actions: [
+                    {
+                      type: 'close-menu',
+                    },
+                  ],
+                },
                 children: [],
               },
             };

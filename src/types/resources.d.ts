@@ -177,6 +177,14 @@ export default interface Resources {
           "un-inhibit-shortcuts": "Re-enable shortcuts"
       },
       "menu-actions": {
+          "close-menu": {
+              "description": "Closes the current menu.",
+              "name": "Close Menu"
+          },
+          "close-submenu": {
+              "description": "Navigates one level up in the menu hierarchy.",
+              "name": "Close Submenu"
+          },
           "delay": {
               "description": "Pauses the workflow for a specified duration.",
               "name": "Delay"
@@ -188,6 +196,10 @@ export default interface Resources {
           "execute-macro": {
               "description": "Types a keyboard macro.",
               "name": "Execute Macro"
+          },
+          "inhibit-shortcuts": {
+              "description": "Disables all Kando shortcuts while this workflow is being executed.",
+              "name": "Inhibit Shortcuts"
           },
           "open-file": {
               "description": "Opens a file or folder.",
@@ -225,12 +237,6 @@ export default interface Resources {
               "isolated": "Run isolated",
               "isolated-info": "This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly.",
               "placeholder": "Insert any command…"
-          },
-          "common": {
-              "delayed-option": "Wait for fade-out animation",
-              "delayed-option-info": "The workflow will only start after the menu is hidden. This is useful if the workflow targets a window that needs to be focused.",
-              "inhibit-shortcuts": "Disable shortcuts",
-              "inhibit-shortcuts-info": "Disables all Kando shortcuts while this workflow is being executed. This prevents any simulated key events from accidentally triggering other menu shortcuts."
           },
           "delay": {
               "duration-info": "The workflow execution will be delayed by this amount of time.",
@@ -530,7 +536,6 @@ export default interface Resources {
           "no-menus": "You have no menus.",
           "no-menus-note": "If you deleted the last one by accident, you can restore it using the undo button.",
           "not-bound": "Not Bound",
-          "quick-select-key-info": "This key allows you to quickly select the menu item.",
           "quick-select-key-label": "Quick-select key",
           "quick-select-key-recording": "Select key…",
           "redo": "Redo",
@@ -577,17 +582,35 @@ export default interface Resources {
           },
           "workflow-editor": {
               "add-action": "Add Action",
-              "hover-workflow": {
-                  "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to the hover workflow!",
-                  "tooltip": "This workflow will be executed when the item is hovered."
+              "button-hover-workflow": {
+                  "description": "The actions below will be executed when the item is hovered. Use the quick-select key to highlight this item with your keyboard!",
+                  "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to this workflow!",
+                  "name": "Hover Workflow"
               },
-              "open-workflow": {
-                  "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button above to add actions to the open workflow!",
-                  "tooltip": "This workflow will be executed when the submenu is opened."
+              "button-select-workflow": {
+                  "description": "The actions below will be executed when the item is selected. Use the quick-select key to activate this workflow with your keyboard!",
+                  "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to this workflow!",
+                  "name": "Selection Workflow"
               },
-              "select-workflow": {
-                  "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to the selection workflow!",
-                  "tooltip": "This workflow will be executed when the item is selected."
+              "root-center-workflow": {
+                  "description": "settings.workflow-editor.root-center-workflow.description",
+                  "empty-hint": "settings.workflow-editor.root-center-workflow.empty-hint",
+                  "name": "settings.workflow-editor.root-center-workflow.name"
+              },
+              "submenu-center-workflow": {
+                  "description": "The actions below will be executed when you click the center of the submenu. Use the quick-select key to trigger this workflow with your keyboard when the submenu is open!",
+                  "empty-hint": "Currently, nothing will happen when you click the center of the submenu. Use the button above to add actions to this workflow!",
+                  "name": "Center-Click Workflow"
+              },
+              "submenu-hover-workflow": {
+                  "description": "The actions below will be executed when the submenu is hovered. Use the quick-select key to highlight this submenu with your keyboard!",
+                  "empty-hint": "Currently, no actions will be executed when hovering over this submenu. Use the button above to add actions to this workflow!",
+                  "name": "Hover Workflow"
+              },
+              "submenu-select-workflow": {
+                  "description": "The actions below will be executed when the submenu is opened. Use the quick-select key to open this submenu with your keyboard!",
+                  "empty-hint": "Currently, no additional actions will be executed when opening this submenu. Use the button above to add actions to this workflow!",
+                  "name": "Open Workflow"
               }
           }
       }

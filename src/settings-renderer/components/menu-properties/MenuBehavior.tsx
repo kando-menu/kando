@@ -10,9 +10,12 @@
 
 import React from 'react';
 import i18next from 'i18next';
+import { TbCircles } from 'react-icons/tb';
+
+import * as classes from './MenuBehavior.module.scss';
 
 import { useAppState, useMenuSettings } from '../../state';
-import { Checkbox, Note } from '../common';
+import { Checkbox, Note, CollapsibleBox } from '../common';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
@@ -21,46 +24,50 @@ export default function MenuBehavior() {
   const editMenu = useMenuSettings((state) => state.editMenu);
 
   return (
-    <>
-      <h1>{i18next.t('settings.menu-behavior')}</h1>
-      <Note useMarkdown marginBottom={5} marginTop={-5}>
-        {i18next.t('settings.menu-behavior-info', {
-          link: 'https://kando.menu/usage/',
-        })}
-      </Note>
-      <Checkbox
-        info={i18next.t('settings.centered-mode-info')}
-        initialValue={menus[selectedMenu].centered}
-        label={i18next.t('settings.centered-mode')}
-        onChange={(centered) => {
-          editMenu(selectedMenu, (menu) => {
-            menu.centered = centered;
-            return menu;
-          });
-        }}
-      />
-      <Checkbox
-        info={i18next.t('settings.anchored-mode-info')}
-        initialValue={menus[selectedMenu].anchored}
-        label={i18next.t('settings.anchored-mode')}
-        onChange={(anchored) => {
-          editMenu(selectedMenu, (menu) => {
-            menu.anchored = anchored;
-            return menu;
-          });
-        }}
-      />
-      <Checkbox
-        info={i18next.t('settings.hover-mode-info')}
-        initialValue={menus[selectedMenu].hoverMode}
-        label={i18next.t('settings.hover-mode')}
-        onChange={(hoverMode) => {
-          editMenu(selectedMenu, (menu) => {
-            menu.hoverMode = hoverMode;
-            return menu;
-          });
-        }}
-      />
-    </>
+    <CollapsibleBox
+      icon={<TbCircles />}
+      isInitiallyExpanded={false}
+      title={i18next.t('settings.menu-behavior')}>
+      <div className={classes.container}>
+        <Note useMarkdown marginBottom={5} marginTop={-5}>
+          {i18next.t('settings.menu-behavior-info', {
+            link: 'https://kando.menu/usage/',
+          })}
+        </Note>
+        <Checkbox
+          info={i18next.t('settings.centered-mode-info')}
+          initialValue={menus[selectedMenu].centered}
+          label={i18next.t('settings.centered-mode')}
+          onChange={(centered) => {
+            editMenu(selectedMenu, (menu) => {
+              menu.centered = centered;
+              return menu;
+            });
+          }}
+        />
+        <Checkbox
+          info={i18next.t('settings.anchored-mode-info')}
+          initialValue={menus[selectedMenu].anchored}
+          label={i18next.t('settings.anchored-mode')}
+          onChange={(anchored) => {
+            editMenu(selectedMenu, (menu) => {
+              menu.anchored = anchored;
+              return menu;
+            });
+          }}
+        />
+        <Checkbox
+          info={i18next.t('settings.hover-mode-info')}
+          initialValue={menus[selectedMenu].hoverMode}
+          label={i18next.t('settings.hover-mode')}
+          onChange={(hoverMode) => {
+            editMenu(selectedMenu, (menu) => {
+              menu.hoverMode = hoverMode;
+              return menu;
+            });
+          }}
+        />
+      </div>
+    </CollapsibleBox>
   );
 }

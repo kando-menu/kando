@@ -165,14 +165,15 @@ export class WindowsBackend extends Backend {
         icon: app ? app.name : actionInfo.icon,
         iconTheme: app ? 'system' : actionInfo.iconTheme,
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'execute-command',
               command: '"' + path + '"',
               detached: true,
               isolated: true,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },
@@ -194,14 +195,15 @@ export class WindowsBackend extends Backend {
         icon: app.name,
         iconTheme: 'system',
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'execute-command',
               command: app.command,
               detached: true,
               isolated: true,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },

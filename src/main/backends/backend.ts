@@ -159,12 +159,13 @@ export abstract class Backend extends EventEmitter {
       icon,
       iconTheme: 'material-symbols-rounded',
       selectWorkflow: {
-        waitForFadeout: false,
-        inhibitShortcuts: false,
         actions: [
           {
             type: 'open-file',
             path,
+          },
+          {
+            type: 'close-menu',
           },
         ],
       },

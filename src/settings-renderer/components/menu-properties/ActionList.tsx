@@ -16,27 +16,43 @@ import i18next from 'i18next';
 import * as classes from './ActionList.module.scss';
 const cx = classNames.bind(classes);
 
-import { Button, Checkbox, Note, ThemedIcon } from '../common';
+import { ShortcutPicker, Button, Note, ThemedIcon } from '../common';
 import { TbPlus, TbTrash } from 'react-icons/tb';
-import {
-  SelectWorkflow,
-  HoverWorkflow,
-  WorkflowAction,
-  ActionTypeRegistry,
-} from '../../../common';
+import { Workflow, WorkflowAction, ActionTypeRegistry } from '../../../common';
 import ActionPicker from './ActionPicker';
 import { ensureUniqueKeys } from '../../utils';
 import { getConfigComponent } from './actions';
 
 type Props = {
-  /** The empty hint text to display when the workflow has no actions. */
-  readonly emptyHint?: string;
+  /** The description of the workflow type. */
+  readonly description: string;
+
+  /**
+   * Whether this is the first workflow type for this item. Used to style the border radii
+   * below the tabs.
+   */
+  readonly isFirstWorkflowType: boolean;
+
+  /**
+   * Whether this is the last workflow type for this item. Used to style the border radii
+   * below the tabs.
+   */
+  readonly isLastWorkflowType: boolean;
 
   /** The workflow to display and edit. */
-  readonly workflow?: SelectWorkflow | HoverWorkflow;
+  readonly workflow?: Workflow;
+
+  /** The empty hint text to display when the workflow has no actions. */
+  readonly emptyHint: string;
+
+  /**
+   * The placeholder text to display in the ShortcutPicker when no quick select key is
+   * bound.
+   */
+  readonly quickSelectKeyPlaceholder: string;
 
   /** Callback to update the workflow. */
-  readonly onUpdateWorkflow: (workflow: SelectWorkflow | HoverWorkflow) => void;
+  readonly onUpdateWorkflow: (workflow: Workflow) => void;
 
   /** Function to call when the container menu item should be modified. */
   readonly onUpdateItem: (info: {
@@ -80,7 +96,7 @@ export default function ActionList(props: Props) {
     props.onUpdateWorkflow({
       ...props.workflow,
       actions: newActions,
-    } as SelectWorkflow | HoverWorkflow);
+    });
   };
 
   // Called when a new action is selected in the ActionPicker. Adds the new action to
@@ -90,7 +106,7 @@ export default function ActionList(props: Props) {
     props.onUpdateWorkflow({
       ...props.workflow,
       actions: newActions,
-    } as SelectWorkflow | HoverWorkflow);
+    });
   };
 
   // Called when an action starts being dragged. Sets the dragIndex to the index of the
@@ -188,38 +204,27 @@ export default function ActionList(props: Props) {
           key="workflow-options"
           className={cx({
             actionItem: true,
+            firstWorkflowType: props.isFirstWorkflowType,
+            lastWorkflowType: props.isLastWorkflowType,
           })}>
-          <div className={classes.actionItemHeader}>
-            {/* <ThemedIcon name={typeMeta.icon} size={16} theme={typeMeta.iconTheme} /> */}
-            <div style={{ flexGrow: 1 }}>Select Workflow</div>
-          </div>
           <div className={classes.actionItemContent}>
-            {props.workflow && 'waitForFadeout' in props.workflow ? (
-              <Checkbox
-                info={i18next.t('menu-items.common.delayed-option-info')}
-                initialValue={props.workflow.waitForFadeout}
-                label={i18next.t('menu-items.common.delayed-option')}
-                onChange={(value) => {
-                  props.onUpdateWorkflow({
-                    ...props.workflow,
-                    waitForFadeout: value,
-                  });
-                }}
-              />
-            ) : null}
-            {props.workflow && 'inhibitShortcuts' in props.workflow ? (
-              <Checkbox
-                info={i18next.t('menu-items.common.inhibit-shortcuts-info')}
-                initialValue={props.workflow.inhibitShortcuts}
-                label={i18next.t('menu-items.common.inhibit-shortcuts')}
-                onChange={(value) => {
-                  props.onUpdateWorkflow({
-                    ...props.workflow,
-                    inhibitShortcuts: value,
-                  });
-                }}
-              />
-            ) : null}
+            <Note marginBottom={8} marginTop={8}>
+              {props.description}
+            </Note>
+            <ShortcutPicker
+              initialValue={props.workflow?.quickSelectKey || ''}
+              label={i18next.t('settings.quick-select-key-label')}
+              mode="key-names"
+              placeholder={props.quickSelectKeyPlaceholder}
+              recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
+              useModifiers={false}
+              onChange={(shortcut) => {
+                props.onUpdateWorkflow({
+                  ...props.workflow,
+                  quickSelectKey: shortcut || undefined,
+                });
+              }}
+            />
           </div>
         </div>
 

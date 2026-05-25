@@ -350,7 +350,7 @@ export class KandoApp {
     }
 
     if (options.closeMenu) {
-      this.menuWindow?.hide();
+      this.menuWindow?.cancel();
       return true;
     }
 
@@ -382,6 +382,11 @@ export class KandoApp {
    */
   public getBackend() {
     return this.backend;
+  }
+
+  /** Allow access to the menu window. */
+  public getMenuWindow() {
+    return this.menuWindow;
   }
 
   /**
@@ -527,7 +532,7 @@ export class KandoApp {
     this.menuWindow.on('close', (event) => {
       if (!this.isQuitting) {
         event.preventDefault();
-        this.menuWindow.hide();
+        this.menuWindow.cancel();
       }
     });
   }

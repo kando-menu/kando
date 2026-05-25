@@ -12,8 +12,11 @@ export type { GeneralSettingsV1 as GeneralSettings } from './general-settings-v1
 export { GENERAL_SETTINGS_SCHEMA_V1 as GENERAL_SETTINGS_SCHEMA } from './general-settings-v1';
 
 export type {
+  CloseMenuActionV2 as CloseMenuAction,
+  CloseSubmenuActionV2 as CloseSubmenuAction,
   ExecuteCommandActionV2 as ExecuteCommandAction,
   ExecuteMacroActionV2 as ExecuteMacroAction,
+  InhibitShortcutsActionV2 as InhibitShortcutsAction,
   OpenFileActionV2 as OpenFileAction,
   OpenMenuActionV2 as OpenMenuAction,
   OpenSettingsActionV2 as OpenSettingsAction,
@@ -34,8 +37,7 @@ export type {
   MenuSettingsV2 as MenuSettings,
   WorkflowActionV2 as WorkflowAction,
   WorkflowActionTypeV2 as WorkflowActionType,
-  SelectWorkflowV2 as SelectWorkflow,
-  HoverWorkflowV2 as HoverWorkflow,
+  WorkflowV2 as Workflow,
 } from './menu-settings-v2';
 export {
   MENU_SETTINGS_SCHEMA_V2 as MENU_SETTINGS_SCHEMA,

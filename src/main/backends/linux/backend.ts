@@ -175,14 +175,15 @@ export abstract class LinuxBackend extends Backend {
         icon: data.icon || 'application-x-executable',
         iconTheme: data.iconTheme,
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'execute-command',
               command: data.command,
               detached: true,
               isolated: true,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },
@@ -199,14 +200,15 @@ export abstract class LinuxBackend extends Backend {
         icon: actionInfo.icon,
         iconTheme: actionInfo.iconTheme,
         selectWorkflow: {
-          waitForFadeout: false,
-          inhibitShortcuts: false,
           actions: [
             {
               type: 'execute-command',
               command: '"' + path + '"',
               detached: true,
               isolated: true,
+            },
+            {
+              type: 'close-menu',
             },
           ],
         },

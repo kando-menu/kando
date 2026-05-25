@@ -13,7 +13,6 @@ import { BrowserWindow, screen, ipcMain, app } from 'electron';
 
 import { DeepReadonly } from './settings';
 import {
-  SubmenuMenuItem,
   ShowMenuRequest,
   Menu,
   MenuItem,
@@ -188,7 +187,7 @@ export class MenuWindow extends BrowserWindow {
 
         // If the 'sameShortcutBehavior' is set to 'close', we hide the menu.
         if (sameShortcutBehavior === 'close') {
-          this.webContents.send('menu-window.hide-menu');
+          this.webContents.send('menu-window.cancel-menu');
           return;
         }
 
@@ -355,12 +354,23 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
+   * This sends a message to the renderer process to close the current submenu. The
+   * renderer will handle this by hiding the current submenu and showing the parent menu
+   * again. If there is no parent menu, nothing will happen.
+   */
+  public closeSubmenu() {
+    if (this.isVisible()) {
+      this.webContents.send('menu-window.close-submenu');
+    }
+  }
+
+  /**
    * This hides the window. It will wait for the fade-out animation to finish before
    * actually hiding the window.
    */
-  public override hide() {
+  public cancel() {
     if (this.isVisible()) {
-      this.webContents.send('menu-window.hide-menu');
+      this.webContents.send('menu-window.cancel-menu');
       this.visible = false;
     }
   }
@@ -375,13 +385,9 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
-   * This hides the window. This method also accepts a delay parameter which can be used
-   * to delay the hiding of the window. This is useful when we want to show a fade-out
-   * animation.
-   *
-   * When Electron windows are hidden, input focus is not necessarily returned to the
-   * topmost window below the hidden window. This is a problem if we want to simulate key
-   * presses.
+   * This hides the window. When Electron windows are hidden, input focus is not
+   * necessarily returned to the topmost window below the hidden window. This is a problem
+   * if we want to simulate key presses.
    *
    * - On Windows, we have to minimize the window instead. This leads to another issue:
    *   https://github.com/kando-menu/kando/issues/375. To make this weird little window
@@ -394,7 +400,7 @@ export class MenuWindow extends BrowserWindow {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  private async hideWindow() {
+  public async hideWindow() {
     this.visible = false;
 
     if (this.hideTimeout) {
@@ -697,40 +703,24 @@ export class MenuWindow extends BrowserWindow {
 
         const pathArray = this.pathToArray(path);
 
-        // If the target of the selection is a submenu, we execute its openWorkflow.
-        // The openWorkflow of a submenu uses the same type as the hoverWorkflow.
-        if (target === InteractionTarget.eSubmenu) {
-          const submenu = item as DeepReadonly<SubmenuMenuItem>;
-          if (submenu.openWorkflow) {
-            WorkflowExecutor.getInstance().executeHoverWorkflow(
-              submenu.openWorkflow,
+        // If the target of the selection is a submenu, we execute its select-workflow.
+        if (target === InteractionTarget.eSubmenu && item.type === 'submenu') {
+          if (item.selectWorkflow) {
+            WorkflowExecutor.getInstance().executeWorkflow(
+              item.selectWorkflow,
               this.kando
             );
           }
         }
 
-        // For buttons, we execute the selectWorkflow. Yet we have to check whether we
-        // have to wait for the fade-out animation to finish before executing the
-        // workflow.
+        // For buttons, we also execute the select-workflow.
         if (target === InteractionTarget.eItem && item.type === 'button') {
-          // If the action is not delayed, we execute it immediately.
-          if (item.selectWorkflow && !item.selectWorkflow.waitForFadeout) {
-            WorkflowExecutor.getInstance().executeSelectWorkflow(
+          if (item.selectWorkflow) {
+            WorkflowExecutor.getInstance().executeWorkflow(
               item.selectWorkflow,
               this.kando
             );
           }
-
-          // Else we execute the action after the window is hidden.
-          this.hideWindow().then(() => {
-            // If the action is delayed, we execute it after the window is hidden.
-            if (item.selectWorkflow?.waitForFadeout) {
-              WorkflowExecutor.getInstance().executeSelectWorkflow(
-                item.selectWorkflow,
-                this.kando
-              );
-            }
-          });
 
           // Track selection for achievements.
           this.kando.achievementTracker.onSelectionMade(
@@ -797,10 +787,7 @@ export class MenuWindow extends BrowserWindow {
       }
 
       if ('hoverWorkflow' in item) {
-        WorkflowExecutor.getInstance().executeHoverWorkflow(
-          item.hoverWorkflow,
-          this.kando
-        );
+        WorkflowExecutor.getInstance().executeWorkflow(item.hoverWorkflow, this.kando);
       }
 
       this.ipcCallbacks.onHover(target, this.pathToArray(path));

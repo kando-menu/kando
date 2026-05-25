@@ -295,7 +295,6 @@
         "shortcut-id-label": "Shortcut ID",
         "tags-info": "Tags can be used to group menus in menu collections.",
         "tags": "Tags",
-        "quick-select-key-info": "This key allows you to quickly select the menu item.",
         "quick-select-key-label": "Quick-select key",
         "quick-select-key-recording": "Select key…",
         "duplicate-menu-item": "Duplicate menu item",
@@ -320,17 +319,35 @@
         },
         "workflow-editor": {
             "add-action": "Add Action",
-            "select-workflow": {
-                "tooltip": "This workflow will be executed when the item is selected.",
-                "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to the selection workflow!"
+            "button-select-workflow": {
+                "name": "Selection Actions",
+                "description": "The actions below will be executed when the item is selected or when you press the quick-select key while its parent menu is shown.",
+                "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to this workflow!"
             },
-            "hover-workflow": {
-                "tooltip": "This workflow will be executed when the item is hovered.",
-                "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to the hover workflow!"
+            "button-hover-workflow": {
+                "name": "Hover Actions",
+                "description": "The actions below will be executed when you hover over the item or when you press the quick-select key while its parent menu is shown.",
+                "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to this workflow!"
             },
-            "open-workflow": {
-                "tooltip": "This workflow will be executed when the submenu is opened.",
-                "empty-hint": "Currently, no actions will be executed when opening this submenu. Use the button above to add actions to the open workflow!"
+            "submenu-select-workflow": {
+                "name": "Open Actions",
+                "description": "The actions below will be executed when the submenu item is opened or when you press the quick-select key while its parent menu is shown.",
+                "empty-hint": "Currently, no additional actions will be executed when opening this submenu. Use the button above to add actions to this workflow!"
+            },
+            "submenu-hover-workflow": {
+                "name": "Hover Actions",
+                "description": "The actions below will be executed when you hover over the submenu item or when you press the quick-select key while its parent menu is shown.",
+                "empty-hint": "Currently, no actions will be executed when hovering over this submenu. Use the button above to add actions to this workflow!"
+            },
+            "submenu-center-workflow": {
+                "name": "Center-Click Actions",
+                "description": "The actions below will be executed when you click the center of the submenu or when you press the quick-select key while the submenu is shown.",
+                "empty-hint": "Currently, nothing will happen when you click the center of the submenu. Use the button above to add actions to this workflow!"
+            },
+            "root-center-workflow": {
+                "name": "Center-Click Actions",
+                "description": "The actions below will be executed when you click the center of the root menu or when you press the quick-select key while the root menu is shown.",
+                "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!"
             }
         }
     },
@@ -361,12 +378,6 @@
         },
         "uri": {
             "placeholder": "Insert any URI…"
-        },
-        "common": {
-            "delayed-option-info": "The workflow will only start after the menu is hidden. This is useful if the workflow targets a window that needs to be focused.",
-            "delayed-option": "Wait for fade-out animation",
-            "inhibit-shortcuts-info": "Disables all Kando shortcuts while this workflow is being executed. This prevents any simulated key events from accidentally triggering other menu shortcuts.",
-            "inhibit-shortcuts": "Disable shortcuts"
         },
         "delay": {
             "duration-info": "The workflow execution will be delayed by this amount of time.",
@@ -587,6 +598,18 @@
         "delay": {
             "name": "Delay",
             "description": "Pauses the workflow for a specified duration."
+        },
+        "close-menu": {
+            "name": "Close Menu",
+            "description": "Closes the current menu."
+        },
+        "close-submenu": {
+            "name": "Close Submenu",
+            "description": "Navigates one level up in the menu hierarchy."
+        },
+        "inhibit-shortcuts": {
+            "name": "Inhibit Shortcuts",
+            "description": "Disables all Kando shortcuts while this workflow is being executed."
         }
     }
 }

@@ -15,6 +15,16 @@ import { version } from './../../../package.json';
 // #region                        Workflow Actions
 // ------------------------------------------------------------------------------------ //
 
+/** This action will close the menu when executed. */
+export const CLOSE_MENU_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('close-menu'),
+});
+
+/** This action will close the current submenu when executed. */
+export const CLOSE_SUBMENU_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('close-submenu'),
+});
+
 /** This action will simply wait for a specified amount of time when triggered. */
 export const DELAY_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('delay'),
@@ -43,6 +53,11 @@ export const EXECUTE_COMMAND_ACTION_SCHEMA_V2 = z.object({
    * platforms.
    */
   isolated: z.boolean().default(false),
+});
+
+/** Temporarily disables all Kando shortcuts when triggered. */
+export const INHIBIT_SHORTCUTS_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('inhibit-shortcuts'),
 });
 
 /** Macros are composed of these events. */
@@ -111,9 +126,12 @@ export const SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
 
 /** This type describes the possible actions that can be performed in a workflow. */
 export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
+  CLOSE_MENU_ACTION_SCHEMA_V2,
+  CLOSE_SUBMENU_ACTION_SCHEMA_V2,
   DELAY_ACTION_SCHEMA_V2,
   EXECUTE_COMMAND_ACTION_SCHEMA_V2,
   EXECUTE_MACRO_ACTION_SCHEMA_V2,
+  INHIBIT_SHORTCUTS_ACTION_SCHEMA_V2,
   OPEN_FILE_ACTION_SCHEMA_V2,
   OPEN_MENU_ACTION_SCHEMA_V2,
   OPEN_SETTINGS_ACTION_SCHEMA_V2,
@@ -123,19 +141,10 @@ export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
 ]);
 
 /** This type describes a workflow for a menu item is triggered when it is selected. */
-export const SELECT_WORKFLOW_SCHEMA_V2 = z.object({
-  /** Whether any select-workflow events should wait until the menu is hidden. */
-  waitForFadeout: z.boolean().default(false),
+export const WORKFLOW_SCHEMA_V2 = z.object({
+  /** The quick-select key for triggering this workflow. */
+  quickSelectKey: z.string().optional(),
 
-  /** Whether all Kando shortcuts should be disabled when the select-workflow is active. */
-  inhibitShortcuts: z.boolean().default(false),
-
-  /** The actions to perform when the event is triggered. */
-  actions: z.array(WORKFLOW_ACTION_SCHEMA_V2).default([]),
-});
-
-/** This type describes a workflow for a menu item is triggered when it is hovered. */
-export const HOVER_WORKFLOW_SCHEMA_V2 = z.object({
   /** The actions to perform when the event is triggered. */
   actions: z.array(WORKFLOW_ACTION_SCHEMA_V2).default([]),
 });
@@ -167,6 +176,9 @@ const BASE_MENU_ITEM_SCHEMA_V2 = z.object({
 export const ROOT_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
   type: z.literal('root'),
 
+  /** The workflow which is triggered when the root center is clicked. */
+  centerClickWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
   /** The top-level children of the menu. */
   get children() {
     return z.array(CHILD_MENU_ITEM_SCHEMA_V2);
@@ -177,9 +189,6 @@ export const ROOT_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
 export const BUTTON_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
   type: z.literal('button'),
 
-  /** The quick-select key for selecting this menu item. */
-  quickSelectKey: z.string().optional(),
-
   /**
    * The direction of the menu item in degrees. If not set, it will be computed when the
    * menu is opened. If set, it is considered to be a "fixed angle" and all siblings will
@@ -187,11 +196,11 @@ export const BUTTON_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
    */
   angle: z.number().optional(),
 
-  /** The workflow which is triggered when the item is selected. */
-  selectWorkflow: SELECT_WORKFLOW_SCHEMA_V2.optional(),
-
   /** The workflow which is triggered when the item is hovered. */
-  hoverWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
+  hoverWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the item is selected. */
+  selectWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 });
 
 /**
@@ -201,20 +210,20 @@ export const BUTTON_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
 export const SUBMENU_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
   type: z.literal('submenu'),
 
-  /** The quick-select key for selecting this menu item. */
-  quickSelectKey: z.string().optional(),
-
   /**
    * The direction of the menu item in degrees. If not set, it will be computed when the
    * menu is opened. If set, it is considered to be a "fixed angle".
    */
   angle: z.number().optional(),
 
-  /** The workflow which is triggered when the submenu is opened. */
-  openWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
-
   /** The workflow which is triggered when the submenu is hovered. */
-  hoverWorkflow: HOVER_WORKFLOW_SCHEMA_V2.optional(),
+  hoverWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the submenu is opened. */
+  selectWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the submenu center is clicked while open. */
+  centerClickWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
   /** The children of this menu item. */
   get children() {
@@ -376,16 +385,18 @@ export const MENU_SETTINGS_SCHEMA_V2 = z.object({
 
 export type MenuV2 = z.infer<typeof MENU_SCHEMA_V2>;
 
-export type SelectWorkflowV2 = z.infer<typeof SELECT_WORKFLOW_SCHEMA_V2>;
-export type HoverWorkflowV2 = z.infer<typeof HOVER_WORKFLOW_SCHEMA_V2>;
+export type WorkflowV2 = z.infer<typeof WORKFLOW_SCHEMA_V2>;
 export type WorkflowActionV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>;
 export type WorkflowActionTypeV2 = z.infer<typeof WORKFLOW_ACTION_SCHEMA_V2>['type'];
 export type MenuItemTypeV2 = z.infer<typeof MENU_ITEM_SCHEMA_V2>['type'];
 
 export type MacroEventV2 = z.infer<typeof MACRO_EVENT_SCHEMA_V2>;
 
+export type CloseMenuActionV2 = z.infer<typeof CLOSE_MENU_ACTION_SCHEMA_V2>;
+export type CloseSubmenuActionV2 = z.infer<typeof CLOSE_SUBMENU_ACTION_SCHEMA_V2>;
 export type ExecuteCommandActionV2 = z.infer<typeof EXECUTE_COMMAND_ACTION_SCHEMA_V2>;
 export type ExecuteMacroActionV2 = z.infer<typeof EXECUTE_MACRO_ACTION_SCHEMA_V2>;
+export type InhibitShortcutsActionV2 = z.infer<typeof INHIBIT_SHORTCUTS_ACTION_SCHEMA_V2>;
 export type OpenFileActionV2 = z.infer<typeof OPEN_FILE_ACTION_SCHEMA_V2>;
 export type OpenMenuActionV2 = z.infer<typeof OPEN_MENU_ACTION_SCHEMA_V2>;
 export type OpenSettingsActionV2 = z.infer<typeof OPEN_SETTINGS_ACTION_SCHEMA_V2>;

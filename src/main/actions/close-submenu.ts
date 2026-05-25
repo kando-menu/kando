@@ -8,17 +8,17 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { DelayAction } from '../../common';
+import { CloseSubmenuAction } from '../../common';
+import { KandoApp } from '../app';
 import { DeepReadonly } from '../settings';
 
 /**
- * Waits for a specified amount of time.
+ * This action closes the current submenu.
  *
- * @param action The action for which the delay should be performed.
- * @returns A promise which resolves when the specified time has elapsed.
+ * @param action The action for which the workflow is executed.
+ * @param app The app which executed the action.
+ * @returns A promise which resolves immediately.
  */
-export async function execute(action: DeepReadonly<DelayAction>) {
-  const duration = action.duration * 1000; // Convert seconds to milliseconds.
-
-  await new Promise((resolve) => setTimeout(resolve, duration));
+export async function execute(action: DeepReadonly<CloseSubmenuAction>, app: KandoApp) {
+  app.getMenuWindow().closeSubmenu();
 }
