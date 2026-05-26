@@ -89,11 +89,21 @@ if (makerRPM.isSupportedOnCurrentPlatform()) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { Installer: RedhatInstaller } = require('electron-installer-redhat');
   const { spawn } = require('@malept/cross-spawn-promise');
+  const fs = require('fs-extra');
 
   RedhatInstaller.prototype.createPackage = async function () {
     this.options.logger(
       "+++ Running patched createPackage method! See Kando's forge.config.ts for details. +++"
     );
+
+    const specContents = await fs.readFile(this.specPath, 'utf8');
+    const patchedSpecContents = specContents.replace(
+      '/usr/share/applications/kando.desktop',
+      '/usr/share/applications/menu.kando.Kando.desktop'
+    );
+    if (patchedSpecContents !== specContents) {
+      await fs.writeFile(this.specPath, patchedSpecContents);
+    }
 
     this.options.logger(`Creating package at ${this.stagingDir}`);
 
