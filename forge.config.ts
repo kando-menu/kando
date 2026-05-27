@@ -56,6 +56,28 @@ const makerRPM = new MakerRpm({
   },
 });
 
+// The Linux makers create desktop files named after the package "name" option. We patch the
+// shared installer to support a dedicated desktop file base name so that we can keep the
+// executable name as "kando" while generating "menu.kando.Kando.desktop".
+if (makerDeb.isSupportedOnCurrentPlatform() || makerRPM.isSupportedOnCurrentPlatform()) {
+  const { ElectronInstaller: electronInstaller } = require('electron-installer-common');
+  const path = require('node:path');
+
+  electronInstaller.prototype.createDesktopFile = async function () {
+    this.options.logger(
+      "+++ Running patched createDesktopFile method! See Kando's forge.config.ts for details. +++"
+    );
+
+    const templatePath = this.options.desktopTemplate || this.defaultDesktopTemplatePath;
+    const baseDir = path.join(this.stagingDir, this.baseAppDir, 'share', 'applications');
+
+    const desktopPath = path.join(baseDir, 'menu.kando.Kando.desktop');
+    await this.createTemplatedFile(templatePath, desktopPath, 0o644);
+
+    this.options.logger(`Desktop file created at ${desktopPath}`);
+  };
+}
+
 // Below comes an evil hack to fix this issue: https://github.com/kando-menu/kando/issues/502
 // For some reason, there seems to be no way to disable the build_id_links feature in the
 // electron-installer-redhat package which is used by electron-forge to create RPM packages.
@@ -67,11 +89,24 @@ if (makerRPM.isSupportedOnCurrentPlatform()) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { Installer: RedhatInstaller } = require('electron-installer-redhat');
   const { spawn } = require('@malept/cross-spawn-promise');
+  const fs = require('fs-extra');
+
   RedhatInstaller.prototype.createPackage = async function () {
     this.options.logger(
       "+++ Running patched createPackage method! See Kando's forge.config.ts for details. +++"
     );
+
+    const specContents = await fs.readFile(this.specPath, 'utf8');
+    const patchedSpecContents = specContents.replace(
+      '/usr/share/applications/kando.desktop',
+      '/usr/share/applications/menu.kando.Kando.desktop'
+    );
+    if (patchedSpecContents !== specContents) {
+      await fs.writeFile(this.specPath, patchedSpecContents);
+    }
+
     this.options.logger(`Creating package at ${this.stagingDir}`);
+
     const output = await spawn(
       'rpmbuild',
       [
@@ -86,6 +121,7 @@ if (makerRPM.isSupportedOnCurrentPlatform()) {
       ],
       this.options.logger
     );
+
     this.options.logger(`rpmbuild output: ${output}`);
   };
 }
