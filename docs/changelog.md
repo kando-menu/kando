@@ -23,8 +23,8 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :wrench: Changed
 
-- Kando will now refuse to load the settings file if it detects that it was created with a newer **major** version of Kando. This is to prevent issues which could arise when switching back to an older version of Kando. This has been added in preparation for the 3.0.0 release which will contain breaking changes.
-- Kando will now also show a warning if it detects that the settings file was created with a newer **minor** version of Kando. This is to make users aware of potential compatibility issues when switching back to an older version of Kando. Yet it will still attempt to load the settings in this case as minor version updates should not contain breaking changes.
+- Kando will now refuse to load the settings files if it detects that they were created with a **newer major version** of Kando. This is to prevent issues which could arise when switching back to an older version of Kando. This has been added in preparation for the 3.0.0 release which will contain breaking changes.
+- Kando will now also show a warning if it detects that the settings files were created with a **newer minor version** of Kando. This is to make users aware of potential compatibility issues when switching back to an older version of Kando. Yet it will still attempt to load the settings in this case as minor version updates should not contain breaking changes.
 
 ### :bug: Fixed
 
