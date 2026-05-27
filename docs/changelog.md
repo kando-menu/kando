@@ -17,6 +17,19 @@ Security   - in case of vulnerabilities.
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 
+## [Kando 2.3.1](https://github.com/kando-menu/kando/releases/tag/v2.3.1)
+
+**Release Date:** TBD
+
+### :wrench: Changed
+
+- Kando will now refuse to load the settings file if it detects that it was created with a newer **major** version of Kando. This is to prevent issues which could arise when switching back to an older version of Kando. This has been added in preparation for the 3.0.0 release which will contain breaking changes.
+- Kando will now also show a warning if it detects that the settings file was created with a newer **minor** version of Kando. This is to make users aware of potential compatibility issues when switching back to an older version of Kando. Yet it will still attempt to load the settings in this case as minor version updates should not contain breaking changes.
+
+### :bug: Fixed
+
+- A bug which caused the prebuilt binaries from GitHub to not launch on recent versions of KDE Plasma. The fix involved renaming the included desktop file from `kando.desktop` to `menu.kando.Kando.desktop` to match the application ID used by Kando. This only works for the Debian package and RPM package, the self-contained zip variant and the appimage will still not launch until you create a desktop file (like [this](https://github.com/kando-menu/kando/blob/main/appstream/menu.kando.Kando.desktop)) for them manually.
+
 ## [Kando 2.3.0](https://github.com/kando-menu/kando/releases/tag/v2.3.0)
 
 **Release Date:** 2026-04-18
