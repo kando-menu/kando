@@ -340,9 +340,25 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
         this.createBackup(oldVersion, data);
       }
 
-      // If the settings file was created with a newer version of Kando, we will not try
-      // to load it but this may fail. We show a warning notifying the user about this and
-      // try to load anyway.
+      // If the settings file was created with a new major version of Kando, we will not
+      // load it as it is very likely to be incompatible. We show an error message
+      // notifying the user about this and keep the default settings.
+      if (
+        oldVersionParsed &&
+        currentVersionParsed &&
+        semver.major(oldVersionParsed) > semver.major(currentVersionParsed)
+      ) {
+        Notification.show({
+          title: `Incompatible settings discovered!`,
+          message: `The ${this.options.name} file was created with a newer major version of Kando and cannot be loaded. Defaults have been restored and a backup of the original file has been created in the backups folder.`,
+          type: 'error',
+        });
+
+        return this.options.defaults();
+      }
+
+      // If the settings file was created with a newer minor version of Kando, we will try
+      // to load it but this may fail. We show a warning notifying the user about this.
       if (
         oldVersionParsed &&
         currentVersionParsed &&
@@ -350,7 +366,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
       ) {
         Notification.show({
           title: `Possibly incompatible settings discovered!`,
-          message: `The ${this.options.name} file was created with a newer version of Kando. Loading may fail. A backup of the file has been created in the backups folder just to be safe.`,
+          message: `The ${this.options.name} file was created with a newer version of Kando and may not be fully compatible. A backup of the file has been created in the backups folder just to be safe.`,
           type: 'info',
         });
       }
