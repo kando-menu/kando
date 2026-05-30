@@ -25,36 +25,39 @@
       minPitch: 0.7,
       maxPitch: 0.7,
     },
-    hoverItem: {
+    openSubmenu: {
+      file: 'select.wav',
+      volume: 0.4,
+      minPitch: 0.9,
+      maxPitch: 0.9,
+    },
+    closeSubmenu: {
+      file: 'select.wav',
+      volume: 0.4,
+      minPitch: 0.7,
+      maxPitch: 0.7,
+    },
+    activateRoot: {
+      file: 'final.wav',
+      volume: 0.7,
+    },
+    hoverButton: {
       file: 'hover.wav',
       minPitch: 0.9,
       maxPitch: 1.0,
     },
-    hoverParent: {
-      file: 'hover.wav',
-      minPitch: 0.8,
-      maxPitch: 0.8,
+    selectButton: {
+      file: 'final.wav',
+      volume: 0.7,
     },
     hoverSubmenu: {
       file: 'hover.wav',
       minPitch: 0.9,
       maxPitch: 0.9,
     },
-    selectItem: {
+    activateSubmenu: {
       file: 'final.wav',
       volume: 0.7,
-    },
-    selectParent: {
-      file: 'select.wav',
-      volume: 0.4,
-      minPitch: 0.7,
-      maxPitch: 0.7,
-    },
-    selectSubmenu: {
-      file: 'select.wav',
-      volume: 0.4,
-      minPitch: 0.9,
-      maxPitch: 0.9,
     },
   },
 }

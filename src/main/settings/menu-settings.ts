@@ -154,7 +154,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
         icon: oldItem.icon,
         iconTheme: oldItem.iconTheme,
         children: [],
-        centerClickWorkflow: {
+        activateWorkflow: {
           quickSelectKey: 'Backspace',
           actions: [
             {
@@ -165,7 +165,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
       };
 
       if (oldItem.quickSelectKey != null) {
-        newItem.selectWorkflow = {
+        newItem.openWorkflow = {
           actions: [],
           quickSelectKey: oldItem.quickSelectKey,
         };
@@ -373,7 +373,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
       name: oldMenu.root.name,
       icon: oldMenu.root.icon,
       iconTheme: oldMenu.root.iconTheme,
-      centerClickWorkflow: {
+      activateWorkflow: {
         quickSelectKey: 'Backspace',
         actions: [
           {

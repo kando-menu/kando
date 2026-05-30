@@ -99,7 +99,7 @@ Promise.all([
   // Helper function to group and re-use function calls
   // associated with showing the settings window.
   const showSettings = () => {
-    menu.cancel();
+    menu.triggerInteraction('closeMenu');
     window.menuAPI.showSettings();
   };
 
@@ -113,7 +113,6 @@ Promise.all([
   const menu = new Menu(
     document.getElementById('kando-menu'),
     menuTheme,
-    soundTheme,
     centerText,
     settings
   );
@@ -127,14 +126,24 @@ Promise.all([
     settingsButton.show();
   });
 
-  // Close the current submenu when the main process requests it.
-  window.menuAPI.onCloseSubmenu(() => {
-    menu.closeSubmenu();
+  // Tell the menu about interactions triggered by the host process. This includes closing
+  // the menu or closing the current submenu.
+  window.menuAPI.onTriggerInteraction((type) => {
+    menu.triggerInteraction(type);
   });
 
-  // Hide the menu when the main process requests it.
-  window.menuAPI.onCancelMenu(() => {
-    menu.cancel();
+  // Tell the host process about interactions triggered by the user or also by the host
+  // process itself via the onTriggerInteraction function.
+  menu.on('interaction', (type, path, time, source) => {
+    window.menuAPI.finalizeInteraction(type, path, time, source);
+
+    // If the menu was closed, we also hide the settings button.
+    if (type === 'closeMenu') {
+      settingsButton.hide();
+    }
+
+    // Play the corresponding sound for the interaction.
+    soundTheme.playSound(type);
   });
 
   // Tell the menu about settings changes. This could check more detailed which setting
@@ -163,33 +172,10 @@ Promise.all([
     window.menuAPI.movePointer(dist);
   });
 
-  // Hide Kando's window when the user aborts a selection.
-  menu.on('cancel', () => {
-    menu.hide();
-    settingsButton.hide();
-    window.menuAPI.cancelSelection();
-  });
-
-  // Hide Kando's window when the user selects an item and notify the main process.
-  menu.on('select', (target, path, time, source) => {
-    if (target === 'item') {
-      menu.hide();
-      settingsButton.hide();
-    }
-    window.menuAPI.selectItem(target, path, time, source);
-  });
-
-  // Report hover events to the main process.
-  menu.on('hover', (target, path) => {
-    window.menuAPI.hoverItem(target, path);
-  });
-
   document.body.addEventListener('keydown', async (ev) => {
     // Hide the menu when the user presses escape.
     if (ev.key === 'Escape') {
-      menu.hide();
-      settingsButton.hide();
-      window.menuAPI.cancelSelection();
+      menu.triggerInteraction('closeMenu');
     }
 
     // Show the settings window if 'cmd + ,' hotkey is pressed on macOS

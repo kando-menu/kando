@@ -177,7 +177,7 @@ export const ROOT_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
   type: z.literal('root'),
 
   /** The workflow which is triggered when the root center is clicked. */
-  centerClickWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+  activateWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
   /** The top-level children of the menu. */
   get children() {
@@ -220,10 +220,10 @@ export const SUBMENU_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
   hoverWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
   /** The workflow which is triggered when the submenu is opened. */
-  selectWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+  openWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
   /** The workflow which is triggered when the submenu center is clicked while open. */
-  centerClickWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+  activateWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
   /** The children of this menu item. */
   get children() {

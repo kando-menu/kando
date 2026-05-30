@@ -103,19 +103,42 @@ export class WorkflowExecutor {
   }
 
   /**
+   * This returns true if the given workflow performs no meaningful actions, e.g. if it
+   * only contains delay actions, inhibit-shortcuts actions, close-menu, or close-submenu
+   * actions.
+   *
+   * This is used to determine whether a workflow only "cancels" the current interaction
+   * by closing the menu. This information is relevant for achievement tracking.
+   *
+   * @param workflow The workflow to check.
+   * @returns True if the workflow performs no meaningful actions, false otherwise.
+   */
+  public isNoopWorkflow(workflow: DeepReadonly<Workflow>): boolean {
+    return workflow.actions.every((action) => {
+      return (
+        action.type === 'delay' ||
+        action.type === 'inhibit-shortcuts' ||
+        action.type === 'close-menu' ||
+        action.type === 'close-submenu'
+      );
+    });
+  }
+
+  /**
    * Executes the given action.
    *
    * @param action The action to execute.
    * @param app The app which executed the action.
-   * @returns A promise which resolves when the action has been executed.
+   * @returns A promise which resolves when the action has been executed or a promise
+   *   which resolves to a function that will be called when the workflow is finalized.
+   *   The finalize function can be used to undo the action, e.g. to re-enable shortcuts
+   *   after an inhibit-shortcuts action.
    */
   private executeAction(
     action: DeepReadonly<WorkflowAction>,
     app: KandoApp
   ): Promise<() => Promise<void>> | Promise<void> {
-    const executor = ACTION_EXECUTORS.get(action.type) as WorkflowActionExecutor<
-      typeof action.type
-    >;
+    const executor = ACTION_EXECUTORS.get(action.type);
     return executor(action, app);
   }
 }

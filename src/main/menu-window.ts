@@ -16,12 +16,13 @@ import {
   ShowMenuRequest,
   Menu,
   MenuItem,
+  Workflow,
   WMInfo,
   SelectionSource,
-  InteractionTarget,
+  MenuInteractionType,
   RootMenuItem,
 } from '../common';
-import { IPCCallbacks } from '../common/ipc';
+import { IPCCallback } from '../common/ipc';
 import { WorkflowExecutor } from './workflow-executor';
 import { KandoApp } from './app';
 
@@ -47,6 +48,12 @@ export class MenuWindow extends BrowserWindow {
    * trigger some achievements.
    */
   public lastSelections: { time: number; date: Date }[] = [];
+
+  /**
+   * This will be set to false once a meaningful interaction with the menu has been made
+   * since the menu was shown. It is used to trigger some achievements.
+   */
+  public noopInteraction = true;
 
   /**
    * This index is used to select the next menu from the list of menus which would match
@@ -76,7 +83,7 @@ export class MenuWindow extends BrowserWindow {
 
   constructor(
     private kando: KandoApp,
-    private ipcCallbacks: IPCCallbacks
+    private ipcCallback: IPCCallback
   ) {
     const display = screen.getPrimaryDisplay();
 
@@ -237,6 +244,7 @@ export class MenuWindow extends BrowserWindow {
     // will be passed to the action as well.
     this.lastMenu = menu;
     this.lastRequest = request;
+    this.noopInteraction = true;
 
     // On Windows, we have to show the window before we can move it. Otherwise, the
     // window will not be moved to the correct monitor.
@@ -314,8 +322,6 @@ export class MenuWindow extends BrowserWindow {
         },
       }
     );
-
-    this.ipcCallbacks.onOpen();
   }
 
   /** This shows the window. */
@@ -631,17 +637,15 @@ export class MenuWindow extends BrowserWindow {
    */
   private getMenuItemAtPath(
     root: DeepReadonly<RootMenuItem>,
-    path: string
+    path: number[]
   ): DeepReadonly<MenuItem> | null {
-    const indices = this.pathToArray(path);
-
-    if (indices.length === 0) {
+    if (path.length === 0) {
       return root;
     }
 
     let item: DeepReadonly<MenuItem> = root;
 
-    for (const index of indices) {
+    for (const index of path) {
       if (item.type !== 'submenu' && item.type !== 'root') {
         return null;
       }
@@ -682,18 +686,51 @@ export class MenuWindow extends BrowserWindow {
         .movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
     });
 
-    // When the user selects an item, we execute the corresponding action. Depending on
-    // the action, we might need to wait for the fade-out animation to finish before we
-    // execute the action.
+    // When the user performs an interaction with the menu, we need to execute the
+    // corresponding workflow. We also report the interaction to whoever requested the
+    // menu and track some achievements.
     ipcMain.on(
-      'menu-window.select-item',
+      'menu-window.finalize-interaction',
       (
         event,
-        target: InteractionTarget,
-        path: string,
+        type: MenuInteractionType,
+        path: number[],
         time: number,
         source: SelectionSource
       ) => {
+        // In any case, we report the interaction to whoever requested the menu.
+        this.ipcCallback(type, path);
+
+        // For open-menu, and close-submenu interactions, we do not need to execute any
+        // workflows.
+        if (
+          type === MenuInteractionType.eOpenMenu ||
+          type === MenuInteractionType.eCloseSubmenu
+        ) {
+          return;
+        }
+
+        // If the menu should be closed, we hide the window and stop here. There is also
+        // no workflow to execute in this case. We only check whether no workflow was
+        // executed in order to track the "cancels" achievement.
+        if (type === MenuInteractionType.eCloseMenu) {
+          this.hideWindow();
+
+          if (this.noopInteraction) {
+            console.log('Menu canceled without interaction');
+            this.kando.achievementTracker.incrementStat('cancels');
+          }
+          return;
+        }
+
+        // The user clicked the root menu item.
+        if (type === MenuInteractionType.eActivateRoot) {
+          if (this.lastMenu.root.activateWorkflow) {
+            this.executeWorkflow(this.lastMenu.root.activateWorkflow);
+          }
+          return;
+        }
+
         const item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
         if (!item) {
@@ -701,30 +738,41 @@ export class MenuWindow extends BrowserWindow {
           return;
         }
 
-        const pathArray = this.pathToArray(path);
-
-        // If the target of the selection is a submenu, we execute its select-workflow.
-        if (target === InteractionTarget.eSubmenu && item.type === 'submenu') {
-          if (item.selectWorkflow) {
-            WorkflowExecutor.getInstance().executeWorkflow(
-              item.selectWorkflow,
-              this.kando
-            );
+        // If the target of the selection is a submenu, we execute its open-workflow.
+        if (type === MenuInteractionType.eOpenSubmenu && item.type === 'submenu') {
+          if (item.openWorkflow) {
+            this.executeWorkflow(item.openWorkflow);
           }
+          return;
         }
 
-        // For buttons, we also execute the select-workflow.
-        if (target === InteractionTarget.eItem && item.type === 'button') {
+        // For buttons and submenus, we may need to execute the hover-workflow.
+        if (
+          (type === MenuInteractionType.eHoverButton && item.type === 'button') ||
+          (type === MenuInteractionType.eHoverSubmenu && item.type === 'submenu')
+        ) {
+          if (item.hoverWorkflow) {
+            this.executeWorkflow(item.hoverWorkflow);
+          }
+          return;
+        }
+
+        // For submenus, there is also the activate-workflow.
+        if (type === MenuInteractionType.eActivateSubmenu && item.type === 'submenu') {
+          if (item.activateWorkflow) {
+            this.executeWorkflow(item.activateWorkflow);
+          }
+          return;
+        }
+
+        // Finally, there is the select-workflow for buttons.
+        if (type === MenuInteractionType.eSelectButton && item.type === 'button') {
           if (item.selectWorkflow) {
-            WorkflowExecutor.getInstance().executeWorkflow(
-              item.selectWorkflow,
-              this.kando
-            );
+            this.executeWorkflow(item.selectWorkflow);
           }
 
-          // Track selection for achievements.
           this.kando.achievementTracker.onSelectionMade(
-            Math.min(Math.max(pathArray.length, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
+            Math.min(Math.max(path.length, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
             time,
             source
           );
@@ -770,40 +818,25 @@ export class MenuWindow extends BrowserWindow {
             }
           }
         }
-
-        // Call the provided IPC callbacks if they exist.
-        this.ipcCallbacks.onSelect(target, pathArray);
       }
     );
-
-    // When the user hovers a menu item, we report this to whoever requested the menu. We
-    // also run any hover-workflow of the item if it has one.
-    ipcMain.on('menu-window.hover-item', (event, target, path) => {
-      const item = this.getMenuItemAtPath(this.lastMenu.root, path);
-
-      if (!item) {
-        console.error('No item found at path: ', path);
-        return;
-      }
-
-      if ('hoverWorkflow' in item) {
-        WorkflowExecutor.getInstance().executeWorkflow(item.hoverWorkflow, this.kando);
-      }
-
-      this.ipcCallbacks.onHover(target, this.pathToArray(path));
-    });
-
-    // We do not hide the window immediately when the user aborts a selection. Instead, we
-    // wait for the fade-out animation to finish.
-    ipcMain.on('menu-window.cancel-selection', () => {
-      this.hideWindow();
-      this.ipcCallbacks.onCancel();
-      this.kando.achievementTracker.incrementStat('cancels');
-    });
 
     // Show the settings window when the user clicks on the settings button in the menu.
     ipcMain.on('menu-window.show-settings', () => {
       this.kando.showSettings();
     });
+  }
+
+  /**
+   * Small helper method to execute a given workflow.
+   *
+   * @param workflow The workflow to execute.
+   */
+  private executeWorkflow(workflow: DeepReadonly<Workflow>) {
+    if (this.noopInteraction) {
+      this.noopInteraction = WorkflowExecutor.getInstance().isNoopWorkflow(workflow);
+    }
+
+    WorkflowExecutor.getInstance().executeWorkflow(workflow, this.kando);
   }
 }

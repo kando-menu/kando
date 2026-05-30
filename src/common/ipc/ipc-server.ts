@@ -15,27 +15,16 @@ import fs from 'fs';
 import path from 'path';
 import * as IPCTypes from './types';
 
-import { TypedEventEmitter, InteractionTarget, RootMenuItem } from '..';
+import { TypedEventEmitter, MenuInteractionType, RootMenuItem } from '..';
 
-/**
- * Callbacks that are provided to the IPC server event handlers to report menu
- * interactions back to the clients. When a client sends a show-menu request, the server
- * emits a 'show-menu' event with these callbacks. We should call these callbacks to
- * notify the client about menu interactions (selection, hover, cancel).
- */
-export type IPCCallbacks = {
-  onOpen: () => void;
-  onCancel: () => void;
-  onSelect: (target: InteractionTarget, path: number[]) => void;
-  onHover: (target: InteractionTarget, path: number[]) => void;
-};
+export type IPCCallback = (interaction: MenuInteractionType, path: number[]) => void;
 
 /** These events are emitted by the IPC server when clients send requests. */
 type IPCServerEvents = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'show-menu': [menu: RootMenuItem];
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  'start-observing': [observerID: number, callbacks: IPCCallbacks];
+  'start-observing': [observerID: number, callback: IPCCallback];
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'stop-observing': [observerID: number];
 };
@@ -52,8 +41,12 @@ type IPCServerEvents = {
  *   events.
  */
 export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCServerEvents>) {
-  /** The protocol version supported by this server. Clients must match this version. */
-  private static readonly cAPIVersion = 1;
+  /**
+   * The protocol version supported by this server. Clients must match this version. With
+   * Kando 3.0.0, the API changed in a backwards-incompatible way, so it has been bumped
+   * to version 2.
+   */
+  private static readonly cAPIVersion = 2;
 
   /**
    * The WebSocket server instance. It is initialized in init() and closed in close(). It
@@ -175,40 +168,23 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
         observerID = this.nextObserverID++;
       }
 
-      this.emit('start-observing', observerID, {
-        onOpen: () => {
-          const openMsg: IPCTypes.OpenMenuMessage = { type: 'open-menu' };
-          ws.send(JSON.stringify(openMsg));
-        },
-        onHover: (target: InteractionTarget, path: number[]) => {
-          const hoverMsg: IPCTypes.HoverItemMessage = {
-            type: 'hover-item',
-            target,
+      this.emit(
+        'start-observing',
+        observerID,
+        (interaction: MenuInteractionType, path: number[]) => {
+          const message: IPCTypes.MenuInteractionMessage = {
+            type: 'menu-interaction',
+            interaction,
             path,
           };
-          ws.send(JSON.stringify(hoverMsg));
-        },
-        onSelect: (target: InteractionTarget, path: number[]) => {
-          const selectMsg: IPCTypes.SelectItemMessage = {
-            type: 'select-item',
-            target,
-            path,
-          };
-          ws.send(JSON.stringify(selectMsg));
 
-          if (oneTime) {
+          ws.send(JSON.stringify(message));
+
+          if (oneTime && interaction === 'closeMenu') {
             stopObserving();
           }
-        },
-        onCancel: () => {
-          const cancelMsg: IPCTypes.CancelMenuMessage = { type: 'cancel-menu' };
-          ws.send(JSON.stringify(cancelMsg));
-
-          if (oneTime) {
-            stopObserving();
-          }
-        },
-      });
+        }
+      );
     };
 
     ws.on('message', (data) => {

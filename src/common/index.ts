@@ -184,11 +184,17 @@ export type KeyStroke = {
  */
 export type KeySequence = Array<KeyStroke>;
 
-/** Enum for the different item categories which can be hovered or selected. */
-export enum InteractionTarget {
-  eItem = 'item',
-  eSubmenu = 'submenu',
-  eParent = 'parent',
+/** Enum for the different things a user can do in a menu. */
+export enum MenuInteractionType {
+  eOpenMenu = 'openMenu',
+  eCloseMenu = 'closeMenu',
+  eOpenSubmenu = 'openSubmenu',
+  eCloseSubmenu = 'closeSubmenu',
+  eActivateRoot = 'activateRoot',
+  eHoverButton = 'hoverButton',
+  eSelectButton = 'selectButton',
+  eHoverSubmenu = 'hoverSubmenu',
+  eActivateSubmenu = 'activateSubmenu',
 }
 
 /**
@@ -342,21 +348,6 @@ export type MenuThemeDescription = {
 };
 
 /**
- * Sound themes can define different sounds for different actions. This enum is used to
- * identify the different sounds.
- */
-export enum SoundType {
-  eOpenMenu = 'openMenu',
-  eCloseMenu = 'closeMenu',
-  eSelectItem = 'selectItem',
-  eSelectSubmenu = 'selectSubmenu',
-  eSelectParent = 'selectParent',
-  eHoverItem = 'hoverItem',
-  eHoverSubmenu = 'hoverSubmenu',
-  eHoverParent = 'hoverParent',
-}
-
-/**
  * This type is used to describe a sound effect. It contains the path to the sound file
  * and some optional properties like the volume and pitch shift.
  */
@@ -412,7 +403,7 @@ export type SoundThemeDescription = {
    * All available sound effects. If a given sound is not defined here, no sound will be
    * played for the corresponding action.
    */
-  readonly sounds: Record<SoundType, SoundEffect>;
+  readonly sounds: Record<MenuInteractionType, SoundEffect>;
 };
 
 /**
@@ -580,6 +571,7 @@ export type LevelProgress = {
  * mode or turbo mode) or a gamepad.
  */
 export enum SelectionSource {
+  eUnknown = 'unknown',
   eClick = 'click',
   eKeyboard = 'keyboard',
   eGesture = 'gesture',

@@ -20,11 +20,11 @@ import { Vec2, RootMenuItem, ChildMenuItem, MenuItem, SubmenuMenuItem } from '..
  */
 type RenderData = {
   /**
-   * The chain of indices to get to this menu item. It will be '/' for the root item and
-   * something like '/0/1/2' for a menu item which is the third child of the second child
+   * The chain of indices to get to this menu item. It will be empty for the root item and
+   * something like [0, 1, 2] for a menu item which is the third child of the second child
    * of the first child of the root menu item.
    */
-  path: string;
+  path: number[];
 
   /** The parent menu item. This will be null for the root item. */
   parent: RenderedRootMenuItem | RenderedSubmenuMenuItem | null;

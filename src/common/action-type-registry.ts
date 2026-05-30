@@ -340,7 +340,7 @@ export class ActionTypeRegistry {
           icon: 'submenu-item.svg',
           iconTheme: 'kando',
           children: [],
-          centerClickWorkflow: {
+          activateWorkflow: {
             quickSelectKey: 'Backspace',
             actions: [
               {

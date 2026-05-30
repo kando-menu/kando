@@ -32,7 +32,7 @@ import {
   SoundThemeDescription,
   MenuThemeDescription,
   WMInfo,
-  SoundType,
+  MenuInteractionType,
   FileIconThemeDescription,
   SoundEffect,
   CommandlineOptions,
@@ -46,7 +46,7 @@ import {
   tryLoadGeneralSettingsFile,
   tryLoadMenuSettingsFile,
 } from './settings';
-import { IPCServer, IPCCallbacks } from '../common/ipc';
+import { IPCServer, IPCCallback } from '../common/ipc';
 import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
 import { EXPORTED_MENU_SCHEMA_V1 } from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
@@ -92,7 +92,7 @@ export class KandoApp {
   private ipcServer: IPCServer;
 
   /** This is used to keep track of all active IPC observers. */
-  private ipcObservers: Map<number, IPCCallbacks> = new Map();
+  private ipcObservers: Map<number, IPCCallback> = new Map();
 
   /** This contains the last WMInfo which was received. */
   private lastWMInfo?: WMInfo;
@@ -504,28 +504,15 @@ export class KandoApp {
    * be called. IPC observers can be registered by other processes via websockets.
    */
   private async createMenuWindow() {
-    this.menuWindow = new MenuWindow(this, {
-      onSelect: (target, path) => {
+    this.menuWindow = new MenuWindow(
+      this,
+      (interaction: MenuInteractionType, path: number[]) => {
         for (const observer of this.ipcObservers.values()) {
-          observer.onSelect(target, path);
+          observer(interaction, path);
         }
-      },
-      onHover: (target, path) => {
-        for (const observer of this.ipcObservers.values()) {
-          observer.onHover(target, path);
-        }
-      },
-      onCancel: () => {
-        for (const observer of this.ipcObservers.values()) {
-          observer.onCancel();
-        }
-      },
-      onOpen: () => {
-        for (const observer of this.ipcObservers.values()) {
-          observer.onOpen();
-        }
-      },
-    });
+      }
+    );
+
     await this.menuWindow.load();
 
     // Make sure that closing the menu window just hides it instead of actually closing it.
@@ -1713,7 +1700,7 @@ export class KandoApp {
         themeVersion: '',
         author: '',
         license: '',
-        sounds: {} as Record<SoundType, SoundEffect>,
+        sounds: {} as Record<MenuInteractionType, SoundEffect>,
       };
 
       return description;

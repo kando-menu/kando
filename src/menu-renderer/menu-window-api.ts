@@ -15,7 +15,7 @@ import {
   Vec2,
   ShowMenuOptions,
   SelectionSource,
-  InteractionTarget,
+  MenuInteractionType,
   RootMenuItem,
 } from '../common';
 
@@ -43,7 +43,7 @@ export const MENU_WINDOW_API = {
   },
 
   /**
-   * This will be called by the host process when a new menu should be shown.
+   * This will be triggered by the host process when a new menu should be shown.
    *
    * @param callback This callback will be called when a new menu should be shown.
    */
@@ -54,60 +54,43 @@ export const MENU_WINDOW_API = {
   },
 
   /**
-   * This will be called by the host process when the current submenu should be closed.
+   * The host can request the renderer process to initiate several menu interactions, such
+   * as closing the menu or closing the current submenu. The renderer process will act
+   * accordingly and call the finalizeInteraction callback afterwards.
    *
-   * @param callback This callback will be called when the current submenu should be
-   *   closed.
+   * @param callback This callback will be called when the host process requests a menu
+   *   interaction.
    */
-  onCloseSubmenu: (func: () => void) => {
-    ipcRenderer.on('menu-window.close-submenu', func);
+  onTriggerInteraction: (func: (type: 'closeMenu' | 'closeSubmenu') => void) => {
+    ipcRenderer.on('menu-window.trigger-interaction', (event, type) => func(type));
   },
 
   /**
-   * This will be called by the host process when the menu should be closed. Usually, the
-   * renderer will call selectItem or cancelSelection to close the menu, but sometimes the
-   * host process needs to close the menu without a selection.
+   * Menu interactions can be triggered by the user in the renderer process, for example
+   * by clicking a menu item or hovering over a submenu. They can also be triggered by the
+   * host process using the onTriggerInteraction function.
    *
-   * @param callback This callback will be called when the menu should be closed.
-   */
-  onCancelMenu: (func: () => void) => {
-    ipcRenderer.on('menu-window.cancel-menu', func);
-  },
-
-  /**
-   * This will be called by the render process when the user selects a menu item.
+   * In both cases, the renderer process will call this finalizeInteraction function to
+   * notify the host process about the interaction. The host process will then execute the
+   * corresponding workflow, track achievements, etc.
    *
-   * @param target The type of the selected item (e.g. item, submenu, parent).
+   * The time and source parameters are used for achievement tracking. They are only
+   * relevant for selection interactions like "selectButton".
+   *
+   * @param type The type of the interaction, e.g. opening a menu, hovering a button, etc.
    * @param path The path of the selected menu item.
    * @param time The time it took to select the item in milliseconds. This is used for
    *   achievement tracking.
-   * @param source The source used to make the selection.
+   * @param source The source used to make the selection. Also used for achievement
+   *   tracking.
    */
-  selectItem: (
-    target: InteractionTarget,
-    path: string,
+  finalizeInteraction: (
+    type: MenuInteractionType,
+    path: number[],
     time: number,
     source: SelectionSource
   ) => {
-    ipcRenderer.send('menu-window.select-item', target, path, time, source);
-  },
-
-  /**
-   * This will be called by the render process when the user hovers a menu item.
-   *
-   * @param target The type of the hovered item (e.g. item, submenu, parent).
-   * @param path The path of the hovered menu item.
-   */
-  hoverItem: (target: InteractionTarget, path: string) => {
-    ipcRenderer.send('menu-window.hover-item', target, path);
-  },
-
-  /**
-   * This will be called by the render process when the user cancels a selection in the
-   * menu.
-   */
-  cancelSelection: () => {
-    ipcRenderer.send('menu-window.cancel-selection');
+    ipcRenderer.send('menu-window.finalize-interaction', type, path, time, source);
   },
 
   /** This will be called by the render process to show the settings window. */

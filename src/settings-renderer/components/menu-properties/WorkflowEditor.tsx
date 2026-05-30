@@ -25,10 +25,10 @@ import ActionList from './ActionList';
 type WorkflowType =
   | 'buttonSelect'
   | 'buttonHover'
-  | 'rootCenter'
-  | 'submenuSelect'
+  | 'rootActivate'
+  | 'submenuOpen'
   | 'submenuHover'
-  | 'submenuCenter';
+  | 'submenuActivate';
 
 type WorkflowMeta = {
   [key in WorkflowType]: {
@@ -79,18 +79,20 @@ export default function WorkflowEditor() {
       emptyHint: i18next.t('settings.workflow-editor.button-hover-workflow.empty-hint'),
       icon: <TbPointer />,
     },
-    rootCenter: {
-      name: i18next.t('settings.workflow-editor.root-center-workflow.name'),
-      description: i18next.t('settings.workflow-editor.root-center-workflow.description'),
-      emptyHint: i18next.t('settings.workflow-editor.root-center-workflow.empty-hint'),
+    rootActivate: {
+      name: i18next.t('settings.workflow-editor.root-activate-workflow.name'),
+      description: i18next.t(
+        'settings.workflow-editor.root-activate-workflow.description'
+      ),
+      emptyHint: i18next.t('settings.workflow-editor.root-activate-workflow.empty-hint'),
       icon: <TbClick />,
     },
-    submenuSelect: {
-      name: i18next.t('settings.workflow-editor.submenu-select-workflow.name'),
+    submenuOpen: {
+      name: i18next.t('settings.workflow-editor.submenu-open-workflow.name'),
       description: i18next.t(
-        'settings.workflow-editor.submenu-select-workflow.description'
+        'settings.workflow-editor.submenu-open-workflow.description'
       ),
-      emptyHint: i18next.t('settings.workflow-editor.submenu-select-workflow.empty-hint'),
+      emptyHint: i18next.t('settings.workflow-editor.submenu-open-workflow.empty-hint'),
       icon: <TbClick />,
     },
     submenuHover: {
@@ -101,12 +103,14 @@ export default function WorkflowEditor() {
       emptyHint: i18next.t('settings.workflow-editor.submenu-hover-workflow.empty-hint'),
       icon: <TbPointer />,
     },
-    submenuCenter: {
-      name: i18next.t('settings.workflow-editor.submenu-center-workflow.name'),
+    submenuActivate: {
+      name: i18next.t('settings.workflow-editor.submenu-activate-workflow.name'),
       description: i18next.t(
-        'settings.workflow-editor.submenu-center-workflow.description'
+        'settings.workflow-editor.submenu-activate-workflow.description'
       ),
-      emptyHint: i18next.t('settings.workflow-editor.submenu-center-workflow.empty-hint'),
+      emptyHint: i18next.t(
+        'settings.workflow-editor.submenu-activate-workflow.empty-hint'
+      ),
       icon: <TbClick />,
     },
   };
@@ -117,9 +121,9 @@ export default function WorkflowEditor() {
   if (selectedItem.type === 'button') {
     workflowTypes.push('buttonSelect', 'buttonHover');
   } else if (selectedItem.type === 'submenu') {
-    workflowTypes.push('submenuSelect', 'submenuHover', 'submenuCenter');
+    workflowTypes.push('submenuOpen', 'submenuHover', 'submenuActivate');
   } else if (selectedItem.type === 'root') {
-    workflowTypes.push('rootCenter');
+    workflowTypes.push('rootActivate');
   }
 
   // Make sure the selected workflow is valid for the current item type. If not, reset to the first workflow.
@@ -133,7 +137,7 @@ export default function WorkflowEditor() {
     workflowType: WorkflowType
   ): Workflow | undefined => {
     if (
-      (workflowType === 'buttonSelect' || workflowType === 'submenuSelect') &&
+      (workflowType === 'buttonSelect' || workflowType === 'submenuOpen') &&
       'selectWorkflow' in item
     ) {
       return item.selectWorkflow;
@@ -145,10 +149,10 @@ export default function WorkflowEditor() {
       return item.hoverWorkflow;
     }
     if (
-      (workflowType === 'submenuCenter' || workflowType === 'rootCenter') &&
-      'centerClickWorkflow' in item
+      (workflowType === 'submenuActivate' || workflowType === 'rootActivate') &&
+      'activateWorkflow' in item
     ) {
-      return item.centerClickWorkflow;
+      return item.activateWorkflow;
     }
     return undefined;
   };
@@ -156,21 +160,20 @@ export default function WorkflowEditor() {
   // Helper function to update a specific workflow.
   const updateWorkflow = (workflowType: WorkflowType, workflow: Workflow | undefined) => {
     editMenuItem(selectedMenu, selectedChildPath, (item) => {
-      if (
-        (workflowType === 'buttonSelect' || workflowType === 'submenuSelect') &&
-        (item.type === 'button' || item.type === 'submenu')
-      ) {
+      if (workflowType === 'buttonSelect' && item.type === 'button') {
         item.selectWorkflow = workflow;
+      } else if (workflowType === 'submenuOpen' && item.type === 'submenu') {
+        item.openWorkflow = workflow;
       } else if (
         (workflowType === 'buttonHover' || workflowType === 'submenuHover') &&
         (item.type === 'button' || item.type === 'submenu')
       ) {
         item.hoverWorkflow = workflow;
       } else if (
-        (workflowType === 'submenuCenter' || workflowType === 'rootCenter') &&
+        (workflowType === 'submenuActivate' || workflowType === 'rootActivate') &&
         (item.type === 'submenu' || item.type === 'root')
       ) {
-        item.centerClickWorkflow = workflow;
+        item.activateWorkflow = workflow;
       }
 
       return item;
@@ -186,7 +189,7 @@ export default function WorkflowEditor() {
     let quickSelectKeyPlaceholder = '';
     if (
       itemIndex < 9 &&
-      (workflowType === 'buttonSelect' || workflowType === 'submenuSelect')
+      (workflowType === 'buttonSelect' || workflowType === 'submenuOpen')
     ) {
       quickSelectKeyPlaceholder = `${itemIndex + 1}`;
     } else {

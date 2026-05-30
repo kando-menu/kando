@@ -16,9 +16,9 @@ import {
   GeneralSettings,
   ShowMenuOptions,
   Vec2,
-  SoundType,
   SelectionSource,
-  InteractionTarget,
+  MenuInteractionType,
+  TypedEventEmitter,
   ChildMenuItem,
 } from '../common';
 import {
@@ -33,7 +33,6 @@ import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
 import { ButtonState, InputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
-import { SoundTheme } from './sound-theme';
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -49,19 +48,26 @@ import { SoundTheme } from './sound-theme';
  * parent items. Items which are connected to the active item are called child items.
  * Items which are connected to child items are called grandchild items.
  *
- * The menu is an event emitter and will emit the following events:
- *
- * @fires 'select' When a node is selected. The event handler will receive the type of
- *   item selected (e.g. item, submenu, parent), the path of the selected item, the time
- *   it took to make the selection, and the input method which was used to make the
- *   selection.
- * @fires 'hover' When an item is hovered.
- * @fires 'cancel' When the menu is hidden.
- * @fires 'move-pointer' When the mouse pointer should be warped due to menu clamping at
- *   the screen edges.
+ * The menu is an event emitter and will emit the following events.
  */
 
-export class Menu extends EventEmitter {
+type MenuEvents = {
+  // Fired when an interaction is triggered by the user or by the host process itself via
+  // the triggerInteraction function. The time and source parameters are used for
+  // achievement tracking. They are only relevant for selection interactions.
+  interaction: [
+    type: MenuInteractionType,
+    path: number[],
+    selectionTime: number,
+    inputSource: SelectionSource,
+  ];
+  // Fired when the pointer should be moved by the given offset. This is used to warp the
+  // pointer to the center of the menu when it is shown.
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  'move-pointer': [dist: Vec2];
+};
+
+export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvents>) {
   /**
    * The root item is the parent of all other menu items. It will be created when the menu
    * is shown and destroyed when the menu is hidden.
@@ -137,7 +143,6 @@ export class Menu extends EventEmitter {
    *
    * @param container The HTML element which contains the menu.
    * @param theme The theme to use for rendering the menu.
-   * @param soundTheme The theme to use for playing sounds.
    * @param centerText The center text manager to use for showing text in the center of
    *   the menu.
    * @param options Use this to tweak the behavior of the menu.
@@ -145,7 +150,6 @@ export class Menu extends EventEmitter {
   constructor(
     private container: HTMLElement,
     private theme: MenuTheme,
-    private soundTheme: SoundTheme,
     private centerText: CenterText,
     private settings: GeneralSettings
   ) {
@@ -200,9 +204,6 @@ export class Menu extends EventEmitter {
     this.root = root;
     this.createRenderData(this.root, this.container);
 
-    // Play the open sound.
-    this.soundTheme.playSound(SoundType.eOpenMenu);
-
     // On Windows, the menu position passed from the main process is sometimes not
     // correct. For instance, this happens when using pen input with Windows Ink enabled.
     // To work around this, we wait a few milliseconds until the first mouse enter event
@@ -221,7 +222,7 @@ export class Menu extends EventEmitter {
       };
 
       this.container.classList.add('no-transitions');
-      this.selectItem(this.root, SelectionSource.eKeyboard, menuPosition);
+      this.selectItem(this.root, menuPosition);
 
       // To ensure that all DOM changes are applied, flush the browser's rendering
       // pipeline first.
@@ -265,14 +266,8 @@ export class Menu extends EventEmitter {
     } else {
       showMenu();
     }
-  }
 
-  /** Hides the menu. */
-  public hide() {
-    this.container.classList.add('hidden');
-    this.hideTimeout = setTimeout(() => {
-      this.clear();
-    }, this.settings.fadeOutDuration);
+    this.emitMenuInteractionEvent(MenuInteractionType.eOpenMenu);
   }
 
   /** Removes all DOM elements from the menu and resets the root menu item. */
@@ -341,24 +336,18 @@ export class Menu extends EventEmitter {
     this.gamepadInput.closeButton = this.settings.gamepadCloseButton;
   }
 
-  /**
-   * This method closes the current submenu. If the current center item is the root item,
-   * nothing happens.
-   */
-  public closeSubmenu() {
-    if (this.centerItem && this.centerItem.type !== 'root') {
-      this.selectParent(SelectionSource.eKeyboard);
+  /** There are two types of interactions which can be triggered by the host process. */
+  public triggerInteraction(type: 'closeMenu' | 'closeSubmenu') {
+    if (
+      type === 'closeSubmenu' &&
+      this.centerItem &&
+      this.centerItem.type === 'submenu'
+    ) {
+      this.selectParent();
     }
-  }
 
-  /**
-   * This method closes the menu in case the selection should be canceled. This should be
-   * called if nothing is selected but the menu should be closed.
-   */
-  public cancel() {
-    if (!this.hideTimeout) {
-      this.soundTheme.playSound(SoundType.eCloseMenu);
-      this.emit('cancel');
+    if (type === 'closeMenu') {
+      this.hide();
     }
   }
 
@@ -371,9 +360,9 @@ export class Menu extends EventEmitter {
   private initializeInput() {
     const onCloseMenu = () => {
       if (this.settings.rmbSelectsParent) {
-        this.selectParent(SelectionSource.eClick);
+        this.selectParent();
       } else {
-        this.cancel();
+        this.hide();
       }
     };
 
@@ -390,8 +379,8 @@ export class Menu extends EventEmitter {
         return;
       }
 
-      if (type === SelectionType.eParent || this.hoveredItem === this.centerItem) {
-        this.selectParent(source, coords);
+      if (type === SelectionType.eParent) {
+        this.selectParent(coords);
         return;
       }
 
@@ -409,21 +398,22 @@ export class Menu extends EventEmitter {
         (item.type === 'submenu' || item.type === 'root') &&
         this.latestInput.distance > this.settings.centerDeadZone
       ) {
-        this.selectItem(item, source, coords);
+        this.selectItem(item, coords);
+        this.emitSelectionEvent(item, source);
         return;
       }
 
-      // If there is a clicked item, select it. If the clicked item is the root item, the
-      // menu will be closed.
+      // If there is a clicked item, select it.
       if (type === SelectionType.eActiveItem && item) {
-        this.selectItem(item, source, coords);
+        this.selectItem(item, coords);
+        this.emitSelectionEvent(item, source);
         return;
       }
 
       // If there is no hovered, clicked or dragged item, the user most likely clicked
       // somewhere outside of the menu.
       if (type === SelectionType.eActiveItem && item === null) {
-        this.cancel();
+        this.hide();
       }
     };
 
@@ -448,7 +438,7 @@ export class Menu extends EventEmitter {
       if (!anyModifierPressed) {
         // Backspace should select the parent item.
         if (event.key === 'Backspace') {
-          this.selectParent(SelectionSource.eKeyboard);
+          this.selectParent();
           return;
         }
 
@@ -457,10 +447,10 @@ export class Menu extends EventEmitter {
         // Then we check whether the center-click-workflow of the center item got triggered.
         if (
           this.centerItem.type === 'submenu' &&
-          this.centerItem.centerClickWorkflow?.quickSelectKey
+          this.centerItem.activateWorkflow?.quickSelectKey
         ) {
           if (
-            this.centerItem.centerClickWorkflow.quickSelectKey.toLocaleLowerCase() ===
+            this.centerItem.activateWorkflow.quickSelectKey.toLocaleLowerCase() ===
             eventKey
           ) {
             console.log('Quick select key for center item triggered');
@@ -475,19 +465,18 @@ export class Menu extends EventEmitter {
             const child = this.centerItem.children[i];
 
             const selectionKeys = [];
-            if (child.selectWorkflow?.quickSelectKey) {
+            if (child.type === 'button' && child.selectWorkflow?.quickSelectKey) {
               selectionKeys.push(child.selectWorkflow.quickSelectKey.toLocaleLowerCase());
+            } else if (child.type === 'submenu' && child.openWorkflow?.quickSelectKey) {
+              selectionKeys.push(child.openWorkflow.quickSelectKey.toLocaleLowerCase());
             } else if (i < 9) {
               selectionKeys.push(`${i + 1}`);
               selectionKeys.push(`num${i + 1}`);
             }
 
             if (selectionKeys.includes(eventKey)) {
-              this.selectItem(
-                child,
-                SelectionSource.eKeyboard,
-                this.getCenterItemPosition()
-              );
+              this.selectItem(child, this.getCenterItemPosition());
+              this.emitSelectionEvent(child, SelectionSource.eKeyboard);
               return;
             }
           }
@@ -496,11 +485,11 @@ export class Menu extends EventEmitter {
         // Finally, we check whether any hover-workflow of the menu items got triggered.
         if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
           for (let i = 0; i < this.centerItem.children.length; i++) {
-            const child = this.centerItem.children[i];
+            const child = this.centerItem.children[i] as RenderedChildMenuItem;
 
             if (child.hoverWorkflow?.quickSelectKey) {
               if (child.hoverWorkflow.quickSelectKey.toLocaleLowerCase() === eventKey) {
-                console.log('Quick select key for hover workflow of item triggered');
+                this.hoverAngle(child.renderData.computedAngle);
                 return;
               }
             }
@@ -521,22 +510,14 @@ export class Menu extends EventEmitter {
       if (event.key === 'Enter') {
         if (this.hoveredItem) {
           if (this.hoveredItem === this.centerItem) {
-            // If pressing Enter on the root item, we want to close the menu. If pressing
-            // Enter on any other item which is not a leaf item, we want to select the
-            // parent item. This allows to quickly navigate back to the parent item
-            // without having to press Backspace or move the mouse.
-            if (this.hoveredItem.type === 'root') {
-              this.cancel();
-            } else {
-              const centerPosition = this.getCenterItemPosition();
-              const parentPosition = math.subtract(
-                centerPosition,
-                this.hoveredItem.renderData.position
-              );
-              this.selectParent(SelectionSource.eKeyboard, parentPosition);
-            }
+            this.emitItemInteractionEvent(
+              this.hoveredItem.type === 'root'
+                ? MenuInteractionType.eActivateRoot
+                : MenuInteractionType.eActivateSubmenu,
+              this.hoveredItem.renderData.path
+            );
           } else {
-            this.selectItem(this.hoveredItem, SelectionSource.eKeyboard);
+            this.selectItem(this.hoveredItem);
           }
 
           return;
@@ -578,6 +559,19 @@ export class Menu extends EventEmitter {
     });
   }
 
+  /** Hides the menu. */
+  private hide() {
+    if (!this.hideTimeout) {
+      this.container.classList.add('hidden');
+
+      this.hideTimeout = setTimeout(() => {
+        this.clear();
+      }, this.settings.fadeOutDuration);
+
+      this.emitMenuInteractionEvent(MenuInteractionType.eCloseMenu);
+    }
+  }
+
   /**
    * Selects the given menu item. This will either push the item to the list of selected
    * items or pop the last item from the list of selected items if the newly selected item
@@ -589,22 +583,16 @@ export class Menu extends EventEmitter {
    * If the given item is a leaf item, the "select" event is emitted.
    *
    * @param item The newly selected menu item.
-   * @param source The input method which was used to make the selection. Used for
-   *   achievement tracking.
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectItem(item: RenderedMenuItem, source: SelectionSource, coords?: Vec2) {
+  private selectItem(item: RenderedMenuItem, coords?: Vec2) {
     this.clickItem(null);
     this.hoverItem(null);
     this.dragItem(null);
 
-    // If the item is already selected, do nothing. Except for the root item - here we
-    // close the menu.
+    // If the item is already selected, we are done here.
     if (this.centerItem === item) {
-      if (item.type === 'root') {
-        this.cancel();
-      }
       return;
     }
 
@@ -704,62 +692,96 @@ export class Menu extends EventEmitter {
       this.wedgeSeparators?.setSeparators(separators, clampedPosition);
     }
 
-    // We do not play a sound effect for the initial selection of the root item and also
-    // do not emit any selection events.
-    let interactionTarget = null;
-
-    if (item !== this.root || selectedParent) {
-      interactionTarget = InteractionTarget.eItem;
-      let soundType = SoundType.eSelectItem;
-      if (item.type === 'submenu') {
-        soundType = SoundType.eSelectSubmenu;
-        interactionTarget = InteractionTarget.eSubmenu;
-      }
-      if (selectedParent) {
-        soundType = SoundType.eSelectParent;
-        interactionTarget = InteractionTarget.eParent;
-      }
-      this.soundTheme.playSound(soundType);
-    }
-
     // Finally update the CSS classes of all DOM nodes according to the new selection chain
     // and update the connectors.
     this.updateCSSClasses();
     this.updateConnectors();
     this.redraw();
-
-    if (interactionTarget === InteractionTarget.eItem) {
-      this.container.classList.add('selected');
-    }
-
-    if (interactionTarget !== null) {
-      this.emit(
-        'select',
-        interactionTarget,
-        item.renderData.path,
-        Date.now() - this.menuShownTime,
-        source
-      );
-    }
   }
 
   /**
    * This method will select the parent of the currently selected item. If the currently
    * selected item is the root item, the "cancel" event will be emitted.
    *
-   * @param source The input method which was used to make the selection. Used for
-   *   achievement tracking.
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectParent(source: SelectionSource, coords?: Vec2) {
+  private selectParent(coords?: Vec2) {
     if (this.centerItem === this.root) {
-      this.cancel();
+      this.hide();
       return;
     }
 
-    this.soundTheme.playSound(SoundType.eSelectParent);
-    this.selectItem(this.centerItem.renderData.parent, source, coords);
+    this.selectItem(this.centerItem.renderData.parent, coords);
+  }
+
+  /**
+   * This will assign the CSS class 'hovered' to the given menu item's node div element.
+   * It will also remove the class from the previously hovered menu item.
+   *
+   * @param item The item to hover. If null, the currently hovered item will be unhovered.
+   */
+  private hoverItem(item?: RenderedMenuItem) {
+    if (this.hoveredItem === item) {
+      return;
+    }
+
+    // Tell the selection wedges about the hovered wedge.
+    if (this.selectionWedges) {
+      if (item === this.centerItem.renderData.parent) {
+        // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
+        // case if we did not just entered a submenu. It looks better this way. Else the
+        // parent wedge would be highlighted already when entering a submenu.
+        if (this.centerItem.renderData.parentWedge && this.hoveredItem !== null) {
+          this.selectionWedges.hover(this.centerItem.renderData.parentWedge);
+        } else {
+          this.selectionWedges.unhover();
+        }
+      } else if (item.type !== 'root' && item.renderData.wedge) {
+        this.selectionWedges.hover(item.renderData.wedge);
+      } else {
+        this.selectionWedges.unhover();
+      }
+    }
+
+    if (this.hoveredItem) {
+      this.hoveredItem.renderData.nodeDiv.classList.remove('hovered');
+      this.hoveredItem = null;
+    }
+
+    if (item) {
+      this.hoveredItem = item;
+      this.hoveredItem.renderData.nodeDiv.classList.add('hovered');
+
+      this.emitItemInteractionEvent(
+        item.type === 'submenu'
+          ? MenuInteractionType.eHoverSubmenu
+          : MenuInteractionType.eHoverButton,
+        this.hoveredItem.renderData.path
+      );
+    }
+  }
+
+  /**
+   * Helper method to move hover focus to the given angle. We do this by simulating a
+   * pointer input at the position of the given angle.
+   *
+   * @param angle The angle to hover, 0° means top, 90° means right, etc.
+   */
+  private hoverAngle(angle: number) {
+    const centerPosition = this.getCenterItemPosition();
+    const distance = this.settings.minParentDistance;
+    const relativePosition = math.getDirection(angle, distance);
+    const absolutePosition = math.add(centerPosition, relativePosition);
+    this.latestInput = {
+      button: this.latestInput.button,
+      absolutePosition,
+      relativePosition,
+      distance,
+      angle,
+    };
+
+    this.redraw();
   }
 
   /**
@@ -782,24 +804,6 @@ export class Menu extends EventEmitter {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       ArrowDown: { x: 0, y: 1 },
     }[key];
-
-    // Helper lambda to move hover focus to the given item. We do this by simulating a
-    // pointer input at the position of the given item.
-    const hoverAngle = (angle: number) => {
-      const centerPosition = this.getCenterItemPosition();
-      const distance = this.settings.minParentDistance;
-      const relativePosition = math.getDirection(angle, distance);
-      const absolutePosition = math.add(centerPosition, relativePosition);
-      this.latestInput = {
-        button: this.latestInput.button,
-        absolutePosition,
-        relativePosition,
-        distance,
-        angle,
-      };
-
-      this.redraw();
-    };
 
     // Let's compile a list of selectable items. These are the child items and the parent
     // item (if any).
@@ -866,7 +870,7 @@ export class Menu extends EventEmitter {
     // extreme item. If there is no extreme item, we do not hover anything.
     if (!this.hoveredItem || this.hoveredItem === this.centerItem) {
       if (extremeItem) {
-        hoverAngle(extremeItem.angle);
+        this.hoverAngle(extremeItem.angle);
       }
       return;
     }
@@ -892,7 +896,7 @@ export class Menu extends EventEmitter {
       const hoveredDot = math.dot(oppositeDir, hoveredDir);
 
       if (hoveredDot > Math.cos(math.toRadians(20))) {
-        hoverAngle(extremeItem.angle);
+        this.hoverAngle(extremeItem.angle);
         return;
       }
     }
@@ -927,72 +931,7 @@ export class Menu extends EventEmitter {
       }
 
       if (bestCandidate) {
-        hoverAngle(bestCandidate.angle);
-      }
-    }
-  }
-
-  /**
-   * This will assign the CSS class 'hovered' to the given menu item's node div element.
-   * It will also remove the class from the previously hovered menu item.
-   *
-   * @param item The item to hover. If null, the currently hovered item will be unhovered.
-   */
-  private hoverItem(item?: RenderedMenuItem) {
-    if (this.hoveredItem === item) {
-      return;
-    }
-
-    // Choose the sound effect to play. We only play a sound if a new item is hovered and
-    // if there was a previously hovered item. This ensures that no hover effect is played
-    // when we enter a submenu - in this case the previously hovered item is null.
-    let interactionTarget = null;
-    if (item && this.hoveredItem !== null) {
-      let soundType = SoundType.eHoverItem;
-      interactionTarget = InteractionTarget.eItem;
-
-      if (item.type === 'submenu') {
-        soundType = SoundType.eHoverSubmenu;
-        interactionTarget = InteractionTarget.eSubmenu;
-      }
-
-      if (item === this.centerItem.renderData.parent) {
-        soundType = SoundType.eHoverParent;
-        interactionTarget = InteractionTarget.eParent;
-      }
-
-      this.soundTheme.playSound(soundType);
-    }
-
-    // Tell the selection wedges about the hovered wedge.
-    if (this.selectionWedges) {
-      if (item === this.centerItem.renderData.parent) {
-        // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
-        // case if we did not just entered a submenu. It looks better this way. Else the
-        // parent wedge would be highlighted already when entering a submenu.
-        if (this.centerItem.renderData.parentWedge && this.hoveredItem !== null) {
-          this.selectionWedges.hover(this.centerItem.renderData.parentWedge);
-        } else {
-          this.selectionWedges.unhover();
-        }
-      } else if (item.type !== 'root' && item.renderData.wedge) {
-        this.selectionWedges.hover(item.renderData.wedge);
-      } else {
-        this.selectionWedges.unhover();
-      }
-    }
-
-    if (this.hoveredItem) {
-      this.hoveredItem.renderData.nodeDiv.classList.remove('hovered');
-      this.hoveredItem = null;
-    }
-
-    if (item) {
-      this.hoveredItem = item;
-      this.hoveredItem.renderData.nodeDiv.classList.add('hovered');
-
-      if (interactionTarget !== null) {
-        this.emit('hover', interactionTarget, this.hoveredItem.renderData.path);
+        this.hoverAngle(bestCandidate.angle);
       }
     }
   }
@@ -1393,7 +1332,7 @@ export class Menu extends EventEmitter {
       const { item, parent, container, level, index, angle, wedge } = queue.shift();
 
       item.renderData = {
-        path: parent ? `${parent.renderData.path}/${index}` : '/',
+        path: parent ? [...parent.renderData.path, index] : [],
         parent,
         position: { x: 0, y: 0 },
         computedAngle: angle,
@@ -1536,13 +1475,58 @@ export class Menu extends EventEmitter {
       );
     } else if (item.type === 'submenu') {
       return (
-        item.selectWorkflow?.quickSelectKey ||
+        item.openWorkflow?.quickSelectKey ||
         item.hoverWorkflow?.quickSelectKey ||
-        item.centerClickWorkflow?.quickSelectKey ||
+        item.activateWorkflow?.quickSelectKey ||
         null
       );
     }
 
     return null;
+  }
+
+  /**
+   * Small helper method to emit menu interaction events.
+   *
+   * @param type The type of interaction.
+   */
+  private emitMenuInteractionEvent(
+    type: MenuInteractionType.eOpenMenu | MenuInteractionType.eCloseMenu
+  ) {
+    this.emit('interaction', type, [], 0, SelectionSource.eUnknown);
+  }
+
+  /**
+   * Small helper method to emit most item interaction events.
+   *
+   * @param type The type of interaction.
+   * @param path The path to the item which is the target of the interaction.
+   */
+  private emitItemInteractionEvent(
+    type:
+      | MenuInteractionType.eOpenSubmenu
+      | MenuInteractionType.eCloseSubmenu
+      | MenuInteractionType.eActivateRoot
+      | MenuInteractionType.eHoverButton
+      | MenuInteractionType.eHoverSubmenu
+      | MenuInteractionType.eActivateSubmenu,
+    path: number[]
+  ) {
+    this.emit('interaction', type, path, 0, SelectionSource.eUnknown);
+  }
+
+  /**
+   * Small helper method to emit selection events.
+   *
+   * @param type The type of interaction.
+   */
+  private emitSelectionEvent(item: RenderedMenuItem, source: SelectionSource) {
+    this.emit(
+      'interaction',
+      MenuInteractionType.eSelectButton,
+      item.renderData.path,
+      Date.now() - this.menuShownTime,
+      source
+    );
   }
 }
