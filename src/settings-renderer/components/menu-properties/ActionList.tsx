@@ -168,6 +168,7 @@ export default function ActionList(props: Props) {
       },
       props.onUpdateItem
     );
+
     return (
       <div
         key={key}

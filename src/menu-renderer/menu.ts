@@ -465,7 +465,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
         // Then we check whether the center-click-workflow of the center item got triggered.
         if (
-          this.centerItem.type === 'submenu' &&
+          (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') &&
           this.centerItem.activateWorkflow?.quickSelectKey
         ) {
           if (

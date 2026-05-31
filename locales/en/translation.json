@@ -264,16 +264,12 @@
             "search-placeholder": "Search for an app…",
             "use-selected": "Use selected"
         },
-        "menu-behavior": "Menu Behavior",
-        "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!",
         "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
         "centered-mode": "Centered Mode",
         "anchored-mode-info": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode and Turbo Mode.",
         "anchored-mode": "Anchored Mode",
         "hover-mode-info": "For power users only! Select items by hovering over them.",
         "hover-mode": "Hover Mode",
-        "menu-conditions": "Menu Conditions",
-        "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
         "app-condition-info": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",
         "app-condition": "Limit to Specific Apps",
         "app-condition-placeholder": "App name",
@@ -348,6 +344,9 @@
                 "name": "Center-Click Actions",
                 "description": "The actions below will be executed when you click the center of the root menu or when you press the quick-select key while the root menu is shown.",
                 "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!"
+            },
+            "action-picker": {
+                "search-placeholder": "Search for an action…"
             }
         }
     },
@@ -568,12 +567,12 @@
             "description": "Opens a file or folder."
         },
         "execute-command": {
-            "name": "Run Command",
-            "description": "Launch apps or scripts."
+            "name": "Execute Command",
+            "description": "Launches apps or runs scripts. "
         },
         "open-menu": {
             "name": "Open Menu",
-            "description": "Opens another menu."
+            "description": "Opens another Kando menu."
         },
         "open-settings": {
             "name": "Open Settings",
@@ -581,27 +580,27 @@
         },
         "open-uri": {
             "name": "Open URI",
-            "description": "Opens websites and more."
+            "description": "Opens websites and more. The URI scheme determines which application will be used to open the link. For example, http:// will usually open your web browser, mailto: will open your email client."
         },
         "simulate-hotkey": {
             "name": "Simulate Hotkey",
-            "description": "Presses a key combination."
+            "description": "Presses a key combination for you. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!"
         },
         "set-clipboard": {
             "name": "Set Clipboard",
-            "description": "Writes content to the clipboard."
+            "description": "Stores the given text in your clipboard. You can use a Ctrl+V hotkey action to paste the text after setting it to the clipboard."
         },
         "execute-macro": {
             "name": "Execute Macro",
-            "description": "Types a keyboard macro."
+            "description": "Types multiple keystrokes in sequence. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!"
         },
         "delay": {
             "name": "Delay",
-            "description": "Pauses the workflow for a specified duration."
+            "description": "Pauses the workflow execution for a specified duration."
         },
         "close-menu": {
             "name": "Close Menu",
-            "description": "Closes the current menu."
+            "description": "Closes the current menu. Workflow actions after this one will wait until the menu is completely faded out before they are executed."
         },
         "close-submenu": {
             "name": "Close Submenu",
@@ -609,7 +608,7 @@
         },
         "inhibit-shortcuts": {
             "name": "Inhibit Shortcuts",
-            "description": "Disables all Kando shortcuts while this workflow is being executed."
+            "description": "Disables all Kando shortcuts for the remainder of this workflow's execution."
         }
     }
 }

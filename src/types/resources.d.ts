@@ -178,7 +178,7 @@ export default interface Resources {
       },
       "menu-actions": {
           "close-menu": {
-              "description": "Closes the current menu.",
+              "description": "Closes the current menu. Actions after this will wait until the menu is completely faded out before they are executed.",
               "name": "Close Menu"
           },
           "close-submenu": {
@@ -194,11 +194,11 @@ export default interface Resources {
               "name": "Run Command"
           },
           "execute-macro": {
-              "description": "Types a keyboard macro.",
+              "description": "Types multiple keystrokes in sequence. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",
               "name": "Execute Macro"
           },
           "inhibit-shortcuts": {
-              "description": "Disables all Kando shortcuts while this workflow is being executed.",
+              "description": "Disables all Kando shortcuts for the remainder of this workflow's execution.",
               "name": "Inhibit Shortcuts"
           },
           "open-file": {
@@ -206,7 +206,7 @@ export default interface Resources {
               "name": "Open File"
           },
           "open-menu": {
-              "description": "Opens another menu.",
+              "description": "Opens another Kando menu.",
               "name": "Open Menu"
           },
           "open-settings": {
@@ -214,15 +214,15 @@ export default interface Resources {
               "name": "Open Settings"
           },
           "open-uri": {
-              "description": "Opens websites and more.",
+              "description": "Opens websites and more. The URI scheme determines which application will be used to open the link. For example, http:// will usually open your web browser, mailto: will open your email client.",
               "name": "Open URI"
           },
           "set-clipboard": {
-              "description": "Writes content to the clipboard.",
+              "description": "Writes the given text to your clipboard.",
               "name": "Set Clipboard"
           },
           "simulate-hotkey": {
-              "description": "Presses a key combination.",
+              "description": "Presses a key combination for you. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",
               "name": "Simulate Hotkey"
           }
       },
@@ -491,10 +491,6 @@ export default interface Resources {
               "title": "Welcome to Kando!"
           },
           "invalid-dropdown-selection": "Select an option…",
-          "menu-behavior": "Menu Behavior",
-          "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!",
-          "menu-conditions": "Menu Conditions",
-          "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
           "menu-themes-dialog": {
               "accent-colors": "Accent Colors",
               "author": "by {{author}}",
@@ -581,6 +577,9 @@ export default interface Resources {
               "start-countdown": "Start countdown"
           },
           "workflow-editor": {
+              "action-picker": {
+                  "search-placeholder": "settings.workflow-editor.action-picker.search-placeholder"
+              },
               "add-action": "Add Action",
               "button-hover-workflow": {
                   "description": "The actions below will be executed when you hover over the item or when you press the quick-select key while its parent menu is shown.",

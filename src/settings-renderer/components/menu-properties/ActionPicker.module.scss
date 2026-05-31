@@ -11,6 +11,22 @@
 @use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
+.container {
+  display: flex;
+  flex-direction: column;
+  height: min(80vh, 500px);
+}
+
+.searchInput {
+  display: flex;
+
+  input {
+    @include text-input;
+    width: 100%;
+    border-radius: 5px 0 0 5px;
+  }
+}
+
 .actionTypeList {
   display: flex;
   flex-direction: column;
@@ -28,13 +44,7 @@
 
 .actionTypeIcon {
   width: 36px;
-}
-
-.actionTypeName,
-.actionTypeDetails {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .actionTypeName {
@@ -44,4 +54,5 @@
 .actionTypeDetails {
   color: $text-muted;
   font-size: 0.8rem;
+  padding-top: 2px;
 }
