@@ -179,13 +179,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
     this.showMenuOptions = showMenuOptions;
 
-    // On some wayland compositors (for instance KWin), one or two initial mouse motion
-    // events are sent containing wrong coordinates. They seem to be the coordinates of
-    // the last mouse motion event over any XWayland surface before Kando's window was
-    // opened. We simply ignore these events. This code is currently used on all platforms
-    // but I think it's not an issue. Instead, we pass the initial menu position as a
-    // first motion event to the input tracker.
-    // Also, if the pointer is not warped to the center of the menu, we should not enter
+    // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
     const deferTurboMode = !this.settings.warpMouse && showMenuOptions.centeredMode;
     this.pointerInput.onShowMenu(deferTurboMode);
@@ -1180,11 +1174,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       if (item === this.centerItem) {
         let hoveredAngle;
 
-        if (
-          this.hoveredItem &&
-          this.hoveredItem.type !== 'root' &&
-          item.type !== 'root'
-        ) {
+        if (this.hoveredItem && this.hoveredItem.type !== 'root') {
           hoveredAngle = this.hoveredItem?.renderData.computedAngle;
           if (this.hoveredItem === this.centerItem.renderData.parent) {
             hoveredAngle = (item.renderData.computedAngle + 180) % 360;
@@ -1201,7 +1191,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         if (item.type === 'submenu' || item.type === 'root') {
           for (let j = 0; j < item.children.length; ++j) {
             const child = item.children[j] as RenderedChildMenuItem;
-            if (child === this.draggedItem || child === this.clickedItem) {
+            if (child === this.draggedItem) {
               child.renderData.position = this.latestInput.relativePosition;
               child.renderData.nodeDiv.style.transform = `translate(${child.renderData.position.x}px, ${child.renderData.position.y}px)`;
             } else {
