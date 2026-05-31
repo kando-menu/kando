@@ -143,7 +143,6 @@ Promise.all([
       settingsButton.hide();
     }
 
-    // Play the corresponding sound for the interaction.
     soundTheme.playSound(type);
   });
 

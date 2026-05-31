@@ -191,6 +191,7 @@ export enum MenuInteractionType {
   eCloseMenu = 'closeMenu',
   eCloseSubmenu = 'closeSubmenu',
   eHoverParent = 'hoverParent',
+  eHoverCenter = 'hoverCenter',
   eHoverButton = 'hoverButton',
   eHoverSubmenu = 'hoverSubmenu',
   eSelectButton = 'selectButton',

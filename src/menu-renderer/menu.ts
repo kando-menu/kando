@@ -786,7 +786,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
       let interaction = MenuInteractionType.eHoverSubmenu;
 
-      if (item === this.centerItem.renderData.parent) {
+      if (item === this.centerItem) {
+        interaction = MenuInteractionType.eHoverCenter;
+      } else if (item === this.centerItem.renderData.parent) {
         interaction = MenuInteractionType.eHoverParent;
       } else if (item.type === 'button') {
         interaction = MenuInteractionType.eHoverButton;
@@ -1537,6 +1539,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       | MenuInteractionType.eOpenSubmenu
       | MenuInteractionType.eCloseSubmenu
       | MenuInteractionType.eHoverParent
+      | MenuInteractionType.eHoverCenter
       | MenuInteractionType.eHoverButton
       | MenuInteractionType.eHoverSubmenu
       | MenuInteractionType.eActivateSubmenu,
