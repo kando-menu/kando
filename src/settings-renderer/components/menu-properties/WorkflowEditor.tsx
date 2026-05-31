@@ -136,11 +136,11 @@ export default function WorkflowEditor() {
     item: MenuItem,
     workflowType: WorkflowType
   ): Workflow | undefined => {
-    if (
-      (workflowType === 'buttonSelect' || workflowType === 'submenuOpen') &&
-      'selectWorkflow' in item
-    ) {
+    if (workflowType === 'buttonSelect' && 'selectWorkflow' in item) {
       return item.selectWorkflow;
+    }
+    if (workflowType === 'submenuOpen' && 'openWorkflow' in item) {
+      return item.openWorkflow;
     }
     if (
       (workflowType === 'buttonHover' || workflowType === 'submenuHover') &&

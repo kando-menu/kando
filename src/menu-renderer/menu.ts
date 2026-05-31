@@ -175,6 +175,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
     this.clear();
 
+    this.emitMenuInteractionEvent(MenuInteractionType.eOpenMenu);
+
     this.showMenuOptions = showMenuOptions;
 
     // On some wayland compositors (for instance KWin), one or two initial mouse motion
@@ -266,8 +268,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     } else {
       showMenu();
     }
-
-    this.emitMenuInteractionEvent(MenuInteractionType.eOpenMenu);
   }
 
   /** Removes all DOM elements from the menu and resets the root menu item. */
@@ -434,7 +434,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
           this.emitItemInteractionEvent(interaction, path);
         }
 
-        this.selectItem(item, coords);
+        if (item.type !== 'button') {
+          this.selectItem(item, coords);
+        }
 
         return;
       }
@@ -499,6 +501,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
               selectionKeys.push(`${i + 1}`);
               selectionKeys.push(`num${i + 1}`);
             }
+
+            console.log('selectionKeys', selectionKeys, eventKey);
 
             if (selectionKeys.includes(eventKey)) {
               this.emitSelectionEvent(child, SelectionSource.eKeyboard);
@@ -623,7 +627,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     }
 
     this.clickItem(null);
-    this.hoverItem(null);
     this.dragItem(null);
 
     // Is the item the parent of the currently active item?
@@ -1025,27 +1028,27 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
   private redraw() {
     const newHoveredItem = this.computeHoveredItem();
 
+    // If no item is hovered, if the mouse is over the center of the menu, or if the
+    // mouse is over the parent of the current menu, hide the center text. Else, we
+    // display the name of the hovered item and make sure it is positioned at the
+    // center of the menu.
+    if (
+      !newHoveredItem ||
+      this.centerItem.renderData.parent === newHoveredItem ||
+      this.centerItem === newHoveredItem
+    ) {
+      this.centerText.hide();
+    } else if (newHoveredItem.type !== 'root' && newHoveredItem !== this.hoveredItem) {
+      const position = this.getCenterItemPosition();
+      this.centerText.show(
+        newHoveredItem.name,
+        position,
+        this.getQuickSelectKey(newHoveredItem)
+      );
+    }
+
     if (newHoveredItem !== this.hoveredItem) {
       this.hoverItem(newHoveredItem);
-
-      // If no item is hovered, if the mouse is over the center of the menu, or if the
-      // mouse is over the parent of the current menu, hide the center text. Else, we
-      // display the name of the hovered item and make sure it is positioned at the
-      // center of the menu.
-      if (
-        !newHoveredItem ||
-        this.centerItem.renderData.parent === newHoveredItem ||
-        this.centerItem === newHoveredItem
-      ) {
-        this.centerText.hide();
-      } else if (newHoveredItem.type !== 'root') {
-        const position = this.getCenterItemPosition();
-        this.centerText.show(
-          newHoveredItem.name,
-          position,
-          this.getQuickSelectKey(newHoveredItem)
-        );
-      }
     }
 
     if (this.draggedItem && this.draggedItem !== this.hoveredItem) {
