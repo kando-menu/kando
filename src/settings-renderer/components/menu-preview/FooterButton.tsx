@@ -64,7 +64,7 @@ export default function FooterButton(props: Props) {
           menuItem: true,
           dragging,
         })}
-        data-tooltip-html={isPopoverOpen || dragging ? undefined : props.name}
+        data-tooltip-content={isPopoverOpen || dragging ? undefined : props.name}
         data-tooltip-id="main-tooltip"
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}
         onDragEnd={() => setDragging(false)}

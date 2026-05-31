@@ -48,12 +48,7 @@
     },
     "menu-items": {
         "command": {
-            "command": "Komanda",
-            "choose-app": "Pasirinkti programą…",
-            "placeholder": "Įterpkite bet kokią komandą…"
-        },
-        "macro": {
-            "recording-placeholder": "Paspauskite klavišus…"
+            "command": "Komanda"
         },
         "submenu": {
             "description": "Talpina savyje kitus meniu elementus.",
@@ -71,11 +66,7 @@
             "placeholder": "Įterpkite bet kokį tekstą…"
         },
         "uri": {
-            "uri": "URI",
-            "placeholder": "Įterpkite bet kokį URI…"
-        },
-        "file": {
-            "placeholder": "Pasirinkti failą ar aplanką…"
+            "uri": "URI"
         }
     },
     "settings": {
@@ -194,18 +185,25 @@
     "menu-actions": {
         "open-file": {
             "name": "Atverti failą",
-            "description": "Atveria failą ar aplanką."
+            "description": "Atveria failą ar aplanką.",
+            "placeholder": "Pasirinkti failą ar aplanką…"
         },
         "execute-command": {
             "name": "Paleisti komandą",
-            "description": "Paleisti programas ar scenarijus."
+            "description": "Paleisti programas ar scenarijus.",
+            "choose-app": "Pasirinkti programą…",
+            "placeholder": "Įterpkite bet kokią komandą…"
         },
         "open-uri": {
             "name": "Atverti URI",
-            "description": "Atveria failus ar internetines svetaines."
+            "description": "Atveria failus ar internetines svetaines.",
+            "placeholder": "Įterpkite bet kokį URI…"
         },
         "open-menu": {
             "description": "Atveria kitą meniu."
+        },
+        "execute-macro": {
+            "recording-placeholder": "Paspauskite klavišus…"
         }
     }
 }

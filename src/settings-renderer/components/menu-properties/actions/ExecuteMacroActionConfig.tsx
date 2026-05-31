@@ -30,8 +30,8 @@ export function ExecuteMacroActionConfig(props: Props) {
   return (
     <MacroPicker
       initialValue={props.action.macro}
-      placeholder={i18next.t('menu-items.macro.placeholder')}
-      recordingPlaceholder={i18next.t('menu-items.macro.recording-placeholder')}
+      placeholder={i18next.t('menu-actions.execute-macro.placeholder')}
+      recordingPlaceholder={i18next.t('menu-actions.execute-macro.recording-placeholder')}
       onChange={(value) => {
         props.onUpdateAction({ ...props.action, macro: value });
       }}

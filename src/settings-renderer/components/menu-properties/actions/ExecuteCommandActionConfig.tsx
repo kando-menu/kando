@@ -47,7 +47,7 @@ export function ExecuteCommandActionConfig(props: Props) {
     <>
       <Button
         icon={<TbApps />}
-        label={i18next.t('menu-items.command.choose-app')}
+        label={i18next.t('menu-actions.execute-command.choose-app')}
         variant="secondary"
         onClick={() => {
           setAppPickerVisible(true);
@@ -56,7 +56,7 @@ export function ExecuteCommandActionConfig(props: Props) {
       <TextInput
         isMultiline
         initialValue={props.action.command}
-        placeholder={i18next.t('menu-items.command.placeholder')}
+        placeholder={i18next.t('menu-actions.execute-command.placeholder')}
         onChange={(value) => {
           props.onUpdateAction({
             ...props.action,
@@ -66,9 +66,9 @@ export function ExecuteCommandActionConfig(props: Props) {
       />
       {supportsIsolatedProcesses ? (
         <Checkbox
-          info={i18next.t('menu-items.command.isolated-info')}
+          info={i18next.t('menu-actions.execute-command.isolated-info')}
           initialValue={props.action.isolated}
-          label={i18next.t('menu-items.command.isolated')}
+          label={i18next.t('menu-actions.execute-command.isolated')}
           onChange={(value) => {
             props.onUpdateAction({
               ...props.action,
@@ -78,9 +78,9 @@ export function ExecuteCommandActionConfig(props: Props) {
         />
       ) : null}
       <Checkbox
-        info={i18next.t('menu-items.command.detached-info')}
+        info={i18next.t('menu-actions.execute-command.detached-info')}
         initialValue={props.action.detached !== false} // explicitly check because undefined should mean true
-        label={i18next.t('menu-items.command.detached')}
+        label={i18next.t('menu-actions.execute-command.detached')}
         onChange={(value) => {
           props.onUpdateAction({
             ...props.action,

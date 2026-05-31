@@ -37,7 +37,7 @@ export function OpenFileActionConfig(props: Props) {
   return (
     <FilePicker
       initialValue={props.action.path}
-      placeholder={i18next.t('menu-items.file.placeholder')}
+      placeholder={i18next.t('menu-actions.open-file.placeholder')}
       onChange={(path) => {
         const parts = path.split(/[/\\]/);
         const name = parts[parts.length - 1];

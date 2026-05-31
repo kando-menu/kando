@@ -31,7 +31,7 @@ export function OpenURIActionConfig(props: Props) {
     <TextInput
       isMultiline
       initialValue={props.action.uri}
-      placeholder={i18next.t('menu-items.uri.placeholder')}
+      placeholder={i18next.t('menu-actions.open-uri.placeholder')}
       onChange={(value) => {
         props.onUpdateAction({ ...props.action, uri: value });
       }}

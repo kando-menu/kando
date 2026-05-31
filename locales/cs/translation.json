@@ -90,30 +90,18 @@
             "tip-3": "Použijte {{app_name}} pro vložení názvu aplikace, která byla aktivní při otevření menu.",
             "tip-4": "Pomocí {{window_name}} vložte název aplikace, která byla zaměřena když jste menu otevírali.",
             "tip-5": "Použijte {{pointer_x}} a {{pointer_y}} pro vložení polohy kurzoru při otevření menu.",
-            "placeholder": "Vložte libovolný příkaz…",
-            "tip-6": "Kliknutím [zde]({{link}}) se dozvíte, jak najít příkazy pro spuštění vašich aplikací.",
-            "detached": "Spustit odpojené",
-            "isolated": "Spustit izolovaně",
-            "detached-info": "Odpojí příkaz z Kando, takže běh bude pokračovat i v případě, že je Kando uzavřeno. Zakázání může vyřešit problémy s příkazy, které se nespouští správně.",
-            "isolated-info": "Spustí příkaz v čistém prostředí, to znamená, že nebude dědit žádné proměnné z Kando. To může pomoci s příkazy, které se nespouští správně.",
-            "choose-app": "Vybrat aplikaci…"
+            "tip-6": "Kliknutím [zde]({{link}}) se dozvíte, jak najít příkazy pro spuštění vašich aplikací."
         },
         "file": {
             "file": "Cesta k souboru",
-            "tip-1": "Tento typ položky můžete použít k otevírání souborů nebo složek.",
-            "placeholder": "Vyberte soubor nebo složku…"
+            "tip-1": "Tento typ položky můžete použít k otevírání souborů nebo složek."
         },
         "hotkey": {
-            "hotkey": "Klávesová zkratka",
-            "recording-placeholder": "Stiskněte klávesovou zkratku…",
             "tip-1": "Při nahrávání klávesové zkratky nemusíte stisknout všechny klávesy najednou. Můžete je zadávat postupně.",
             "tip-2": "Pokud nelze klávesu nahrát, protože ji používá systém, zkuste její název napsat přímo.",
-            "tip-3": "Klikněte na [tento odkaz]({{link}}) pro zobrazení všech platných klíčů.",
-            "hotkey-info": "Tato zkratka bude spuštěna, když je vybrána položka. Při nahrávání nemusíte stisknout všechny klávesy najednou, můžete je také stisknout za sebou. To je užitečné, pokud je zkratka již vázána na globální akci!"
+            "tip-3": "Klikněte na [tento odkaz]({{link}}) pro zobrazení všech platných klíčů."
         },
         "macro": {
-            "placeholder": "Stiskněte tlačítko záznamu pro spuštění nahrávání!",
-            "recording-placeholder": "Stiskněte klávesy…",
             "tip-1": "Kando standardně přidává 10ms prodlevu před každou událostí klávesnice. Můžete to změnit pomocí vlastnosti \"delay\".",
             "tip-2": "Můžete upravit makra také ručně. To je užitečné, pokud chcete upravit načasování kláves."
         },
@@ -145,8 +133,7 @@
             "tip-4": "Použijte {{app_name}} k vložení názvu aplikace, která byla aktivní při otevření menu.",
             "tip-5": "Použijte {{window_name}} k vložení názvu okna, které bylo aktivní při otevření menu.",
             "tip-6": "Použijte {{pointer_x}} a {{pointer_y}} k vložení polohy kurzoru při otevření menu.",
-            "uri": "URI",
-            "placeholder": "Vložte libovolné URI…"
+            "uri": "URI"
         },
         "common": {
             "delayed-option": "Počkat na dokončení animace",
@@ -558,11 +545,18 @@
     "menu-actions": {
         "open-file": {
             "name": "Otevřít soubor",
-            "description": "Otevře soubor nebo složku."
+            "description": "Otevře soubor nebo složku.",
+            "placeholder": "Vyberte soubor nebo složku…"
         },
         "execute-command": {
             "name": "Spustit příkaz",
-            "description": "Spustit apku nebo skript."
+            "description": "Spustit apku nebo skript.",
+            "choose-app": "Vybrat aplikaci…",
+            "placeholder": "Vložte libovolný příkaz…",
+            "isolated": "Spustit izolovaně",
+            "isolated-info": "Spustí příkaz v čistém prostředí, to znamená, že nebude dědit žádné proměnné z Kando. To může pomoci s příkazy, které se nespouští správně.",
+            "detached-info": "Odpojí příkaz z Kando, takže běh bude pokračovat i v případě, že je Kando uzavřeno. Zakázání může vyřešit problémy s příkazy, které se nespouští správně.",
+            "detached": "Spustit odpojené"
         },
         "open-menu": {
             "name": "Přesměrování",
@@ -574,15 +568,21 @@
         },
         "open-uri": {
             "name": "Otevřít URI",
-            "description": "Otevře webové stránky a další."
+            "description": "Otevře webové stránky a další.",
+            "placeholder": "Vložte libovolné URI…"
         },
         "simulate-hotkey": {
             "name": "Simulovat klávesovou zkratku",
-            "description": "Stiskněte kombinaci kláves."
+            "description": "Stiskněte kombinaci kláves.",
+            "recording-placeholder": "Stiskněte klávesovou zkratku…",
+            "hotkey": "Klávesová zkratka",
+            "hotkey-info": "Tato zkratka bude spuštěna, když je vybrána položka. Při nahrávání nemusíte stisknout všechny klávesy najednou, můžete je také stisknout za sebou. To je užitečné, pokud je zkratka již vázána na globální akci!"
         },
         "execute-macro": {
             "name": "Simulovat makro",
-            "description": "Použije sled kláves."
+            "description": "Použije sled kláves.",
+            "placeholder": "Stiskněte tlačítko záznamu pro spuštění nahrávání!",
+            "recording-placeholder": "Stiskněte klávesy…"
         }
     }
 }

@@ -83,19 +83,13 @@
             "tip-2": "Si la dirección al ejecutable contiene espacios, \"entrecomíllela\".",
             "tip-3": "Usa {{app_name}} para insertar el nombre de la aplicación que estaba enfocada cuando abrió el menú.",
             "tip-4": "Usa {{window_name}}para insertar el nombre de la ventana que estaba enfocada cuando abrió el menú.",
-            "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
-            "placeholder": "Inserte cualquier orden…",
-            "choose-app": "Elija una aplicación…"
+            "tip-5": "Usa {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú."
         },
         "hotkey": {
-            "hotkey": "Atajo",
-            "recording-placeholder": "Presione un atajo…",
             "tip-1": "Al grabar un atajo, no es necesario presionar todas las teclas a la vez. Puede presionarlas una tras otra.",
             "tip-2": "Si no puede grabar una tecla porque la utiliza el sistema, pruebe a escribir directamente su nombre."
         },
         "macro": {
-            "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
-            "recording-placeholder": "Presiona las teclas…",
             "tip-1": "De manera predeterminada, Kando añade una demora de 10 ms antes de cada suceso de tecla. Puede cambiarlo con la propiedad «delay»."
         },
         "submenu": {
@@ -122,11 +116,9 @@
             "tip-4": "Usa {{app_name}} para insertar el nombre de la aplicación que fué enfocada cuando abriste el menú.",
             "tip-5": "Use {{window_name}} para insertar el nombre de la ventana que estaba activa cuando abrió el menú.",
             "tip-6": "Utilice {{pointer_x}} y {{pointer_y}} para insertar la posición del puntero donde se abrió el menú.",
-            "uri": "URI",
-            "placeholder": "Inserte cualquier URI…"
+            "uri": "URI"
         },
         "file": {
-            "placeholder": "Elegir archivo o carpeta…",
             "tip-1": "Puede usar este tipo de elemento para abrir archivos o carpetas."
         },
         "settings": {
@@ -284,11 +276,14 @@
     "menu-actions": {
         "open-file": {
             "name": "Abrir archivo",
-            "description": "Abre un archivo o carpeta."
+            "description": "Abre un archivo o carpeta.",
+            "placeholder": "Elegir archivo o carpeta…"
         },
         "execute-command": {
             "name": "Ejecutar orden",
-            "description": "Ejecute aplicaciones o secuencias de órdenes."
+            "description": "Ejecute aplicaciones o secuencias de órdenes.",
+            "choose-app": "Elija una aplicación…",
+            "placeholder": "Inserte cualquier orden…"
         },
         "open-settings": {
             "name": "Abrir configuración",
@@ -296,18 +291,23 @@
         },
         "open-uri": {
             "name": "Abrir URI",
-            "description": "Abrir archivos o sitios web."
+            "description": "Abrir archivos o sitios web.",
+            "placeholder": "Inserte cualquier URI…"
         },
         "simulate-hotkey": {
             "name": "Simular atajo",
-            "description": "Presiona una combinación de teclas."
+            "description": "Presiona una combinación de teclas.",
+            "recording-placeholder": "Presione un atajo…",
+            "hotkey": "Atajo"
         },
         "open-menu": {
             "description": "Abre otro menú."
         },
         "execute-macro": {
             "name": "Simular Macro",
-            "description": "Escribe una macro del teclado."
+            "description": "Escribe una macro del teclado.",
+            "placeholder": "¡Pulsa el botón de grabación para comenzar a grabar!",
+            "recording-placeholder": "Presiona las teclas…"
         }
     }
 }

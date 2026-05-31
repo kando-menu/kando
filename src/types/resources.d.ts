@@ -178,7 +178,7 @@ export default interface Resources {
       },
       "menu-actions": {
           "close-menu": {
-              "description": "Closes the current menu. Actions after this will wait until the menu is completely faded out before they are executed.",
+              "description": "Closes the current menu. Workflow actions after this one will wait until the menu is completely faded out before they are executed.",
               "name": "Close Menu"
           },
           "close-submenu": {
@@ -186,16 +186,26 @@ export default interface Resources {
               "name": "Close Submenu"
           },
           "delay": {
-              "description": "Pauses the workflow for a specified duration.",
+              "description": "Pauses the workflow execution for a specified duration.",
+              "duration-info": "The workflow execution will be delayed by this amount of time.",
+              "duration-label": "Seconds",
               "name": "Delay"
           },
           "execute-command": {
-              "description": "Launch apps or scripts.",
-              "name": "Run Command"
+              "choose-app": "Choose an app…",
+              "description": "Launches apps or runs scripts. ",
+              "detached": "Run detached",
+              "detached-info": "This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly.",
+              "isolated": "Run isolated",
+              "isolated-info": "This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly.",
+              "name": "Execute Command",
+              "placeholder": "Insert any command…"
           },
           "execute-macro": {
               "description": "Types multiple keystrokes in sequence. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",
-              "name": "Execute Macro"
+              "name": "Execute Macro",
+              "placeholder": "Hit the record button to start recording!",
+              "recording-placeholder": "Press any keys…"
           },
           "inhibit-shortcuts": {
               "description": "Disables all Kando shortcuts for the remainder of this workflow's execution.",
@@ -203,7 +213,8 @@ export default interface Resources {
           },
           "open-file": {
               "description": "Opens a file or folder.",
-              "name": "Open File"
+              "name": "Open File",
+              "placeholder": "Choose a file or folder…"
           },
           "open-menu": {
               "description": "Opens another Kando menu.",
@@ -215,51 +226,26 @@ export default interface Resources {
           },
           "open-uri": {
               "description": "Opens websites and more. The URI scheme determines which application will be used to open the link. For example, http:// will usually open your web browser, mailto: will open your email client.",
-              "name": "Open URI"
+              "name": "Open URI",
+              "placeholder": "Insert any URI…"
           },
           "set-clipboard": {
-              "description": "Writes the given text to your clipboard.",
-              "name": "Set Clipboard"
+              "description": "Stores the given text in your clipboard. You can use a Ctrl+V hotkey action to paste the text after setting it to the clipboard.",
+              "name": "Set Clipboard",
+              "placeholder": "Insert any text…"
           },
           "simulate-hotkey": {
               "description": "Presses a key combination for you. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",
-              "name": "Simulate Hotkey"
+              "hotkey": "Hotkey",
+              "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
+              "name": "Simulate Hotkey",
+              "recording-placeholder": "Type a hotkey…"
           }
       },
       "menu-items": {
-          "clipboard": {
-              "placeholder": "Insert any text…"
-          },
-          "command": {
-              "choose-app": "Choose an app…",
-              "detached": "Run detached",
-              "detached-info": "This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly.",
-              "isolated": "Run isolated",
-              "isolated-info": "This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly.",
-              "placeholder": "Insert any command…"
-          },
-          "delay": {
-              "duration-info": "The workflow execution will be delayed by this amount of time.",
-              "duration-label": "Seconds"
-          },
-          "file": {
-              "placeholder": "Choose a file or folder…"
-          },
-          "hotkey": {
-              "hotkey": "Hotkey",
-              "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
-              "recording-placeholder": "Type a hotkey…"
-          },
-          "macro": {
-              "placeholder": "Hit the record button to start recording!",
-              "recording-placeholder": "Press any keys…"
-          },
           "submenu": {
               "description": "Contains other menu items.",
               "name": "Submenu"
-          },
-          "uri": {
-              "placeholder": "Insert any URI…"
           }
       },
       "settings": {
@@ -578,7 +564,7 @@ export default interface Resources {
           },
           "workflow-editor": {
               "action-picker": {
-                  "search-placeholder": "settings.workflow-editor.action-picker.search-placeholder"
+                  "search-placeholder": "Search for an action…"
               },
               "add-action": "Add Action",
               "button-hover-workflow": {

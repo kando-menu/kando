@@ -351,39 +351,9 @@
         }
     },
     "menu-items": {
-        "command": {
-            "choose-app": "Choose an app…",
-            "placeholder": "Insert any command…",
-            "isolated-info": "This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly.",
-            "isolated": "Run isolated",
-            "detached-info": "This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly.",
-            "detached": "Run detached"
-        },
-        "file": {
-            "placeholder": "Choose a file or folder…"
-        },
-        "hotkey": {
-            "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
-            "hotkey": "Hotkey",
-            "recording-placeholder": "Type a hotkey…"
-        },
-        "macro": {
-            "placeholder": "Hit the record button to start recording!",
-            "recording-placeholder": "Press any keys…"
-        },
         "submenu": {
             "name": "Submenu",
             "description": "Contains other menu items."
-        },
-        "uri": {
-            "placeholder": "Insert any URI…"
-        },
-        "delay": {
-            "duration-info": "The workflow execution will be delayed by this amount of time.",
-            "duration-label": "Seconds"
-        },
-        "clipboard": {
-            "placeholder": "Insert any text…"
         }
     },
     "achievements": {
@@ -564,11 +534,18 @@
     "menu-actions": {
         "open-file": {
             "name": "Open File",
-            "description": "Opens a file or folder."
+            "description": "Opens a file or folder.",
+            "placeholder": "Choose a file or folder…"
         },
         "execute-command": {
             "name": "Execute Command",
-            "description": "Launches apps or runs scripts. "
+            "description": "Launches apps or runs scripts. ",
+            "choose-app": "Choose an app…",
+            "placeholder": "Insert any command…",
+            "isolated": "Run isolated",
+            "isolated-info": "This will run the command in a clean environment, meaning that it will not inherit any environment variables from Kando. This can help with commands that do not start properly.",
+            "detached-info": "This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly.",
+            "detached": "Run detached"
         },
         "open-menu": {
             "name": "Open Menu",
@@ -580,23 +557,32 @@
         },
         "open-uri": {
             "name": "Open URI",
-            "description": "Opens websites and more. The URI scheme determines which application will be used to open the link. For example, http:// will usually open your web browser, mailto: will open your email client."
+            "description": "Opens websites and more. The URI scheme determines which application will be used to open the link. For example, http:// will usually open your web browser, mailto: will open your email client.",
+            "placeholder": "Insert any URI…"
         },
         "simulate-hotkey": {
             "name": "Simulate Hotkey",
-            "description": "Presses a key combination for you. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!"
+            "description": "Presses a key combination for you. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",
+            "recording-placeholder": "Type a hotkey…",
+            "hotkey": "Hotkey",
+            "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!"
         },
         "set-clipboard": {
             "name": "Set Clipboard",
-            "description": "Stores the given text in your clipboard. You can use a Ctrl+V hotkey action to paste the text after setting it to the clipboard."
+            "description": "Stores the given text in your clipboard. You can use a Ctrl+V hotkey action to paste the text after setting it to the clipboard.",
+            "placeholder": "Insert any text…"
         },
         "execute-macro": {
             "name": "Execute Macro",
-            "description": "Types multiple keystrokes in sequence. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!"
+            "description": "Types multiple keystrokes in sequence. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",
+            "placeholder": "Hit the record button to start recording!",
+            "recording-placeholder": "Press any keys…"
         },
         "delay": {
             "name": "Delay",
-            "description": "Pauses the workflow execution for a specified duration."
+            "description": "Pauses the workflow execution for a specified duration.",
+            "duration-info": "The workflow execution will be delayed by this amount of time.",
+            "duration-label": "Seconds"
         },
         "close-menu": {
             "name": "Close Menu",

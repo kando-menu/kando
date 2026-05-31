@@ -334,9 +334,6 @@
         },
         "hotkey": {
             "tip-3": "點擊[此連結]({{link}})查看所有有效的按鍵名稱。",
-            "hotkey": "快捷鍵",
-            "hotkey-info": "當此項目被選取時，將會觸發此快捷鍵。錄製時，不需一次按下所有按鍵，也可一個接一個地按。若某個快捷鍵已被綁定至全域操作，此功能會有所幫助！",
-            "recording-placeholder": "輸入快捷鍵…",
             "tip-1": "錄製快捷鍵時，不需一次按下所有按鍵，可一個接一個地按。",
             "tip-2": "若某個按鍵因已被系統使用而無法錄製，請嘗試直接輸入其名稱。"
         },
@@ -344,27 +341,18 @@
             "tip-1": "此項目類型會開啟 Kando 的設定視窗。"
         },
         "macro": {
-            "placeholder": "按下錄製按鈕即可開始錄製！",
-            "recording-placeholder": "按下任意按鍵…",
             "tip-2": "您也可以手動編輯巨集。如果想調整按鍵的時序，此功能會有所幫助。",
             "tip-1": "預設情況下，Kando 會在每個按鍵事件前加入 10 毫秒的延遲。可以使用「delay」屬性來變更此值。"
         },
         "command": {
-            "placeholder": "輸入任何命令…",
-            "isolated": "於獨立環境執行",
-            "isolated-info": "此選項會將命令在一個純淨的環境中執行，而不繼承 Kando 的任何環境變數。有助於解決無法正常執行命令的問題。",
-            "detached-info": "此選項會將命令與 Kando 分離，使其在 Kando 關閉後仍能繼續執行。停用此選項或可解決某些命令無法正常執行的問題。",
-            "detached": "以分離模式執行",
             "tip-2": "若執行檔的路徑中包含空格，應使用引號（\"\"）將其包裹起來。",
             "tip-1": "可使用「執行命令」項目類型，來啟動應用程式或指令碼。",
             "tip-4": "使用 {{window_name}} 來插入開啟選單時的焦點視窗標題。",
             "tip-3": "使用 {{app_name}} 來插入開啟選單時的焦點應用程式名稱。",
             "tip-5": "使用 {{pointer_x}} 與 {{pointer_y}} 來插入開啟選單時的指標位置。",
-            "tip-6": "點擊[這裡]({{link}})以了解如何找到啟動應用程式所需的命令。",
-            "choose-app": "選擇應用程式…"
+            "tip-6": "點擊[這裡]({{link}})以了解如何找到啟動應用程式所需的命令。"
         },
         "file": {
-            "placeholder": "選擇檔案或資料夾…",
             "tip-1": "可使用此項目類型來開啟檔案或資料夾。"
         },
         "submenu": {
@@ -380,7 +368,6 @@
         },
         "uri": {
             "tip-3": "可使用「開啟 URI」項目類型，來開啟 mailto: 連結。",
-            "placeholder": "輸入任何 URI…",
             "tip-1": "可使用「開啟 URI」項目類型，透過 http:// 協定來開啟網站。",
             "tip-2": "可用此功能來呼叫自訂的 URI 配置，例如 slack:// 或 zoommtg://。",
             "tip-4": "使用 {{app_name}} 來插入開啟選單時的焦點應用程式名稱。",
@@ -574,11 +561,18 @@
     "menu-actions": {
         "open-file": {
             "name": "開啟檔案",
-            "description": "開啟檔案或資料夾。"
+            "description": "開啟檔案或資料夾。",
+            "placeholder": "選擇檔案或資料夾…"
         },
         "execute-command": {
             "name": "執行命令",
-            "description": "啟動應用程式或指令碼。"
+            "description": "啟動應用程式或指令碼。",
+            "choose-app": "選擇應用程式…",
+            "placeholder": "輸入任何命令…",
+            "isolated": "於獨立環境執行",
+            "isolated-info": "此選項會將命令在一個純淨的環境中執行，而不繼承 Kando 的任何環境變數。有助於解決無法正常執行命令的問題。",
+            "detached-info": "此選項會將命令與 Kando 分離，使其在 Kando 關閉後仍能繼續執行。停用此選項或可解決某些命令無法正常執行的問題。",
+            "detached": "以分離模式執行"
         },
         "open-menu": {
             "name": "選單跳轉",
@@ -590,15 +584,21 @@
         },
         "open-uri": {
             "name": "開啟 URI",
-            "description": "開啟網站或其他連結。"
+            "description": "開啟網站或其他連結。",
+            "placeholder": "輸入任何 URI…"
         },
         "simulate-hotkey": {
             "name": "模擬快捷鍵",
-            "description": "按下組合鍵。"
+            "description": "按下組合鍵。",
+            "recording-placeholder": "輸入快捷鍵…",
+            "hotkey": "快捷鍵",
+            "hotkey-info": "當此項目被選取時，將會觸發此快捷鍵。錄製時，不需一次按下所有按鍵，也可一個接一個地按。若某個快捷鍵已被綁定至全域操作，此功能會有所幫助！"
         },
         "execute-macro": {
             "name": "執行巨集",
-            "description": "輸入一段鍵盤巨集。"
+            "description": "輸入一段鍵盤巨集。",
+            "placeholder": "按下錄製按鈕即可開始錄製！",
+            "recording-placeholder": "按下任意按鍵…"
         }
     }
 }

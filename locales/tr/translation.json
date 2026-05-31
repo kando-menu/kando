@@ -89,14 +89,10 @@
             "tip-1": "Dosya veya klasörleri açmak için bu öğe tipini kullanabilirsiniz."
         },
         "hotkey": {
-            "hotkey": "Kısayol Tuşu",
-            "recording-placeholder": "Bir kısayol tuşuna basın…",
             "tip-1": "Bir kısayol tuşu kaydederken tüm tuşlara aynı anda basmanız gerekmez. Onlara birer birer basabilirsiniz.",
             "tip-2": "Sistem tarafından kullanıldığı için bir tuşu kaydedemiyorsanız, doğrudan adını yazmayı deneyin."
         },
         "macro": {
-            "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
-            "recording-placeholder": "Tuşlara basın…",
             "tip-1": "Varsayılan olarak, Kando her tuş olayından önce 10ms gecikme ekler. Bunu \"delay\" özelliği ile değiştirebilirsiniz."
         },
         "submenu": {
@@ -187,11 +183,15 @@
         },
         "simulate-hotkey": {
             "name": "Kısayol Tuşu Simüle Et",
-            "description": "Bir kısayol tuşuna basar."
+            "description": "Bir kısayol tuşuna basar.",
+            "recording-placeholder": "Bir kısayol tuşuna basın…",
+            "hotkey": "Kısayol Tuşu"
         },
         "execute-macro": {
             "name": "Makro Simüle Et",
-            "description": "Bir klavye makrosu yazar."
+            "description": "Bir klavye makrosu yazar.",
+            "placeholder": "Kayda başlamak için kayıt düğmesine basın!",
+            "recording-placeholder": "Tuşlara basın…"
         }
     }
 }

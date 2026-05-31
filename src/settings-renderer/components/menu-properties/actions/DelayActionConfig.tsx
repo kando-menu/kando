@@ -29,9 +29,9 @@ type Props = {
 export function DelayActionConfig(props: Props) {
   return (
     <Spinbutton
-      info={i18next.t('menu-items.delay.duration-info')}
+      info={i18next.t('menu-actions.delay.duration-info')}
       initialValue={props.action.duration}
-      label={i18next.t('menu-items.delay.duration-label')}
+      label={i18next.t('menu-actions.delay.duration-label')}
       max={60}
       min={0}
       step={0.1}
