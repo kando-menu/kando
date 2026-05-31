@@ -74,6 +74,7 @@
     transition: var(--menu-transition);
   }
 
+  &.type-root>.icon-layer>.icon-container,
   &.type-submenu>.icon-layer>.icon-container {
     color: var(--submenu-icon-color);
   }
@@ -111,10 +112,19 @@
     height: var(--center-size);
   }
 
-  &.type-submenu:has(>.hovered:not(.parent))>.icon-layer>.icon-container {
+  /* If the center item has a hovered child node, hide its icon. */
+  &.active:has(>.hovered)>.icon-layer>.icon-container {
     opacity: 0;
   }
 
+  /* Show the icons of the parent and child items. */
+  &.active>.icon-layer>.icon-container,
+  &.parent>.icon-layer>.icon-container,
+  &.child>.icon-layer>.icon-container {
+    opacity: 1;
+  }
+
+  &.type-root>.icon-layer,
   &.type-submenu>.icon-layer {
     background-color: var(--background-color);
     border-radius: 50%;
@@ -127,7 +137,6 @@
       height: 90% !important;
       border-radius: 50%;
       overflow: hidden;
-      opacity: 1;
     }
   }
 
