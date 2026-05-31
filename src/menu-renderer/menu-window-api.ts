@@ -61,7 +61,11 @@ export const MENU_WINDOW_API = {
    * @param callback This callback will be called when the host process requests a menu
    *   interaction.
    */
-  onTriggerInteraction: (func: (type: 'closeMenu' | 'closeSubmenu') => void) => {
+  onTriggerInteraction: (
+    func: (
+      type: MenuInteractionType.eCloseMenu | MenuInteractionType.eCloseSubmenu
+    ) => void
+  ) => {
     ipcRenderer.on('menu-window.trigger-interaction', (event, type) => func(type));
   },
 

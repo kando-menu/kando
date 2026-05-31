@@ -187,13 +187,13 @@ export type KeySequence = Array<KeyStroke>;
 /** Enum for the different things a user can do in a menu. */
 export enum MenuInteractionType {
   eOpenMenu = 'openMenu',
-  eCloseMenu = 'closeMenu',
   eOpenSubmenu = 'openSubmenu',
+  eCloseMenu = 'closeMenu',
   eCloseSubmenu = 'closeSubmenu',
-  eActivateRoot = 'activateRoot',
+  eHoverParent = 'hoverParent',
   eHoverButton = 'hoverButton',
-  eSelectButton = 'selectButton',
   eHoverSubmenu = 'hoverSubmenu',
+  eSelectButton = 'selectButton',
   eActivateSubmenu = 'activateSubmenu',
 }
 

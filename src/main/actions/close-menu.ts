@@ -21,5 +21,5 @@ import { DeepReadonly } from '../settings';
  * @returns A promise which resolves when the menu has been successfully closed.
  */
 export async function execute(action: DeepReadonly<CloseMenuAction>, app: KandoApp) {
-  await app.getMenuWindow().hideWindow();
+  await app.getMenuWindow().closeMenu();
 }

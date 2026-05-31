@@ -37,9 +37,10 @@
       minPitch: 0.7,
       maxPitch: 0.7,
     },
-    activateRoot: {
-      file: 'final.wav',
-      volume: 0.7,
+    hoverParent: {
+      file: 'hover.wav',
+      minPitch: 0.8,
+      maxPitch: 0.8,
     },
     hoverButton: {
       file: 'hover.wav',

@@ -337,16 +337,18 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
   }
 
   /** There are two types of interactions which can be triggered by the host process. */
-  public triggerInteraction(type: 'closeMenu' | 'closeSubmenu') {
+  public triggerInteraction(
+    type: MenuInteractionType.eCloseMenu | MenuInteractionType.eCloseSubmenu
+  ) {
     if (
-      type === 'closeSubmenu' &&
+      type === MenuInteractionType.eCloseSubmenu &&
       this.centerItem &&
       this.centerItem.type === 'submenu'
     ) {
       this.selectParent();
     }
 
-    if (type === 'closeMenu') {
+    if (type === MenuInteractionType.eCloseMenu) {
       this.hide();
     }
   }
@@ -384,12 +386,11 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         return;
       }
 
-      // If there is an item currently dragged, select it. If we are in Marking Mode or
-      // Turbo Mode, the selection type will be eSubmenuOnly. In this case, we only select
-      // submenus in order to prevent unwanted actions. This way the user can always check
-      // if the correct action was selected before executing it.
-      // We also do not trigger selections of the parent item when moving the mouse in the
-      // center zone of the menu. This feels more natural and prevents accidental
+      // If we are in Marking Mode or Turbo Mode, the selection type will be eSubmenuOnly.
+      // In this case, we only select submenus in order to prevent unwanted actions. This
+      // way the user can always check if the correct action was selected before executing
+      // it. We also do not trigger selections of the parent item when moving the mouse in
+      // the center zone of the menu. This feels more natural and prevents accidental
       // selections.
       const item = this.hoveredItem || this.clickedItem || this.draggedItem;
       if (
@@ -398,15 +399,43 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         (item.type === 'submenu' || item.type === 'root') &&
         this.latestInput.distance > this.settings.centerDeadZone
       ) {
+        let interaction = MenuInteractionType.eOpenSubmenu;
+        let path = item.renderData.path;
+
+        if (item === this.centerItem.renderData.parent) {
+          interaction = MenuInteractionType.eCloseSubmenu;
+          path = this.centerItem.renderData.path;
+        }
+
+        this.emitItemInteractionEvent(interaction, path);
+
         this.selectItem(item, coords);
-        this.emitSelectionEvent(item, source);
+
         return;
       }
 
       // If there is a clicked item, select it.
       if (type === SelectionType.eActiveItem && item) {
+        let interaction = MenuInteractionType.eOpenSubmenu;
+        let path = item.renderData.path;
+
+        if (item === this.centerItem) {
+          interaction = MenuInteractionType.eActivateSubmenu;
+        } else if (item.type === 'button') {
+          interaction = MenuInteractionType.eSelectButton;
+        } else if (item === this.centerItem.renderData.parent) {
+          interaction = MenuInteractionType.eCloseSubmenu;
+          path = this.centerItem.renderData.path;
+        }
+
+        if (interaction === MenuInteractionType.eSelectButton) {
+          this.emitSelectionEvent(item, source);
+        } else {
+          this.emitItemInteractionEvent(interaction, path);
+        }
+
         this.selectItem(item, coords);
-        this.emitSelectionEvent(item, source);
+
         return;
       }
 
@@ -436,12 +465,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 
       if (!anyModifierPressed) {
-        // Backspace should select the parent item.
-        if (event.key === 'Backspace') {
-          this.selectParent();
-          return;
-        }
-
         const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
 
         // Then we check whether the center-click-workflow of the center item got triggered.
@@ -453,7 +476,10 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             this.centerItem.activateWorkflow.quickSelectKey.toLocaleLowerCase() ===
             eventKey
           ) {
-            console.log('Quick select key for center item triggered');
+            this.emitItemInteractionEvent(
+              MenuInteractionType.eActivateSubmenu,
+              this.centerItem.renderData.path
+            );
             return;
           }
         }
@@ -475,8 +501,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             }
 
             if (selectionKeys.includes(eventKey)) {
-              this.selectItem(child, this.getCenterItemPosition());
               this.emitSelectionEvent(child, SelectionSource.eKeyboard);
+              this.selectItem(child, this.getCenterItemPosition());
               return;
             }
           }
@@ -511,12 +537,17 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         if (this.hoveredItem) {
           if (this.hoveredItem === this.centerItem) {
             this.emitItemInteractionEvent(
-              this.hoveredItem.type === 'root'
-                ? MenuInteractionType.eActivateRoot
-                : MenuInteractionType.eActivateSubmenu,
+              MenuInteractionType.eActivateSubmenu,
               this.hoveredItem.renderData.path
             );
+          } else if (this.hoveredItem.type === 'submenu') {
+            this.emitItemInteractionEvent(
+              MenuInteractionType.eOpenSubmenu,
+              this.hoveredItem.renderData.path
+            );
+            this.selectItem(this.hoveredItem);
           } else {
+            this.emitSelectionEvent(this.hoveredItem, SelectionSource.eKeyboard);
             this.selectItem(this.hoveredItem);
           }
 
@@ -587,14 +618,13 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    *   given, the latest pointer input position is used.
    */
   private selectItem(item: RenderedMenuItem, coords?: Vec2) {
-    this.clickItem(null);
-    this.hoverItem(null);
-    this.dragItem(null);
-
-    // If the item is already selected, we are done here.
     if (this.centerItem === item) {
       return;
     }
+
+    this.clickItem(null);
+    this.hoverItem(null);
+    this.dragItem(null);
 
     // Is the item the parent of the currently active item?
     const selectedParent = item == this.centerItem?.renderData.parent;
@@ -712,6 +742,10 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       return;
     }
 
+    this.emitItemInteractionEvent(
+      MenuInteractionType.eCloseSubmenu,
+      this.centerItem.renderData.path
+    );
     this.selectItem(this.centerItem.renderData.parent, coords);
   }
 
@@ -753,12 +787,15 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       this.hoveredItem = item;
       this.hoveredItem.renderData.nodeDiv.classList.add('hovered');
 
-      this.emitItemInteractionEvent(
-        item.type === 'submenu'
-          ? MenuInteractionType.eHoverSubmenu
-          : MenuInteractionType.eHoverButton,
-        this.hoveredItem.renderData.path
-      );
+      let interaction = MenuInteractionType.eHoverSubmenu;
+
+      if (item === this.centerItem.renderData.parent) {
+        interaction = MenuInteractionType.eHoverParent;
+      } else if (item.type === 'button') {
+        interaction = MenuInteractionType.eHoverButton;
+      }
+
+      this.emitItemInteractionEvent(interaction, this.hoveredItem.renderData.path);
     }
   }
 
@@ -1506,7 +1543,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     type:
       | MenuInteractionType.eOpenSubmenu
       | MenuInteractionType.eCloseSubmenu
-      | MenuInteractionType.eActivateRoot
+      | MenuInteractionType.eHoverParent
       | MenuInteractionType.eHoverButton
       | MenuInteractionType.eHoverSubmenu
       | MenuInteractionType.eActivateSubmenu,

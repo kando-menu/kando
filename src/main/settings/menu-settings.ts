@@ -211,7 +211,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
 
       // Depending on the old item's delay property, we want to add the close-menu action
       // before or after the execute-command action.
-      if ((oldItem.data as { delay?: boolean }).delay) {
+      if ((oldItem.data as { delayed?: boolean }).delayed) {
         newItem.selectWorkflow.actions.unshift({
           type: 'close-menu',
         });
@@ -254,7 +254,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
 
       // Depending on the old item's delay property, we want to add the close-menu action
       // before or after the execute-command action.
-      if ((oldItem.data as { delay?: boolean }).delay) {
+      if ((oldItem.data as { delayed?: boolean }).delayed) {
         newItem.selectWorkflow.actions.unshift({
           type: 'close-menu',
         });
@@ -293,7 +293,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
 
       // Depending on the old item's delay property, we want to add the close-menu action
       // before or after the execute-command action.
-      if ((oldItem.data as { delay?: boolean }).delay) {
+      if ((oldItem.data as { delayed?: boolean }).delayed) {
         newItem.selectWorkflow.actions.unshift({
           type: 'close-menu',
         });

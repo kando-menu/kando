@@ -149,7 +149,7 @@ export class KandoApp {
               if (this.settingsWindow?.isFocused()) {
                 this.settingsWindow.close();
               } else if (this.menuWindow?.isVisible()) {
-                this.menuWindow.hide();
+                this.menuWindow.closeMenu();
               }
             },
           },
@@ -350,7 +350,7 @@ export class KandoApp {
     }
 
     if (options.closeMenu) {
-      this.menuWindow?.cancel();
+      this.menuWindow?.closeMenu();
       return true;
     }
 
@@ -507,6 +507,7 @@ export class KandoApp {
     this.menuWindow = new MenuWindow(
       this,
       (interaction: MenuInteractionType, path: number[]) => {
+        console.log('Menu interaction:', interaction, path);
         for (const observer of this.ipcObservers.values()) {
           observer(interaction, path);
         }
@@ -519,7 +520,7 @@ export class KandoApp {
     this.menuWindow.on('close', (event) => {
       if (!this.isQuitting) {
         event.preventDefault();
-        this.menuWindow.cancel();
+        this.menuWindow.closeMenu();
       }
     });
   }

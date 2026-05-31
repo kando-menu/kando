@@ -81,6 +81,15 @@ export class MenuWindow extends BrowserWindow {
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout = null;
 
+  /** Resolves once a closeMenu request has been finalized and the window is hidden. */
+  private pendingCloseMenuPromise?: Promise<void>;
+
+  /** Stores the resolver for pendingCloseMenuPromise while a close is in progress. */
+  private resolvePendingCloseMenu?: () => void;
+
+  /** Stores the rejecter for pendingCloseMenuPromise while a close is in progress. */
+  private rejectPendingCloseMenu?: (error: unknown) => void;
+
   constructor(
     private kando: KandoApp,
     private ipcCallback: IPCCallback
@@ -366,7 +375,10 @@ export class MenuWindow extends BrowserWindow {
    */
   public closeSubmenu() {
     if (this.isVisible()) {
-      this.webContents.send('menu-window.close-submenu');
+      this.webContents.send(
+        'menu-window.trigger-interaction',
+        MenuInteractionType.eCloseSubmenu
+      );
     }
   }
 
@@ -374,10 +386,51 @@ export class MenuWindow extends BrowserWindow {
    * This hides the window. It will wait for the fade-out animation to finish before
    * actually hiding the window.
    */
-  public cancel() {
-    if (this.isVisible()) {
-      this.webContents.send('menu-window.cancel-menu');
-      this.visible = false;
+  public async closeMenu() {
+    if (!this.isVisible()) {
+      return;
+    }
+
+    // If a close request is already in flight, return the existing promise.
+    if (this.pendingCloseMenuPromise) {
+      return this.pendingCloseMenuPromise;
+    }
+
+    this.pendingCloseMenuPromise = new Promise<void>((resolve, reject) => {
+      this.resolvePendingCloseMenu = () => {
+        this.resolvePendingCloseMenu = undefined;
+        this.rejectPendingCloseMenu = undefined;
+        this.pendingCloseMenuPromise = undefined;
+        resolve();
+      };
+
+      this.rejectPendingCloseMenu = (error: unknown) => {
+        this.resolvePendingCloseMenu = undefined;
+        this.rejectPendingCloseMenu = undefined;
+        this.pendingCloseMenuPromise = undefined;
+        reject(error);
+      };
+    });
+
+    this.webContents.send(
+      'menu-window.trigger-interaction',
+      MenuInteractionType.eCloseMenu
+    );
+
+    return this.pendingCloseMenuPromise;
+  }
+
+  /** Resolves a pending closeMenu promise if there is one. */
+  private settlePendingCloseMenu() {
+    if (this.resolvePendingCloseMenu) {
+      this.resolvePendingCloseMenu();
+    }
+  }
+
+  /** Rejects a pending closeMenu promise if there is one. */
+  private failPendingCloseMenu(error: unknown) {
+    if (this.rejectPendingCloseMenu) {
+      this.rejectPendingCloseMenu(error);
     }
   }
 
@@ -691,7 +744,7 @@ export class MenuWindow extends BrowserWindow {
     // menu and track some achievements.
     ipcMain.on(
       'menu-window.finalize-interaction',
-      (
+      async (
         event,
         type: MenuInteractionType,
         path: number[],
@@ -714,24 +767,29 @@ export class MenuWindow extends BrowserWindow {
         // no workflow to execute in this case. We only check whether no workflow was
         // executed in order to track the "cancels" achievement.
         if (type === MenuInteractionType.eCloseMenu) {
-          this.hideWindow();
+          try {
+            await this.hideWindow();
+            this.settlePendingCloseMenu();
+          } catch (error) {
+            this.failPendingCloseMenu(error);
+            throw error;
+          }
 
           if (this.noopInteraction) {
-            console.log('Menu canceled without interaction');
             this.kando.achievementTracker.incrementStat('cancels');
           }
           return;
         }
 
+        const item = this.getMenuItemAtPath(this.lastMenu.root, path);
+
         // The user clicked the root menu item.
-        if (type === MenuInteractionType.eActivateRoot) {
+        if (type === MenuInteractionType.eActivateSubmenu && item.type === 'root') {
           if (this.lastMenu.root.activateWorkflow) {
             this.executeWorkflow(this.lastMenu.root.activateWorkflow);
           }
           return;
         }
-
-        const item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
         if (!item) {
           console.error('No item found at path: ', path);

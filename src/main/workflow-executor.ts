@@ -14,6 +14,7 @@ import { Notification } from './utils/notification';
 import { DeepReadonly } from './settings';
 
 import { execute as closeMenu } from './actions/close-menu';
+import { execute as closeSubmenu } from './actions/close-submenu';
 import { execute as executeCommand } from './actions/execute-command';
 import { execute as executeMacro } from './actions/execute-macro';
 import { execute as inhibitShortcuts } from './actions/inhibit-shortcuts';
@@ -35,6 +36,7 @@ const ACTION_EXECUTORS = new Map<
   WorkflowActionExecutor<WorkflowActionType>
 >([
   ['close-menu', closeMenu],
+  ['close-submenu', closeSubmenu],
   ['delay', delay],
   ['execute-command', executeCommand],
   ['execute-macro', executeMacro],

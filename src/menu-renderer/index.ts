@@ -19,6 +19,7 @@ import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { CenterText } from './center-text';
+import { MenuInteractionType } from '../common';
 
 /**
  * This file is the main entry point for Kando's menu renderer process. It is responsible
@@ -99,7 +100,7 @@ Promise.all([
   // Helper function to group and re-use function calls
   // associated with showing the settings window.
   const showSettings = () => {
-    menu.triggerInteraction('closeMenu');
+    menu.triggerInteraction(MenuInteractionType.eCloseMenu);
     window.menuAPI.showSettings();
   };
 
@@ -175,7 +176,7 @@ Promise.all([
   document.body.addEventListener('keydown', async (ev) => {
     // Hide the menu when the user presses escape.
     if (ev.key === 'Escape') {
-      menu.triggerInteraction('closeMenu');
+      menu.triggerInteraction(MenuInteractionType.eCloseMenu);
     }
 
     // Show the settings window if 'cmd + ,' hotkey is pressed on macOS
