@@ -116,6 +116,10 @@ export class WorkflowExecutor {
    * @returns True if the workflow performs no meaningful actions, false otherwise.
    */
   public isNoopWorkflow(workflow: DeepReadonly<Workflow>): boolean {
+    if (!workflow.actions || workflow.actions.length === 0) {
+      return true;
+    }
+
     return workflow.actions.every((action) => {
       return (
         action.type === 'delay' ||
