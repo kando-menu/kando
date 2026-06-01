@@ -7,10 +7,10 @@
   themeVersion: '1.0.0',
   license: 'CC0-1.0',
 
-  // This theme was created for Kando's sound theme engine version 1.
+  // This theme was created for Kando's sound theme engine version 2.
   // Kando will use this to check if the theme is compatible with the
   // current version of Kando.
-  engineVersion: 1,
+  engineVersion: 2,
 
   // This is a list of sound files which are played when certain events
   // occur in the menu.

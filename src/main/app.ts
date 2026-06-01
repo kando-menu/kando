@@ -729,9 +729,12 @@ export class KandoApp {
       ]);
 
       // Load all descriptions in parallel.
-      const descriptions = await Promise.all(
+      let descriptions = await Promise.all(
         themes.map((theme) => this.loadSoundThemeDescription(theme))
       );
+
+      // Filter out themes that failed to load a description.
+      descriptions = descriptions.filter((desc) => desc.id !== 'none');
 
       // Sort by the name property of the description.
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
@@ -1687,31 +1690,41 @@ export class KandoApp {
    */
   private async loadSoundThemeDescription(theme: string) {
     const metaFile = await this.findThemePath('sound-themes', theme);
+    const engineVersion = 2;
+
+    const emptyTheme: SoundThemeDescription = {
+      id: 'none',
+      name: 'None',
+      directory: '',
+      engineVersion,
+      themeVersion: '',
+      author: '',
+      license: '',
+      sounds: {} as Record<MenuInteractionType, SoundEffect>,
+    };
 
     if (!metaFile) {
       if (theme !== 'none') {
-        console.error(`Sound theme "${theme}" not found. No sounds will be played.`);
+        console.warn(`Sound theme "${theme}" not found.`);
       }
 
-      const description: SoundThemeDescription = {
-        id: 'none',
-        name: 'None',
-        directory: '',
-        engineVersion: 1,
-        themeVersion: '',
-        author: '',
-        license: '',
-        sounds: {} as Record<MenuInteractionType, SoundEffect>,
-      };
-
-      return description;
+      return emptyTheme;
     }
 
     const content = await fs.promises.readFile(metaFile);
     const description = json5.parse(content.toString()) as SoundThemeDescription;
+
+    if (description.engineVersion !== engineVersion) {
+      console.warn(
+        `Sound theme "${theme}" has unsupported engine version ${description.engineVersion}. Must be ${engineVersion}.`
+      );
+      return emptyTheme;
+    }
+
     const directory = path.dirname(metaFile);
     description.id = path.basename(directory);
     description.directory = path.dirname(directory);
+
     return description;
   }
 
