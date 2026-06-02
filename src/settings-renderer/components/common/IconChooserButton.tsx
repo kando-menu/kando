@@ -49,7 +49,7 @@ type Props = {
   readonly isGrouped?: boolean;
 
   /** Forwards the variant to the button component. Defaults to 'secondary'. */
-  readonly variant?: 'primary' | 'secondary' | 'invisible' | 'tool' | 'floating';
+  readonly variant?: 'primary' | 'secondary' | 'invisible' | 'tool' | 'pill';
 };
 
 /**

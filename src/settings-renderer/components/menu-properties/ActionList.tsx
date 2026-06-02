@@ -231,12 +231,15 @@ export default function ActionList(props: Props) {
 
         {displayedActions.map((action) => renderAction(action))}
 
-        <Button
-          icon={<TbPlus />}
-          label={i18next.t('settings.workflow-editor.add-action')}
-          variant="secondary"
-          onClick={() => setActionPickerVisible(true)}
-        />
+        <div className={classes.addActionContainer}>
+          <Button
+            isBlock
+            icon={<TbPlus />}
+            label={i18next.t('settings.workflow-editor.add-action')}
+            variant="pill"
+            onClick={() => setActionPickerVisible(true)}
+          />
+        </div>
 
         {displayedActions.length === 0 && (
           <Note isCentered marginTop={16}>

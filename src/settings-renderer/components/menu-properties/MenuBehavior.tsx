@@ -14,7 +14,7 @@ import i18next from 'i18next';
 import * as classes from './MenuBehavior.module.scss';
 
 import { useAppState, useMenuSettings } from '../../state';
-import { Checkbox } from '../common';
+import { Checkbox, Note } from '../common';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
@@ -24,6 +24,12 @@ export default function MenuBehavior() {
 
   return (
     <div className={classes.container}>
+      <h1>{i18next.t('settings.menu-behavior')}</h1>
+      <Note useMarkdown marginBottom={-5} marginTop={-5}>
+        {i18next.t('settings.menu-behavior-info', {
+          link: 'https://kando.menu/usage/',
+        })}
+      </Note>
       <Checkbox
         info={i18next.t('settings.centered-mode-info')}
         initialValue={menus[selectedMenu].centered}

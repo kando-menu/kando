@@ -18,7 +18,7 @@ import * as classes from './MenuConditions.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import { Checkbox, Button } from '../common';
+import { Checkbox, Button, Note } from '../common';
 import ScreenAreaPicker from './ScreenAreaPicker';
 import WindowPicker from './WindowPicker';
 
@@ -70,6 +70,8 @@ export default function MenuConditions() {
 
   return (
     <div className={classes.container}>
+      <h1>{i18next.t('settings.menu-conditions')}</h1>
+      <Note marginTop={-5}>{i18next.t('settings.menu-conditions-info')}</Note>
       <Checkbox
         info={i18next.t('settings.app-condition-info')}
         initialValue={appConditionVisible}

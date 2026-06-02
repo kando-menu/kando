@@ -477,6 +477,10 @@ export default interface Resources {
               "title": "Welcome to Kando!"
           },
           "invalid-dropdown-selection": "Select an option…",
+          "menu-behavior": "settings.menu-behavior",
+          "menu-behavior-info": "settings.menu-behavior-info",
+          "menu-conditions": "Menu Conditions",
+          "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
           "menu-themes-dialog": {
               "accent-colors": "Accent Colors",
               "author": "by {{author}}",

@@ -348,7 +348,11 @@
             "action-picker": {
                 "search-placeholder": "Search for an action…"
             }
-        }
+        },
+        "menu-conditions": "Menu Conditions",
+        "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
+        "menu-behavior": "Menu Behavior",
+        "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!"
     },
     "menu-items": {
         "submenu": {

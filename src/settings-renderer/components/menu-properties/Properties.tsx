@@ -164,7 +164,7 @@ export default function Properties() {
               icon={<TbCopy />}
               size="large"
               tooltip={i18next.t('settings.duplicate-menu-item')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 duplicateMenuItem(selectedMenu, selectedChildPath);
               }}
@@ -174,7 +174,7 @@ export default function Properties() {
               icon={<TbTrash />}
               size="large"
               tooltip={i18next.t('settings.delete-menu-item')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 deleteMenuItem(selectedMenu, selectedChildPath);
                 selectParent();

@@ -32,7 +32,7 @@ type Props = {
    * background when hovered, tool has no background at all. Defaults to 'secondary'.
    * Floating has a dark background and more rounded corners.
    */
-  readonly variant?: 'primary' | 'secondary' | 'invisible' | 'tool' | 'floating';
+  readonly variant?: 'primary' | 'secondary' | 'invisible' | 'tool' | 'pill';
 
   /** Size of the button. Defaults to 'medium'. */
   readonly size?: 'small' | 'medium' | 'large';

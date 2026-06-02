@@ -20,6 +20,8 @@
 
 .menuListContent {
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 0px; // This is important to make the scrollboxes work.
   background-color: $window-background;
   border-top-left-radius: 12px;
@@ -27,6 +29,10 @@
   border-top: $area-border;
   border-left: $area-border;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.075);
+
+  > :first-child {
+    flex-grow: 1;
+  }
 }
 
 .menu {
@@ -46,12 +52,7 @@
   }
 
   &.selected {
-    padding-right: 75px;
-  }
-
-  // Leave some space at the bottom of the menu list for the floating button.
-  &:last-child {
-    margin-bottom: 75px;
+    padding-right: 100px;
   }
 
   // A low opacity seems to be required. Setting it to zero hides also the dragged copy
@@ -87,17 +88,8 @@
     transform: none;
     opacity: 1;
 
-    .toolButton {
+    > * {
       pointer-events: all;
-    }
-
-    .toolButton:hover {
-      color: $text-link-hover;
-      background-color: light-dark(rgba($key-dark, 0.2), rgba($key-light, 0.2));
-    }
-
-    .toolButton:active {
-      transform: translateY(1px);
     }
   }
 }
@@ -118,11 +110,9 @@
   font-size: 0.8rem;
 }
 
-.floatingButton {
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
+.addMenuButtonContainer {
+  display: flex;
+  padding: 30px;
 }
 
 .message {
