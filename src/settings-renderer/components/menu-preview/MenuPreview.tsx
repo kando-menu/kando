@@ -12,7 +12,9 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
+import { TbCopy, TbTrash } from 'react-icons/tb';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import * as classes from './MenuPreview.module.scss';
@@ -69,6 +71,7 @@ export default function MenuPreview() {
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
   const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
+  const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
   const deleteMenu = useMenuSettings((state) => state.deleteMenu);
 
   // When the user selects a submenu or navigates back to the parent menu, a short
@@ -357,6 +360,51 @@ export default function MenuPreview() {
     setTransitionAngle(parentAngle);
   };
 
+  // Renders a small trash and duplicate button next to the child item if it is currently
+  // selected.
+  const renderChildButtons = (renderedChild: RenderedMenuItem, angle: number) => {
+    if (renderedChild.index < 0 || renderedChild.index >= centerItem.children.length) {
+      return null;
+    }
+
+    if (renderedChild.index !== selectedChild || selectedChild === dragIndex) {
+      return null;
+    }
+
+    const trashDir = math.getDirection(angle + 25, 1);
+    const copyDir = math.getDirection(angle - 25, 1);
+
+    return (
+      <>
+        <div
+          className={classes.tool}
+          style={utils.makeCSSProperties('dir', trashDir)}
+          data-tooltip-content={i18next.t('settings.delete-menu-item')}
+          data-tooltip-id="main-tooltip"
+          onClick={(event) => {
+            event.stopPropagation();
+            deleteMenuItem(selectedMenu, selectedChildPath);
+
+            // Select the center item after deletion.
+            selectChildPath(selectedChildPath.slice(0, -1));
+          }}>
+          <TbTrash />
+        </div>
+        <div
+          className={classes.tool}
+          style={utils.makeCSSProperties('dir', copyDir)}
+          data-tooltip-content={i18next.t('settings.duplicate-menu-item')}
+          data-tooltip-id="main-tooltip"
+          onClick={(event) => {
+            event.stopPropagation();
+            duplicateMenuItem(selectedMenu, selectedChildPath);
+          }}>
+          <TbCopy />
+        </div>
+      </>
+    );
+  };
+
   // Assembles a list of divs for the grandchild items of the given child item.
   const renderGrandchildren = (renderedChild: RenderedMenuItem, angle: number) => {
     // The drop indicator for dropping into a submenu is rendered as a "ghost" child item
@@ -515,6 +563,7 @@ export default function MenuPreview() {
           <ThemedIcon name={child.icon} size="100%" theme={child.iconTheme} />
         ) : null}
         {renderGrandchildren(child, renderedChildAngles[index])}
+        {renderChildButtons(child, renderedChildAngles[index])}
       </div>
     );
   };
@@ -525,6 +574,8 @@ export default function MenuPreview() {
     return (
       <div
         key={child.key}
+        data-tooltip-content={i18next.t('settings.fix-menu-item-angle')}
+        data-tooltip-id="main-tooltip"
         className={cx({
           lock: true,
           locked: child.angle !== undefined,

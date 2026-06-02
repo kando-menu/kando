@@ -12,12 +12,10 @@ import React from 'react';
 import i18next from 'i18next';
 
 import * as classes from './Properties.module.scss';
-import { TbCopy, TbTrash } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
   Headerbar,
-  Button,
   IconChooserButton,
   TagInput,
   ShortcutPicker,
@@ -38,9 +36,7 @@ export default function Properties() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
-  const selectParent = useAppState((state) => state.selectParent);
-  const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
-  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
+
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const [menuTags, setMenuTags] = React.useState([]);
@@ -157,31 +153,6 @@ export default function Properties() {
           ) : null}
           {selectedItem ? <WorkflowEditor /> : null}
         </Scrollbox>
-        {!isRoot && selectedItem ? (
-          <div className={classes.floatingButton}>
-            <Button
-              isGrouped
-              icon={<TbCopy />}
-              size="large"
-              tooltip={i18next.t('settings.duplicate-menu-item')}
-              variant="pill"
-              onClick={() => {
-                duplicateMenuItem(selectedMenu, selectedChildPath);
-              }}
-            />
-            <Button
-              isGrouped
-              icon={<TbTrash />}
-              size="large"
-              tooltip={i18next.t('settings.delete-menu-item')}
-              variant="pill"
-              onClick={() => {
-                deleteMenuItem(selectedMenu, selectedChildPath);
-                selectParent();
-              }}
-            />
-          </div>
-        ) : null}
       </div>
     </>
   );

@@ -19,6 +19,8 @@ $grandchild-size: 4cqmin;
 $grandchild-offset: 7.2cqmin;
 $lock-size: 4cqmin;
 $lock-offset: 18cqmin;
+$tool-size: 5cqmin;
+$tool-offset: 13cqmin;
 $backlink-size: 8cqmin;
 $backlink-offset: 30cqmin;
 
@@ -38,6 +40,7 @@ $backlink-offset: 30cqmin;
     .child,
     .center,
     .backLink,
+    .tool,
     .lock {
       position: absolute;
       aspect-ratio: 1;
@@ -71,7 +74,7 @@ $backlink-offset: 30cqmin;
 
       transform: translate(calc(50cqmin), calc(50cqmin));
 
-      &:active {
+      &:not(.selected):active {
         top: calc(-1 * $center-size / 2 - $icon-padding / 2 + 1px);
       }
 
@@ -106,7 +109,7 @@ $backlink-offset: 30cqmin;
           scale(1.1);
       }
 
-      &:active {
+      &:not(.selected):active {
         top: calc(-1 * $child-size / 2 - $icon-padding / 2 + 1px);
       }
 
@@ -148,6 +151,36 @@ $backlink-offset: 30cqmin;
 
       &:active {
         top: calc(-1 * $lock-size / 2 - $icon-padding / 4 + 1px);
+      }
+    }
+
+    .tool {
+      width: $tool-size;
+      top: calc(-1 * $tool-size / 2 + $child-size / 2);
+      left: calc(-1 * $tool-size / 2 + $child-size / 2);
+
+      font-size: 3cqmin;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      transform: translate(
+        calc($tool-offset * var(--dir-x)),
+        calc($tool-offset * var(--dir-y))
+      );
+
+      opacity: 0.5;
+
+      background-color: transparent;
+      color: $text-normal;
+
+      &:hover {
+        opacity: 1;
+        background-color: light-dark(rgba($base-dark, 0.1), rgba($base-light, 0.1));
+      }
+
+      &:active {
+        top: calc(-1 * $tool-size / 2 + $child-size / 2 + 1px);
       }
     }
 

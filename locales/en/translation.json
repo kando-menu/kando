@@ -253,7 +253,7 @@
         "empty-collection-note": "Edit the tags above or add a completely new menu to this collection with the button below.",
         "duplicate-menu": "Duplicate menu",
         "delete-menu": "Delete menu",
-        "create-menu-button": "New menu",
+        "create-menu-button": "Add Menu",
         "import-menu": "Import menu",
         "add-menu-item-hint": "Drag this item to add it to the menu above!",
         "add-menu-items": "Add Menu Items",
@@ -352,7 +352,9 @@
         "menu-conditions": "Menu Conditions",
         "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
         "menu-behavior": "Menu Behavior",
-        "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!"
+        "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!",
+        "export-menu": "Export menu",
+        "fix-menu-item-angle": "Fix the angle of this menu item"
     },
     "menu-items": {
         "submenu": {

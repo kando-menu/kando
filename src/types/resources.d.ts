@@ -297,18 +297,20 @@ export default interface Resources {
           "cancel": "Cancel",
           "centered-mode": "Centered Mode",
           "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
-          "create-menu-button": "New menu",
+          "create-menu-button": "Add Menu",
           "delete-menu": "Delete menu",
           "delete-menu-item": "Delete menu item",
           "duplicate-menu": "Duplicate menu",
           "duplicate-menu-item": "Duplicate menu item",
           "empty-collection": "This collection is empty.",
           "empty-collection-note": "Edit the tags above or add a completely new menu to this collection with the button below.",
+          "export-menu": "Export menu",
           "export-menu-error-title": "Failed to export menu",
           "file-picker": {
               "select-directory": "Select a directory",
               "select-file": "Select a file"
           },
+          "fix-menu-item-angle": "settings.fix-menu-item-angle",
           "general-settings-dialog": {
               "advanced-menu-options": "Advanced Menu Options",
               "advanced-menu-options-note": "Usually, you can leave these settings at their default values.",
@@ -477,8 +479,8 @@ export default interface Resources {
               "title": "Welcome to Kando!"
           },
           "invalid-dropdown-selection": "Select an option…",
-          "menu-behavior": "settings.menu-behavior",
-          "menu-behavior-info": "settings.menu-behavior-info",
+          "menu-behavior": "Menu Behavior",
+          "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!",
           "menu-conditions": "Menu Conditions",
           "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
           "menu-themes-dialog": {
