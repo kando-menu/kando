@@ -2,18 +2,18 @@
 // SPDX-License-Identifier: CC0-1.0
 /* eslint @typescript-eslint/naming-convention: off */
 
-import {includeIgnoreFile} from '@eslint/compat';
+import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
 import xoReact from 'eslint-config-xo-react';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
-import {defineConfig} from 'eslint/config';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
 
-const filename      = fileURLToPath(import.meta.url);
-const dirname       = path.dirname(filename);
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 const gitignorePath = path.resolve(dirname, '.gitignore');
 
 export default defineConfig([
@@ -37,7 +37,7 @@ export default defineConfig([
     rules: {
       'react/boolean-prop-naming': [
         'error',
-        {rule: '^(is|has|do|use|hide|initial)[A-Z]([A-Za-z0-9]?)+'},
+        { rule: '^(is|has|do|use|hide|initial)[A-Z]([A-Za-z0-9]?)+' },
       ],
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-require-imports': 'off',

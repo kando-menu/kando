@@ -116,7 +116,7 @@ export default function GridIconPicker(props: Props) {
         rowIndex: Math.floor(selectedIndex / columns),
       });
     }
-  }, [gridInstance, props.filterTerm]);
+  }, [selectedIndex, gridInstance]);
 
   return (
     <div style={{ flexGrow: 1, minHeight: 0 }}>

@@ -74,7 +74,7 @@ export default function WindowPicker(props: Props) {
         clearInterval(interval);
       };
     }
-  }, [timer]);
+  }, [timer, props.mode]);
 
   const getCaption = () => {
     if (timer > timeout) {

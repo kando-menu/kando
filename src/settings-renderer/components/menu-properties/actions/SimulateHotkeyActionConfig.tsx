@@ -32,7 +32,9 @@ export function SimulateHotkeyActionConfig(props: Props) {
       initialValue={props.action.hotkey}
       label={i18next.t('menu-actions.simulate-hotkey.hotkey')}
       mode="key-codes"
-      recordingPlaceholder={i18next.t('menu-actions.simulate-hotkey.recording-placeholder')}
+      recordingPlaceholder={i18next.t(
+        'menu-actions.simulate-hotkey.recording-placeholder'
+      )}
       onChange={(value) => {
         props.onUpdateAction({
           ...props.action,
