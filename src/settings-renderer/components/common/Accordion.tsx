@@ -23,9 +23,6 @@ export type AccordionItemProps = {
   /** The content shown in the collapsible area. */
   readonly children?: React.ReactNode;
 
-  /** Whether the item should be expanded initially. */
-  readonly isInitiallyExpanded?: boolean;
-
   /** Optional callback called when the expanded state changes. */
   readonly onToggle?: (isExpanded: boolean) => void;
 };
@@ -36,8 +33,11 @@ type Props = {
   /** Accordion items whose expansion should be mutually exclusive. */
   readonly children: AccordionItemElement | AccordionItemElement[];
 
-  /** Optional index of the item that should be expanded initially. */
-  readonly initiallyExpandedIndex?: number | null;
+  /** Index of the currently expanded item. */
+  readonly expandedIndex: number | null;
+
+  /** Callback called when the expanded item changes. */
+  readonly onExpandedIndexChange: (expandedIndex: number | null) => void;
 };
 
 type AccordionPanelProps = {
@@ -76,37 +76,19 @@ function AccordionPanel(props: AccordionPanelProps) {
   );
 }
 
-function getInitialExpandedIndex(
-  children: AccordionItemElement[],
-  initiallyExpandedIndex?: number | null
-) {
-  if (initiallyExpandedIndex !== undefined) {
-    return initiallyExpandedIndex;
-  }
-
-  const childIndex = children.findIndex(
-    (child) => child.props.isInitiallyExpanded ?? true
-  );
-  return childIndex === -1 ? null : childIndex;
-}
-
 /** Shows multiple collapsible boxes while allowing at most one open panel at a time. */
 export default function Accordion(props: Props) {
   const children = React.Children.toArray(props.children).filter(
     React.isValidElement
   ) as AccordionItemElement[];
 
-  const [expandedIndex, setExpandedIndex] = React.useState<number | null>(() =>
-    getInitialExpandedIndex(children, props.initiallyExpandedIndex)
-  );
-
   return children.map((child, index) => (
     <AccordionPanel
       key={child.key ?? `accordion-item-${String(index)}`}
-      isExpanded={expandedIndex === index}
+      isExpanded={props.expandedIndex === index}
       title={child.props.title}
       onToggle={(isExpanded: boolean) => {
-        setExpandedIndex(isExpanded ? index : null);
+        props.onExpandedIndexChange(isExpanded ? index : null);
         child.props.onToggle?.(isExpanded);
       }}>
       {child.props.children}

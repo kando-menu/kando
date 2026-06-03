@@ -42,6 +42,9 @@ export default function Properties() {
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const [menuTags, setMenuTags] = React.useState([]);
+  const [expandedMenuPropertiesIndex, setExpandedMenuPropertiesIndex] = React.useState<
+    number | null
+  >(null);
 
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
@@ -149,7 +152,9 @@ export default function Properties() {
                   setMenuTags(newTags);
                 }}
               />
-              <Accordion initiallyExpandedIndex={null}>
+              <Accordion
+                expandedIndex={expandedMenuPropertiesIndex}
+                onExpandedIndexChange={setExpandedMenuPropertiesIndex}>
                 <AccordionItem title={i18next.t('settings.menu-behavior')}>
                   <MenuBehavior />
                 </AccordionItem>
