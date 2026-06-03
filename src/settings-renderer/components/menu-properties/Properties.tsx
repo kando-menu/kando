@@ -152,6 +152,7 @@ export default function Properties() {
                   setMenuTags(newTags);
                 }}
               />
+              <div style={{ height: 5 }} />
               <Accordion
                 expandedIndex={expandedMenuPropertiesIndex}
                 onExpandedIndexChange={setExpandedMenuPropertiesIndex}>
@@ -162,6 +163,7 @@ export default function Properties() {
                   <MenuConditions />
                 </AccordionItem>
               </Accordion>
+              <div style={{ height: 2 }} />
             </div>
           ) : null}
           {selectedItem ? <WorkflowEditor /> : null}

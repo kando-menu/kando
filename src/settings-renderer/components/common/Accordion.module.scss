@@ -13,11 +13,20 @@
 @use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
+.accordionPanel {
+  border-top: $area-border;
+
+  &:last-child {
+    border-bottom: $area-border;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  padding: 12px 0;
 
   font-weight: bold;
 

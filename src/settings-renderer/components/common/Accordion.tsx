@@ -54,13 +54,13 @@ export function AccordionItem(props: AccordionItemProps) {
 function AccordionPanel(props: AccordionPanelProps) {
   const [contentRef] = useAutoAnimate({ duration: 250 });
 
-  const toggle = () => {
-    props.onToggle?.(!props.isExpanded);
-  };
-
   return (
-    <div>
-      <div className={classes.header} onClick={toggle}>
+    <div className={classes.accordionPanel}>
+      <div
+        className={classes.header}
+        onClick={() => {
+          props.onToggle?.(!props.isExpanded);
+        }}>
         <span className={classes.title}>{props.title}</span>
         <TbChevronDown
           className={cx({
@@ -82,16 +82,20 @@ export default function Accordion(props: Props) {
     React.isValidElement
   ) as AccordionItemElement[];
 
-  return children.map((child, index) => (
-    <AccordionPanel
-      key={child.key ?? `accordion-item-${String(index)}`}
-      isExpanded={props.expandedIndex === index}
-      title={child.props.title}
-      onToggle={(isExpanded: boolean) => {
-        props.onExpandedIndexChange(isExpanded ? index : null);
-        child.props.onToggle?.(isExpanded);
-      }}>
-      {child.props.children}
-    </AccordionPanel>
-  ));
+  return (
+    <div>
+      {children.map((child, index) => (
+        <AccordionPanel
+          key={child.key ?? `accordion-item-${String(index)}`}
+          isExpanded={props.expandedIndex === index}
+          title={child.props.title}
+          onToggle={(isExpanded: boolean) => {
+            props.onExpandedIndexChange(isExpanded ? index : null);
+            child.props.onToggle?.(isExpanded);
+          }}>
+          {child.props.children}
+        </AccordionPanel>
+      ))}
+    </div>
+  );
 }
