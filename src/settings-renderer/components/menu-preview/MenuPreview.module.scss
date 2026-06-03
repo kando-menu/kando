@@ -160,7 +160,7 @@ $backlink-offset: 30cqmin;
       }
 
       &:active {
-        top: calc(-1 * $lock-size / 2 - $icon-padding / 4 + 1px);
+        top: calc(-1 * $lock-size / 2 + 1px);
       }
     }
 
@@ -191,7 +191,7 @@ $backlink-offset: 30cqmin;
       }
 
       &:active {
-        top: calc(-1 * $tool-size / 2 + $child-size / 2 + 1px);
+        top: calc(-1 * $tool-size / 2 + $child-size / 2 + $icon-padding + 1px);
       }
     }
 
