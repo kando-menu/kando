@@ -13,7 +13,7 @@
 .menuItem {
   cursor: grab;
   border-radius: 50%;
-  padding: min(calc(2px + 0.2vw), 5px);
+  padding: min(calc(5px + 0.2vw), 10px);
   width: min(calc(20px + 2vw), 50px);
   margin: 5px min(calc(4px + 0.4vw), 10px);
   aspect-ratio: 1;

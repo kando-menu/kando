@@ -1,39 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
-
-<!-- SPDX-License-Identifier: CC0-1.0 -->
-
+<!--
+SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
+SPDX-License-Identifier: MIT
+-->
 <svg
-   width="256"
-   height="256"
-   viewBox="0 0 256 256"
-   version="1.1"
-   id="svg1"
-   xml:space="preserve"
-   sodipodi:docname="clipboard-item.svg"
-   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="2.6406019"
-     inkscape:cx="96.947594"
-     inkscape:cy="94.675385"
-     inkscape:window-width="2021"
-     inkscape:window-height="1483"
-     inkscape:window-x="26"
-     inkscape:window-y="23"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg1" /><defs
-     id="defs1" /><path
-     style="font-variation-settings:normal;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999994;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
-     d="m 128,28.380854 c -13.11114,0 -23.83845,10.727298 -23.83845,23.838455 H 68.403866 c -11.919227,0 -11.919227,11.919229 -11.919227,11.919229 V 195.25004 c 0,11.91923 11.919227,11.91923 11.919227,11.91923 H 187.59615 c 0,0 11.91922,0 11.91922,-11.91923 V 64.138538 c 0,-11.919228 -11.91922,-11.919228 -11.91922,-11.919228 h -35.75769 c 0,-1.6687 0,-3.337387 -0.35758,-4.886886 C 149.21623,36.485926 139.56166,28.380854 128,28.380854 Z m 0,11.919228 c 4.88689,0 8.93943,3.218186 10.8465,7.389912 0.59596,1.430308 1.07273,2.860616 1.07273,4.529316 0,6.555573 -5.36366,11.919228 -11.91923,11.919228 -6.55557,0 -11.91923,-5.363655 -11.91923,-11.919228 0,-6.555584 5.36366,-11.919228 11.91923,-11.919228 z M 80.323094,76.057763 H 92.242322 V 87.976992 H 163.75769 V 76.057763 h 11.91923 V 183.33082 H 80.323094 Z"
-     id="path1-5" /></svg>
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+  <path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2" />
+  <path d="M9 12l.01 0" />
+  <path d="M13 12l2 0" />
+  <path d="M9 16l.01 0" />
+  <path d="M13 16l2 0" />
+</svg>
