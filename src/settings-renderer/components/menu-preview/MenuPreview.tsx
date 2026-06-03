@@ -390,7 +390,8 @@ export default function MenuPreview() {
       return null;
     }
 
-    if (renderedChild.index !== selectedChild || selectedChild === dragIndex) {
+    // Only the selected child item has the buttons.
+    if (renderedChild.index !== selectedChild || isDraggedChild(renderedChild)) {
       return null;
     }
 
@@ -613,15 +614,23 @@ export default function MenuPreview() {
 
   // Renders the lock icon for the given child item. The lock is locked if the item has a
   // fixed angle.
-  const renderLock = (child: RenderedMenuItem, index: number) => {
+  const renderLock = (renderedChild: RenderedMenuItem, index: number) => {
+    // Only the selected child and children which are currently locked have a lock icon.
+    if (
+      (renderedChild.index !== selectedChild && renderedChild.angle === undefined) ||
+      isDraggedChild(renderedChild)
+    ) {
+      return null;
+    }
+
     return (
       <div
-        key={child.key}
+        key={renderedChild.key}
         data-tooltip-content={i18next.t('settings.fix-menu-item-angle')}
         data-tooltip-id="main-tooltip"
         className={cx({
           lock: true,
-          locked: child.angle !== undefined,
+          locked: renderedChild.angle !== undefined,
         })}
         style={utils.makeCSSProperties('dir', childDirections[index])}
         onClick={() => {
@@ -639,7 +648,7 @@ export default function MenuPreview() {
           });
         }}>
         <ThemedIcon
-          name={child.angle !== undefined ? 'lock' : 'lock_open'}
+          name={renderedChild.angle !== undefined ? 'lock' : 'lock_open'}
           size="100%"
           theme="material-symbols-rounded"
         />
@@ -927,14 +936,7 @@ export default function MenuPreview() {
               {
                 // Add the lock icons for each child item. When locked, the item cannot be
                 // reordered via drag and drop, but its fixed angle can be adjusted instead.
-                renderedChildren.map((child, index) => {
-                  // The dragged item does not have a lock icon.
-                  if (isDraggedChild(child)) {
-                    return null;
-                  }
-
-                  return renderLock(child, index);
-                })
+                renderedChildren.map(renderLock)
               }
             </div>
           </CSSTransition>

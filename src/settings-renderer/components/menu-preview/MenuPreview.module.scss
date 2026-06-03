@@ -18,11 +18,21 @@ $child-offset: 30cqmin;
 $grandchild-size: 4cqmin;
 $grandchild-offset: 7.2cqmin;
 $lock-size: 4cqmin;
-$lock-offset: 18cqmin;
+$lock-offset: 17.5cqmin;
 $tool-size: 5cqmin;
 $tool-offset: 13cqmin;
 $backlink-size: 8cqmin;
 $backlink-offset: 30cqmin;
+
+@keyframes fade-in-control {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
 
 .previewArea {
   display: flex;
@@ -48,14 +58,13 @@ $backlink-offset: 30cqmin;
       background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.3));
       touch-action: none;
       transition: transform 0.2s ease;
-      border: 2px solid transparent;
 
       &:hover {
         background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.4));
       }
 
       &.selected {
-        border: 2px solid light-dark($key-dark, $key-light);
+        outline: 2px solid light-dark($key-dark, $key-light);
         background-color: light-dark(
           rgba(color.mix(color.adjust($base-dark, $lightness: 10%), $key-dark, 50%), 0.4),
           rgba(
@@ -121,8 +130,8 @@ $backlink-offset: 30cqmin;
 
     .lock {
       width: $lock-size;
-      top: calc(-1 * $lock-size / 2 - $icon-padding / 4);
-      left: calc(-1 * $lock-size / 2 - $icon-padding / 4);
+      top: calc(-1 * $lock-size / 2);
+      left: calc(-1 * $lock-size / 2);
       padding: $icon-padding / 2;
 
       transform: translate(
@@ -133,6 +142,7 @@ $backlink-offset: 30cqmin;
       background-color: transparent;
       color: $text-normal;
       opacity: 0.5;
+      animation: fade-in-control 0.2s ease;
 
       &.locked {
         opacity: 1;
@@ -156,8 +166,8 @@ $backlink-offset: 30cqmin;
 
     .tool {
       width: $tool-size;
-      top: calc(-1 * $tool-size / 2 + $child-size / 2);
-      left: calc(-1 * $tool-size / 2 + $child-size / 2);
+      top: calc(-1 * $tool-size / 2 + $child-size / 2 + $icon-padding);
+      left: calc(-1 * $tool-size / 2 + $child-size / 2 + $icon-padding);
 
       font-size: 3cqmin;
       display: flex;
@@ -170,6 +180,7 @@ $backlink-offset: 30cqmin;
       );
 
       opacity: 0.5;
+      animation: fade-in-control 0.2s ease;
 
       background-color: transparent;
       color: $text-normal;

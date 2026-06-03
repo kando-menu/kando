@@ -354,7 +354,7 @@
         "menu-behavior": "Menu Behavior",
         "menu-behavior-info": "Before you enable these options, we recommend learning why we like Kando's default behavior [here]({{link}})!",
         "export-menu": "Export menu",
-        "fix-menu-item-angle": "Fix the angle of this menu item",
+        "fix-menu-item-angle": "Fix the angle of this menu item. After enabling this, drag the item to update the angle.",
         "edit-submenu": "Edit submenu"
     },
     "menu-items": {
