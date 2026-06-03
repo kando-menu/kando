@@ -11,6 +11,7 @@
 import { ExecuteCommandAction } from '../../common';
 import { KandoApp } from '../app';
 import { DeepReadonly } from '../settings';
+import { Notification } from '../utils/notification';
 import { exec } from '../utils/shell';
 
 /**
@@ -31,8 +32,14 @@ export async function execute(action: DeepReadonly<ExecuteCommandAction>, app: K
     .replace(/\{{pointer_x}}/g, app.getLastWMInfo().pointerX.toString())
     .replace(/\{{pointer_y}}/g, app.getLastWMInfo().pointerY.toString());
 
-  return exec(command, {
+  exec(command, {
     detach: action.detached,
     isolate: action.isolated,
+  }).catch((error) => {
+    Notification.show({
+      title: `Failed to execute command: ${command}`,
+      message: error,
+      type: 'error',
+    });
   });
 }
