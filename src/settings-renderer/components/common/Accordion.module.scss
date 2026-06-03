@@ -8,52 +8,45 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use 'sass:color';
+
 @use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
-.container {
+.header {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding-bottom: 16px;
-  padding-top: 8px;
-}
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 
-.conditionInput {
-  margin-bottom: -5px;
+  font-weight: bold;
 
-  > *:first-child {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-  }
+  opacity: 0.9;
 
-  > *:last-child {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
+  cursor: pointer;
 
-  > * {
-    margin-bottom: 10px;
-  }
-
-  display: flex;
-
-  input {
-    @include text-input;
-
-    flex-grow: 1;
-    border-radius: 0;
+  &:hover {
+    opacity: 1;
   }
 }
 
-.screenCondition {
-  input {
-    min-width: 0;
-    text-align: center;
-    padding: 4px 0px;
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-    &::-webkit-inner-spin-button {
-      appearance: none;
-    }
+.caret {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+
+  transform: rotate(0deg);
+
+  &:not(.expanded) {
+    transform: rotate(90deg);
   }
+}
+
+.content {
+  overflow: hidden;
 }

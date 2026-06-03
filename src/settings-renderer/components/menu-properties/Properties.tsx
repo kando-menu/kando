@@ -15,6 +15,8 @@ import * as classes from './Properties.module.scss';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
+  Accordion,
+  AccordionItem,
   Headerbar,
   IconChooserButton,
   TagInput,
@@ -147,8 +149,14 @@ export default function Properties() {
                   setMenuTags(newTags);
                 }}
               />
-              <MenuBehavior />
-              <MenuConditions />
+              <Accordion initiallyExpandedIndex={null}>
+                <AccordionItem title={i18next.t('settings.menu-behavior')}>
+                  <MenuBehavior />
+                </AccordionItem>
+                <AccordionItem title={i18next.t('settings.menu-conditions')}>
+                  <MenuConditions />
+                </AccordionItem>
+              </Accordion>
             </div>
           ) : null}
           {selectedItem ? <WorkflowEditor /> : null}

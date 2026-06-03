@@ -24,7 +24,6 @@ export default function MenuBehavior() {
 
   return (
     <div className={classes.container}>
-      <h1>{i18next.t('settings.menu-behavior')}</h1>
       <Note useMarkdown marginBottom={-5} marginTop={-5}>
         {i18next.t('settings.menu-behavior-info', {
           link: 'https://kando.menu/usage/',

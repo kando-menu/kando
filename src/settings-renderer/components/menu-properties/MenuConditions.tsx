@@ -70,8 +70,9 @@ export default function MenuConditions() {
 
   return (
     <div className={classes.container}>
-      <h1>{i18next.t('settings.menu-conditions')}</h1>
-      <Note marginTop={-5}>{i18next.t('settings.menu-conditions-info')}</Note>
+      <Note marginBottom={5} marginTop={-5}>
+        {i18next.t('settings.menu-conditions-info')}
+      </Note>
       <Checkbox
         info={i18next.t('settings.app-condition-info')}
         initialValue={appConditionVisible}

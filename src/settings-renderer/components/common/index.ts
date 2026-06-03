@@ -11,6 +11,7 @@
 // This directory contains all components which are used in multiple places in the
 // settings dialog.
 
+export { default as Accordion, AccordionItem } from './Accordion';
 export { default as Base64IconPicker } from './Base64IconPicker';
 export { default as Blossom } from './Blossom';
 export { default as Button } from './Button';
