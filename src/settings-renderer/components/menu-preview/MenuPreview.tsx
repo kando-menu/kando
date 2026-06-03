@@ -14,7 +14,7 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
-import { TbCopy, TbTrash } from 'react-icons/tb';
+import { TbCopy, TbTrash, TbPencil } from 'react-icons/tb';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import * as classes from './MenuPreview.module.scss';
@@ -109,6 +109,10 @@ export default function MenuPreview() {
   const [dropInto, setDropInto] = React.useState(false);
   const [tempItem, setTempItem] = React.useState<RenderedMenuItem | null>(null);
   const [dragAngle, setDragAngle] = React.useState<number | null>(null);
+  const [editedSubmenuPath, setEditedSubmenuPath] = React.useState<string | null>(null);
+
+  const selectedChildPathKey = `${String(selectedMenu)}:${selectedChildPath.join('.')}`;
+  const editingSelectedSubmenu = editedSubmenuPath === selectedChildPathKey;
 
   // Some booleans matching to the three cases explained above to make the code below more
   // readable.
@@ -139,7 +143,11 @@ export default function MenuPreview() {
   for (let i = 0; i < selectedChildPath.length; i++) {
     const childIndex = selectedChildPath[i];
     const child = centerItem.children[childIndex] as ChildMenuItem;
-    if (child.type === 'submenu') {
+    const selectedSubmenuShouldOpen =
+      child.type === 'submenu' &&
+      (editingSelectedSubmenu || i < selectedChildPath.length - 1);
+
+    if (selectedSubmenuShouldOpen) {
       showingRootMenu = false;
       parentAngle = utils.getParentAngle(childAngles[childIndex]);
       centerItem = child;
@@ -319,21 +327,29 @@ export default function MenuPreview() {
 
   // Adds the given index to the selected menu path if the center is currently selected.
   // Else a child was selected and the hence the last index of the path is replaced.
-  const selectChild = (which: number, doAnimation: boolean) => {
+  const getChildPath = (which: number) => {
     if (selectedChild === -1) {
-      selectChildPath(selectedChildPath.concat(which));
-    } else {
-      selectChildPath(selectedChildPath.slice(0, -1).concat(which));
+      return selectedChildPath.concat(which);
     }
 
-    // If the selected child is a submenu, we need to trigger a transition by changing
-    // the key of the CSSTransition component.
-    if (doAnimation) {
-      const child = centerItem.children[which];
-      if (child.type === 'submenu') {
-        setTransitionPing(!transitionPing);
-        setTransitionAngle(childAngles[which]);
-      }
+    return selectedChildPath.slice(0, -1).concat(which);
+  };
+
+  const selectChild = (which: number) => {
+    setEditedSubmenuPath(null);
+    selectChildPath(getChildPath(which));
+  };
+
+  const editChild = (which: number) => {
+    const child = centerItem.children[which];
+    const childPath = getChildPath(which);
+
+    selectChildPath(childPath);
+
+    if (child.type === 'submenu') {
+      setEditedSubmenuPath(`${String(selectedMenu)}:${childPath.join('.')}`);
+      setTransitionPing(!transitionPing);
+      setTransitionAngle(childAngles[which]);
     }
   };
 
@@ -341,7 +357,12 @@ export default function MenuPreview() {
   // path. If the center is already selected, nothing is done.
   const selectCenter = () => {
     if (selectedChild !== -1) {
-      selectChildPath(selectedChildPath.slice(0, -1));
+      setEditedSubmenuPath(
+        centerItemPath.length > 0
+          ? `${String(selectedMenu)}:${centerItemPath.join('.')}`
+          : null
+      );
+      selectChildPath(centerItemPath);
     }
   };
 
@@ -349,6 +370,8 @@ export default function MenuPreview() {
   // refers to an item, the last two indices are removed so that the parent submenu is
   // selected.
   const selectParent = () => {
+    setEditedSubmenuPath(null);
+
     if (selectedChild === -1) {
       selectChildPath(selectedChildPath.slice(0, -1));
     } else {
@@ -372,6 +395,7 @@ export default function MenuPreview() {
     }
 
     const trashDir = math.getDirection(angle + 25, 1);
+    const editDir = math.getDirection(angle, 1);
     const copyDir = math.getDirection(angle - 25, 1);
 
     return (
@@ -390,6 +414,20 @@ export default function MenuPreview() {
           }}>
           <TbTrash />
         </div>
+        {/* The edit button is only shown for submenus as only they can be edited. */}
+        {centerItem.children[renderedChild.index]?.type === 'submenu' ? (
+          <div
+            className={classes.tool}
+            style={utils.makeCSSProperties('dir', editDir)}
+            data-tooltip-content={i18next.t('settings.edit-submenu')}
+            data-tooltip-id="main-tooltip"
+            onClick={(event) => {
+              event.stopPropagation();
+              editChild(renderedChild.index);
+            }}>
+            <TbPencil />
+          </div>
+        ) : null}
         <div
           className={classes.tool}
           style={utils.makeCSSProperties('dir', copyDir)}
@@ -485,7 +523,7 @@ export default function MenuPreview() {
           // Select the child if the user presses enter or space. This is required for
           // keyboard navigation in the menu preview.
           if (event.key === 'Enter' || event.key === ' ') {
-            selectChild(index, true);
+            selectChild(index);
           }
 
           // Delete the item if the user presses the delete key.
@@ -556,7 +594,12 @@ export default function MenuPreview() {
             dragIndex === null &&
             clickedDownContainer === currentContainer.current
           ) {
-            selectChild(index, true);
+            selectChild(index);
+          }
+        }}
+        onDoubleClick={() => {
+          if (child.index >= 0 && centerItem.children[child.index]?.type === 'submenu') {
+            editChild(index);
           }
         }}>
         {child.iconTheme && child.icon ? (
@@ -739,11 +782,11 @@ export default function MenuPreview() {
                     // case we need to shift the selected child index by one in the
                     // corresponding direction.
                     if (selectedChild === dragIndex) {
-                      selectChild(dropIndex, false);
+                      selectChild(dropIndex);
                     } else if (dragIndex < selectedChild && selectedChild <= dropIndex) {
-                      selectChild(selectedChild - 1, false);
+                      selectChild(selectedChild - 1);
                     } else if (dragIndex > selectedChild && selectedChild >= dropIndex) {
-                      selectChild(selectedChild + 1, false);
+                      selectChild(selectedChild + 1);
                     }
                   }
                 } else {

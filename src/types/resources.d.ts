@@ -302,6 +302,7 @@ export default interface Resources {
           "delete-menu-item": "Delete menu item",
           "duplicate-menu": "Duplicate menu",
           "duplicate-menu-item": "Duplicate menu item",
+          "edit-submenu": "settings.edit-submenu",
           "empty-collection": "This collection is empty.",
           "empty-collection-note": "Edit the tags above or add a completely new menu to this collection with the button below.",
           "export-menu": "Export menu",
@@ -310,7 +311,7 @@ export default interface Resources {
               "select-directory": "Select a directory",
               "select-file": "Select a file"
           },
-          "fix-menu-item-angle": "settings.fix-menu-item-angle",
+          "fix-menu-item-angle": "Fix the angle of this menu item",
           "general-settings-dialog": {
               "advanced-menu-options": "Advanced Menu Options",
               "advanced-menu-options-note": "Usually, you can leave these settings at their default values.",
