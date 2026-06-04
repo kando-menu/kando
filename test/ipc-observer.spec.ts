@@ -15,7 +15,7 @@ import path from 'path';
 
 import * as IPCTypes from '../src/common/ipc/types';
 import { IPCServer } from '../src/common/ipc/ipc-server';
-import { InteractionTarget } from '../src/common';
+import { MenuInteractionType } from '../src/common';
 import { IPCObserverClient } from '../src/common/ipc/ipc-observer-client';
 
 describe('IPC Observer Protocol', function () {
@@ -78,15 +78,15 @@ describe('IPC Observer Protocol', function () {
 
     // Listen for start-observing event on server.
     let requestReceived = false;
-    server.on('start-observing', (observerID, callbacks) => {
+    server.on('start-observing', (observerID, callback) => {
       requestReceived = true;
       expect(observerID).to.equal(1);
 
       // "interact" with the menu.
-      callbacks.onOpen();
-      callbacks.onHover(InteractionTarget.eSubmenu, [0, 1, 2]);
-      callbacks.onSelect(InteractionTarget.eItem, [0, 1]);
-      callbacks.onCancel();
+      callback(MenuInteractionType.eOpenMenu, []);
+      callback(MenuInteractionType.eHoverButton, [0, 1, 2]);
+      callback(MenuInteractionType.eSelectButton, [0, 1]);
+      callback(MenuInteractionType.eCloseMenu, []);
     });
 
     // Listen for events on client
@@ -95,24 +95,18 @@ describe('IPC Observer Protocol', function () {
     let hoverReceived = false;
     let cancelReceived = false;
 
-    client.on('open', () => {
-      openReceived = true;
-    });
-
-    client.on('select', (target, path) => {
-      expect(target).to.equal(InteractionTarget.eItem);
-      expect(path).to.deep.equal([0, 1]);
-      selectReceived = true;
-    });
-
-    client.on('hover', (target, path) => {
-      expect(target).to.equal(InteractionTarget.eSubmenu);
-      expect(path).to.deep.equal([0, 1, 2]);
-      hoverReceived = true;
-    });
-
-    client.on('cancel', () => {
-      cancelReceived = true;
+    client.on('interaction', (type, path) => {
+      if (type === MenuInteractionType.eOpenMenu) {
+        openReceived = true;
+      } else if (type === MenuInteractionType.eSelectButton) {
+        expect(path).to.deep.equal([0, 1]);
+        selectReceived = true;
+      } else if (type === MenuInteractionType.eHoverButton) {
+        expect(path).to.deep.equal([0, 1, 2]);
+        hoverReceived = true;
+      } else if (type === MenuInteractionType.eCloseMenu) {
+        cancelReceived = true;
+      }
     });
 
     // Finally start observing, which should trigger the server to send events.
@@ -137,16 +131,18 @@ describe('IPC Observer Protocol', function () {
     await client.init();
 
     // Listen for start-observing event on server.
-    server.on('start-observing', (observerID, callbacks) => {
+    server.on('start-observing', (observerID, callback) => {
       // "interact" with the menu.
-      callbacks.onOpen();
+      callback(MenuInteractionType.eOpenMenu, []);
     });
 
     // Listen for events on client
     let openReceived = false;
 
-    client.on('open', () => {
-      openReceived = true;
+    client.on('interaction', (type) => {
+      if (type === MenuInteractionType.eOpenMenu) {
+        openReceived = true;
+      }
     });
 
     // Start observing, which should trigger the server to send events.
@@ -184,21 +180,25 @@ describe('IPC Observer Protocol', function () {
     let open1Received = false;
     let open2Received = false;
 
-    server.on('start-observing', (observerID, callbacks) => {
+    server.on('start-observing', (observerID, callback) => {
       if (observerID === 1) {
         observer1Received = true;
       } else if (observerID === 2) {
         observer2Received = true;
       }
-      callbacks.onOpen();
+      callback(MenuInteractionType.eOpenMenu, []);
     });
 
-    client1.on('open', () => {
-      open1Received = true;
+    client1.on('interaction', (type) => {
+      if (type === MenuInteractionType.eOpenMenu) {
+        open1Received = true;
+      }
     });
 
-    client2.on('open', () => {
-      open2Received = true;
+    client2.on('interaction', (type) => {
+      if (type === MenuInteractionType.eOpenMenu) {
+        open2Received = true;
+      }
     });
 
     client1.startObserving();

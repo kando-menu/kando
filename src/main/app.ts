@@ -222,8 +222,8 @@ export class KandoApp {
     });
 
     // When a IPC client registers as observer, we store it.
-    this.ipcServer.on('start-observing', (observerID, callbacks) => {
-      this.ipcObservers.set(observerID, callbacks);
+    this.ipcServer.on('start-observing', (observerID, callback) => {
+      this.ipcObservers.set(observerID, callback);
     });
 
     // When a IPC client stops observing, we remove it from the list.
