@@ -74,7 +74,7 @@
         "inhibit-shortcuts": "Временно отключить все сочетания клавиш",
         "new-version-notification-header": "Доступна новая версия Kando!",
         "quit": "Выйти",
-        "show-settings": "На стройку",
+        "show-settings": "Настройки",
         "un-inhibit-shortcuts": "Включить сочетания клавиш",
         "new-version-notification-body": "Скачать можно тут: {{link}}.",
         "invalid-link-header": "Недопустимая ссылка",
