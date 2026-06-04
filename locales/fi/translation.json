@@ -260,7 +260,9 @@
             "restore-settings": "Palauta config.json…",
             "reload-note": "Kun lataat uudelleen valikkoteeman, CSS-muutokset toteutetaan vaikka valikko olisi avoinna. Muutokset, jotka on tehty theme.json-tiedostoon, vaativat valikon avaamisen uudelleen.",
             "dev-tools-note": "Kando käyttää kahta ikkunaa: yksi valikkoa varten, toinen asetuksia varten. Voit avata kehitystyökalut ja tutkia molempia ikkunoita toisistaan erillään.",
-            "menu-window-dev-tools": "Tutki valikkoa"
+            "menu-window-dev-tools": "Tutki valikkoa",
+            "enable-achievement-notifications": "Näytä saavutusilmoitukset",
+            "interaction-modes": "Vuorovaikutustilat"
         },
         "hover-mode": "Kohdistustila",
         "hover-mode-info": "Vain edistyneille käyttäjille! Valitsee kohteita hiiren osoittimen kohdistamisella.",
@@ -320,7 +322,16 @@
             "light-dark-mode-info": "Jos käytössä, voit valita eri teeman ja väriasetukset kuin järjestelmässäsi oletuksena.",
             "get-themes-online": "Hae teemoja verkosta",
             "create-your-own-themes": "Luo omia teemoja",
-            "open-theme-directory": "Lataa teema tietokoneelta"
+            "open-theme-directory": "Lataa teema tietokoneelta",
+            "default-colors": "Oletusvärit",
+            "enable-menu-animations": "Valikkoanimaatiot",
+            "choose-preset": "Valitse esiasetus…",
+            "reload-presets": "Lataa esiasetukset uudelleen",
+            "save-preset": "Tallenna esiasetus",
+            "open-presets-directory": "Avaa esiasetusten kansio",
+            "preset-name-empty": "Esiasetuksen nimi ei voi olla tyhjä!",
+            "preset-name-exists": "Esiasetus samalla nimellä on jo olemassa.",
+            "preset-name-placeholder": "esim. Omat mukautetut värit"
         },
         "shortcut-label": "Pikanäppäin",
         "shortcut-recording": "Paina pikanäppäintä…",
@@ -410,7 +421,10 @@
         "app-picker": {
             "search-placeholder": "Etsi sovellusta…",
             "use-selected": "Käytä valittua"
-        }
+        },
+        "export-menu-error-title": "Valikon vienti epäonnistui",
+        "import-menu-error-title": "Valikon tuonti epäonnistui",
+        "import-menu": "Tuo valikko"
     },
     "achievements": {
         "attributes": {
