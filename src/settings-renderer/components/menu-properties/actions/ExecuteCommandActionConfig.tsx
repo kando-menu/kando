@@ -45,25 +45,28 @@ export function ExecuteCommandActionConfig(props: Props) {
 
   return (
     <>
-      <Button
-        icon={<TbApps />}
-        label={i18next.t('menu-actions.execute-command.choose-app')}
-        variant="secondary"
-        onClick={() => {
-          setAppPickerVisible(true);
-        }}
-      />
-      <TextInput
-        isMultiline
-        initialValue={props.action.command}
-        placeholder={i18next.t('menu-actions.execute-command.placeholder')}
-        onChange={(value) => {
-          props.onUpdateAction({
-            ...props.action,
-            command: value,
-          });
-        }}
-      />
+      <div style={{ display: 'flex', gap: '2px' }}>
+        <TextInput
+          isGrouped
+          initialValue={props.action.command}
+          placeholder={i18next.t('menu-actions.execute-command.placeholder')}
+          onChange={(value) => {
+            props.onUpdateAction({
+              ...props.action,
+              command: value,
+            });
+          }}
+        />
+        <Button
+          isGrouped
+          icon={<TbApps />}
+          tooltip={i18next.t('menu-actions.execute-command.choose-app')}
+          variant="secondary"
+          onClick={() => {
+            setAppPickerVisible(true);
+          }}
+        />
+      </div>
       {supportsIsolatedProcesses ? (
         <Checkbox
           info={i18next.t('menu-actions.execute-command.isolated-info')}

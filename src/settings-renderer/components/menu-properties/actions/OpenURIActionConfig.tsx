@@ -29,7 +29,6 @@ type Props = {
 export function OpenURIActionConfig(props: Props) {
   return (
     <TextInput
-      isMultiline
       initialValue={props.action.uri}
       placeholder={i18next.t('menu-actions.open-uri.placeholder')}
       onChange={(value) => {

@@ -31,6 +31,16 @@
     pointer-events: none;
     opacity: 0.5;
   }
+
+  &.grouped:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  &.grouped:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 
 textarea.input {
