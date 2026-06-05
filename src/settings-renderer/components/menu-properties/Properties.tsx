@@ -19,6 +19,7 @@ import {
   AccordionItem,
   Headerbar,
   IconChooserButton,
+  SettingsRow,
   TagInput,
   ShortcutPicker,
   Swirl,
@@ -87,18 +88,20 @@ export default function Properties() {
       );
     }
     return (
-      <TextInput
+      <SettingsRow
         info={backend.shortcutHint}
-        initialValue={menus[selectedMenu].shortcutID}
-        label={i18next.t('settings.shortcut-id-label')}
-        placeholder={i18next.t('settings.not-bound')}
-        onChange={(shortcutID) => {
-          editMenu(selectedMenu, (menu) => {
-            menu.shortcutID = shortcutID;
-            return menu;
-          });
-        }}
-      />
+        label={i18next.t('settings.shortcut-id-label')}>
+        <TextInput
+          initialValue={menus[selectedMenu].shortcutID}
+          placeholder={i18next.t('settings.not-bound')}
+          onChange={(shortcutID) => {
+            editMenu(selectedMenu, (menu) => {
+              menu.shortcutID = shortcutID;
+              return menu;
+            });
+          }}
+        />
+      </SettingsRow>
     );
   };
 
