@@ -11,8 +11,6 @@
 import React from 'react';
 import i18next from 'i18next';
 
-import { TbClick, TbPointer } from 'react-icons/tb';
-
 import * as classes from './WorkflowEditor.module.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(classes);
@@ -20,6 +18,7 @@ const cx = classNames.bind(classes);
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 
 import { Workflow, MenuItem } from '../../../common';
+import { ThemedIcon } from '../common';
 import ActionList from './ActionList';
 
 type WorkflowType =
@@ -69,7 +68,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.button-select-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.button-select-workflow.empty-hint'),
-      icon: <TbClick />,
+      icon: <ThemedIcon name="workflow-select.svg" size="1em" theme="kando" />,
     },
     buttonHover: {
       name: i18next.t('settings.workflow-editor.button-hover-workflow.name'),
@@ -77,7 +76,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.button-hover-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.button-hover-workflow.empty-hint'),
-      icon: <TbPointer />,
+      icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
     },
     rootActivate: {
       name: i18next.t('settings.workflow-editor.root-activate-workflow.name'),
@@ -85,7 +84,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.root-activate-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.root-activate-workflow.empty-hint'),
-      icon: <TbClick />,
+      icon: <ThemedIcon name="workflow-activate.svg" size="1em" theme="kando" />,
     },
     submenuOpen: {
       name: i18next.t('settings.workflow-editor.submenu-open-workflow.name'),
@@ -93,7 +92,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.submenu-open-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.submenu-open-workflow.empty-hint'),
-      icon: <TbClick />,
+      icon: <ThemedIcon name="workflow-select.svg" size="1em" theme="kando" />,
     },
     submenuHover: {
       name: i18next.t('settings.workflow-editor.submenu-hover-workflow.name'),
@@ -101,7 +100,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.submenu-hover-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.submenu-hover-workflow.empty-hint'),
-      icon: <TbPointer />,
+      icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
     },
     submenuActivate: {
       name: i18next.t('settings.workflow-editor.submenu-activate-workflow.name'),
@@ -111,7 +110,7 @@ export default function WorkflowEditor() {
       emptyHint: i18next.t(
         'settings.workflow-editor.submenu-activate-workflow.empty-hint'
       ),
-      icon: <TbClick />,
+      icon: <ThemedIcon name="workflow-activate.svg" size="1em" theme="kando" />,
     },
   };
 
