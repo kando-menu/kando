@@ -14,12 +14,12 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
 .conditionInput {
-  margin-bottom: -5px;
+  margin-bottom: -8px;
 
   > *:first-child {
     border-top-left-radius: 5px;
