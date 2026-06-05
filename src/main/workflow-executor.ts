@@ -82,6 +82,10 @@ export class WorkflowExecutor {
    * @param app The app which executed the action.
    */
   public async executeWorkflow(workflow: DeepReadonly<Workflow>, app: KandoApp) {
+    if (!workflow.actions || workflow.actions.length === 0) {
+      return;
+    }
+
     const finalizeCalls: (() => Promise<void>)[] = [];
 
     try {
