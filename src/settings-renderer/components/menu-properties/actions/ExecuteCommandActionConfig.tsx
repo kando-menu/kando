@@ -48,6 +48,7 @@ export function ExecuteCommandActionConfig(props: Props) {
       <div style={{ display: 'flex', gap: '2px' }}>
         <TextInput
           isGrouped
+          isMultiline
           initialValue={props.action.command}
           placeholder={i18next.t('menu-actions.execute-command.placeholder')}
           onChange={(value) => {

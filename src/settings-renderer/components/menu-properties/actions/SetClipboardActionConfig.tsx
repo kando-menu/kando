@@ -29,6 +29,7 @@ type Props = {
 export function SetClipboardActionConfig(props: Props) {
   return (
     <TextInput
+      isMultiline
       initialValue={props.action.text}
       placeholder={i18next.t('menu-actions.set-clipboard.placeholder')}
       onChange={(value) => {

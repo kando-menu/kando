@@ -38,6 +38,9 @@ type Props = {
    * only the first and last input in the group round. Defaults to false.
    */
   readonly isGrouped?: boolean;
+
+  /** Whether the text input should support multiple lines. */
+  readonly isMultiline?: boolean;
 };
 
 /**
@@ -68,19 +71,42 @@ export default function TextInput(props: Props) {
     };
   }, [value, props]);
 
+  if (props.isMultiline) {
+    return (
+      <textarea
+        className={cx({
+          input: true,
+          invisible: props.variant === 'invisible',
+          grouped: props.isGrouped,
+        })}
+        disabled={props.isDisabled}
+        placeholder={props.placeholder}
+        spellCheck="false"
+        value={value}
+        onBlur={() => props.onChange?.(value)}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    );
+  }
+
   return (
-    <textarea
+    <input
       className={cx({
         input: true,
         invisible: props.variant === 'invisible',
-        grouped: props.isGrouped,
       })}
       disabled={props.isDisabled}
       placeholder={props.placeholder}
       spellCheck="false"
+      type="text"
       value={value}
       onBlur={() => props.onChange?.(value)}
       onChange={(event) => setValue(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          (event.target as HTMLInputElement).blur();
+        }
+      }}
     />
   );
 }
