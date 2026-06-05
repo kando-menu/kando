@@ -507,7 +507,6 @@ export class KandoApp {
     this.menuWindow = new MenuWindow(
       this,
       (interaction: MenuInteractionType, path: number[]) => {
-        console.log('Menu interaction:', interaction, path);
         for (const observer of this.ipcObservers.values()) {
           observer(interaction, path);
         }
