@@ -64,7 +64,7 @@ $backlink-offset: 30cqmin;
       }
 
       &.selected {
-        outline: 2px solid light-dark($key-dark, $key-light);
+        border: 2px solid light-dark($key-dark, $key-light);
         background-color: light-dark(
           rgba(color.mix(color.adjust($base-dark, $lightness: 10%), $key-dark, 50%), 0.4),
           rgba(
