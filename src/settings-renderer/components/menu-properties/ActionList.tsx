@@ -112,7 +112,16 @@ export default function ActionList(props: Props) {
   // Called when an action starts being dragged. Sets the dragIndex to the index of the
   // dragged action, which will cause the display to update and show the dragged action
   // in a "dragging" style.
-  const handleDragStart = (index: number) => {
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, index: number) => {
+    const item = event.currentTarget;
+    const headers = item.querySelector<HTMLElement>(`.${classes.actionItemHeader}`);
+    const pointerTarget = document.elementFromPoint(event.clientX, event.clientY);
+
+    if (headers === null || pointerTarget === null || !headers.contains(pointerTarget)) {
+      event.preventDefault();
+      return;
+    }
+
     setDragIndex(index);
     setDropIndex(index);
   };
@@ -180,7 +189,7 @@ export default function ActionList(props: Props) {
         onDragEnd={handleDragEnd}
         onDragEnter={() => handleDragEnter(index)}
         onDragOver={(event) => event.preventDefault()}
-        onDragStart={() => handleDragStart(index)}>
+        onDragStart={(event) => handleDragStart(event, index)}>
         <div className={classes.actionItemHeader}>
           <ThemedIcon name={typeMeta.icon} size={16} theme={typeMeta.iconTheme} />
           <div style={{ flexGrow: 1 }}>{typeMeta.name}</div>
