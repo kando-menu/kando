@@ -34,6 +34,7 @@ type WorkflowMeta = {
     name: string;
     description: string;
     emptyHint: string;
+    quickSelectKeyHint: string;
     icon: React.ReactNode;
   };
 };
@@ -68,6 +69,9 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.button-select-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.button-select-workflow.empty-hint'),
+      quickSelectKeyHint: i18next.t(
+        'settings.workflow-editor.button-select-workflow.quick-select-key-hint'
+      ),
       icon: <ThemedIcon name="workflow-select.svg" size="1em" theme="kando" />,
     },
     buttonHover: {
@@ -76,6 +80,9 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.button-hover-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.button-hover-workflow.empty-hint'),
+      quickSelectKeyHint: i18next.t(
+        'settings.workflow-editor.button-hover-workflow.quick-select-key-hint'
+      ),
       icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
     },
     rootActivate: {
@@ -84,6 +91,9 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.root-activate-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.root-activate-workflow.empty-hint'),
+      quickSelectKeyHint: i18next.t(
+        'settings.workflow-editor.root-activate-workflow.quick-select-key-hint'
+      ),
       icon: <ThemedIcon name="workflow-activate.svg" size="1em" theme="kando" />,
     },
     submenuOpen: {
@@ -92,6 +102,9 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.submenu-open-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.submenu-open-workflow.empty-hint'),
+      quickSelectKeyHint: i18next.t(
+        'settings.workflow-editor.submenu-open-workflow.quick-select-key-hint'
+      ),
       icon: <ThemedIcon name="workflow-select.svg" size="1em" theme="kando" />,
     },
     submenuHover: {
@@ -100,6 +113,9 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.submenu-hover-workflow.description'
       ),
       emptyHint: i18next.t('settings.workflow-editor.submenu-hover-workflow.empty-hint'),
+      quickSelectKeyHint: i18next.t(
+        'settings.workflow-editor.submenu-hover-workflow.quick-select-key-hint'
+      ),
       icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
     },
     submenuActivate: {
@@ -109,6 +125,9 @@ export default function WorkflowEditor() {
       ),
       emptyHint: i18next.t(
         'settings.workflow-editor.submenu-activate-workflow.empty-hint'
+      ),
+      quickSelectKeyHint: i18next.t(
+        'settings.workflow-editor.submenu-activate-workflow.quick-select-key-hint'
       ),
       icon: <ThemedIcon name="workflow-activate.svg" size="1em" theme="kando" />,
     },
@@ -223,6 +242,7 @@ export default function WorkflowEditor() {
           isFirstWorkflowType={workflowType === workflowTypes[0]}
           isLastWorkflowType={workflowType === workflowTypes[workflowTypes.length - 1]}
           quickSelectKeyPlaceholder={quickSelectKeyPlaceholder}
+          quickSelectKeyInfo={workflowMeta[workflowType].quickSelectKeyHint}
           workflow={workflow}
           onUpdateItem={(info) => {
             editMenuItem(selectedMenu, selectedChildPath, (item) => {

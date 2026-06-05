@@ -51,6 +51,9 @@ type Props = {
    */
   readonly quickSelectKeyPlaceholder: string;
 
+  /** The info text shown for the quick select key in the ActionPicker. */
+  readonly quickSelectKeyInfo: string;
+
   /** Callback to update the workflow. */
   readonly onUpdateWorkflow: (workflow: Workflow) => void;
 
@@ -224,6 +227,7 @@ export default function ActionList(props: Props) {
             <ShortcutPicker
               initialValue={props.workflow?.quickSelectKey || ''}
               label={i18next.t('settings.quick-select-key-label')}
+              info={props.quickSelectKeyInfo}
               mode="key-names"
               placeholder={props.quickSelectKeyPlaceholder}
               recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
