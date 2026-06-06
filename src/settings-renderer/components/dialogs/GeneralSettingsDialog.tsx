@@ -297,6 +297,15 @@ export default function GeneralSettingsDialog() {
           />
           <SettingsCheckbox
             info={i18next.t(
+              'settings.general-settings-dialog.return-pointer-after-selection-info'
+            )}
+            label={i18next.t(
+              'settings.general-settings-dialog.return-pointer-after-selection'
+            )}
+            settingsKey="returnPointerToMenuOpeningPosition"
+          />
+          <SettingsCheckbox
+            info={i18next.t(
               'settings.general-settings-dialog.right-mouse-button-selects-parent-info'
             )}
             label={i18next.t(

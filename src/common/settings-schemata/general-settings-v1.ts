@@ -169,6 +169,9 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
   /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
   warpMouse: z.boolean().default(true),
 
+  /** If true, the pointer will return to where it was when the menu was opened. */
+  returnPointerToMenuOpeningPosition: z.boolean().default(false),
+
   /** If enabled, menus using the hover mode require a final click for selecting items. */
   hoverModeNeedsConfirmation: z.boolean().default(false),
 

@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Settings } from '../src/main/settings';
+import { GENERAL_SETTINGS_SCHEMA } from '../src/common';
 import { expect } from 'chai';
 import os from 'os';
 import path from 'path';
@@ -40,6 +41,12 @@ describe('settings', () => {
       const settings = SETTINGS_SCHEMA.parse(content, { reportInput: true });
       return { settings, didMigration: false };
     },
+  });
+
+  it('should keep the pointer return option disabled by default', () => {
+    const defaults = GENERAL_SETTINGS_SCHEMA.parse({});
+
+    expect(defaults.returnPointerToMenuOpeningPosition).to.be.false;
   });
 
   it('should return default values', () => {

@@ -21,10 +21,12 @@ import {
   SelectionSource,
   MenuInteractionType,
   RootMenuItem,
+  Vec2,
 } from '../common';
 import { IPCCallback } from '../common/ipc';
 import { WorkflowExecutor } from './workflow-executor';
 import { KandoApp } from './app';
+import { getPointerReturnOffset, scalePointerOffset } from './pointer-motion';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MENU_WINDOW_WEBPACK_ENTRY: string;
@@ -80,6 +82,9 @@ export class MenuWindow extends BrowserWindow {
 
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout = null;
+
+  /** The pointer position where the currently shown menu was opened. */
+  private menuOpeningPointerPosition?: Vec2;
 
   /** Resolves once a closeMenu request has been finalized and the window is hidden. */
   private pendingCloseMenuPromise?: Promise<void>;
@@ -257,6 +262,7 @@ export class MenuWindow extends BrowserWindow {
     // will be passed to the action as well.
     this.lastMenu = menu;
     this.lastRequest = request;
+    this.menuOpeningPointerPosition = { x: info.pointerX, y: info.pointerY };
     this.noopInteraction = true;
 
     // On Windows, we have to show the window before we can move it. Otherwise, the
@@ -724,23 +730,12 @@ export class MenuWindow extends BrowserWindow {
     // Move the mouse pointer. This is used to move the pointer to the center of the
     // menu when the menu is opened too close to the screen edge.
     ipcMain.on('menu-window.move-pointer', (event, dist) => {
-      let scale = 1;
-
-      // On Windows, the pointer movement has to be scaled to the DPI scale of the
-      // display where the menu is shown.
-      if (os.platform() === 'win32') {
-        const bounds = this.getBounds();
-        const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
-        scale = display.scaleFactor;
-      }
-
-      // Regardless of the platform, we have to scale the movement to the zoom factor of
-      // the window.
-      scale *= this.webContents.getZoomFactor();
-
-      this.kando
-        .getBackend()
-        .movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
+      this.movePointer(dist, true).catch((error) => {
+        console.error(
+          'Failed to move mouse pointer:',
+          error instanceof Error ? error.message : error
+        );
+      });
     });
 
     // When the user performs an interaction with the menu, we need to execute the
@@ -787,16 +782,16 @@ export class MenuWindow extends BrowserWindow {
 
         const item = this.getMenuItemAtPath(this.lastMenu.root, path);
 
+        if (!item) {
+          console.error('No item found at path: ', path);
+          return;
+        }
+
         // The user clicked the root menu item.
         if (type === MenuInteractionType.eActivateSubmenu && item.type === 'root') {
           if (this.lastMenu.root.activateWorkflow) {
             this.executeWorkflow(this.lastMenu.root.activateWorkflow);
           }
-          return;
-        }
-
-        if (!item) {
-          console.error('No item found at path: ', path);
           return;
         }
 
@@ -829,9 +824,15 @@ export class MenuWindow extends BrowserWindow {
 
         // Finally, there is the select-workflow for buttons.
         if (type === MenuInteractionType.eSelectButton && item.type === 'button') {
+          const menuOpeningPointerPosition = this.menuOpeningPointerPosition
+            ? { ...this.menuOpeningPointerPosition }
+            : undefined;
+
           if (item.selectWorkflow) {
-            this.executeWorkflow(item.selectWorkflow);
+            await this.executeWorkflow(item.selectWorkflow);
           }
+
+          await this.returnPointerToMenuOpeningPosition(menuOpeningPointerPosition);
 
           this.kando.achievementTracker.onSelectionMade(
             Math.min(Math.max(path.length, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
@@ -899,6 +900,82 @@ export class MenuWindow extends BrowserWindow {
       this.noopInteraction = WorkflowExecutor.getInstance().isNoopWorkflow(workflow);
     }
 
-    WorkflowExecutor.getInstance().executeWorkflow(workflow, this.kando);
+    return WorkflowExecutor.getInstance().executeWorkflow(workflow, this.kando);
+  }
+
+  /**
+   * Moves the pointer by the given logical-pixel distance.
+   *
+   * @param dist The distance to move the pointer.
+   * @param includeZoom Whether to include the menu window zoom factor in the movement.
+   * @param referencePoint The point used to choose the display scale on Windows.
+   */
+  private async movePointer(dist: Vec2, includeZoom: boolean, referencePoint?: Vec2) {
+    const scaledDist = scalePointerOffset(
+      dist,
+      this.getPointerMoveScale(includeZoom, referencePoint)
+    );
+
+    if (scaledDist.x === 0 && scaledDist.y === 0) {
+      return;
+    }
+
+    await this.kando.getBackend().movePointer(scaledDist.x, scaledDist.y);
+  }
+
+  /**
+   * Gets the scale factor required by the backend for pointer movement.
+   *
+   * @param includeZoom Whether to include the menu window zoom factor in the movement.
+   * @param referencePoint The point used to choose the display scale on Windows.
+   * @returns The scale factor for pointer movement.
+   */
+  private getPointerMoveScale(includeZoom: boolean, referencePoint?: Vec2) {
+    let scale = 1;
+
+    // On Windows, the pointer movement has to be scaled to the DPI scale of the
+    // display where the pointer is currently shown.
+    if (os.platform() === 'win32') {
+      const bounds = this.getBounds();
+      const display = screen.getDisplayNearestPoint(
+        referencePoint ?? { x: bounds.x, y: bounds.y }
+      );
+      scale = display.scaleFactor;
+    }
+
+    // Renderer-originated movement is relative to the zoomed menu window.
+    if (includeZoom) {
+      scale *= this.webContents.getZoomFactor();
+    }
+
+    return scale;
+  }
+
+  /**
+   * Moves the pointer back to where it was when the selected menu was opened.
+   *
+   * @param openingPosition The pointer position where the selected menu was opened.
+   */
+  private async returnPointerToMenuOpeningPosition(openingPosition?: Vec2) {
+    if (!this.kando.getGeneralSettings().get('returnPointerToMenuOpeningPosition')) {
+      return;
+    }
+
+    if (!openingPosition) {
+      return;
+    }
+
+    try {
+      const info = await this.kando.getBackend().getWMInfo();
+      const currentPosition = { x: info.pointerX, y: info.pointerY };
+      const offset = getPointerReturnOffset(openingPosition, currentPosition);
+
+      await this.movePointer(offset, false, currentPosition);
+    } catch (error) {
+      console.error(
+        'Failed to return mouse pointer to menu opening position:',
+        error instanceof Error ? error.message : error
+      );
+    }
   }
 }

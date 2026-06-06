@@ -399,6 +399,8 @@ export default interface Resources {
               "require-click-for-hover-mode-info": "If unchecked, items will be selected immediately when the mouse is moved over them for menus using Hover Mode.",
               "restore-menus": "Restore menus.json…",
               "restore-settings": "Restore config.json…",
+              "return-pointer-after-selection": "Return pointer after selection",
+              "return-pointer-after-selection-info": "If checked, the mouse pointer will move back to where it was when the menu was opened after you select a button.",
               "right-mouse-button-selects-parent": "Right mouse button selects parent",
               "right-mouse-button-selects-parent-info": "If unchecked, the right mouse button will close the menu instead.",
               "sakura-dark": "Sakura Dark",
