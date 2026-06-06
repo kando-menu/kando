@@ -19,8 +19,8 @@ jobs:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 #v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 #v4.4.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 #v6.0.3
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e #v6.4.0
         with:
           node-version-file: .node-version
       - name: Install Dependencies
@@ -39,7 +39,7 @@ jobs:
           sudo flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
           sudo tools/make-flatpak-bundle.sh
       - name: Upload Artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         with:
           name: build-${{ matrix.os }}
           path: out/make/**/*
@@ -52,8 +52,8 @@ jobs:
         os: [windows-2022, windows-11-arm]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 #v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 #v4.4.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 #v6.0.3
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e #v6.4.0
         with:
           node-version-file: .node-version
       - name: Install Dependencies
@@ -73,7 +73,7 @@ jobs:
             Get-ChildItem -Path out/make/squirrel.windows/*/*.exe | Rename-Item -NewName { $_.BaseName + "-arm64" + $_.Extension }
           }
       - name: Upload Artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         with:
           name: build-${{ matrix.os }}
           path: |
@@ -90,8 +90,8 @@ jobs:
     steps:
       # https://github.com/electron/forge/issues/2807
       - run: python3 -m pip install setuptools --break-system-packages
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 #v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 #v4.4.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 #v6.0.3
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e #v6.4.0
         with:
           node-version-file: .node-version
       - name: Install Dependencies
@@ -115,7 +115,7 @@ jobs:
         run: |
           npm run make
       - name: Upload Artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         with:
           name: build-${{ matrix.os }}
           path: |
