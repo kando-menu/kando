@@ -101,7 +101,7 @@
     "read-ini-file": "^5.0.0",
     "sass": "^1.100.0",
     "semver": "^7.8.2",
-    "sass-loader": "^16.0.8",
+    "sass-loader": "^17.0.0",
     "simple-icons-font": "^16.20.0",
     "string-replace-loader": "^3.3.0",
     "style-loader": "^4.0.0",
