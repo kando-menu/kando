@@ -313,6 +313,7 @@ export default interface Resources {
           },
           "fix-menu-item-angle": "Fix the angle of this menu item. After enabling this, drag the item to update the angle.",
           "general-settings-dialog": {
+              "achievements": "Achievements",
               "advanced-menu-options": "Advanced Menu Options",
               "advanced-menu-options-note": "Usually, you can leave these settings at their default values.",
               "app-settings": "Application Settings",
@@ -574,7 +575,7 @@ export default interface Resources {
               "action-picker": {
                   "search-placeholder": "Search for an action…"
               },
-              "activate-workflow-name": "settings.workflow-editor.activate-workflow-name",
+              "activate-workflow-name": "Center-Click Workflow",
               "add-action": "Add Action",
               "button-hover-workflow": {
                   "description": "The actions below will be executed when you move your pointer over the item.",
@@ -586,14 +587,14 @@ export default interface Resources {
                   "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to this workflow!",
                   "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the select workflow."
               },
-              "hover-workflow-name": "settings.workflow-editor.hover-workflow-name",
-              "open-workflow-name": "settings.workflow-editor.open-workflow-name",
+              "hover-workflow-name": "Hover Workflow",
+              "open-workflow-name": "Open Workflow",
               "root-activate-workflow": {
                   "description": "The actions below will be executed when you click the center of the root menu.",
                   "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!",
                   "quick-select-key-hint": "Pressing this key while the root menu is open will also trigger the center-click workflow."
               },
-              "select-workflow-name": "settings.workflow-editor.select-workflow-name",
+              "select-workflow-name": "Select Workflow",
               "submenu-activate-workflow": {
                   "description": "The actions below will be executed when you click the center of the submenu.",
                   "empty-hint": "Currently, nothing will happen when you click the center of the submenu. Use the button above to add actions to this workflow!",

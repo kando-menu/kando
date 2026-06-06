@@ -264,7 +264,7 @@ export default function GeneralSettingsDialog() {
             )}
             settingsKey="hideSettingsButton"
           />
-          <h1>Achievements</h1>
+          <h1>{i18next.t('settings.general-settings-dialog.achievements')}</h1>
           <SettingsCheckbox
             info={i18next.t('settings.general-settings-dialog.enable-achievements-info')}
             label={i18next.t('settings.general-settings-dialog.enable-achievements')}
