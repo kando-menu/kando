@@ -36,6 +36,7 @@ type WorkflowMeta = {
     emptyHint: string;
     quickSelectKeyHint: string;
     icon: React.ReactNode;
+    actionsMayChangeItem: boolean;
   };
 };
 
@@ -73,6 +74,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.button-select-workflow.quick-select-key-hint'
       ),
       icon: <ThemedIcon name="workflow-select.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
     },
     buttonHover: {
       name: i18next.t('settings.workflow-editor.button-hover-workflow.name'),
@@ -84,6 +86,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.button-hover-workflow.quick-select-key-hint'
       ),
       icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
     },
     rootActivate: {
       name: i18next.t('settings.workflow-editor.root-activate-workflow.name'),
@@ -95,6 +98,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.root-activate-workflow.quick-select-key-hint'
       ),
       icon: <ThemedIcon name="workflow-activate.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: false,
     },
     submenuOpen: {
       name: i18next.t('settings.workflow-editor.submenu-open-workflow.name'),
@@ -106,6 +110,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.submenu-open-workflow.quick-select-key-hint'
       ),
       icon: <ThemedIcon name="workflow-select.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
     },
     submenuHover: {
       name: i18next.t('settings.workflow-editor.submenu-hover-workflow.name'),
@@ -117,6 +122,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.submenu-hover-workflow.quick-select-key-hint'
       ),
       icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
     },
     submenuActivate: {
       name: i18next.t('settings.workflow-editor.submenu-activate-workflow.name'),
@@ -130,6 +136,7 @@ export default function WorkflowEditor() {
         'settings.workflow-editor.submenu-activate-workflow.quick-select-key-hint'
       ),
       icon: <ThemedIcon name="workflow-activate.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: false,
     },
   };
 
@@ -245,6 +252,9 @@ export default function WorkflowEditor() {
           quickSelectKeyInfo={workflowMeta[workflowType].quickSelectKeyHint}
           workflow={workflow}
           onUpdateItem={(info) => {
+            if (!workflowMeta[workflowType].actionsMayChangeItem) {
+              return;
+            }
             editMenuItem(selectedMenu, selectedChildPath, (item) => {
               if (info.name) {
                 item.name = info.name;
