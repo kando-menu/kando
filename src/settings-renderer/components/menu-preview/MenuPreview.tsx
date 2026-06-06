@@ -405,12 +405,9 @@ export default function MenuPreview() {
           style={utils.makeCSSProperties('dir', trashDir)}
           data-tooltip-content={i18next.t('settings.delete-menu-item')}
           data-tooltip-id="main-tooltip"
-          onClick={(event) => {
-            event.stopPropagation();
+          onClick={() => {
             deleteMenuItem(selectedMenu, selectedChildPath);
-
-            // Select the center item after deletion.
-            selectChildPath(selectedChildPath.slice(0, -1));
+            selectCenter();
           }}>
           <TbTrash />
         </div>
@@ -421,8 +418,7 @@ export default function MenuPreview() {
             style={utils.makeCSSProperties('dir', editDir)}
             data-tooltip-content={i18next.t('settings.edit-submenu')}
             data-tooltip-id="main-tooltip"
-            onClick={(event) => {
-              event.stopPropagation();
+            onClick={() => {
               editChild(renderedChild.index);
             }}>
             <TbPencil />
