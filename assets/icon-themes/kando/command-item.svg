@@ -1,20 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> -->
-<!-- SPDX-License-Identifier: CC0-1.0 -->
+<!--
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
+SPDX-License-Identifier: MIT
+-->
 
 <svg
-  width="256"
-  height="256"
-  viewBox="0 0 256 256"
-  version="1.1"
-  id="svg1"
-  xml:space="preserve"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:svg="http://www.w3.org/2000/svg"><defs
-     id="defs1" /><path
-     d="m 87.55438,109.40955 c -1.904397,-0.0455 -3.763441,0.72548 -5.123714,2.0404 -2.67523,2.72056 -2.67523,7.16413 0,9.88469 l 18.318414,18.27309 -18.318414,18.2731 c -2.67523,2.72054 -2.67523,7.16413 0,9.88467 2.720564,2.67523 7.11878,2.67523 9.839344,0 l 23.21544,-23.21542 c 2.72055,-2.72056 2.72055,-7.16413 0,-9.88469 L 92.27001,111.44995 c -1.224251,-1.22425 -2.947273,-1.94973 -4.71563,-2.0404 z m 40.44563,47.60974 v 11.60774 h 34.82316 v -11.60772 z m 0,0"
-     id="path1-4"
-     style="font-variation-settings:normal;opacity:0.5;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /><path
-     d="m 70.414853,40.942135 c -19.361311,0 -35.276578,15.915267 -35.276578,35.276578 V 179.78131 c 0,19.36131 15.915267,35.27658 35.276578,35.27658 H 185.58517 c 19.36129,0 35.27658,-15.91527 35.27658,-35.27658 V 76.218713 c 0,-19.361311 -15.91527,-35.276578 -35.27658,-35.276578 z m 0,23.21544 H 185.58517 c 6.89209,0 12.06112,5.169048 12.06112,12.061138 V 179.78131 c 0,6.89207 -5.16903,12.06114 -12.06112,12.06114 H 70.414853 c -6.892089,0 -12.061138,-5.16907 -12.061138,-12.06114 V 76.218713 c 0,-6.89209 5.169049,-12.061138 12.061138,-12.061138 z m 0,0"
-     id="path2"
-     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:currentColor;fill-opacity:1;stroke-width:0.999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" /></svg>
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="command-item.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs
+      id="defs3" />
+   <sodipodi:namedview
+      id="namedview3"
+      pagecolor="#ffffff"
+      bordercolor="#000000"
+      borderopacity="0.25"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      inkscape:zoom="14.291667"
+      inkscape:cx="1.574344"
+      inkscape:cy="21.690962"
+      inkscape:window-width="1282"
+      inkscape:window-height="1269"
+      inkscape:window-x="26"
+      inkscape:window-y="23"
+      inkscape:window-maximized="0"
+      inkscape:current-layer="svg3" />
+   <path
+      d="M 8.3420797,9.2565598 11.08552,12 8.3420797,14.74344"
+      id="path1"
+      style="stroke-width:2" />
+   <path
+      d="m 12.91448,14.74344 h 2.74344"
+      id="path2"
+      style="stroke-width:2" />
+   <path
+      d="M 3.7696793,7.4275997 A 3.6579203,3.6579203 0 0 1 7.4275997,3.7696793 H 16.5724 a 3.6579203,3.6579203 0 0 1 3.657921,3.6579204 V 16.5724 A 3.6579203,3.6579203 0 0 1 16.5724,20.230321 H 7.4275997 A 3.6579203,3.6579203 0 0 1 3.7696793,16.5724 V 7.4275997"
+      id="path3"
+      style="stroke-width:2" />
+</svg>

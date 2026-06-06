@@ -11,15 +11,12 @@
 import { EventEmitter } from 'events';
 
 import * as IPCTypes from './types';
-import { TypedEventEmitter, InteractionTarget } from '..';
+import { TypedEventEmitter, MenuInteractionType } from '..';
 import { createCrossWebSocket } from './cross-websocket';
 
 /** These events are emitted by the IPC client when menu interactions occur. */
 type IPCObserverClientEvents = {
-  open: [];
-  cancel: [];
-  select: [target: InteractionTarget, path: number[]];
-  hover: [target: InteractionTarget, path: number[]];
+  interaction: [type: MenuInteractionType, path: number[]];
   error: [error: IPCTypes.IPCErrorReason];
 };
 
@@ -36,20 +33,17 @@ type IPCObserverClientEvents = {
  *     const client = new IPCObserverClient(12345, 1);
  *     await client.init();
  *     client.startObserving();
- *     client.on('open', () => { ... });
- *     client.on('cancel', () => { ... });
- *     client.on('select', (path) => { ... });
- *     client.on('hover', (path) => { ... });
+ *     client.on('interaction', (type, path) => { ... });
  *     client.stopObserving();
  */
 export class IPCObserverClient extends (EventEmitter as new () => TypedEventEmitter<IPCObserverClientEvents>) {
   private ws: ReturnType<typeof createCrossWebSocket> | null = null;
 
   /**
-   * This is the API version of the client. For now, there is only version 1, but this
-   * allows for future compatibility checks if the protocol evolves.
+   * This is the API version of the client. With Kando 3.0.0, the API changed in a
+   * backwards-incompatible way, so it has been bumped to version 2.
    */
-  private clientApiVersion = 1;
+  private clientApiVersion = 2;
 
   /**
    * Constructs a new IPCObserverClient instance.
@@ -93,16 +87,9 @@ export class IPCObserverClient extends (EventEmitter as new () => TypedEventEmit
       const handleMessage = (data: string): void => {
         const msg = JSON.parse(data);
 
-        if (IPCTypes.OPEN_MENU_MESSAGE.safeParse(msg).success) {
-          this.emit('open');
-        } else if (IPCTypes.CANCEL_MENU_MESSAGE.safeParse(msg).success) {
-          this.emit('cancel');
-        } else if (IPCTypes.SELECT_ITEM_MESSAGE.safeParse(msg).success) {
-          const { target, path } = msg as IPCTypes.SelectItemMessage;
-          this.emit('select', target, path);
-        } else if (IPCTypes.HOVER_ITEM_MESSAGE.safeParse(msg).success) {
-          const { target, path } = msg as IPCTypes.HoverItemMessage;
-          this.emit('hover', target, path);
+        if (IPCTypes.MENU_INTERACTION_MESSAGE.safeParse(msg).success) {
+          const { interaction, path } = msg as IPCTypes.MenuInteractionMessage;
+          this.emit('interaction', interaction, path);
         } else if (IPCTypes.ERROR_MESSAGE.safeParse(msg).success) {
           const errorMsg = msg as IPCTypes.ErrorMessage;
           console.error(`IPC Error (${errorMsg.reason}): ${errorMsg.description}`);

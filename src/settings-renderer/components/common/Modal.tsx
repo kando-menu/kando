@@ -71,17 +71,19 @@ export default function Modal(props: Props) {
   const modalContent = React.useRef(null);
   const pointerDownOnBackground = React.useRef(false);
 
+  const { isVisible, onClose } = props;
+
   React.useEffect(() => {
     // If the modal is not visible, we don't need to do anything.
-    if (!props.isVisible || !modalContent.current) {
+    if (!isVisible || !modalContent.current) {
       return;
     }
 
     // Hide on escape.
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (props.isVisible) {
-          props.onClose();
+        if (isVisible) {
+          onClose();
         }
       }
     };
@@ -107,12 +109,14 @@ export default function Modal(props: Props) {
     document.addEventListener('focusin', handleFocusIn);
     FocusTrapManager.add(modalContent.current);
 
+    const currentModalContent = modalContent.current;
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('focusin', handleFocusIn);
-      FocusTrapManager.remove(modalContent.current);
+      FocusTrapManager.remove(currentModalContent);
     };
-  }, [props.isVisible]);
+  }, [isVisible, onClose]);
 
   // Define the close button with an icon. On macOS, the close button is displayed on the
   // left side of the header bar. On other platforms, it is displayed on the right side.

@@ -15,7 +15,7 @@ import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { TbPlus, TbDownload } from 'react-icons/tb';
+import { TbPlus, TbDownload, TbUpload, TbCopy, TbTrash } from 'react-icons/tb';
 
 import * as classes from './MenuList.module.scss';
 const cx = classNames.bind(classes);
@@ -111,8 +111,8 @@ export default function MenuList() {
   // If a drag is in progress, we need to move the dragged menu to the position of the
   // menu we are currently hovering over. This is done by removing the dragged menu
   // from the list and inserting it at the position of the hovered menu.
-  if (dragIndex !== null && dropIndex !== null) {
-    const draggedMenu = renderedMenus.splice(dragIndex, 1)[0];
+  if (dragIndex !== null && dropIndex !== null && dragIndex !== dropIndex) {
+    const [draggedMenu] = renderedMenus.splice(dragIndex, 1);
     renderedMenus.splice(dropIndex, 0, draggedMenu);
   }
 
@@ -151,7 +151,7 @@ export default function MenuList() {
               <div key="-1" className={classes.message}>
                 <h1>{i18next.t('settings.no-menus')}</h1>
                 <Note>{i18next.t('settings.no-menus-note')}</Note>
-                <Swirl marginTop={10} variant="2" />
+                <Swirl marginTop={20} variant="2" />
               </div>
             )}
             {menus.length > 0 &&
@@ -160,7 +160,7 @@ export default function MenuList() {
                 <div key="-1" className={classes.message}>
                   <h1>{i18next.t('settings.no-matching-menus')}</h1>
                   <Note>{i18next.t('settings.no-matching-menus-note')}</Note>
-                  <Swirl marginTop={10} variant="2" />
+                  <Swirl marginTop={20} variant="2" />
                 </div>
               )}
             {menus.length > 0 &&
@@ -169,7 +169,7 @@ export default function MenuList() {
                 <div key="-1" className={classes.message}>
                   <h1>{i18next.t('settings.empty-collection')}</h1>
                   <Note>{i18next.t('settings.empty-collection-note')}</Note>
-                  <Swirl marginTop={10} variant="2" />
+                  <Swirl marginTop={20} variant="2" />
                 </div>
               )}
 
@@ -299,91 +299,56 @@ export default function MenuList() {
                       <div className={classes.menuSubtitle}>{menu.shortcut}</div>
                     </div>
 
-                    <div
-                      className={cx({
-                        toolButtonContainer: true,
-                      })}>
-                      <div
-                        className={cx({
-                          toolButton: true,
-                        })}
-                        data-tooltip-content="Preview Menu"
-                        data-tooltip-id="main-tooltip"
-                        onClick={() => window.settingsAPI.openMenu(selectedMenu)}>
-                        <ThemedIcon name="preview-menu.svg" theme="kando" />
-                      </div>
-                      <div
-                        className={cx({
-                          toolButton: true,
-                        })}
-                        data-tooltip-content="More Options"
-                        data-tooltip-id="main-tooltip"
-                        onClick={() =>
-                          window.ipcAPI.showMenu(
-                            'Menu Options',
-                            'open-menu.svg',
-                            'kando',
-                            [
-                              {
-                                name: i18next.t('settings.duplicate-menu'),
-                                icon: 'content_copy',
-                                iconTheme: 'material-symbols-rounded',
-                                callback: () => {
-                                  duplicateMenu(selectedMenu);
-                                },
-                              },
-                              {
-                                name: i18next.t('settings.delete-menu'),
-                                icon: 'delete',
-                                iconTheme: 'material-symbols-rounded',
-                                callback: () => {
-                                  deleteMenu(selectedMenu);
-                                },
-                              },
-                              {
-                                name: 'Export Menu',
-                                icon: 'upload_2',
-                                iconTheme: 'material-symbols-rounded',
-                                callback: () => {
-                                  window.settingsAPI.exportMenu(selectedMenu);
-                                },
-                              },
-                            ]
-                          )
-                        }>
-                        <ThemedIcon name="open-menu.svg" theme="kando" />
-                      </div>
+                    <div className={classes.toolButtonContainer}>
+                      <Button
+                        tooltip={i18next.t('settings.export-menu')}
+                        icon={<TbUpload />}
+                        variant="tool"
+                        onClick={() => window.settingsAPI.exportMenu(selectedMenu)}
+                      />
+
+                      <Button
+                        tooltip={i18next.t('settings.duplicate-menu')}
+                        icon={<TbCopy />}
+                        variant="tool"
+                        onClick={() => duplicateMenu(selectedMenu)}
+                      />
+
+                      <Button
+                        tooltip={i18next.t('settings.delete-menu')}
+                        icon={<TbTrash />}
+                        variant="tool"
+                        onClick={() => deleteMenu(selectedMenu)}
+                      />
                     </div>
                   </div>
                 </div>
               );
             })}
+            <div className={classes.addMenuButtonContainer}>
+              <Button
+                isGrouped
+                isGrowing
+                icon={<TbPlus />}
+                label={i18next.t('settings.create-menu-button')}
+                variant="pill"
+                onClick={() => {
+                  addMenu(menuCollections[selectedCollection]?.tags || []);
+                  selectMenu(menus.length);
+                }}
+              />
+              <Button
+                isGrouped
+                icon={<TbDownload />}
+                tooltip={i18next.t('settings.import-menu')}
+                variant="pill"
+                onClick={() => {
+                  window.settingsAPI.importMenu();
+                }}
+              />
+            </div>
           </div>
         </Scrollbox>
-
-        <div className={classes.floatingButton}>
-          <Button
-            isGrouped
-            icon={<TbPlus />}
-            size="large"
-            tooltip={i18next.t('settings.create-menu-button')}
-            variant="floating"
-            onClick={() => {
-              addMenu(menuCollections[selectedCollection]?.tags || []);
-              selectMenu(menus.length);
-            }}
-          />
-          <Button
-            isGrouped
-            icon={<TbDownload />}
-            size="large"
-            tooltip={i18next.t('settings.import-menu')}
-            variant="floating"
-            onClick={() => {
-              window.settingsAPI.importMenu();
-            }}
-          />
-        </div>
       </div>
     </div>
   );

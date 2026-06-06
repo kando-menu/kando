@@ -1,0 +1,129 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use 'sass:color';
+
+@use '../../variables.scss' as *;
+
+.workflowEditor {
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.workflow {
+  display: none;
+
+  &.active {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.workflowTabs {
+  display: flex;
+  gap: 2px;
+  align-items: flex-start;
+  margin-bottom: -2px;
+  z-index: 1;
+
+  .workflowTab {
+    display: flex;
+    border-radius: 8px 8px 0 0;
+    padding: 6px 8px;
+    font-weight: bold;
+    border: 1.5px solid transparent;
+
+    min-width: 0px;
+
+    overflow: hidden;
+    white-space: nowrap;
+
+    flex: 0 1 auto;
+    transition:
+      flex-grow 250ms ease,
+      padding 250ms ease,
+      background-color 250ms ease;
+
+    .workflowIcon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .workflowName {
+      display: inline-block;
+      opacity: 0;
+      max-width: 0;
+      overflow: hidden;
+      transition:
+        padding 250ms ease,
+        opacity 250ms ease,
+        max-width 250ms ease;
+    }
+
+    &.active {
+      flex-grow: 1;
+      background-color: light-dark($base-light, color.adjust($base-dark, $lightness: 5%));
+      border: 1.5px solid
+        light-dark(
+          color.adjust($base-light, $lightness: -10%),
+          color.adjust($base-dark, $lightness: -10%)
+        );
+      border-bottom: 1.5px solid transparent;
+
+      .workflowName {
+        opacity: 1;
+        max-width: 240px;
+        padding-left: 8px;
+      }
+    }
+
+    &:not(.active) {
+      border-radius: 8px;
+      padding-bottom: 2px;
+
+      &:hover {
+        background-color: light-dark(
+          color.adjust($base-light, $lightness: -3%),
+          color.adjust($base-dark, $lightness: 3%)
+        );
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+
+  &:has(.workflowTab:hover) .workflowTab {
+    flex-grow: 0;
+
+    .workflowName {
+      opacity: 0;
+      max-width: 0;
+      padding-left: 0;
+    }
+  }
+
+  &:has(.workflowTab:hover) .workflowTab:hover {
+    flex-grow: 1;
+
+    .workflowName {
+      opacity: 1;
+      max-width: 240px;
+      padding-left: 8px;
+    }
+  }
+}

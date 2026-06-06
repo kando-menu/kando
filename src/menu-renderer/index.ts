@@ -18,6 +18,8 @@ import { SettingsButton } from './settings-button';
 import { MenuTheme } from './menu-theme';
 import { SoundTheme } from './sound-theme';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
+import { CenterText } from './center-text';
+import { MenuInteractionType } from '../common';
 
 /**
  * This file is the main entry point for Kando's menu renderer process. It is responsible
@@ -41,6 +43,10 @@ Promise.all([
   menuTheme.loadDescription(themeDescription);
   menuTheme.setColors(colors);
 
+  // The center text is not directly shown by the menu, but handled by a separate class.
+  const centerText = new CenterText(document.getElementById('kando-menu'));
+  centerText.setDiameter(menuTheme.centerTextWrapWidth);
+
   // This will be called below whenever the menu theme should be reloaded.
   const reloadMenuTheme = async () => {
     Promise.all([
@@ -49,6 +55,9 @@ Promise.all([
     ]).then(([themeDescription, colors]) => {
       menuTheme.loadDescription(themeDescription);
       menuTheme.setColors(colors);
+
+      centerText.setDiameter(menuTheme.centerTextWrapWidth);
+      centerText.setEnabled(menuTheme.drawCenterText);
 
       // Reload the menu if it is currently shown.
       const [root, menuOptions] = menu.getCurrentRequest();
@@ -91,7 +100,7 @@ Promise.all([
   // Helper function to group and re-use function calls
   // associated with showing the settings window.
   const showSettings = () => {
-    menu.cancel();
+    menu.triggerInteraction(MenuInteractionType.eCloseMenu);
     window.menuAPI.showSettings();
   };
 
@@ -105,7 +114,7 @@ Promise.all([
   const menu = new Menu(
     document.getElementById('kando-menu'),
     menuTheme,
-    soundTheme,
+    centerText,
     settings
   );
 
@@ -118,9 +127,23 @@ Promise.all([
     settingsButton.show();
   });
 
-  // Hide the menu when the main process requests it.
-  window.menuAPI.onHideMenu(() => {
-    menu.cancel();
+  // Tell the menu about interactions triggered by the host process. This includes closing
+  // the menu or closing the current submenu.
+  window.menuAPI.onTriggerInteraction((type) => {
+    menu.triggerInteraction(type);
+  });
+
+  // Tell the host process about interactions triggered by the user or also by the host
+  // process itself via the onTriggerInteraction function.
+  menu.on('interaction', (type, path, time, source) => {
+    window.menuAPI.finalizeInteraction(type, path, time, source);
+
+    // If the menu was closed, we also hide the settings button.
+    if (type === 'closeMenu') {
+      settingsButton.hide();
+    }
+
+    soundTheme.playSound(type);
   });
 
   // Tell the menu about settings changes. This could check more detailed which setting
@@ -149,33 +172,10 @@ Promise.all([
     window.menuAPI.movePointer(dist);
   });
 
-  // Hide Kando's window when the user aborts a selection.
-  menu.on('cancel', () => {
-    menu.hide();
-    settingsButton.hide();
-    window.menuAPI.cancelSelection();
-  });
-
-  // Hide Kando's window when the user selects an item and notify the main process.
-  menu.on('select', (target, path, time, source) => {
-    if (target === 'item') {
-      menu.hide();
-      settingsButton.hide();
-    }
-    window.menuAPI.selectItem(target, path, time, source);
-  });
-
-  // Report hover events to the main process.
-  menu.on('hover', (target, path) => {
-    window.menuAPI.hoverItem(target, path);
-  });
-
   document.body.addEventListener('keydown', async (ev) => {
     // Hide the menu when the user presses escape.
     if (ev.key === 'Escape') {
-      menu.hide();
-      settingsButton.hide();
-      window.menuAPI.cancelSelection();
+      menu.triggerInteraction(MenuInteractionType.eCloseMenu);
     }
 
     // Show the settings window if 'cmd + ,' hotkey is pressed on macOS

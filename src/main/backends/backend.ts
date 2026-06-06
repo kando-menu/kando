@@ -154,11 +154,21 @@ export abstract class Backend extends EventEmitter {
     }
 
     return {
-      type: 'file',
+      type: 'button',
       name,
       icon,
       iconTheme: 'material-symbols-rounded',
-      data: { path },
+      selectWorkflow: {
+        actions: [
+          {
+            type: 'open-file',
+            path,
+          },
+          {
+            type: 'close-menu',
+          },
+        ],
+      },
     };
   }
 
@@ -176,22 +186,10 @@ export abstract class Backend extends EventEmitter {
    * keyboard macros.
    *
    * @param keys The keys to simulate.
-   * @param inhibitShortcuts If true, all currently bound shortcuts should be inhibited
-   *   while simulating the key sequence.
    * @returns A promise which resolves when the key sequence has been simulated.
    */
-  public async simulateKeys(keys: KeySequence, inhibitShortcuts: boolean): Promise<void> {
-    let inhibitionID = 0;
-
-    if (inhibitShortcuts) {
-      inhibitionID = await this.inhibitAllShortcuts();
-    }
-
+  public async simulateKeys(keys: KeySequence): Promise<void> {
     await this.simulateKeysImpl(keys);
-
-    if (inhibitShortcuts) {
-      await this.releaseInhibition(inhibitionID);
-    }
   }
 
   /**

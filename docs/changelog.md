@@ -21,7 +21,20 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 **Release Date:** TBD
 
+**:collision: This major release contains many changes and new features and the configuration file format has changed significantly!** Kando will automatically convert your old configuration files to the new format when you start it for the first time after the update. However, you will not be able to switch back to an older version of Kando. If you want to do this at some point, make sure to [back up your configuration files properly](https://kando.menu/config-files/)!
+
 ### :tada: Added
+
+- **Workflows!** Instead of fixed item types, we have now various _actions_ which can be combined in flexible ways. We only have two menu item types now: submenus and leaf items, called buttons. Buttons offer two workflows which can be filled with any number of actions:
+  - The hover-workflow gets executed when you mouse-over the item. The default menu items do not use this, but you could put actions into this if you want.
+  - The select-workflow gets triggered when you click the item. This usually contains two actions: first something like open-url, execute-command, or simulate-shortcut. And then: close-menu. You can reorder the actions to first close the menu and then execute the other action! Or decide not to close the menu at all...
+
+  Submenu-items have three workflows right now:
+  - The hover-workflow is the same as for buttons.
+  - The open-workflow gets executed when you open the submenu. Per default, this will not contain any actions.
+  - The center-click-workflow will be triggered when you click the center of the submenu when it's open. Per default, this will have one action: close-submenu. But you could replace this (or add) any other actions to the center!
+
+  Also interesting is that each workflow has its own quick-select key. So usually, you would want to assign quick-select keys to the open-workflow of submenus and select-workflows of buttons. Yet you can also change the quick-select key of the workflow which gets triggered when you click the center of a submenu! Per default, this will be backspace (for closing the submenu).
 
 - Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
 - A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
@@ -29,13 +42,19 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 ### :wrench: Changed
 
-- The styling of the settings dialog has been updated in various places to make it look more modern.
+- Many of the icons of the Kando icon theme. These are used for the actions and for the example menu items which can be created from the preview footer area.
+- The position of the delete-menu-item and duplicate-menu-item buttons in the settings dialog. They are now shown next to selected menu items in the preview area.
+- The position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
+- What happens when you select a submenu in the menu preview in the settings: before, the submenu would open immediately. Now, it will be selected just as other menu items. To edit its content, you have to either double-click it or use the tiny edit button which appears when you select the submenu.
 - Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
 
 ### :bug: Fixed
 
 - Selecting menu items with the numpad keys. They now work the same as the normal number keys. Thanks to [@username1419](https://github.com/username1419) for this fix!
 
+### :fire: Removed
+
+- The preview button for menus. I think it's not super useful and there is not much space where it used to be.
 
 ## [Kando 2.3.1](https://github.com/kando-menu/kando/releases/tag/v2.3.1)
 

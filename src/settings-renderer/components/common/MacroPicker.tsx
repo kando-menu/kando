@@ -13,7 +13,7 @@ import JSON5 from 'json5';
 import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
-import { MacroEvent } from '../../../common/item-types/macro-item-type';
+import { MacroEvent } from '../../../common/';
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
 import { Button } from '.';
 

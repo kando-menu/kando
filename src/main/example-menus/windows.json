@@ -3,7 +3,7 @@
   "shortcutID": "example-menu",
   "centered": false,
   "root": {
-    "type": "submenu",
+    "type": "root",
     "name": "example-menu.name",
     "icon": "award_star",
     "iconTheme": "material-symbols-rounded",
@@ -16,54 +16,99 @@
         "quickSelectKey": "A",
         "children": [
           {
-            "type": "command",
-            "data": {
-              "command": "start \"\" \"https://kando.menu\""
-            },
+            "type": "button",
             "name": "example-menu.apps.web-browser",
             "icon": "globe",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "W"
+            "quickSelectKey": "W",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "start \"\" \"https://kando.menu\"",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "start \"\" mailto:"
-            },
+            "type": "button",
             "name": "example-menu.apps.email",
             "icon": "mail",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "E"
+            "quickSelectKey": "E",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "start \"\" mailto:",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "mspaint"
-            },
+            "type": "button",
             "name": "example-menu.apps.paint",
             "icon": "brush",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "P"
+            "quickSelectKey": "P",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "mspaint",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "start \"\" explorer"
-            },
+            "type": "button",
             "name": "example-menu.apps.file-browser",
             "icon": "folder_shared",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "F"
+            "quickSelectKey": "F",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "start \"\" explorer",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "start \"\" powershell"
-            },
+            "type": "button",
             "name": "example-menu.apps.terminal",
             "icon": "terminal",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "T"
+            "quickSelectKey": "T",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "start \"\" powershell",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
           }
         ]
       },
@@ -75,67 +120,108 @@
         "quickSelectKey": "L",
         "children": [
           {
-            "type": "uri",
-            "data": {
-              "uri": "https://www.google.com"
-            },
+            "type": "button",
             "name": "Google",
             "icon": "google",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "G"
+            "quickSelectKey": "G",
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://www.google.com"
+                }
+              ]
+            }
           },
           {
-            "type": "uri",
-            "data": {
-              "uri": "https://github.com/kando-menu/kando"
-            },
+            "type": "button",
             "name": "example-menu.web-links.kando-on-github",
             "icon": "github",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "H"
+            "quickSelectKey": "H",
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://github.com/kando-menu/kando"
+                }
+              ]
+            }
           },
           {
-            "type": "uri",
-            "data": {
-              "uri": "https://ko-fi.com/schneegans"
-            },
+            "type": "button",
             "name": "example-menu.web-links.kando-on-kofi",
             "icon": "kofi",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "K"
+            "quickSelectKey": "K",
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://ko-fi.com/schneegans"
+                }
+              ]
+            }
           },
           {
-            "type": "uri",
-            "data": {
-              "uri": "https://www.youtube.com/@simonschneegans"
-            },
+            "type": "button",
             "name": "example-menu.web-links.kando-on-youtube",
             "icon": "youtube",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "Y"
+            "quickSelectKey": "Y",
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://www.youtube.com/@simonschneegans"
+                }
+              ]
+            }
           },
           {
-            "type": "uri",
-            "data": {
-              "uri": "https://discord.gg/hZwbVSDkhy"
-            },
+            "type": "button",
             "name": "example-menu.web-links.kando-on-discord",
             "icon": "discord",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "D"
+            "quickSelectKey": "D",
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://discord.gg/hZwbVSDkhy"
+                }
+              ]
+            }
           }
         ]
       },
       {
-        "type": "hotkey",
-        "data": {
-          "hotkey": "ControlLeft+MetaLeft+ArrowRight",
-          "delayed": false
-        },
+        "type": "button",
         "name": "example-menu.next-workspace",
         "icon": "arrow_forward",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "N"
+        "quickSelectKey": "N",
+        "selectWorkflow": {
+          "waitForFadeout": false,
+          "inhibitShortcuts": false,
+          "actions": [
+            {
+              "type": "simulate-hotkey",
+              "hotkey": "ControlLeft+MetaLeft+ArrowRight"
+            }
+          ]
+        }
       },
       {
         "type": "submenu",
@@ -145,38 +231,56 @@
         "quickSelectKey": "C",
         "children": [
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "ControlLeft+KeyV",
-              "delayed": true
-            },
+            "type": "button",
             "name": "example-menu.clipboard.paste",
             "icon": "content_paste_go",
             "iconTheme": "material-symbols-rounded",
+            "quickSelectKey": "V",
             "angle": 90,
-            "quickSelectKey": "V"
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "ControlLeft+KeyV"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "ControlLeft+KeyC",
-              "delayed": true
-            },
+            "type": "button",
             "name": "example-menu.clipboard.copy",
             "icon": "content_copy",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "C"
+            "quickSelectKey": "C",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "ControlLeft+KeyC"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "ControlLeft+KeyX",
-              "delayed": true
-            },
+            "type": "button",
             "name": "example-menu.clipboard.cut",
             "icon": "cut",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "X"
+            "quickSelectKey": "X",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "ControlLeft+KeyX"
+                }
+              ]
+            }
           }
         ]
       },
@@ -188,50 +292,74 @@
         "quickSelectKey": "A",
         "children": [
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "MediaTrackNext",
-              "delayed": false
-            },
+            "type": "button",
             "name": "example-menu.audio.next-track",
             "icon": "skip_next",
             "iconTheme": "material-symbols-rounded",
+            "quickSelectKey": "N",
             "angle": 90,
-            "quickSelectKey": "N"
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "MediaTrackNext"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "MediaPlayPause",
-              "delayed": false
-            },
+            "type": "button",
             "name": "example-menu.audio.play-pause",
             "icon": "play_pause",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "P"
+            "quickSelectKey": "P",
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "MediaPlayPause"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "AudioVolumeMute",
-              "delayed": false
-            },
+            "type": "button",
             "name": "example-menu.audio.mute",
             "icon": "music_off",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "M"
+            "quickSelectKey": "M",
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "AudioVolumeMute"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "MediaTrackPrevious",
-              "delayed": false
-            },
+            "type": "button",
             "name": "example-menu.audio.previous-track",
             "icon": "skip_previous",
             "iconTheme": "material-symbols-rounded",
+            "quickSelectKey": "P",
             "angle": 270,
-            "quickSelectKey": "P"
+            "selectWorkflow": {
+              "waitForFadeout": false,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "MediaTrackPrevious"
+                }
+              ]
+            }
           }
         ]
       },
@@ -243,64 +371,94 @@
         "quickSelectKey": "W",
         "children": [
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "MetaLeft+ArrowUp",
-              "delayed": true
-            },
+            "type": "button",
             "name": "example-menu.windows.toggle-maximize",
             "icon": "open_in_full",
             "iconTheme": "material-symbols-rounded",
+            "quickSelectKey": "F",
             "angle": 0,
-            "quickSelectKey": "F"
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "MetaLeft+ArrowUp"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "MetaLeft+ArrowRight",
-              "delayed": true
-            },
+            "type": "button",
             "name": "example-menu.windows.tile-right",
             "icon": "text_select_jump_to_end",
             "iconTheme": "material-symbols-rounded",
+            "quickSelectKey": "R",
             "angle": 90,
-            "quickSelectKey": "R"
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "MetaLeft+ArrowRight"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "AltLeft+F4",
-              "delayed": true
-            },
+            "type": "button",
             "name": "example-menu.windows.close-window",
             "icon": "cancel_presentation",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "X"
+            "quickSelectKey": "X",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "AltLeft+F4"
+                }
+              ]
+            }
           },
           {
-            "type": "hotkey",
-            "data": {
-              "hotkey": "MetaLeft+ArrowLeft",
-              "delayed": true
-            },
+            "type": "button",
             "name": "example-menu.windows.tile-left",
             "icon": "text_select_jump_to_beginning",
             "iconTheme": "material-symbols-rounded",
+            "quickSelectKey": "L",
             "angle": 270,
-            "quickSelectKey": "L"
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "MetaLeft+ArrowLeft"
+                }
+              ]
+            }
           }
         ]
       },
       {
-        "type": "hotkey",
-        "data": {
-          "hotkey": "ControlLeft+MetaLeft+ArrowLeft",
-          "delayed": false
-        },
+        "type": "button",
         "name": "example-menu.previous-workspace",
         "icon": "arrow_back",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "P"
+        "quickSelectKey": "P",
+        "selectWorkflow": {
+          "waitForFadeout": false,
+          "inhibitShortcuts": false,
+          "actions": [
+            {
+              "type": "simulate-hotkey",
+              "hotkey": "ControlLeft+MetaLeft+ArrowLeft"
+            }
+          ]
+        }
       },
       {
         "type": "submenu",
@@ -310,79 +468,137 @@
         "quickSelectKey": "B",
         "children": [
           {
-            "type": "command",
-            "data": {
-              "command": "start \"\" %USERPROFILE%\\Downloads"
-            },
+            "type": "button",
             "name": "example-menu.bookmarks.downloads",
             "icon": "download",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "D"
+            "quickSelectKey": "D",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "start \"\" %USERPROFILE%\\Downloads",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyVideos'))\"",
-              "detached": false
-            },
+            "type": "button",
             "name": "example-menu.bookmarks.videos",
             "icon": "video_camera_front",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "V"
+            "quickSelectKey": "V",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyVideos'))\"",
+                  "detached": false,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyPictures'))\"",
-              "detached": false
-            },
+            "type": "button",
             "name": "example-menu.bookmarks.pictures",
             "icon": "imagesmode",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "P"
+            "quickSelectKey": "P",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyPictures'))\"",
+                  "detached": false,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyDocuments'))\"",
-              "detached": false
-            },
+            "type": "button",
             "name": "example-menu.bookmarks.documents",
             "icon": "text_ad",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "O"
+            "quickSelectKey": "O",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyDocuments'))\"",
+                  "detached": false,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('Desktop'))\"",
-              "detached": false
-            },
+            "type": "button",
             "name": "example-menu.bookmarks.desktop",
             "icon": "desktop_windows",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "E"
+            "quickSelectKey": "E",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('Desktop'))\"",
+                  "detached": false,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "start \"\" %USERPROFILE%"
-            },
+            "type": "button",
             "name": "example-menu.bookmarks.home",
             "icon": "home",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "H"
+            "quickSelectKey": "H",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "start \"\" %USERPROFILE%",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
           },
           {
-            "type": "command",
-            "data": {
-              "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyMusic'))\"",
-              "detached": false
-            },
+            "type": "button",
             "name": "example-menu.bookmarks.music",
             "icon": "music_note",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "M"
+            "quickSelectKey": "M",
+            "selectWorkflow": {
+              "waitForFadeout": true,
+              "inhibitShortcuts": false,
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "powershell -Command \"Start-Process explorer.exe ([System.Environment]::GetFolderPath('MyMusic'))\"",
+                  "detached": false,
+                  "isolated": false
+                }
+              ]
+            }
           }
         ]
       }

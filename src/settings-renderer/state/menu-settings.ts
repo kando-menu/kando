@@ -20,6 +20,8 @@ import {
   MenuCollection,
   Menu,
   MenuItem,
+  SubmenuMenuItem,
+  RootMenuItem,
 } from '../../common';
 
 // The menu settings state object allows access, modification, and change notification of
@@ -175,7 +177,7 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
       addMenu: (tags: string[]) =>
         set(
           produce((state) => {
-            state.menus.push({
+            const newMenu: Menu = {
               shortcut: '',
               shortcutID: '',
               centered: false,
@@ -183,13 +185,22 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
               hoverMode: false,
               tags,
               root: {
-                type: 'submenu',
+                type: 'root',
                 name: 'New Menu',
                 icon: 'apps',
                 iconTheme: 'material-symbols-rounded',
+                activateWorkflow: {
+                  quickSelectKey: 'Backspace',
+                  actions: [
+                    {
+                      type: 'close-menu',
+                    },
+                  ],
+                },
                 children: [],
               },
-            });
+            };
+            state.menus.push(newMenu);
           })
         ),
 
@@ -246,8 +257,15 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
             const { parent, item } = getMenuItem(state.menus[menuIndex].root, itemPath);
             const updatedItem = callback(item);
 
+            if (item.type !== updatedItem.type) {
+              console.warn(
+                'Changing the type of a menu item is not supported. This may lead to unexpected behavior.'
+              );
+              return;
+            }
+
             // If the parent is null, we are editing the root item.
-            if (parent === null) {
+            if (updatedItem.type === 'root') {
               state.menus[menuIndex].root = updatedItem;
             } else {
               parent.children[itemPath[itemPath.length - 1]] = updatedItem;
@@ -266,6 +284,7 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
               console.warn(
                 'Deleting the root item is not supported. This should not happen.'
               );
+              return;
             } else {
               parent.children.splice(itemPath[itemPath.length - 1], 1);
             }
@@ -277,9 +296,7 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
           produce((state) => {
             const { parent, item } = getMenuItem(state.menus[menuIndex].root, itemPath);
 
-            // If the parent is null, we are attempting to duplicate the root item. This
-            // should not happen for now.
-            if (parent === null) {
+            if (item.type === 'root') {
               console.warn(
                 'Duplicating the root item is not supported. This should not happen.'
               );
@@ -310,9 +327,17 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
               parent: fromParent,
             } = getMenuItem(fromMenu.root, fromPath);
 
+            if (fromItem.type === 'root') {
+              console.warn(
+                'Moving the root item is not supported. This should not happen.'
+              );
+              return;
+            }
+
             const toSubmenuPath = toPath.slice(0, toPath.length - 1);
             let toIndex = toPath[toPath.length - 1];
-            const { item: toSubmenu } = getMenuItem(toMenu.root, toSubmenuPath);
+            const toSubmenu = getMenuItem(toMenu.root, toSubmenuPath)
+              .item as SubmenuMenuItem;
 
             // If the last index is -1, we want to insert the item at the end of the
             // children array of the submenu.
@@ -334,12 +359,13 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
       addCollection: () =>
         set(
           produce((state) => {
-            state.collections.push({
+            const newCollection: MenuCollection = {
               name: 'New Collection',
               icon: 'sell',
               iconTheme: 'material-symbols-rounded',
               tags: [],
-            });
+            };
+            state.collections.push(newCollection);
           })
         ),
 
@@ -418,7 +444,7 @@ export function useMappedMenuProperties<U>(mapFn: (menu: Menu) => U): U[] {
  * the names of the collections, you can use this hook to map the collections to their
  * names and only re-render when the names change.
  *
- * @param mapFn - Mapping function to extract relevant properties from each menu.
+ * @param mapFn - Mapping function to extract relevant properties from each collection.
  */
 export function useMappedCollectionProperties<U>(
   mapFn: (menu: MenuCollection) => U
@@ -455,20 +481,21 @@ export function useMappedCollectionProperties<U>(
  *   empty, the root item is returned and both index and parent are null.
  */
 function getMenuItem(
-  root: MenuItem,
+  root: RootMenuItem,
   itemPath: number[]
 ): {
   item: MenuItem;
   index: number | null;
-  parent: MenuItem | null;
+  parent: SubmenuMenuItem | RootMenuItem | null;
 } {
-  let item = root;
+  let item: MenuItem = root;
   let index = null;
-  let parent = null;
+  let parent: RootMenuItem | SubmenuMenuItem | null = null;
+
   for (let i = 0; i < itemPath.length; i++) {
-    parent = item;
+    parent = item as SubmenuMenuItem;
     index = itemPath[i];
-    item = item.children[index];
+    item = parent.children[index];
   }
 
   // If the parent was not changed above, we are editing the root item.

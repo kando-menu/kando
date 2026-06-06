@@ -19,6 +19,7 @@ import {
   Menu,
   AppDescription,
   LevelProgress,
+  MenuItem,
 } from '../../common';
 
 // This state object contains all information about the settings dialog itself. The state
@@ -225,13 +226,12 @@ export const useAppState = create<AppState & AppStateActions>((set) => ({
 
 /**
  * A utility function that returns the currently selected menu item in the settings
- * dialog. It also returns a bool indicating whether the item is the root item of the menu
- * or not. If anything goes wrong, null is returned.
+ * dialog. If anything goes wrong, null is returned.
  *
  * @param menus The list of all menus.
  * @param selectedMenu The index of the currently selected menu.
- * @param selectedChildPath The path to the currently selected
- * @returns The selected menu item and whether it is the root item or not.
+ * @param selectedChildPath The path to the currently selected child.
+ * @returns The selected menu item.
  */
 export function getSelectedChild(
   menus: Menu[],
@@ -240,21 +240,21 @@ export function getSelectedChild(
 ) {
   // If the selected menu is invalid, return null.
   if (selectedMenu < 0 || selectedMenu >= menus.length) {
-    return { selectedItem: null, isRoot: false };
+    return null;
   }
 
-  let selectedItem = menus[selectedMenu].root;
-  let isRoot = true;
+  let selectedItem: MenuItem = menus[selectedMenu].root;
 
   for (let i = 0; i < selectedChildPath.length; i++) {
-    selectedItem = selectedItem.children[selectedChildPath[i]];
-    isRoot = false;
-
-    // If the selected child is invalid, return null.
-    if (!selectedItem) {
-      return { selectedItem: null, isRoot: false };
+    if (
+      (selectedItem.type !== 'submenu' && selectedItem.type !== 'root') ||
+      selectedItem.children.length <= selectedChildPath[i]
+    ) {
+      return null;
     }
+
+    selectedItem = selectedItem.children[selectedChildPath[i]];
   }
 
-  return { selectedItem, isRoot };
+  return selectedItem;
 }

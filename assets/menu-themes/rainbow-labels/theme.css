@@ -151,6 +151,13 @@
     opacity: 1;
   }
 
+  /* If an item is clicked, we scale it down a bit. */
+  &.parent.hovered.clicked>.icon-layer,
+  &.child.hovered.clicked>.icon-layer,
+  &.active.hovered.clicked>.icon-layer {
+    transform: scale(0.95);
+  }
+
   /* We disable any transition for dragged submenu items. */
   &.dragged.type-submenu {
     transition: none;

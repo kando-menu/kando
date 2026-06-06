@@ -32,12 +32,13 @@ import {
   SoundThemeDescription,
   MenuThemeDescription,
   WMInfo,
-  SoundType,
+  MenuInteractionType,
   FileIconThemeDescription,
   SoundEffect,
   CommandlineOptions,
   SystemInfo,
   VersionInfo,
+  RootMenuItem,
 } from '../common';
 import {
   Settings,
@@ -45,16 +46,14 @@ import {
   tryLoadGeneralSettingsFile,
   tryLoadMenuSettingsFile,
 } from './settings';
-import { IPCServer, IPCCallbacks } from '../common/ipc';
+import { IPCServer, IPCCallback } from '../common/ipc';
 import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
-import {
-  EXPORTED_MENU_SCHEMA_V1,
-  ExportedMenuV1,
-} from '../common/settings-schemata/exported-menu-v1';
+import { EXPORTED_MENU_SCHEMA_V1 } from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
 import { supportsIsolatedProcesses } from './utils/shell';
+import { ExportedMenuV2 } from '../common/settings-schemata/exported-menu-v2';
 
 /**
  * This class contains the main host process logic of Kando. It is responsible for
@@ -93,7 +92,7 @@ export class KandoApp {
   private ipcServer: IPCServer;
 
   /** This is used to keep track of all active IPC observers. */
-  private ipcObservers: Map<number, IPCCallbacks> = new Map();
+  private ipcObservers: Map<number, IPCCallback> = new Map();
 
   /** This contains the last WMInfo which was received. */
   private lastWMInfo?: WMInfo;
@@ -150,7 +149,7 @@ export class KandoApp {
               if (this.settingsWindow?.isFocused()) {
                 this.settingsWindow.close();
               } else if (this.menuWindow?.isVisible()) {
-                this.menuWindow.hide();
+                this.menuWindow.closeMenu();
               }
             },
           },
@@ -223,8 +222,8 @@ export class KandoApp {
     });
 
     // When a IPC client registers as observer, we store it.
-    this.ipcServer.on('start-observing', (observerID, callbacks) => {
-      this.ipcObservers.set(observerID, callbacks);
+    this.ipcServer.on('start-observing', (observerID, callback) => {
+      this.ipcObservers.set(observerID, callback);
     });
 
     // When a IPC client stops observing, we remove it from the list.
@@ -351,7 +350,7 @@ export class KandoApp {
     }
 
     if (options.closeMenu) {
-      this.menuWindow?.hide();
+      this.menuWindow?.closeMenu();
       return true;
     }
 
@@ -383,6 +382,11 @@ export class KandoApp {
    */
   public getBackend() {
     return this.backend;
+  }
+
+  /** Allow access to the menu window. */
+  public getMenuWindow() {
+    return this.menuWindow;
   }
 
   /**
@@ -500,35 +504,22 @@ export class KandoApp {
    * be called. IPC observers can be registered by other processes via websockets.
    */
   private async createMenuWindow() {
-    this.menuWindow = new MenuWindow(this, {
-      onSelect: (target, path) => {
+    this.menuWindow = new MenuWindow(
+      this,
+      (interaction: MenuInteractionType, path: number[]) => {
         for (const observer of this.ipcObservers.values()) {
-          observer.onSelect(target, path);
+          observer(interaction, path);
         }
-      },
-      onHover: (target, path) => {
-        for (const observer of this.ipcObservers.values()) {
-          observer.onHover(target, path);
-        }
-      },
-      onCancel: () => {
-        for (const observer of this.ipcObservers.values()) {
-          observer.onCancel();
-        }
-      },
-      onOpen: () => {
-        for (const observer of this.ipcObservers.values()) {
-          observer.onOpen();
-        }
-      },
-    });
+      }
+    );
+
     await this.menuWindow.load();
 
     // Make sure that closing the menu window just hides it instead of actually closing it.
     this.menuWindow.on('close', (event) => {
       if (!this.isQuitting) {
         event.preventDefault();
-        this.menuWindow.hide();
+        this.menuWindow.closeMenu();
       }
     });
   }
@@ -737,9 +728,12 @@ export class KandoApp {
       ]);
 
       // Load all descriptions in parallel.
-      const descriptions = await Promise.all(
+      let descriptions = await Promise.all(
         themes.map((theme) => this.loadSoundThemeDescription(theme))
       );
+
+      // Filter out themes that failed to load a description.
+      descriptions = descriptions.filter((desc) => desc.id !== 'none');
 
       // Sort by the name property of the description.
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
@@ -1037,9 +1031,9 @@ export class KandoApp {
       // include local UI flags like centered/anchored/hoverMode). This also makes future
       // extensions easier.
       const menu = settings.menus[menuIndex];
-      const menuData: ExportedMenuV1 = {
+      const menuData: ExportedMenuV2 = {
         version: settings.version,
-        menu: menu.root as MenuItem,
+        menu: menu.root as RootMenuItem,
       };
 
       try {
@@ -1695,31 +1689,41 @@ export class KandoApp {
    */
   private async loadSoundThemeDescription(theme: string) {
     const metaFile = await this.findThemePath('sound-themes', theme);
+    const engineVersion = 2;
+
+    const emptyTheme: SoundThemeDescription = {
+      id: 'none',
+      name: 'None',
+      directory: '',
+      engineVersion,
+      themeVersion: '',
+      author: '',
+      license: '',
+      sounds: {} as Record<MenuInteractionType, SoundEffect>,
+    };
 
     if (!metaFile) {
       if (theme !== 'none') {
-        console.error(`Sound theme "${theme}" not found. No sounds will be played.`);
+        console.warn(`Sound theme "${theme}" not found.`);
       }
 
-      const description: SoundThemeDescription = {
-        id: 'none',
-        name: 'None',
-        directory: '',
-        engineVersion: 1,
-        themeVersion: '',
-        author: '',
-        license: '',
-        sounds: {} as Record<SoundType, SoundEffect>,
-      };
-
-      return description;
+      return emptyTheme;
     }
 
     const content = await fs.promises.readFile(metaFile);
     const description = json5.parse(content.toString()) as SoundThemeDescription;
+
+    if (description.engineVersion !== engineVersion) {
+      console.warn(
+        `Sound theme "${theme}" has unsupported engine version ${description.engineVersion}. Must be ${engineVersion}.`
+      );
+      return emptyTheme;
+    }
+
     const directory = path.dirname(metaFile);
     description.id = path.basename(directory);
     description.directory = path.dirname(directory);
+
     return description;
   }
 
@@ -1790,9 +1794,9 @@ export class KandoApp {
       menu = require('./example-menus/linux.json');
     }
 
-    const translate = (item: MenuItem) => {
+    const translate = (item: MenuItem | RootMenuItem) => {
       item.name = i18next.t(item.name as ParseKeys);
-      if (item.children) {
+      if (item.type === 'submenu' || item.type === 'root') {
         for (const child of item.children) {
           translate(child);
         }

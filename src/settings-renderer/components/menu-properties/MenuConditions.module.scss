@@ -11,7 +11,16 @@
 @use '../../variables.scss' as *;
 @use '../../mixins.scss' as *;
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
 .conditionInput {
+  margin-bottom: -8px;
+
   > *:first-child {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;

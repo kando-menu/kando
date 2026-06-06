@@ -9,13 +9,26 @@
 // SPDX-License-Identifier: MIT
 
 import fs from 'fs-extra';
+import semver from 'semver';
+import lodash from 'lodash';
 
 import {
   MENU_SETTINGS_SCHEMA_V1,
   MenuSettingsV1,
+  MenuItemV1,
 } from '../../common/settings-schemata/menu-settings-v1';
 
-import { MENU_SETTINGS_SCHEMA, MenuSettings } from '../../common/settings-schemata';
+import {
+  MENU_SETTINGS_SCHEMA_V2,
+  MenuSettingsV2,
+  MenuV2,
+  ChildMenuItemV2,
+  RootMenuItemV2,
+  SubmenuMenuItemV2,
+  ButtonMenuItemV2,
+} from '../../common/settings-schemata/menu-settings-v2';
+
+import { MenuSettings } from '../../common/settings-schemata';
 import { getConfigDirectory, Settings } from '.';
 
 import { version } from './../../../package.json';
@@ -39,7 +52,7 @@ export function getMenuSettings(
       file: 'menus.json',
       directory: getConfigDirectory(),
       ignoreWriteProtectedConfigFiles,
-      defaults: () => MENU_SETTINGS_SCHEMA.parse({}),
+      defaults: () => MENU_SETTINGS_SCHEMA_V2.parse({}),
       load: (content) => loadMenuSettings(content),
     });
   } catch (error) {
@@ -88,14 +101,23 @@ function loadMenuSettings(content: object): {
 } {
   // If the version field is not present, we assume this is an old settings file.
   if (!('version' in content)) {
-    const settings = migrateToMenuSettingsV1(content);
-    return { settings, didMigration: true };
+    const settingsV1 = migrateToMenuSettingsV1(content);
+    const settingsV2 = migrateToMenuSettingsV2(settingsV1);
+    return { settings: settingsV2, didMigration: true };
   }
 
-  // Here we could compare the version to the current version and decide whether any
-  // migration is necessary. For now, no further migrations are needed.
-  if (content.version !== version) {
-    const settings = MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true });
+  // If we are loading pre-3.0 settings, we need to migrate them to the new format. For
+  // updates within the 3 series, we can just parse the settings according to the latest
+  // schema and update the version field if necessary.
+  const contentVersion = typeof content.version === 'string' ? content.version : '';
+  const parsedVersion = semver.coerce(contentVersion);
+
+  if (parsedVersion && semver.lt(parsedVersion, '3.0.0-alpha.0')) {
+    const settingsV1 = MENU_SETTINGS_SCHEMA_V1.parse(content, { reportInput: true });
+    const settingsV2 = migrateToMenuSettingsV2(settingsV1);
+    return { settings: settingsV2, didMigration: true };
+  } else if (content.version !== version) {
+    const settings = MENU_SETTINGS_SCHEMA_V2.parse(content, { reportInput: true });
 
     // Yet we still need to update the version to the current version. We set
     // didMigration to true to indicate that the settings file has been updated.
@@ -104,9 +126,286 @@ function loadMenuSettings(content: object): {
   }
 
   return {
-    settings: MENU_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
+    settings: MENU_SETTINGS_SCHEMA_V2.parse(content, { reportInput: true }),
     didMigration: false,
   };
+}
+
+/** Migrates pre-3.0 menu settings to the workflow-based v2 format. */
+function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
+  console.log('Migrating potentially old settings to MenuSettingsV2 format...');
+
+  // The collection schema has not changed, so we can directly use the old collections.
+  const newSettings: MenuSettingsV2 = {
+    version,
+    menus: [],
+    collections: lodash.cloneDeep(oldSettings.collections),
+  };
+
+  // The key difference between the old and the new menu format uses a workflow-based
+  // approach. Instead of many menu-item types, we now have only "buttons" and "submenus".
+  // Each have some workflows triggered by events like "select" or "hover". The workflows
+  // are composed of actions which now have those types.
+  const migrateToMenuItemV2 = (oldItem: MenuItemV1): ChildMenuItemV2 => {
+    if (oldItem.type === 'submenu') {
+      const newItem: SubmenuMenuItemV2 = {
+        type: 'submenu',
+        name: oldItem.name,
+        icon: oldItem.icon,
+        iconTheme: oldItem.iconTheme,
+        children: [],
+        activateWorkflow: {
+          quickSelectKey: 'Backspace',
+          actions: [
+            {
+              type: 'close-submenu',
+            },
+          ],
+        },
+      };
+
+      if (oldItem.quickSelectKey != null) {
+        newItem.openWorkflow = {
+          actions: [],
+          quickSelectKey: oldItem.quickSelectKey,
+        };
+      }
+
+      if (oldItem.angle != null) {
+        newItem.angle = oldItem.angle;
+      }
+
+      // Recursively migrate the children if there are any.
+      if (oldItem.children) {
+        newItem.children = oldItem.children.map(migrateToMenuItemV2);
+      }
+
+      return newItem;
+    }
+
+    const newItem: ButtonMenuItemV2 = {
+      type: 'button',
+      name: oldItem.name,
+      icon: oldItem.icon,
+      iconTheme: oldItem.iconTheme,
+    };
+
+    if (oldItem.angle != null) {
+      newItem.angle = oldItem.angle;
+    }
+
+    // Now create the select-workflow for the new item. Depending on the old item type, we
+    // create different actions for the select event of the new item.
+    if (oldItem.type === 'command') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'execute-command',
+            command: (oldItem.data as { command?: string }).command ?? '',
+            detached: (oldItem.data as { detached?: boolean }).detached ?? true,
+            isolated: (oldItem.data as { isolated?: boolean }).isolated ?? false,
+          },
+        ],
+      };
+
+      // Depending on the old item's delay property, we want to add the close-menu action
+      // before or after the execute-command action.
+      if ((oldItem.data as { delayed?: boolean }).delayed) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'close-menu',
+        });
+      } else {
+        newItem.selectWorkflow.actions.push({
+          type: 'close-menu',
+        });
+      }
+    } else if (oldItem.type === 'file') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'open-file',
+            path: (oldItem.data as { path?: string }).path ?? '',
+          },
+          {
+            type: 'close-menu',
+          },
+        ],
+      };
+    } else if (oldItem.type === 'hotkey') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'simulate-hotkey',
+            hotkey: (oldItem.data as { hotkey?: string }).hotkey ?? '',
+          },
+        ],
+      };
+
+      // If the old item had the inhibitShortcuts property set to true, we also add an
+      // inhibit-shortcuts action at the beginning of the workflow.
+      if ((oldItem.data as { inhibitShortcuts?: boolean }).inhibitShortcuts) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'inhibit-shortcuts',
+        });
+      }
+
+      // Depending on the old item's delay property, we want to add the close-menu action
+      // before or after the execute-command action.
+      if ((oldItem.data as { delayed?: boolean }).delayed) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'close-menu',
+        });
+      } else {
+        newItem.selectWorkflow.actions.push({
+          type: 'close-menu',
+        });
+      }
+    } else if (oldItem.type === 'macro') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'execute-macro',
+            macro: lodash.cloneDeep(
+              (
+                oldItem.data as {
+                  macro?: {
+                    type: 'keyDown' | 'keyUp';
+                    delay: number;
+                    key: string;
+                  }[];
+                }
+              ).macro ?? []
+            ),
+          },
+        ],
+      };
+      // If the old item had the inhibitShortcuts property set to true, we also add an
+      // inhibit-shortcuts action at the beginning of the workflow.
+      if ((oldItem.data as { inhibitShortcuts?: boolean }).inhibitShortcuts) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'inhibit-shortcuts',
+        });
+      }
+
+      // Depending on the old item's delay property, we want to add the close-menu action
+      // before or after the execute-command action.
+      if ((oldItem.data as { delayed?: boolean }).delayed) {
+        newItem.selectWorkflow.actions.unshift({
+          type: 'close-menu',
+        });
+      } else {
+        newItem.selectWorkflow.actions.push({
+          type: 'close-menu',
+        });
+      }
+    } else if (oldItem.type === 'text') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'inhibit-shortcuts',
+          },
+          {
+            type: 'close-menu',
+          },
+          {
+            type: 'set-clipboard',
+            text: (oldItem.data as { text?: string }).text ?? '',
+          },
+          {
+            type: 'simulate-hotkey',
+            hotkey: 'ControlLeft+V',
+          },
+        ],
+      };
+    } else if (oldItem.type === 'uri') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'open-uri',
+            uri: (oldItem.data as { uri?: string }).uri ?? '',
+          },
+          {
+            type: 'close-menu',
+          },
+        ],
+      };
+    } else if (oldItem.type === 'redirect') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'open-menu',
+            menu: (oldItem.data as { menu?: string }).menu ?? '',
+          },
+          {
+            type: 'close-menu',
+          },
+        ],
+      };
+    } else if (oldItem.type === 'settings') {
+      newItem.selectWorkflow = {
+        quickSelectKey: oldItem.quickSelectKey,
+        actions: [
+          {
+            type: 'open-settings',
+          },
+          {
+            type: 'close-menu',
+          },
+        ],
+      };
+    }
+
+    return newItem;
+  };
+
+  // The menu schema has not changed either, but the menu items themselves have changed a
+  // lot. We copy over the menus and transform the menu items to the new format.
+  for (const oldMenu of oldSettings.menus) {
+    const root: RootMenuItemV2 = {
+      type: 'root',
+      name: oldMenu.root.name,
+      icon: oldMenu.root.icon,
+      iconTheme: oldMenu.root.iconTheme,
+      activateWorkflow: {
+        quickSelectKey: 'Backspace',
+        actions: [
+          {
+            type: 'close-menu',
+          },
+        ],
+      },
+      children: [],
+    };
+
+    for (const oldChild of oldMenu.root.children) {
+      root.children.push(migrateToMenuItemV2(oldChild));
+    }
+
+    const newMenu: MenuV2 = {
+      root,
+      shortcut: oldMenu.shortcut,
+      shortcutID: oldMenu.shortcutID,
+      centered: oldMenu.centered,
+      anchored: oldMenu.anchored,
+      hoverMode: oldMenu.hoverMode,
+      tags: lodash.cloneDeep(oldMenu.tags),
+    };
+
+    if (oldMenu.conditions != null) {
+      newMenu.conditions = lodash.cloneDeep(oldMenu.conditions);
+    }
+
+    newSettings.menus.push(newMenu);
+  }
+
+  return newSettings;
 }
 
 /**

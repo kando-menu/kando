@@ -9,8 +9,8 @@
 // SPDX-License-Identifier: MIT
 
 import * as z from 'zod';
-import { MENU_ITEM_SCHEMA } from '../settings-schemata';
-import { InteractionTarget } from '..';
+import { ROOT_MENU_ITEM_SCHEMA } from '../settings-schemata';
+import { MenuInteractionType } from '..';
 
 /** Enum of all possible reasons for declining a request. */
 export enum IPCErrorReason {
@@ -43,7 +43,7 @@ export const IPC_INFO_SCHEMA = z.object({
  */
 export const SHOW_MENU_MESSAGE = z.object({
   type: z.literal('show-menu'),
-  menu: MENU_ITEM_SCHEMA,
+  menu: ROOT_MENU_ITEM_SCHEMA,
 });
 
 /**
@@ -60,36 +60,13 @@ export const STOP_OBSERVING_MESSAGE = z.object({
   type: z.literal('stop-observing'),
 });
 
-/** Sent by the server to notify an observing client that a menu was opened. */
-export const OPEN_MENU_MESSAGE = z.object({
-  type: z.literal('open-menu'),
-});
-
-/**
- * Sent by the server to notify the client that the menu was closed without a selection.
- * This can happen if the user cancels the menu or another menu is shown on top.
- */
-export const CANCEL_MENU_MESSAGE = z.object({
-  type: z.literal('cancel-menu'),
-});
-
 /**
  * Sent by the client to notify the server that a menu item was selected. The path is an
  * array of indices representing the path to the selected item in the menu tree.
  */
-export const SELECT_ITEM_MESSAGE = z.object({
-  type: z.literal('select-item'),
-  target: z.enum(InteractionTarget),
-  path: z.array(z.number()),
-});
-
-/**
- * Sent by the client to notify the server that a menu item is being hovered. The path is
- * an array of indices representing the path to the hovered item in the menu tree.
- */
-export const HOVER_ITEM_MESSAGE = z.object({
-  type: z.literal('hover-item'),
-  target: z.enum(InteractionTarget),
+export const MENU_INTERACTION_MESSAGE = z.object({
+  type: z.literal('menu-interaction'),
+  interaction: z.enum(MenuInteractionType),
   path: z.array(z.number()),
 });
 
@@ -107,16 +84,7 @@ export type IPCInfo = z.infer<typeof IPC_INFO_SCHEMA>;
 export type ShowMenuMessage = z.infer<typeof SHOW_MENU_MESSAGE>;
 export type StartObservingMessage = z.infer<typeof START_OBSERVING_MESSAGE>;
 export type StopObservingMessage = z.infer<typeof STOP_OBSERVING_MESSAGE>;
-export type OpenMenuMessage = z.infer<typeof OPEN_MENU_MESSAGE>;
-export type CancelMenuMessage = z.infer<typeof CANCEL_MENU_MESSAGE>;
-export type SelectItemMessage = z.infer<typeof SELECT_ITEM_MESSAGE>;
-export type HoverItemMessage = z.infer<typeof HOVER_ITEM_MESSAGE>;
+export type MenuInteractionMessage = z.infer<typeof MENU_INTERACTION_MESSAGE>;
 export type ErrorMessage = z.infer<typeof ERROR_MESSAGE>;
 
-export const IPC_MESSAGES = [
-  SHOW_MENU_MESSAGE,
-  CANCEL_MENU_MESSAGE,
-  SELECT_ITEM_MESSAGE,
-  HOVER_ITEM_MESSAGE,
-  ERROR_MESSAGE,
-];
+export const IPC_MESSAGES = [SHOW_MENU_MESSAGE, MENU_INTERACTION_MESSAGE, ERROR_MESSAGE];

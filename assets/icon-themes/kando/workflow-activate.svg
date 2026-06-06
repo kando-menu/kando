@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+SPDX-License-Identifier: MIT
+-->
+
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="currentColor"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="workflow-activate.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs
+      id="defs1" />
+   <sodipodi:namedview
+      id="namedview1"
+      pagecolor="#ffffff"
+      bordercolor="#000000"
+      borderopacity="0.25"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      inkscape:zoom="31.592795"
+      inkscape:cx="6.9794395"
+      inkscape:cy="13.800615"
+      inkscape:window-width="2880"
+      inkscape:window-height="1583"
+      inkscape:window-x="0"
+      inkscape:window-y="0"
+      inkscape:window-maximized="1"
+      inkscape:current-layer="svg1" />
+   <path
+      d="M 11.927,11.003 11.976,11 l 0.098,0.003 0.097,0.012 0.097,0.022 9.048,3.014 c 0.845,0.282 0.928,1.445 0.131,1.843 l -3.702,1.851 -1.85,3.702 c -0.399,0.797 -1.562,0.714 -1.844,-0.13 l -3.003,-9.011 -0.033,-0.135 -0.012,-0.097 v -0.148 l 0.012,-0.097 0.022,-0.097 0.03,-0.094 0.04,-0.09 0.05,-0.084 0.086,-0.117 0.067,-0.07 0.037,-0.034 0.076,-0.06 0.081,-0.052 0.087,-0.043 0.103,-0.04 0.135,-0.033 z"
+      id="path1"
+      sodipodi:nodetypes="cccccccccccccccccccccccccccc" />
+   <path
+      style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+      id="path3"
+      sodipodi:type="arc"
+      sodipodi:cx="12.0026"
+      sodipodi:cy="-12.000016"
+      sodipodi:rx="7.7889013"
+      sodipodi:ry="7.7889013"
+      sodipodi:start="0.31435551"
+      sodipodi:end="4.3990085"
+      sodipodi:open="true"
+      sodipodi:arc-type="arc"
+      d="m 19.409813,-9.5916597 a 7.7889013,7.7889013 0 0 1 -8.224399,5.3375579 7.7889013,7.7889013 0 0 1 -6.9295218,-6.9362812 7.7889013,7.7889013 0 0 1 5.3455744,-8.219191"
+      transform="rotate(90)" />
+</svg>

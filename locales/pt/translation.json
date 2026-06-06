@@ -237,13 +237,6 @@
     },
     "menu-items": {
         "command": {
-            "name": "Executar Comando",
-            "description": "Executa apps ou scripts.",
-            "placeholder": "Insira algum comando…",
-            "isolated": "Executar isoladamente",
-            "isolated-info": "Isto irá executar o comando num ambiente limpo, não herdando nenhuma variável de ambiente do Kando. Isto pode ajudar com comandos que não iniciam corretamente.",
-            "detached": "Executar separadamente",
-            "detached-info": "Isto irá desconectar o comando do Kando, fazendo com que continue executando mesmo se o Kando estiver fechado. Desativar isto pode ajudar a resolver problemas com comandos que não iniciam corretamente.",
             "tip-1": "Pode usar o elemento do tipo Comando para iniciar aplicações ou scripts.",
             "tip-3": "Use {{app_name}} para inserir o nome da aplicação que estava focado quando abriu o menu.",
             "tip-4": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
@@ -251,36 +244,16 @@
             "tip-6": "Clique [aqui]({{link}}) para descobrir como encontrar os comandos para iniciar as suas apps."
         },
         "file": {
-            "name": "Abrir Ficheiro",
-            "description": "Abre um ficheiro ou pasta.",
-            "placeholder": "Escolher ficheiro ou pasta…",
             "tip-1": "Pode usar este tipo de elemento para abrir ficheiros ou pastas."
         },
         "hotkey": {
-            "name": "Simular atalho de teclado",
-            "description": "Pressione uma combinação de teclas.",
-            "hotkey": "Tecla de Atalho",
-            "hotkey-info": "Esta tecla de atalho será acionada quando o elemento é selecionado. Quando estiver a gravar, não precisa pressionar todas as teclas de uma vez, também pode pressioná-las uma após a outra. Isto é útil se uma tecla de atalho já está atribuída a alguma ação global!",
-            "recording-placeholder": "Pressione uma tecla de atalho…",
             "tip-1": "Ao gravar uma tecla de atalho, não precisa pressionar todas as teclas ao mesmo tempo. Pode pressionar uma após a outra.",
             "tip-2": "Se não consegue gravar uma tecla porque ela é usada pelo sistema, tente digitar o nome da tecla diretamente.",
             "tip-3": "Clique [nesta ligação]({{link}}) para ver todos os nomes de chave válidos."
         },
         "macro": {
-            "name": "Simular Macro",
-            "description": "Digita um macro de teclado.",
-            "placeholder": "Aperte o botão de gravação para começar a gravar!",
-            "recording-placeholder": "Pressione as teclas…",
             "tip-1": "Por padrão, Kando adiciona 10ms de delay antes de cada evento de tecla. Pode mudar isto com a propriedade \"delay\".",
             "tip-2": "Pode editar o macro manualmente. Isto é útil se quer ajustar o tempo das teclas."
-        },
-        "redirect": {
-            "name": "Redirecionar",
-            "description": "Abre outro menu."
-        },
-        "settings": {
-            "name": "Abrir Ajustes",
-            "description": "Abre a janela de configurações do Kando."
         },
         "submenu": {
             "description": "Contém outros elementos de menu.",
@@ -293,15 +266,10 @@
             "tip-7": "Pode apagar um menu ou elemento do menu pelo ícone de lixo abaixo."
         },
         "text": {
-            "name": "Pasta texto",
-            "description": "Insere o texto fornecido.",
             "placeholder": "Insira qualquer texto…",
             "tip-1": "Esta ação usa a sua área de transferência para colar o texto. Depois de usar a ação, a área de transferência conterá o texto."
         },
         "uri": {
-            "name": "Abrir URI",
-            "description": "Abre sites e mais.",
-            "placeholder": "Insira alguma URL…",
             "tip-1": "Pode usar o elemento URI para abrir um site usando o protocolo http://.",
             "tip-3": "Pode usar o elemento URI para abrir uma ligação do tipo mailto:.",
             "tip-4": "Use {{app_name}} para inserir o nome da aplicação que estava focado quando abriu o menu.",
@@ -389,6 +357,48 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando não pode atribuir atalhos globais diretamente no KDE/Wayland. Ao invés disso, especifique um ID de atalho aqui e procure por ele na secção de atalhos globais do KWin nas configurações de sistema do seu KDE. Lá pode atribuir um atalho que irá abrir este menu."
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Abrir Ficheiro",
+            "description": "Abre um ficheiro ou pasta.",
+            "placeholder": "Escolher ficheiro ou pasta…"
+        },
+        "execute-command": {
+            "name": "Executar Comando",
+            "description": "Executa apps ou scripts.",
+            "placeholder": "Insira algum comando…",
+            "isolated": "Executar isoladamente",
+            "isolated-info": "Isto irá executar o comando num ambiente limpo, não herdando nenhuma variável de ambiente do Kando. Isto pode ajudar com comandos que não iniciam corretamente.",
+            "detached-info": "Isto irá desconectar o comando do Kando, fazendo com que continue executando mesmo se o Kando estiver fechado. Desativar isto pode ajudar a resolver problemas com comandos que não iniciam corretamente.",
+            "detached": "Executar separadamente"
+        },
+        "open-menu": {
+            "name": "Redirecionar",
+            "description": "Abre outro menu."
+        },
+        "open-settings": {
+            "name": "Abrir Ajustes",
+            "description": "Abre a janela de configurações do Kando."
+        },
+        "open-uri": {
+            "name": "Abrir URI",
+            "description": "Abre sites e mais.",
+            "placeholder": "Insira alguma URL…"
+        },
+        "simulate-hotkey": {
+            "name": "Simular atalho de teclado",
+            "description": "Pressione uma combinação de teclas.",
+            "recording-placeholder": "Pressione uma tecla de atalho…",
+            "hotkey": "Tecla de Atalho",
+            "hotkey-info": "Esta tecla de atalho será acionada quando o elemento é selecionado. Quando estiver a gravar, não precisa pressionar todas as teclas de uma vez, também pode pressioná-las uma após a outra. Isto é útil se uma tecla de atalho já está atribuída a alguma ação global!"
+        },
+        "execute-macro": {
+            "name": "Simular Macro",
+            "description": "Digita um macro de teclado.",
+            "placeholder": "Aperte o botão de gravação para começar a gravar!",
+            "recording-placeholder": "Pressione as teclas…"
         }
     }
 }

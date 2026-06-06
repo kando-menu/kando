@@ -19,7 +19,12 @@ import i18next from 'i18next';
 import { enableDragDropTouch } from 'drag-drop-touch';
 
 import App from './components/App';
-import { useAppState, useGeneralSettings, useMenuSettings } from './state';
+import {
+  useAppState,
+  useGeneralSettings,
+  useMenuSettings,
+  getSelectedChild,
+} from './state';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { IPCMenuManager } from './utils/ipc-menu-manager';
 
@@ -118,13 +123,11 @@ Promise.all([
 
       // Make sure that the selected child path is valid.
       if (selectedMenu >= 0) {
-        let selectedItem = menus[selectedMenu].root;
-        for (let i = 0; i < selectedChildPath.length; i++) {
-          selectedItem = selectedItem.children[selectedChildPath[i]];
-          if (selectedItem === undefined) {
-            selectParent();
-            return;
-          }
+        const selectedItem = getSelectedChild(menus, selectedMenu, selectedChildPath);
+
+        if (!selectedItem) {
+          selectParent();
+          return;
         }
       }
     };

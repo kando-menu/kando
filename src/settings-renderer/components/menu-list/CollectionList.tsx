@@ -99,7 +99,7 @@ export default function CollectionList() {
           <button
             className={cx({ collection: true, selected: selectedCollection === -1 })}
             data-tooltip-content={
-              selectedCollection === -1 ? '' : i18next.t('settings.all-menus')
+              selectedCollection === -1 ? undefined : i18next.t('settings.all-menus')
             }
             data-tooltip-id="main-tooltip"
             type="button"
@@ -117,7 +117,7 @@ export default function CollectionList() {
               })}
               data-tooltip-content={
                 collection.index === selectedCollection
-                  ? ''
+                  ? undefined
                   : collections[collection.index].name
               }
               data-tooltip-id="main-tooltip"

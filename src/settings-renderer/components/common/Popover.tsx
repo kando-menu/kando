@@ -47,6 +47,7 @@ type Props = {
  * @returns A popover element.
  */
 export default function Popover(props: Props) {
+  const { isVisible, position, onClose } = props;
   const popoverContent = React.useRef(null);
   const popoverTriangle = React.useRef(null);
   const popoverTarget = React.useRef(null);
@@ -54,7 +55,7 @@ export default function Popover(props: Props) {
 
   // Show the popover if props.visible is true.
   React.useEffect(() => {
-    if (!props.isVisible || !popoverContent.current) {
+    if (!isVisible || !popoverContent.current) {
       return;
     }
 
@@ -73,7 +74,7 @@ export default function Popover(props: Props) {
 
     let yDiff = 0;
 
-    if (props.position === 'bottom') {
+    if (position === 'bottom') {
       yDiff = targetRect.bottom + triangleSize;
       popoverTriangle.current.classList.add(classes.top);
       popoverTriangle.current.classList.remove(classes.bottom);
@@ -106,14 +107,14 @@ export default function Popover(props: Props) {
         popoverTarget.current &&
         !popoverTarget.current.contains(event.target as Node)
       ) {
-        props.onClose();
+        onClose();
       }
     };
 
     // Dismiss the popover when the user presses ESC.
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        props.onClose();
+        onClose();
       }
     };
 
@@ -140,14 +141,16 @@ export default function Popover(props: Props) {
     document.addEventListener('focusin', handleFocusIn);
     FocusTrapManager.add(popoverContent.current);
 
+    const currentPopoverContent = popoverContent.current;
+
     return () => {
       document.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('pointerup', handleClick);
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('focusin', handleFocusIn);
-      FocusTrapManager.remove(popoverContent.current);
+      FocusTrapManager.remove(currentPopoverContent);
     };
-  }, [props.onClose, props.isVisible]);
+  }, [onClose, isVisible, position]);
 
   return (
     <>

@@ -13,7 +13,7 @@ declare const window: WindowWithAPIs;
 
 import { Howl } from 'howler';
 
-import { SoundThemeDescription, SoundType } from '../common';
+import { SoundThemeDescription, MenuInteractionType } from '../common';
 
 /** This class is responsible for loading a sound theme and playing sounds. */
 export class SoundTheme {
@@ -56,7 +56,7 @@ export class SoundTheme {
    *
    * @param type The type of sound to play.
    */
-  public playSound(type: SoundType) {
+  public playSound(type: MenuInteractionType) {
     const sound = this.description.sounds[type];
     if (sound) {
       const volume = (sound.volume || 1) * this.volume;

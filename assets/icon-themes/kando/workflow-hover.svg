@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+SPDX-License-Identifier: MIT
+-->
+
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="currentColor"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="workflow-hover.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs
+      id="defs1" />
+   <sodipodi:namedview
+      id="namedview1"
+      pagecolor="#ffffff"
+      bordercolor="#000000"
+      borderopacity="0.25"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      inkscape:zoom="31.592795"
+      inkscape:cx="6.9794395"
+      inkscape:cy="13.800615"
+      inkscape:window-width="2880"
+      inkscape:window-height="1583"
+      inkscape:window-x="0"
+      inkscape:window-y="0"
+      inkscape:window-maximized="1"
+      inkscape:current-layer="svg1"
+      showguides="true">
+      <sodipodi:guide
+         position="13.053436,10.948789"
+         orientation="-0.70710678,-0.70710678"
+         id="guide3"
+         inkscape:locked="false" />
+   </sodipodi:namedview>
+   <path
+      d="m 12.117305,11.192529 0.049,-0.003 0.098,0.003 0.097,0.012 0.097,0.022 9.048,3.014 c 0.845,0.282 0.928,1.445 0.131,1.843 l -3.702,1.851 -1.85,3.702 c -0.399,0.797 -1.562,0.714 -1.844,-0.13 l -3.003,-9.011 -0.033,-0.135 -0.012,-0.097 v -0.148 l 0.012,-0.097 0.022,-0.097 0.03,-0.094 0.04,-0.09 0.05,-0.084 0.086,-0.117 0.067,-0.07 0.037,-0.034 0.076,-0.06 0.081,-0.052 0.087,-0.043 0.103,-0.04 0.135,-0.033 z"
+      id="path1"
+      sodipodi:nodetypes="cccccccccccccccccccccccccccc" />
+   <path
+      style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+      id="path3"
+      sodipodi:type="arc"
+      sodipodi:cx="12.109005"
+      sodipodi:cy="-12.108337"
+      sodipodi:rx="4.446775"
+      sodipodi:ry="4.446835"
+      sodipodi:start="0.62110852"
+      sodipodi:end="4.0153586"
+      sodipodi:open="true"
+      sodipodi:arc-type="arc"
+      d="m 15.725273,-9.5205595 a 4.446775,4.446835 0 0 1 -4.419935,1.7858298 4.446775,4.446835 0 0 1 -3.4963255,-3.2405113 4.446775,4.446835 0 0 1 1.4454139,-4.542716"
+      transform="rotate(90)" />
+   <path
+      style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-dasharray:12, 12;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+      id="path5"
+      sodipodi:type="arc"
+      sodipodi:cx="12.569051"
+      sodipodi:cy="-12.686071"
+      sodipodi:rx="9.3754425"
+      sodipodi:ry="9.4012995"
+      sodipodi:start="0.42292759"
+      sodipodi:end="4.311576"
+      sodipodi:open="true"
+      sodipodi:arc-type="arc"
+      d="m 21.118435,-8.8274786 a 9.3754425,9.4012995 0 0 1 -9.935111,5.4394493 9.3754425,9.4012995 0 0 1 -7.9151173,-8.1144387 9.3754425,9.4012995 0 0 1 5.6428556,-9.839794"
+      transform="rotate(90)" />
+</svg>

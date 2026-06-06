@@ -83,37 +83,17 @@
         "command": {
             "command": "Komento",
             "command-info": "Tämä suoritetaan.",
-            "description": "Suorittaa komentorivikomennon.",
-            "name": "Suorita komento",
-            "placeholder": "Lisää mikä tahansa komento…",
-            "isolated-info": "Tämä suorittaa komennon puhtaassa ympäristössä, mikä tarkoittaa, että se ei peri mitään ympäristömuuttujia Kandolta. Tämä voi auttaa käskyissä, jotka eivät käynnisty kunnolla.",
-            "isolated": "Suorita eristettynä",
-            "detached": "Suorita irrallisena",
-            "detached-info": "Tämä irrottaa komennon Kandosta, joten se jatkaa toimintaansa, vaikka Kando olisi suljettu. Tämän poistaminen käytöstä saattaa ratkaista ongelmat komennoilla, jotka eivät käynnisty kunnolla.",
-            "choose-app": "Valitse sovellus…",
             "tip-1": "Voit käyttää Komento-kohdetyyppiä käynnistääksesi sovelluksia tai komentosarjoja.",
             "tip-2": "Jos polku suoritettavaan tiedostoon sisältää välilyöntejä, anna polku \"lainausmerkkien kera\"."
         },
         "file": {
-            "description": "Avaa tiedoston tai kansion.",
             "file": "Tiedostopolku",
-            "name": "Avaa tiedosto",
-            "placeholder": "Valitse tiedosto tai kansio…",
             "tip-1": "Voit käyttää tätä kohdetyyppiä avaamaan tiedostoja tai kansioita."
         },
         "macro": {
-            "name": "Suorita makro",
-            "recording-placeholder": "Paina näppäimiä…",
-            "tip-1": "Oletusarvon mukaan Kando lisää kymmenen millisekunnin viiveen ennen jokaista näppäintapahtumaa. Voit muuttaa tätä \"viive\"-ominaisuudella.",
-            "description": "Kirjoittaa näppäimistömakron."
-        },
-        "redirect": {
-            "description": "Avaa toisen valikon.",
-            "name": "Uudelleenohjaus"
+            "tip-1": "Oletusarvon mukaan Kando lisää kymmenen millisekunnin viiveen ennen jokaista näppäintapahtumaa. Voit muuttaa tätä \"viive\"-ominaisuudella."
         },
         "settings": {
-            "description": "Avaa Kandon asetusikkunan.",
-            "name": "Avaa asetukset",
             "tip-1": "Tämä toiminto avaa Kandon asetusikkunan."
         },
         "submenu": {
@@ -128,22 +108,10 @@
             "tip-7": "Voit poistaa valikon tai valikon kohteen roskakorin kuvakkeella alapuolella."
         },
         "text": {
-            "name": "Liitä teksti",
             "placeholder": "Syötä mitä tahansa tekstiä…",
-            "description": "Syöttää annetun tekstin.",
             "tip-1": "Tämä toiminto käyttää leikepöytääsi tekstin liittämiseen. Toiminnan käytön jälkeen teksti jää leikepöydälle."
         },
-        "uri": {
-            "description": "Avaa tiedostoja tai verkkosivuja.",
-            "name": "Avaa URI",
-            "placeholder": "Syötä mikä tahansa URI…"
-        },
         "hotkey": {
-            "name": "Simuloi pikanäppäin",
-            "description": "Painaa näppäinyhdistelmää.",
-            "hotkey": "Pikanäppäin",
-            "hotkey-info": "Tämä pikanäppäin käynnistyy, kun kohde on valittu. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu johonkin muuhun toimintaan!",
-            "recording-placeholder": "Kirjoita pikanäppäin…",
             "tip-1": "Tallentaessasi pikanäppäintä, sinun ei tarvitse painaa kaikkia näppäimiä kerralla. Voit painaa niitä yksitellen.",
             "tip-2": "Jos et voi tallentaa näppäintä koska järjestelmä käyttää sitä jo, yritä kirjoittamalla sen nimi suoraan.",
             "tip-3": "Paina [tästä linkistä]({{link}}) nähdäksesi kaikkien hyväksyttyjen näppäinten nimet."
@@ -493,5 +461,47 @@
             "name": "Ajatusta nopeampi {{tier}}"
         },
         "completed-title": "Saavutus avattu!"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Avaa tiedosto",
+            "description": "Avaa tiedoston tai kansion.",
+            "placeholder": "Valitse tiedosto tai kansio…"
+        },
+        "execute-command": {
+            "name": "Suorita komento",
+            "description": "Suorittaa komentorivikomennon.",
+            "choose-app": "Valitse sovellus…",
+            "placeholder": "Lisää mikä tahansa komento…",
+            "isolated": "Suorita eristettynä",
+            "isolated-info": "Tämä suorittaa komennon puhtaassa ympäristössä, mikä tarkoittaa, että se ei peri mitään ympäristömuuttujia Kandolta. Tämä voi auttaa käskyissä, jotka eivät käynnisty kunnolla.",
+            "detached-info": "Tämä irrottaa komennon Kandosta, joten se jatkaa toimintaansa, vaikka Kando olisi suljettu. Tämän poistaminen käytöstä saattaa ratkaista ongelmat komennoilla, jotka eivät käynnisty kunnolla.",
+            "detached": "Suorita irrallisena"
+        },
+        "open-menu": {
+            "name": "Uudelleenohjaus",
+            "description": "Avaa toisen valikon."
+        },
+        "open-settings": {
+            "name": "Avaa asetukset",
+            "description": "Avaa Kandon asetusikkunan."
+        },
+        "open-uri": {
+            "name": "Avaa URI",
+            "description": "Avaa tiedostoja tai verkkosivuja.",
+            "placeholder": "Syötä mikä tahansa URI…"
+        },
+        "simulate-hotkey": {
+            "name": "Simuloi pikanäppäin",
+            "description": "Painaa näppäinyhdistelmää.",
+            "recording-placeholder": "Kirjoita pikanäppäin…",
+            "hotkey": "Pikanäppäin",
+            "hotkey-info": "Tämä pikanäppäin käynnistyy, kun kohde on valittu. Tallentaessasi sinun ei tarvitse painaa kaikkia näppäimiä kerralla; voit myös painaa niitä yksi toisensa jälkeen. Tämä on hyödyllistä, jos pikanäppäin on jo asetettu johonkin muuhun toimintaan!"
+        },
+        "execute-macro": {
+            "name": "Suorita makro",
+            "description": "Kirjoittaa näppäimistömakron.",
+            "recording-placeholder": "Paina näppäimiä…"
+        }
     }
 }

@@ -14,7 +14,7 @@ import os from 'os';
 import path from 'path';
 
 import * as IPCTypes from '../src/common/ipc/types';
-import { MenuItem, InteractionTarget } from '../src/common';
+import { MenuInteractionType, RootMenuItem } from '../src/common';
 import { IPCServer } from '../src/common/ipc/ipc-server';
 import { IPCShowMenuClient } from '../src/common/ipc/ipc-show-menu-client';
 
@@ -40,7 +40,7 @@ describe('IPC Show-Menu Protocol', function () {
 
     const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
     expect(info).to.have.property('port');
-    expect(info).to.have.property('apiVersion', 1);
+    expect(info).to.have.property('apiVersion', 2);
   });
 
   it('should fail gracefully if the port is wrong', async function () {
@@ -92,12 +92,12 @@ describe('IPC Show-Menu Protocol', function () {
     });
 
     // "interact" with the menu.
-    server.on('start-observing', (observerID, callbacks) => {
+    server.on('start-observing', (observerID, callback) => {
       expect(observerID).to.equal(0); // One-time observer should have ID 0.
 
-      callbacks.onHover(InteractionTarget.eSubmenu, [0, 1, 2]);
-      callbacks.onSelect(InteractionTarget.eItem, [0, 1]);
-      callbacks.onCancel();
+      callback(MenuInteractionType.eHoverButton, [0, 1, 2]);
+      callback(MenuInteractionType.eSelectButton, [0, 1]);
+      callback(MenuInteractionType.eCloseMenu, []);
     });
 
     // Listen for events on client
@@ -105,28 +105,25 @@ describe('IPC Show-Menu Protocol', function () {
     let hoverReceived = false;
     let cancelReceived = false;
 
-    client.on('select', (target, path) => {
-      expect(target).to.equal(InteractionTarget.eItem);
-      expect(path).to.deep.equal([0, 1]);
-      selectReceived = true;
-    });
-
-    client.on('hover', (target, path) => {
-      expect(target).to.equal(InteractionTarget.eSubmenu);
-      expect(path).to.deep.equal([0, 1, 2]);
-      hoverReceived = true;
-    });
-
-    client.on('cancel', () => {
-      cancelReceived = true;
+    client.on('interaction', (type, path) => {
+      if (type === MenuInteractionType.eSelectButton) {
+        expect(path).to.deep.equal([0, 1]);
+        selectReceived = true;
+      } else if (type === MenuInteractionType.eHoverButton) {
+        expect(path).to.deep.equal([0, 1, 2]);
+        hoverReceived = true;
+      } else if (type === MenuInteractionType.eCloseMenu) {
+        cancelReceived = true;
+      }
     });
 
     // Finally "show" the menu.
     client.showMenu({
       name: 'TestMenu',
-      type: 'submenu',
+      type: 'root',
       icon: 'icon',
       iconTheme: 'iconTheme',
+      children: [],
     });
 
     // Wait for events to propagate
@@ -154,7 +151,7 @@ describe('IPC Show-Menu Protocol', function () {
     });
 
     // Send a malformed message.
-    client.showMenu({ invalid: 'data' } as unknown as MenuItem);
+    client.showMenu({ invalid: 'data' } as unknown as RootMenuItem);
 
     // Wait for events to propagate
     await new Promise((resolve) => setTimeout(resolve, 100));

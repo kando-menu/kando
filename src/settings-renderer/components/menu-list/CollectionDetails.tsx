@@ -70,7 +70,12 @@ export default function CollectionDetails(props: Props) {
     return () => {
       MouseTrap.unbind('mod+f');
     };
-  }, []);
+  }, [
+    menuSearchBarVisible,
+    selectCollection,
+    selectedCollection,
+    setMenuSearchBarVisible,
+  ]);
 
   // Update the tag editor whenever the selected menu collection changes.
   React.useEffect(() => {

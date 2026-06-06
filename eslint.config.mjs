@@ -4,13 +4,13 @@
 
 import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
+import xoReact from 'eslint-config-xo-react';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
-import xoReact from 'eslint-config-xo-react';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -38,14 +38,6 @@ export default defineConfig([
       'react/boolean-prop-naming': [
         'error',
         { rule: '^(is|has|do|use|hide|initial)[A-Z]([A-Za-z0-9]?)+' },
-      ],
-      'react/jsx-sort-props': [
-        'error',
-        {
-          callbacksLast: true,
-          shorthandFirst: true,
-          reservedFirst: true,
-        },
       ],
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-require-imports': 'off',
