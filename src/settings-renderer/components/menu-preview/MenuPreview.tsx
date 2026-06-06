@@ -533,6 +533,11 @@ export default function MenuPreview() {
             selectCenter();
           }
         }}
+        onDoubleClick={() => {
+          if (centerItem.children[child.index]?.type === 'submenu') {
+            editChild(index);
+          }
+        }}
         onPointerDown={() => {
           if (child.angle !== undefined) {
             angleDragMayStart = true;
@@ -573,7 +578,7 @@ export default function MenuPreview() {
             }
           }
         }}
-        onPointerUp={() => {
+        onPointerUp={(event) => {
           if (angleDragOngoing) {
             setDragAngle(null);
             setDragIndex(null);
@@ -595,12 +600,16 @@ export default function MenuPreview() {
             dragIndex === null &&
             clickedDownContainer === currentContainer.current
           ) {
-            selectChild(index);
-          }
-        }}
-        onDoubleClick={() => {
-          if (child.index >= 0 && centerItem.children[child.index]?.type === 'submenu') {
-            editChild(index);
+            // With right mouse button or long touch, the user can open submenus without
+            // double-clicking.
+            if (
+              event.button === 2 &&
+              centerItem.children[child.index]?.type === 'submenu'
+            ) {
+              editChild(index);
+            } else {
+              selectChild(index);
+            }
           }
         }}>
         {child.iconTheme && child.icon ? (
