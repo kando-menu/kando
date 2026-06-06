@@ -51,9 +51,9 @@
 
     flex: 0 1 auto;
     transition:
-      flex-grow 150ms ease,
-      padding 150ms ease,
-      background-color 150ms ease;
+      flex-grow 250ms ease,
+      padding 250ms ease,
+      background-color 250ms ease;
 
     .workflowIcon {
       display: inline-flex;
@@ -68,9 +68,9 @@
       max-width: 0;
       overflow: hidden;
       transition:
-        padding 150ms ease,
-        opacity 150ms ease,
-        max-width 150ms ease;
+        padding 250ms ease,
+        opacity 250ms ease,
+        max-width 250ms ease;
     }
 
     &.active {
