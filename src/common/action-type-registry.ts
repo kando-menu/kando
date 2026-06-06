@@ -376,7 +376,9 @@ export class ActionTypeRegistry {
 
         selectWorkflow.actions.push(actionType.createAction());
 
-        if (!actionType.prefersDelayedExecution) {
+        // Open-menu actions are a special case: They should not be followed by a
+        // close-menu action, because the menu can stay open.
+        if (!actionType.prefersDelayedExecution && typeName !== 'open-menu') {
           selectWorkflow.actions.push({
             type: 'close-menu',
           });
