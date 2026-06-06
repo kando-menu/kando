@@ -58,6 +58,7 @@ $backlink-offset: 30cqmin;
       background-color: light-dark(rgba($base-dark, 0.3), rgba($base-light, 0.3));
       touch-action: none;
       transition: transform 0.2s ease;
+      border: 2px solid transparent;
 
       &:hover {
         background-color: light-dark(rgba($base-dark, 0.4), rgba($base-light, 0.4));
