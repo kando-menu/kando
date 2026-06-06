@@ -405,6 +405,7 @@ export default interface Resources {
               "sakura-system": "Sakura System",
               "settings-button-position": "Settings button position",
               "settings-button-position-info": "Choose the screen corner where the settings button will be shown.",
+              "settings-dialog-and-tray-icon": "Settings Dialog & Tray Icon",
               "settings-window-color-scheme": "Settings window color scheme",
               "settings-window-color-scheme-info": "If you choose 'system', the settings window will use the same color scheme as your operating system.",
               "settings-window-dev-tools": "Inspect settings",
@@ -573,42 +574,40 @@ export default interface Resources {
               "action-picker": {
                   "search-placeholder": "Search for an action…"
               },
+              "activate-workflow-name": "settings.workflow-editor.activate-workflow-name",
               "add-action": "Add Action",
               "button-hover-workflow": {
-                  "description": "The actions below will be executed when you hover over the item or when you press the quick-select key while its parent menu is shown.",
+                  "description": "The actions below will be executed when you move your pointer over the item.",
                   "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to this workflow!",
-                  "name": "Hover-Workflow",
-                  "quick-select-key-hint": "settings.workflow-editor.button-hover-workflow.quick-select-key-hint"
+                  "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the hover workflow."
               },
               "button-select-workflow": {
-                  "description": "The actions below will be executed when the item is selected or when you press the quick-select key while its parent menu is shown.",
+                  "description": "The actions below will be executed when you select the item.",
                   "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to this workflow!",
-                  "name": "Select-Workflow",
-                  "quick-select-key-hint": "settings.workflow-editor.button-select-workflow.quick-select-key-hint"
+                  "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the select workflow."
               },
+              "hover-workflow-name": "settings.workflow-editor.hover-workflow-name",
+              "open-workflow-name": "settings.workflow-editor.open-workflow-name",
               "root-activate-workflow": {
-                  "description": "The actions below will be executed when you click the center of the root menu or when you press the quick-select key while the root menu is shown.",
+                  "description": "The actions below will be executed when you click the center of the root menu.",
                   "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!",
-                  "name": "Center-Click-Workflow",
-                  "quick-select-key-hint": "settings.workflow-editor.root-activate-workflow.quick-select-key-hint"
+                  "quick-select-key-hint": "Pressing this key while the root menu is open will also trigger the center-click workflow."
               },
+              "select-workflow-name": "settings.workflow-editor.select-workflow-name",
               "submenu-activate-workflow": {
-                  "description": "The actions below will be executed when you click the center of the submenu or when you press the quick-select key while the submenu is shown.",
+                  "description": "The actions below will be executed when you click the center of the submenu.",
                   "empty-hint": "Currently, nothing will happen when you click the center of the submenu. Use the button above to add actions to this workflow!",
-                  "name": "Center-Click-Workflow",
-                  "quick-select-key-hint": "settings.workflow-editor.submenu-activate-workflow.quick-select-key-hint"
+                  "quick-select-key-hint": "Pressing this key while the submenu is open will also trigger the center-click workflow."
               },
               "submenu-hover-workflow": {
-                  "description": "The actions below will be executed when you hover over the submenu item or when you press the quick-select key while its parent menu is shown.",
+                  "description": "The actions below will be executed when you move your pointer over the submenu item.",
                   "empty-hint": "Currently, no actions will be executed when hovering over this submenu. Use the button above to add actions to this workflow!",
-                  "name": "Hover-Workflow",
-                  "quick-select-key-hint": "settings.workflow-editor.submenu-hover-workflow.quick-select-key-hint"
+                  "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the hover workflow."
               },
               "submenu-open-workflow": {
-                  "description": "The actions below will be executed when the submenu item is opened or when you press the quick-select key while its parent menu is shown.",
+                  "description": "The actions below will be executed when the submenu item is selected.",
                   "empty-hint": "Currently, no additional actions will be executed when opening this submenu. Use the button above to add actions to this workflow!",
-                  "name": "Open-Workflow",
-                  "quick-select-key-hint": "settings.workflow-editor.submenu-open-workflow.quick-select-key-hint"
+                  "quick-select-key-hint": "Pressing this key will open the submenu."
               }
           }
       }

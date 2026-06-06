@@ -136,7 +136,9 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.lazy-initialization')}
             settingsKey="lazyInitialization"
           />
-          <h1>Settings Dialog & Tray Icon</h1>
+          <h1>
+            {i18next.t('settings.general-settings-dialog.settings-dialog-and-tray-icon')}
+          </h1>
           <SettingsDropdown
             info={i18next.t(
               'settings.general-settings-dialog.settings-window-color-scheme-info'

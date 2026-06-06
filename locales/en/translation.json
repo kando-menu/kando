@@ -209,7 +209,8 @@
             "input-options": "Input Options",
             "learn-interaction-mode": "Learn more about Kando's interaction modes [here]({{link}})!",
             "backup-menus-note": "This will backup or restore all your menus at once. This includes all your configured shortcuts, menu layouts, and your menu collections.",
-            "backup-settings-note": "This will backup or restore Kando's settings, which include all your general settings and your menu-theme configuration."
+            "backup-settings-note": "This will backup or restore Kando's settings, which include all your general settings and your menu-theme configuration.",
+            "settings-dialog-and-tray-icon": "Settings Dialog & Tray Icon"
         },
         "introduction-dialog": {
             "slide1-title": "Kando offers a unique and efficient way for interacting with your computer.",
@@ -316,44 +317,42 @@
         "workflow-editor": {
             "add-action": "Add Action",
             "button-select-workflow": {
-                "name": "Select Workflow",
                 "description": "The actions below will be executed when you select the item.",
                 "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the select workflow."
             },
             "button-hover-workflow": {
-                "name": "Hover Workflow",
                 "description": "The actions below will be executed when you move your pointer over the item.",
                 "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the hover workflow."
             },
             "submenu-open-workflow": {
-                "name": "Open Workflow",
                 "description": "The actions below will be executed when the submenu item is selected.",
                 "empty-hint": "Currently, no additional actions will be executed when opening this submenu. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key will open the submenu."
             },
             "submenu-hover-workflow": {
-                "name": "Hover Workflow",
                 "description": "The actions below will be executed when you move your pointer over the submenu item.",
                 "empty-hint": "Currently, no actions will be executed when hovering over this submenu. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the hover workflow."
             },
             "submenu-activate-workflow": {
-                "name": "Center-Click Workflow",
                 "description": "The actions below will be executed when you click the center of the submenu.",
                 "empty-hint": "Currently, nothing will happen when you click the center of the submenu. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key while the submenu is open will also trigger the center-click workflow."
             },
             "root-activate-workflow": {
-                "name": "Center-Click Workflow",
                 "description": "The actions below will be executed when you click the center of the root menu.",
                 "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key while the root menu is open will also trigger the center-click workflow."
             },
             "action-picker": {
                 "search-placeholder": "Search for an action…"
-            }
+            },
+            "select-workflow-name": "Select Workflow",
+            "hover-workflow-name": "Hover Workflow",
+            "activate-workflow-name": "Center-Click Workflow",
+            "open-workflow-name": "Open Workflow"
         },
         "menu-conditions": "Menu Conditions",
         "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",

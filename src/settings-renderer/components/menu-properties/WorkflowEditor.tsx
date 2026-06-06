@@ -65,7 +65,7 @@ export default function WorkflowEditor() {
   // Each workflow type has a description and an icon for the selector buttons.
   const workflowMeta: WorkflowMeta = {
     buttonSelect: {
-      name: i18next.t('settings.workflow-editor.button-select-workflow.name'),
+      name: i18next.t('settings.workflow-editor.select-workflow-name'),
       description: i18next.t(
         'settings.workflow-editor.button-select-workflow.description'
       ),
@@ -77,7 +77,7 @@ export default function WorkflowEditor() {
       actionsMayChangeItem: true,
     },
     buttonHover: {
-      name: i18next.t('settings.workflow-editor.button-hover-workflow.name'),
+      name: i18next.t('settings.workflow-editor.hover-workflow-name'),
       description: i18next.t(
         'settings.workflow-editor.button-hover-workflow.description'
       ),
@@ -89,7 +89,7 @@ export default function WorkflowEditor() {
       actionsMayChangeItem: true,
     },
     rootActivate: {
-      name: i18next.t('settings.workflow-editor.root-activate-workflow.name'),
+      name: i18next.t('settings.workflow-editor.activate-workflow-name'),
       description: i18next.t(
         'settings.workflow-editor.root-activate-workflow.description'
       ),
@@ -101,7 +101,7 @@ export default function WorkflowEditor() {
       actionsMayChangeItem: false,
     },
     submenuOpen: {
-      name: i18next.t('settings.workflow-editor.submenu-open-workflow.name'),
+      name: i18next.t('settings.workflow-editor.open-workflow-name'),
       description: i18next.t(
         'settings.workflow-editor.submenu-open-workflow.description'
       ),
@@ -113,7 +113,7 @@ export default function WorkflowEditor() {
       actionsMayChangeItem: true,
     },
     submenuHover: {
-      name: i18next.t('settings.workflow-editor.submenu-hover-workflow.name'),
+      name: i18next.t('settings.workflow-editor.hover-workflow-name'),
       description: i18next.t(
         'settings.workflow-editor.submenu-hover-workflow.description'
       ),
@@ -125,7 +125,7 @@ export default function WorkflowEditor() {
       actionsMayChangeItem: true,
     },
     submenuActivate: {
-      name: i18next.t('settings.workflow-editor.submenu-activate-workflow.name'),
+      name: i18next.t('settings.workflow-editor.activate-workflow-name'),
       description: i18next.t(
         'settings.workflow-editor.submenu-activate-workflow.description'
       ),
