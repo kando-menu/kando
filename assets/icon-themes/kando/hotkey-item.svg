@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
 SPDX-License-Identifier: MIT
 -->
+
 <svg
    width="24"
    height="24"
@@ -31,25 +33,25 @@ SPDX-License-Identifier: MIT
       inkscape:pageopacity="0.0"
       inkscape:pagecheckerboard="0"
       inkscape:deskcolor="#d1d1d1"
-      inkscape:zoom="57.166667"
-      inkscape:cx="12.008746"
-      inkscape:cy="12"
-      inkscape:window-width="2880"
-      inkscape:window-height="1583"
-      inkscape:window-x="0"
-      inkscape:window-y="0"
-      inkscape:window-maximized="1"
+      inkscape:zoom="20.211469"
+      inkscape:cx="11.998138"
+      inkscape:cy="16.22841"
+      inkscape:window-width="1128"
+      inkscape:window-height="1269"
+      inkscape:window-x="26"
+      inkscape:window-y="23"
+      inkscape:window-maximized="0"
       inkscape:current-layer="svg5" />
    <path
-      d="M 4.206997,5.9387754 A 1.7317784,1.7317784 0 0 1 5.9387754,4.206997 H 18.061224 a 1.7317784,1.7317784 0 0 1 1.731779,1.7317784 V 18.061224 a 1.7317784,1.7317784 0 0 1 -1.731779,1.731779 H 5.9387754 A 1.7317784,1.7317784 0 0 1 4.206997,18.061224 V 5.9387754"
+      d="M 4.4543813,6.1311854 A 1.6768041,1.6768041 0 0 1 6.1311854,4.4543813 H 17.868814 a 1.6768041,1.6768041 0 0 1 1.676805,1.6768041 V 17.868814 a 1.6768041,1.6768041 0 0 1 -1.676805,1.676805 H 6.1311854 A 1.6768041,1.6768041 0 0 1 4.4543813,17.868814 V 6.1311854"
       id="path1"
       style="stroke-width:2" />
    <path
-      d="M 12.865889,9.4023323 V 11.134111 A 0.86588921,0.86588921 0 0 0 13.731778,12 h 0.86589"
+      d="M 12.838402,9.4847937 V 11.161598 A 0.83840207,0.83840207 0 0 0 13.676804,12 h 0.838403"
       id="path2"
       style="stroke-width:2" />
    <path
-      d="M 15.463557,9.4023323 V 14.597668"
+      d="M 15.353608,9.4847937 V 14.515207"
       id="path3"
       style="stroke-width:2" />
    <path
@@ -57,7 +59,7 @@ SPDX-License-Identifier: MIT
       id="path4"
       style="stroke-width:2" />
    <path
-      d="M 10.268221,9.4023323 H 8.5364431 v 5.1953357"
+      d="M 10.323195,9.4847937 H 8.6463917 v 5.0304133"
       id="path5"
       style="stroke-width:2" />
 </svg>

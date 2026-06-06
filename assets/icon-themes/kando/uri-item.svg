@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
 SPDX-License-Identifier: MIT
 -->
+
 <svg
    width="24"
    height="24"
@@ -31,41 +33,41 @@ SPDX-License-Identifier: MIT
       inkscape:pageopacity="0.0"
       inkscape:pagecheckerboard="0"
       inkscape:deskcolor="#d1d1d1"
-      inkscape:zoom="40.422938"
-      inkscape:cx="6.3454072"
-      inkscape:cy="8.2131586"
-      inkscape:window-width="2880"
-      inkscape:window-height="1583"
-      inkscape:window-x="0"
-      inkscape:window-y="0"
-      inkscape:window-maximized="1"
+      inkscape:zoom="20.211469"
+      inkscape:cx="12.146569"
+      inkscape:cy="17.9601"
+      inkscape:window-width="1128"
+      inkscape:window-height="1269"
+      inkscape:window-x="26"
+      inkscape:window-y="23"
+      inkscape:window-maximized="0"
       inkscape:current-layer="svg7" />
    <path
-      d="m 19.933442,12.983063 a 7.9869052,7.9922842 0 1 0 -7.945195,7.064291"
+      d="m 19.324855,12.945655 a 7.3743379,7.3829641 0 1 0 -7.335827,6.52572"
       id="path1"
       style="stroke-width:2" />
    <path
-      d="M 4.5453384,9.3909751 H 19.454228"
+      d="M 5.1169639,9.6274229 H 18.882395"
       id="path2"
       style="stroke-width:2" />
    <path
-      d="M 4.5453384,14.719165 H 12.887217"
+      d="M 5.1169639,14.549399 H 12.81905"
       id="path3"
       style="stroke-width:2" />
    <path
-      d="m 11.556066,4.0627856 a 15.086376,15.096537 0 0 0 0,15.9845684"
+      d="m 11.589994,4.7054468 a 13.929305,13.945599 0 0 0 0,14.7659282"
       id="path4"
       style="stroke-width:2" />
    <path
-      d="m 12.4435,4.0627856 a 15.07839,15.088545 0 0 1 2.244321,9.1413974"
+      d="m 12.409365,4.7054468 a 13.921931,13.938216 0 0 1 2.072189,8.4444702"
       id="path5"
       style="stroke-width:2" />
    <path
-      d="m 15.549519,20.935386 4.437169,-4.440158"
+      d="m 15.277163,20.291705 4.096854,-4.101647"
       id="path6"
       style="stroke-width:2" />
    <path
-      d="M 19.986688,20.49137 V 16.495228 H 15.993236"
+      d="M 19.374017,19.88154 V 16.190058 H 15.686848"
       id="path7"
       style="stroke-width:2" />
 </svg>

@@ -1,17 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
 SPDX-License-Identifier: MIT
 -->
+
 <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="2"
-  stroke-linecap="round"
-  stroke-linejoin="round"
->
-  <path d="M5 19l2.757 -7.351a1 1 0 0 1 .936 -.649h12.307a1 1 0 0 1 .986 1.164l-.996 5.211a2 2 0 0 1 -1.964 1.625h-14.026a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v2" />
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="file-item.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs
+      id="defs1" />
+   <sodipodi:namedview
+      id="namedview1"
+      pagecolor="#ffffff"
+      bordercolor="#000000"
+      borderopacity="0.25"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      inkscape:zoom="14.291667"
+      inkscape:cx="4.0932945"
+      inkscape:cy="16.862974"
+      inkscape:window-width="1128"
+      inkscape:window-height="1269"
+      inkscape:window-x="26"
+      inkscape:window-y="23"
+      inkscape:window-maximized="0"
+      inkscape:current-layer="svg1" />
+   <path
+      d="M 5.8939712,18.790101 8.4252158,12.056315 A 0.91811556,0.91603681 0 0 1 9.284572,11.461807 H 20.58382 a 0.91811556,0.91603681 0 0 1 0.905262,1.066266 l -0.914443,4.773468 a 1.8362311,1.8320736 0 0 1 -1.803179,1.48856 H 5.8939712 A 1.8362311,1.8320736 0 0 1 4.0577401,16.958028 V 6.8816227 A 1.8362311,1.8320736 0 0 1 5.8939712,5.0495491 H 9.5664334 L 12.32078,7.7976595 h 6.426809 a 1.8362311,1.8320736 0 0 1 1.836231,1.8320736 v 1.8320739"
+      id="path1"
+      style="stroke-width:2" />
 </svg>

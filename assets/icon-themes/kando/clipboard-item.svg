@@ -1,22 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
 SPDX-License-Identifier: MIT
 -->
+
 <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="2"
-  stroke-linecap="round"
-  stroke-linejoin="round"
->
-  <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
-  <path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2" />
-  <path d="M9 12l.01 0" />
-  <path d="M13 12l2 0" />
-  <path d="M9 16l.01 0" />
-  <path d="M13 16l2 0" />
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="clipboard-item.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs
+      id="defs6" />
+   <sodipodi:namedview
+      id="namedview6"
+      pagecolor="#ffffff"
+      bordercolor="#000000"
+      borderopacity="0.25"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      inkscape:zoom="14.291667"
+      inkscape:cx="8.2915452"
+      inkscape:cy="12.524781"
+      inkscape:window-width="1463"
+      inkscape:window-height="1269"
+      inkscape:window-x="26"
+      inkscape:window-y="23"
+      inkscape:window-maximized="0"
+      inkscape:current-layer="svg6" />
+   <path
+      d="M 9.1919201,5.4353741 H 7.3198668 A 1.8720533,1.8756074 0 0 0 5.4478134,7.3109815 V 18.564626 a 1.8720533,1.8756074 0 0 0 1.8720534,1.875607 h 9.3602662 a 1.8720533,1.8756074 0 0 0 1.872054,-1.875607 V 7.3109815 A 1.8720533,1.8756074 0 0 0 16.680133,5.4353741 H 14.80808"
+      id="path1"
+      style="stroke-width:2" />
+   <path
+      d="M 9.1919201,5.4353741 A 1.8720533,1.8756074 0 0 1 11.063973,3.5597667 h 1.872054 A 1.8720533,1.8756074 0 0 1 14.80808,5.4353741 1.8720533,1.8756074 0 0 1 12.936027,7.3109815 H 11.063973 A 1.8720533,1.8756074 0 0 1 9.1919201,5.4353741"
+      id="path2"
+      style="stroke-width:2" />
+   <path
+      d="m 9.1919201,12 h 0.00936"
+      id="path3"
+      style="stroke-width:2" />
+   <path
+      d="M 12.936027,12 H 14.80808"
+      id="path4"
+      style="stroke-width:2" />
+   <path
+      d="m 9.1919201,15.751215 h 0.00936"
+      id="path5"
+      style="stroke-width:2" />
+   <path
+      d="M 12.936027,15.751215 H 14.80808"
+      id="path6"
+      style="stroke-width:2" />
 </svg>

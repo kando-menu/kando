@@ -1,19 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 SPDX-FileCopyrightText: Paweł Kuna <https://github.com/tabler/tabler-icons>
 SPDX-License-Identifier: MIT
 -->
+
 <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="2"
-  stroke-linecap="round"
-  stroke-linejoin="round"
->
-  <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
-  <path d="M11 13l9 -9" />
-  <path d="M15 4h5v5" />
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="redirect-item.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs
+      id="defs3" />
+   <sodipodi:namedview
+      id="namedview3"
+      pagecolor="#ffffff"
+      bordercolor="#000000"
+      borderopacity="0.25"
+      inkscape:showpageshadow="2"
+      inkscape:pageopacity="0.0"
+      inkscape:pagecheckerboard="0"
+      inkscape:deskcolor="#d1d1d1"
+      inkscape:zoom="14.291667"
+      inkscape:cx="14.658892"
+      inkscape:cy="20.361516"
+      inkscape:window-width="1128"
+      inkscape:window-height="1269"
+      inkscape:window-x="26"
+      inkscape:window-y="23"
+      inkscape:window-maximized="0"
+      inkscape:current-layer="svg3" />
+   <path
+      d="M 11.790088,6.8046647 H 6.3148687 a 1.8250729,1.8250729 0 0 0 -1.8250728,1.825073 v 9.1253643 a 1.8250729,1.8250729 0 0 0 1.8250728,1.825072 h 9.1253653 a 1.8250729,1.8250729 0 0 0 1.825073,-1.825072 v -5.475219"
+      id="path1"
+      style="stroke-width:2" />
+   <path
+      d="M 10.877551,13.19242 19.090379,4.9795918"
+      id="path2"
+      style="stroke-width:2" />
+   <path
+      d="m 14.527698,4.9795918 h 4.562681 v 4.5626823"
+      id="path3"
+      style="stroke-width:2" />
 </svg>
