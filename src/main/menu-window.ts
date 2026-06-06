@@ -24,9 +24,9 @@ import {
   Vec2,
 } from '../common';
 import { IPCCallback } from '../common/ipc';
+import * as math from '../common/math';
 import { WorkflowExecutor } from './workflow-executor';
 import { KandoApp } from './app';
-import { getPointerReturnOffset, scalePointerOffset } from './pointer-motion';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MENU_WINDOW_WEBPACK_ENTRY: string;
@@ -911,7 +911,7 @@ export class MenuWindow extends BrowserWindow {
    * @param referencePoint The point used to choose the display scale on Windows.
    */
   private async movePointer(dist: Vec2, includeZoom: boolean, referencePoint?: Vec2) {
-    const scaledDist = scalePointerOffset(
+    const scaledDist = math.multiply(
       dist,
       this.getPointerMoveScale(includeZoom, referencePoint)
     );
@@ -968,7 +968,7 @@ export class MenuWindow extends BrowserWindow {
     try {
       const info = await this.kando.getBackend().getWMInfo();
       const currentPosition = { x: info.pointerX, y: info.pointerY };
-      const offset = getPointerReturnOffset(openingPosition, currentPosition);
+      const offset = math.subtract(openingPosition, currentPosition);
 
       await this.movePointer(offset, false, currentPosition);
     } catch (error) {
