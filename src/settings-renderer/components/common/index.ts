@@ -11,6 +11,7 @@
 // This directory contains all components which are used in multiple places in the
 // settings dialog.
 
+export { default as Accordion, AccordionItem } from './Accordion';
 export { default as Base64IconPicker } from './Base64IconPicker';
 export { default as Blossom } from './Blossom';
 export { default as Button } from './Button';
@@ -35,6 +36,7 @@ export { default as SettingsRow } from './SettingsRow';
 export { default as SettingsSpinbutton } from './SettingsSpinbutton';
 export { default as ShortcutPicker } from './ShortcutPicker';
 export { default as Sidebar } from './Sidebar';
+export { default as Spinbutton } from './Spinbutton';
 export { default as Swirl } from './Swirl';
 export { default as Tag } from './Tag';
 export { default as TagInput } from './TagInput';

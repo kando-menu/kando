@@ -16,13 +16,14 @@ import {
   ShowMenuRequest,
   Menu,
   MenuItem,
+  Workflow,
   WMInfo,
   SelectionSource,
-  InteractionTarget,
+  MenuInteractionType,
+  RootMenuItem,
 } from '../common';
-import { IPCCallbacks } from '../common/ipc';
-import { ItemActionRegistry } from './item-actions/item-action-registry';
-import { Notification } from './utils/notification';
+import { IPCCallback } from '../common/ipc';
+import { WorkflowExecutor } from './workflow-executor';
 import { KandoApp } from './app';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -47,6 +48,12 @@ export class MenuWindow extends BrowserWindow {
    * trigger some achievements.
    */
   public lastSelections: { time: number; date: Date }[] = [];
+
+  /**
+   * This will be set to false once a meaningful interaction with the menu has been made
+   * since the menu was shown. It is used to trigger some achievements.
+   */
+  public noopInteraction = true;
 
   /**
    * This index is used to select the next menu from the list of menus which would match
@@ -74,9 +81,18 @@ export class MenuWindow extends BrowserWindow {
   /** This timeout is used to hide the window after the fade-out animation. */
   private hideTimeout: NodeJS.Timeout = null;
 
+  /** Resolves once a closeMenu request has been finalized and the window is hidden. */
+  private pendingCloseMenuPromise?: Promise<void>;
+
+  /** Stores the resolver for pendingCloseMenuPromise while a close is in progress. */
+  private resolvePendingCloseMenu?: () => void;
+
+  /** Stores the rejecter for pendingCloseMenuPromise while a close is in progress. */
+  private rejectPendingCloseMenu?: (error: unknown) => void;
+
   constructor(
     private kando: KandoApp,
-    private ipcCallbacks: IPCCallbacks
+    private ipcCallback: IPCCallback
   ) {
     const display = screen.getPrimaryDisplay();
 
@@ -187,7 +203,7 @@ export class MenuWindow extends BrowserWindow {
 
         // If the 'sameShortcutBehavior' is set to 'close', we hide the menu.
         if (sameShortcutBehavior === 'close') {
-          this.webContents.send('menu-window.hide-menu');
+          this.closeMenu();
           return;
         }
 
@@ -227,6 +243,10 @@ export class MenuWindow extends BrowserWindow {
 
       // Push the current shortcuts to the stack and inhibit the menu's shortcut
       if (shortcut && shortcut.length > 0) {
+        if (this.shortcutInhibitionID > 0) {
+          await this.kando.getBackend().releaseInhibition(this.shortcutInhibitionID);
+        }
+
         this.shortcutInhibitionID = await this.kando
           .getBackend()
           .inhibitShortcut(shortcut);
@@ -237,6 +257,7 @@ export class MenuWindow extends BrowserWindow {
     // will be passed to the action as well.
     this.lastMenu = menu;
     this.lastRequest = request;
+    this.noopInteraction = true;
 
     // On Windows, we have to show the window before we can move it. Otherwise, the
     // window will not be moved to the correct monitor.
@@ -314,8 +335,6 @@ export class MenuWindow extends BrowserWindow {
         },
       }
     );
-
-    this.ipcCallbacks.onOpen();
   }
 
   /** This shows the window. */
@@ -354,13 +373,68 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
+   * This sends a message to the renderer process to close the current submenu. The
+   * renderer will handle this by hiding the current submenu and showing the parent menu
+   * again. If there is no parent menu, nothing will happen.
+   */
+  public closeSubmenu() {
+    if (this.isVisible()) {
+      this.webContents.send(
+        'menu-window.trigger-interaction',
+        MenuInteractionType.eCloseSubmenu
+      );
+    }
+  }
+
+  /**
    * This hides the window. It will wait for the fade-out animation to finish before
    * actually hiding the window.
    */
-  public override hide() {
-    if (this.isVisible()) {
-      this.webContents.send('menu-window.hide-menu');
-      this.visible = false;
+  public async closeMenu() {
+    if (!this.isVisible()) {
+      return;
+    }
+
+    // If a close request is already in flight, return the existing promise.
+    if (this.pendingCloseMenuPromise) {
+      return this.pendingCloseMenuPromise;
+    }
+
+    this.pendingCloseMenuPromise = new Promise<void>((resolve, reject) => {
+      this.resolvePendingCloseMenu = () => {
+        this.resolvePendingCloseMenu = undefined;
+        this.rejectPendingCloseMenu = undefined;
+        this.pendingCloseMenuPromise = undefined;
+        resolve();
+      };
+
+      this.rejectPendingCloseMenu = (error: unknown) => {
+        this.resolvePendingCloseMenu = undefined;
+        this.rejectPendingCloseMenu = undefined;
+        this.pendingCloseMenuPromise = undefined;
+        reject(error);
+      };
+    });
+
+    this.webContents.send(
+      'menu-window.trigger-interaction',
+      MenuInteractionType.eCloseMenu
+    );
+
+    return this.pendingCloseMenuPromise;
+  }
+
+  /** Resolves a pending closeMenu promise if there is one. */
+  private settlePendingCloseMenu() {
+    if (this.resolvePendingCloseMenu) {
+      this.resolvePendingCloseMenu();
+    }
+  }
+
+  /** Rejects a pending closeMenu promise if there is one. */
+  private failPendingCloseMenu(error: unknown) {
+    if (this.rejectPendingCloseMenu) {
+      this.rejectPendingCloseMenu(error);
     }
   }
 
@@ -374,13 +448,9 @@ export class MenuWindow extends BrowserWindow {
   }
 
   /**
-   * This hides the window. This method also accepts a delay parameter which can be used
-   * to delay the hiding of the window. This is useful when we want to show a fade-out
-   * animation.
-   *
-   * When Electron windows are hidden, input focus is not necessarily returned to the
-   * topmost window below the hidden window. This is a problem if we want to simulate key
-   * presses.
+   * This hides the window. When Electron windows are hidden, input focus is not
+   * necessarily returned to the topmost window below the hidden window. This is a problem
+   * if we want to simulate key presses.
    *
    * - On Windows, we have to minimize the window instead. This leads to another issue:
    *   https://github.com/kando-menu/kando/issues/375. To make this weird little window
@@ -393,7 +463,7 @@ export class MenuWindow extends BrowserWindow {
    *
    * See also: https://stackoverflow.com/questions/50642126/previous-window-focus-electron
    */
-  private async hideWindow() {
+  public async hideWindow() {
     this.visible = false;
 
     if (this.hideTimeout) {
@@ -607,8 +677,8 @@ export class MenuWindow extends BrowserWindow {
    */
   private pathToArray(path: string): number[] {
     return path
-      .substring(1)
       .split('/')
+      .filter((x) => x.length > 0)
       .map((x: string) => parseInt(x));
   }
 
@@ -620,18 +690,26 @@ export class MenuWindow extends BrowserWindow {
    *
    * @param root The root item of the menu.
    * @param path The path to the menu item to select.
-   * @returns The menu item at the given path.
-   * @throws If the path is invalid.
+   * @returns The menu item at the given path or null if no item is found at the path.
    */
-  private getMenuItemAtPath(root: DeepReadonly<MenuItem>, path: string) {
-    let item = root;
-    const indices = this.pathToArray(path);
+  private getMenuItemAtPath(
+    root: DeepReadonly<RootMenuItem>,
+    path: number[]
+  ): DeepReadonly<MenuItem> | null {
+    if (path.length === 0) {
+      return root;
+    }
 
-    for (const index of indices) {
-      if (!item.children || index >= item.children.length) {
-        throw new Error(`Invalid path "${path}".`);
+    let item: DeepReadonly<MenuItem> = root;
+
+    for (const index of path) {
+      if (item.type !== 'submenu' && item.type !== 'root') {
+        return null;
       }
 
+      if (!item.children || index < 0 || index >= item.children.length) {
+        return null;
+      }
       item = item.children[index];
     }
 
@@ -665,66 +743,98 @@ export class MenuWindow extends BrowserWindow {
         .movePointer(Math.floor(dist.x * scale), Math.floor(dist.y * scale));
     });
 
-    // When the user selects an item, we execute the corresponding action. Depending on
-    // the action, we might need to wait for the fade-out animation to finish before we
-    // execute the action.
+    // When the user performs an interaction with the menu, we need to execute the
+    // corresponding workflow. We also report the interaction to whoever requested the
+    // menu and track some achievements.
     ipcMain.on(
-      'menu-window.select-item',
-      (
+      'menu-window.finalize-interaction',
+      async (
         event,
-        target: InteractionTarget,
-        path: string,
+        type: MenuInteractionType,
+        path: number[],
         time: number,
         source: SelectionSource
       ) => {
-        const pathArray = this.pathToArray(path);
+        // In any case, we report the interaction to whoever requested the menu.
+        this.ipcCallback(type, path);
 
-        if (target === InteractionTarget.eItem) {
-          const execute = (item: DeepReadonly<MenuItem>) => {
-            ItemActionRegistry.getInstance()
-              .execute(item, this.kando)
-              .catch((error) => {
-                Notification.show({
-                  title: 'Failed to execute action',
-                  message: error instanceof Error ? error.message : error,
-                  type: 'error',
-                });
-              });
-          };
+        // For open-menu, and close-submenu interactions, we do not need to execute any
+        // workflows.
+        if (
+          type === MenuInteractionType.eOpenMenu ||
+          type === MenuInteractionType.eCloseSubmenu
+        ) {
+          return;
+        }
 
-          let item: DeepReadonly<MenuItem>;
-          let executeDelayed = false;
-
+        // If the menu should be closed, we hide the window and stop here. There is also
+        // no workflow to execute in this case. We only check whether no workflow was
+        // executed in order to track the "cancels" achievement.
+        if (type === MenuInteractionType.eCloseMenu) {
           try {
-            // Find the selected item.
-            item = this.getMenuItemAtPath(this.lastMenu.root, path);
-
-            // If the action is not delayed, we execute it immediately.
-            executeDelayed = ItemActionRegistry.getInstance().delayedExecution(item);
-            if (!executeDelayed) {
-              execute(item);
-            }
+            await this.hideWindow();
+            this.settlePendingCloseMenu();
           } catch (error) {
-            Notification.show({
-              title: 'Failed to select item',
-              message: error instanceof Error ? error.message : error,
-              type: 'error',
-            });
+            this.failPendingCloseMenu(error);
+            throw error;
           }
 
-          // Also wait with the execution of the selected action until the fade-out
-          // animation is finished to make sure that any resulting events (such as virtual
-          // key presses) are not captured by the window.
-          this.hideWindow().then(() => {
-            // If the action is delayed, we execute it after the window is hidden.
-            if (executeDelayed) {
-              execute(item);
-            }
-          });
+          if (this.noopInteraction) {
+            this.kando.achievementTracker.incrementStat('cancels');
+          }
+          return;
+        }
 
-          // Track selection for achievements.
+        const item = this.getMenuItemAtPath(this.lastMenu.root, path);
+
+        // The user clicked the root menu item.
+        if (type === MenuInteractionType.eActivateSubmenu && item.type === 'root') {
+          if (this.lastMenu.root.activateWorkflow) {
+            this.executeWorkflow(this.lastMenu.root.activateWorkflow);
+          }
+          return;
+        }
+
+        if (!item) {
+          console.error('No item found at path: ', path);
+          return;
+        }
+
+        // If the target of the selection is a submenu, we execute its open-workflow.
+        if (type === MenuInteractionType.eOpenSubmenu && item.type === 'submenu') {
+          if (item.openWorkflow) {
+            this.executeWorkflow(item.openWorkflow);
+          }
+          return;
+        }
+
+        // For buttons and submenus, we may need to execute the hover-workflow.
+        if (
+          (type === MenuInteractionType.eHoverButton && item.type === 'button') ||
+          (type === MenuInteractionType.eHoverSubmenu && item.type === 'submenu')
+        ) {
+          if (item.hoverWorkflow) {
+            this.executeWorkflow(item.hoverWorkflow);
+          }
+          return;
+        }
+
+        // For submenus, there is also the activate-workflow.
+        if (type === MenuInteractionType.eActivateSubmenu && item.type === 'submenu') {
+          if (item.activateWorkflow) {
+            this.executeWorkflow(item.activateWorkflow);
+          }
+          return;
+        }
+
+        // Finally, there is the select-workflow for buttons.
+        if (type === MenuInteractionType.eSelectButton && item.type === 'button') {
+          if (item.selectWorkflow) {
+            this.executeWorkflow(item.selectWorkflow);
+          }
+
           this.kando.achievementTracker.onSelectionMade(
-            Math.min(Math.max(pathArray.length, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
+            Math.min(Math.max(path.length, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
             time,
             source
           );
@@ -770,28 +880,25 @@ export class MenuWindow extends BrowserWindow {
             }
           }
         }
-
-        // Call the provided callbacks if they exist.
-        this.ipcCallbacks.onSelect(target, pathArray);
       }
     );
-
-    // When the user hovers a menu item, we report this to whoever requested the menu.
-    ipcMain.on('menu-window.hover-item', (event, target, path) => {
-      this.ipcCallbacks.onHover(target, this.pathToArray(path));
-    });
-
-    // We do not hide the window immediately when the user aborts a selection. Instead, we
-    // wait for the fade-out animation to finish.
-    ipcMain.on('menu-window.cancel-selection', () => {
-      this.hideWindow();
-      this.ipcCallbacks.onCancel();
-      this.kando.achievementTracker.incrementStat('cancels');
-    });
 
     // Show the settings window when the user clicks on the settings button in the menu.
     ipcMain.on('menu-window.show-settings', () => {
       this.kando.showSettings();
     });
+  }
+
+  /**
+   * Small helper method to execute a given workflow.
+   *
+   * @param workflow The workflow to execute.
+   */
+  private executeWorkflow(workflow: DeepReadonly<Workflow>) {
+    if (this.noopInteraction) {
+      this.noopInteraction = WorkflowExecutor.getInstance().isNoopWorkflow(workflow);
+    }
+
+    WorkflowExecutor.getInstance().executeWorkflow(workflow, this.kando);
   }
 }

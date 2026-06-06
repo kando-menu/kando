@@ -12,19 +12,26 @@ import { WindowWithAPIs } from '../../settings-window-api';
 declare const window: WindowWithAPIs;
 
 import React from 'react';
+import i18next from 'i18next';
 import classNames from 'classnames/bind';
+import { TbCopy, TbTrash, TbPencil } from 'react-icons/tb';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import * as classes from './MenuPreview.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import { AchievementStatsNumberKeys } from '../../../common';
+import {
+  AchievementStatsNumberKeys,
+  ChildMenuItem,
+  RootMenuItem,
+  SubmenuMenuItem,
+  ActionTypeRegistry,
+} from '../../../common';
 import * as math from '../../../common/math';
 import * as utils from './utils';
 
 import { ThemedIcon } from '../common';
-import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
 import { ensureUniqueKeys } from '../../utils';
 
 /**
@@ -64,7 +71,7 @@ export default function MenuPreview() {
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
   const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
-  const deleteMenu = useMenuSettings((state) => state.deleteMenu);
+  const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
 
   // When the user selects a submenu or navigates back to the parent menu, a short
   // transition animation is shown. The new menu fades in from the direction of the
@@ -101,6 +108,10 @@ export default function MenuPreview() {
   const [dropInto, setDropInto] = React.useState(false);
   const [tempItem, setTempItem] = React.useState<RenderedMenuItem | null>(null);
   const [dragAngle, setDragAngle] = React.useState<number | null>(null);
+  const [editedSubmenuPath, setEditedSubmenuPath] = React.useState<string | null>(null);
+
+  const selectedChildPathKey = `${String(selectedMenu)}:${selectedChildPath.join('.')}`;
+  const editingSelectedSubmenu = editedSubmenuPath === selectedChildPathKey;
 
   // Some booleans matching to the three cases explained above to make the code below more
   // readable.
@@ -121,7 +132,7 @@ export default function MenuPreview() {
   // is selected). If the selection path is empty, the root menu is the center item. We
   // also store the index of the selected leaf child if it is not a submenu. If the center
   // is selected, the index is -1.
-  let centerItem = menu.root;
+  let centerItem: RootMenuItem | SubmenuMenuItem = menu.root;
   let selectedChild = -1;
   let showingRootMenu = true;
   let childAngles = math.computeItemAngles(centerItem.children);
@@ -130,9 +141,12 @@ export default function MenuPreview() {
 
   for (let i = 0; i < selectedChildPath.length; i++) {
     const childIndex = selectedChildPath[i];
-    const child = centerItem.children[childIndex];
-    const type = ItemTypeRegistry.getInstance().getType(child.type);
-    if (type?.hasChildren) {
+    const child = centerItem.children[childIndex] as ChildMenuItem;
+    const selectedSubmenuShouldOpen =
+      child.type === 'submenu' &&
+      (editingSelectedSubmenu || i < selectedChildPath.length - 1);
+
+    if (selectedSubmenuShouldOpen) {
       showingRootMenu = false;
       parentAngle = utils.getParentAngle(childAngles[childIndex]);
       centerItem = child;
@@ -312,22 +326,29 @@ export default function MenuPreview() {
 
   // Adds the given index to the selected menu path if the center is currently selected.
   // Else a child was selected and the hence the last index of the path is replaced.
-  const selectChild = (which: number, doAnimation: boolean) => {
+  const getChildPath = (which: number) => {
     if (selectedChild === -1) {
-      selectChildPath(selectedChildPath.concat(which));
-    } else {
-      selectChildPath(selectedChildPath.slice(0, -1).concat(which));
+      return selectedChildPath.concat(which);
     }
 
-    // If the selected child is a submenu, we need to trigger a transition by changing
-    // the key of the CSSTransition component.
-    if (doAnimation) {
-      const child = centerItem.children[which];
-      const type = ItemTypeRegistry.getInstance().getType(child.type);
-      if (type?.hasChildren) {
-        setTransitionPing(!transitionPing);
-        setTransitionAngle(childAngles[which]);
-      }
+    return selectedChildPath.slice(0, -1).concat(which);
+  };
+
+  const selectChild = (which: number) => {
+    setEditedSubmenuPath(null);
+    selectChildPath(getChildPath(which));
+  };
+
+  const editChild = (which: number) => {
+    const child = centerItem.children[which];
+    const childPath = getChildPath(which);
+
+    selectChildPath(childPath);
+
+    if (child.type === 'submenu') {
+      setEditedSubmenuPath(`${String(selectedMenu)}:${childPath.join('.')}`);
+      setTransitionPing(!transitionPing);
+      setTransitionAngle(childAngles[which]);
     }
   };
 
@@ -335,7 +356,12 @@ export default function MenuPreview() {
   // path. If the center is already selected, nothing is done.
   const selectCenter = () => {
     if (selectedChild !== -1) {
-      selectChildPath(selectedChildPath.slice(0, -1));
+      setEditedSubmenuPath(
+        centerItemPath.length > 0
+          ? `${String(selectedMenu)}:${centerItemPath.join('.')}`
+          : null
+      );
+      selectChildPath(centerItemPath);
     }
   };
 
@@ -343,6 +369,8 @@ export default function MenuPreview() {
   // refers to an item, the last two indices are removed so that the parent submenu is
   // selected.
   const selectParent = () => {
+    setEditedSubmenuPath(null);
+
     if (selectedChild === -1) {
       selectChildPath(selectedChildPath.slice(0, -1));
     } else {
@@ -354,14 +382,79 @@ export default function MenuPreview() {
     setTransitionAngle(parentAngle);
   };
 
+  // Renders a small trash and duplicate button next to the child item if it is currently
+  // selected.
+  const renderChildButtons = (renderedChild: RenderedMenuItem, angle: number) => {
+    if (renderedChild.index < 0 || renderedChild.index >= centerItem.children.length) {
+      return null;
+    }
+
+    // Only the selected child item has the buttons.
+    if (renderedChild.index !== selectedChild || isDraggedChild(renderedChild)) {
+      return null;
+    }
+
+    const trashDir = math.getDirection(angle + 25, 1);
+    const editDir = math.getDirection(angle, 1);
+    const copyDir = math.getDirection(angle - 25, 1);
+
+    return (
+      <>
+        <div
+          className={classes.tool}
+          style={utils.makeCSSProperties('dir', trashDir)}
+          data-tooltip-content={i18next.t('settings.delete-menu-item')}
+          data-tooltip-id="main-tooltip"
+          onClick={() => {
+            deleteMenuItem(selectedMenu, selectedChildPath);
+            selectCenter();
+          }}>
+          <TbTrash />
+        </div>
+        {/* The edit button is only shown for submenus as only they can be edited. */}
+        {centerItem.children[renderedChild.index]?.type === 'submenu' ? (
+          <div
+            className={classes.tool}
+            style={utils.makeCSSProperties('dir', editDir)}
+            data-tooltip-content={i18next.t('settings.edit-submenu')}
+            data-tooltip-id="main-tooltip"
+            onClick={() => {
+              editChild(renderedChild.index);
+            }}>
+            <TbPencil />
+          </div>
+        ) : null}
+        <div
+          className={classes.tool}
+          style={utils.makeCSSProperties('dir', copyDir)}
+          data-tooltip-content={i18next.t('settings.duplicate-menu-item')}
+          data-tooltip-id="main-tooltip"
+          onClick={(event) => {
+            event.stopPropagation();
+            duplicateMenuItem(selectedMenu, selectedChildPath);
+          }}>
+          <TbCopy />
+        </div>
+      </>
+    );
+  };
+
   // Assembles a list of divs for the grandchild items of the given child item.
-  const renderGrandchildren = (child: RenderedMenuItem, angle: number) => {
-    if (!centerItem.children || !centerItem.children[child.index]?.children) {
+  const renderGrandchildren = (renderedChild: RenderedMenuItem, angle: number) => {
+    // The drop indicator for dropping into a submenu is rendered as a "ghost" child item
+    // with index -1.
+    if (renderedChild.index < 0 || renderedChild.index >= centerItem.children.length) {
+      return null;
+    }
+
+    const child = centerItem.children[renderedChild.index];
+
+    if (child.type !== 'submenu') {
       return null;
     }
 
     const grandchildAngles = math.computeItemAngles(
-      centerItem.children[child.index].children,
+      child.children,
       utils.getParentAngle(angle)
     );
 
@@ -393,14 +486,16 @@ export default function MenuPreview() {
   const renderChild = (child: RenderedMenuItem, index: number) => {
     let angleDragMayStart = false;
     let clickedDownContainer: HTMLDivElement | null = null;
-    const selected = selectedChild >= 0 && selectedChild === child.index;
+    const childIndex = child.index;
+    const isSelected = selectedChild >= 0 && selectedChild === childIndex;
+    const isSubmenu = centerItem.children[childIndex]?.type === 'submenu';
 
     return (
       <div
         key={child.key}
         className={cx({
           child: true,
-          selected,
+          selected: isSelected,
           dragging: isDraggedChild(child),
           dropping: dropInto && dropIndex === child.index,
         })}
@@ -416,7 +511,7 @@ export default function MenuPreview() {
           event.dataTransfer.effectAllowed = 'copyMove';
           event.dataTransfer.setData(
             'kando/child-path',
-            JSON.stringify(centerItemPath.concat(index))
+            JSON.stringify(centerItemPath.concat(childIndex))
           );
           setDragIndex(index);
           setDropIndex(index);
@@ -424,15 +519,25 @@ export default function MenuPreview() {
         }}
         onKeyDown={(event) => {
           // Select the child if the user presses enter or space. This is required for
-          // keyboard navigation in the menu preview.
+          // keyboard navigation in the menu preview. If the child is already selected
+          // and a submenu, the user can also open the submenu with enter or space.
           if (event.key === 'Enter' || event.key === ' ') {
-            selectChild(index, true);
+            if (isSubmenu && isSelected) {
+              editChild(childIndex);
+            } else {
+              selectChild(childIndex);
+            }
           }
 
           // Delete the item if the user presses the delete key.
-          if (event.key === 'Delete' || event.key === 'Backspace') {
-            deleteMenuItem(selectedMenu, centerItemPath.concat(index));
+          if (event.key === 'Delete') {
+            deleteMenuItem(selectedMenu, centerItemPath.concat(childIndex));
             selectCenter();
+          }
+        }}
+        onDoubleClick={() => {
+          if (isSubmenu) {
+            editChild(childIndex);
           }
         }}
         onPointerDown={() => {
@@ -475,14 +580,14 @@ export default function MenuPreview() {
             }
           }
         }}
-        onPointerUp={() => {
+        onPointerUp={(event) => {
           if (angleDragOngoing) {
             setDragAngle(null);
             setDragIndex(null);
             angleDragMayStart = false;
 
             // If the angle was changed, we need to update the item in the menu.
-            editMenuItem(selectedMenu, centerItemPath, (center) => {
+            editMenuItem(selectedMenu, centerItemPath, (center: SubmenuMenuItem) => {
               center.children.forEach((item, i) => {
                 item.angle = renderedChildren[i].angle;
               });
@@ -493,38 +598,55 @@ export default function MenuPreview() {
           // interaction, onPointerUp is also called at the end of a drag operation. In
           // this case we do not want to select the child.
           else if (
-            !selected &&
+            !isSelected &&
             dragIndex === null &&
             clickedDownContainer === currentContainer.current
           ) {
-            selectChild(index, true);
+            // With right mouse button or long touch, the user can open submenus without
+            // double-clicking.
+            if (event.button === 2 && isSubmenu) {
+              editChild(childIndex);
+            } else {
+              selectChild(childIndex);
+            }
           }
         }}>
         {child.iconTheme && child.icon ? (
           <ThemedIcon name={child.icon} size="100%" theme={child.iconTheme} />
         ) : null}
         {renderGrandchildren(child, renderedChildAngles[index])}
+        {renderChildButtons(child, renderedChildAngles[index])}
       </div>
     );
   };
 
   // Renders the lock icon for the given child item. The lock is locked if the item has a
   // fixed angle.
-  const renderLock = (child: RenderedMenuItem, index: number) => {
+  const renderLock = (renderedChild: RenderedMenuItem, index: number) => {
+    // Only the selected child and children which are currently locked have a lock icon.
+    if (
+      (renderedChild.index !== selectedChild && renderedChild.angle === undefined) ||
+      isDraggedChild(renderedChild)
+    ) {
+      return null;
+    }
+
     return (
       <div
-        key={child.key}
+        key={renderedChild.key}
+        data-tooltip-content={i18next.t('settings.fix-menu-item-angle')}
+        data-tooltip-id="main-tooltip"
         className={cx({
           lock: true,
-          locked: child.angle !== undefined,
+          locked: renderedChild.angle !== undefined,
         })}
         style={utils.makeCSSProperties('dir', childDirections[index])}
         onClick={() => {
           // If the item is locked, we unlock it. If it is not locked, we lock it. This is
           // done by removing the angle from the item or setting it to the current angle
           // of the item.
-          const itemPath = centerItemPath.concat(index);
-          editMenuItem(selectedMenu, itemPath, (item) => {
+          const itemPath = centerItemPath.concat(renderedChild.index);
+          editMenuItem(selectedMenu, itemPath, (item: ChildMenuItem) => {
             if (item.angle !== undefined) {
               delete item.angle;
             } else {
@@ -534,7 +656,7 @@ export default function MenuPreview() {
           });
         }}>
         <ThemedIcon
-          name={child.angle !== undefined ? 'lock' : 'lock_open'}
+          name={renderedChild.angle !== undefined ? 'lock' : 'lock_open'}
           size="100%"
           theme="material-symbols-rounded"
         />
@@ -563,10 +685,9 @@ export default function MenuPreview() {
 
     // Compile a list of potential drop targets.
     const children = centerItem.children.map((child) => {
-      const type = ItemTypeRegistry.getInstance().getType(child.type);
       return {
         angle: child.angle,
-        dropTarget: type?.hasChildren,
+        dropTarget: child.type === 'submenu',
       };
     });
 
@@ -615,13 +736,19 @@ export default function MenuPreview() {
             <div
               ref={currentContainer}
               className={classes.transitionContainer}
+              onKeyDown={(event) => {
+                // Select the parent item if the user presses the backspace key.
+                if (event.key === 'Backspace' && !showingRootMenu) {
+                  selectParent();
+                }
+              }}
               onDragEnter={(event) => {
                 // If we enter the container during an external drag, we check whether
                 // we could create a new item from the dragged data. If this is the case,
                 // we create a temporary dragged item which will be used as a "drop
                 // indicator" item.
                 if (tempItem === null && dragIndex === null) {
-                  const supported = ItemTypeRegistry.getInstance().hasSupportedDataType(
+                  const supported = ActionTypeRegistry.getInstance().hasSupportedDataType(
                     event.dataTransfer
                   );
 
@@ -678,15 +805,15 @@ export default function MenuPreview() {
                     // case we need to shift the selected child index by one in the
                     // corresponding direction.
                     if (selectedChild === dragIndex) {
-                      selectChild(dropIndex, false);
+                      selectChild(dropIndex);
                     } else if (dragIndex < selectedChild && selectedChild <= dropIndex) {
-                      selectChild(selectedChild - 1, false);
+                      selectChild(selectedChild - 1);
                     } else if (dragIndex > selectedChild && selectedChild >= dropIndex) {
-                      selectChild(selectedChild + 1, false);
+                      selectChild(selectedChild + 1);
                     }
                   }
                 } else {
-                  const item = await ItemTypeRegistry.getInstance().createItem(
+                  const item = await ActionTypeRegistry.getInstance().createItem(
                     event.dataTransfer
                   );
 
@@ -708,30 +835,45 @@ export default function MenuPreview() {
                     if (dropIndex === -1 && dropInto) {
                       // Create new item in parent.
                       const parentPath = centerItemPath.slice(0, -1);
-                      editMenuItem(selectedMenu, parentPath, (parent) => {
-                        parent.children.push(item);
-                        addAchievementStats(parentPath.length, parent.children.length);
-                        return parent;
-                      });
+                      editMenuItem(
+                        selectedMenu,
+                        parentPath,
+                        (parent: SubmenuMenuItem) => {
+                          parent.children.push(item);
+                          addAchievementStats(parentPath.length, parent.children.length);
+                          return parent;
+                        }
+                      );
                     } else if (dropIndex >= 0 && dropInto) {
                       // Create new item in submenu.
                       const submenuPath = centerItemPath.concat(dropIndex);
-                      editMenuItem(selectedMenu, submenuPath, (submenu) => {
-                        submenu.children.push(item);
-                        addAchievementStats(submenuPath.length, submenu.children.length);
-                        return submenu;
-                      });
+                      editMenuItem(
+                        selectedMenu,
+                        submenuPath,
+                        (submenu: SubmenuMenuItem) => {
+                          submenu.children.push(item);
+                          addAchievementStats(
+                            submenuPath.length,
+                            submenu.children.length
+                          );
+                          return submenu;
+                        }
+                      );
                     } else if (dropIndex >= 0) {
                       // Create new item among siblings and select it.
-                      editMenuItem(selectedMenu, centerItemPath, (center) => {
-                        center.children.splice(dropIndex, 0, item);
-                        addAchievementStats(
-                          centerItemPath.length,
-                          center.children.length
-                        );
+                      editMenuItem(
+                        selectedMenu,
+                        centerItemPath,
+                        (center: SubmenuMenuItem) => {
+                          center.children.splice(dropIndex, 0, item);
+                          addAchievementStats(
+                            centerItemPath.length,
+                            center.children.length
+                          );
 
-                        return center;
-                      });
+                          return center;
+                        }
+                      );
                       selectChildPath(centerItemPath.concat(dropIndex));
                     }
                   }
@@ -781,18 +923,6 @@ export default function MenuPreview() {
                   if (event.key === 'Enter' || event.key === ' ') {
                     selectCenter();
                   }
-
-                  // Delete the menu if the user presses the delete key and the center
-                  // item is the root menu. If it is a submenu, we delete the submenu
-                  // instead.
-                  if (event.key === 'Delete' || event.key === 'Backspace') {
-                    if (showingRootMenu) {
-                      deleteMenu(selectedMenu);
-                    } else {
-                      deleteMenuItem(selectedMenu, centerItemPath);
-                      selectParent();
-                    }
-                  }
                 }}>
                 <ThemedIcon
                   name={centerItem.icon}
@@ -808,14 +938,7 @@ export default function MenuPreview() {
               {
                 // Add the lock icons for each child item. When locked, the item cannot be
                 // reordered via drag and drop, but its fixed angle can be adjusted instead.
-                renderedChildren.map((child, index) => {
-                  // The dragged item does not have a lock icon.
-                  if (isDraggedChild(child)) {
-                    return null;
-                  }
-
-                  return renderLock(child, index);
-                })
+                renderedChildren.map(renderLock)
               }
             </div>
           </CSSTransition>

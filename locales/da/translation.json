@@ -166,16 +166,11 @@
     },
     "menu-items": {
         "text": {
-            "name": "Indsæt tekst",
-            "description": "Indsætter den givne tekst.",
             "placeholder": "Indsæt en hvilken som helst tekst…",
             "tip-1": "Denne handling bruger din udklipsholder til at indsætte teksten. Når du har brugt handlingen, vil udklipsholderen indeholde teksten."
         },
         "uri": {
             "tip-5": "Brug {{window_name}} til at indsætte navnet på det vindue, der var i fokus, da du åbnede menuen.",
-            "name": "Åben URI",
-            "description": "Åbner hjemmesider og meget mere.",
-            "placeholder": "Indsæt en hvilken som helst URI…",
             "tip-4": "Brug {{app_name}} til at indsætte navnet på den applikation, der var i fokus, da du åbnede menuen.",
             "tip-6": "Brug {{pointer_x}} og {{pointer_y}} til at indsætte den markørposition, hvor menuen blev åbnet.",
             "tip-1": "Du kan bruge URI-elementtypen til at åbne en hjemmeside ved hjælp af http://-protokollen."
@@ -239,6 +234,13 @@
     "backends": {
         "gnome": {
             "error": "Kunne ikke oprette forbindelse til Kando Integration GNOME Shell-udvidelsen. Du kan hente den herfra: {{link}}"
+        }
+    },
+    "menu-actions": {
+        "open-uri": {
+            "name": "Åben URI",
+            "description": "Åbner hjemmesider og meget mere.",
+            "placeholder": "Indsæt en hvilken som helst URI…"
         }
     }
 }

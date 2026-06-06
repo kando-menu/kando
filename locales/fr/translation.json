@@ -85,53 +85,27 @@
         "command": {
             "command": "Commande",
             "command-info": "Cette commande sera exécutée.",
-            "description": "Lancer une application ou un scripte.",
-            "name": "Exécuter une Commande",
             "tip-1": "Tu peux utiliser l'élément Commande pour lancer des applications ou des scripts.",
             "tip-2": "Si le chemin d'un exécutable contient des espaces, il faut le \"mettre entre guillemets\".",
             "tip-3": "Utilisez {{app_name}} pour insérer le nom de l'application qui était active lorsque vous avez ouvert le menu.",
             "tip-4": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était active lorsque vous avez ouvert le menu.",
             "tip-5": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
-            "placeholder": "Insérer une commande…",
-            "tip-6": "Cliquez [ici]({{link}}) pour savoir comment trouver les commandes pour lancer vos applications.",
-            "isolated": "Exécution isolée",
-            "isolated-info": "La commande sera exécutée dans un environnement vierge, c'est-à-dire qu'elle n'héritera d'aucune variable d'environnement de Kando. Cela peut aider les commandes qui ne démarrent pas correctement.",
-            "detached": "Exécution détachée",
-            "detached-info": "Cela déconnectera la commande de Kando, elle continuera donc à s'exécuter même si Kando est fermé. Ceci peut résoudre des problèmes avec des commandes qui ne démarrent pas correctement.",
-            "choose-app": "Choisir une application…"
+            "tip-6": "Cliquez [ici]({{link}}) pour savoir comment trouver les commandes pour lancer vos applications."
         },
         "file": {
-            "description": "Ouvre un fichier ou dossier.",
             "file": "Chemin d'accès au fichier",
-            "name": "Ouvrir un fichier",
-            "tip-1": "Utilisez ce type d'élément pour ouvrir des fichiers ou dossiers.",
-            "placeholder": "Choisir un fichier ou un dossier…"
+            "tip-1": "Utilisez ce type d'élément pour ouvrir des fichiers ou dossiers."
         },
         "hotkey": {
-            "description": "Exécute un raccourci clavier.",
-            "hotkey": "Raccourci clavier",
-            "name": "Simuler une touche de raccourci",
-            "recording-placeholder": "Écrire le raccourci clavier…",
             "tip-1": "Lors de l'enregistrement du raccourci clavier, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps. Elles peuvent être enfoncées l'une après l'autre.",
             "tip-2": "Si une touche ne peut pas être enregistrée car elle est utilisée par le système, essayez de taper son nom directement.",
-            "hotkey-info": "Ce raccourci clavier est déclenché lorsque l'élément est sélectionné. Lors de l'enregistrement, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps, vous pouvez également les appuyer l'une après l'autre. C'est utile si une touche de raccourci est déjà liée à une action globale !",
             "tip-3": "Cliquez sur [ce lien]({{link}}) pour voir tous les noms de clés valides."
         },
         "macro": {
-            "description": "Exécute une macro clavier.",
-            "name": "Simuler une Macro",
-            "placeholder": "Cliquez sur le rond pour commencer à enregistrer !",
-            "recording-placeholder": "Appuyez sur un touche…",
             "tip-1": "Par défaut, Kando ajoute un délai de 10 millisecondes entre chaque touche. Vous pouvez modifier ce délai à l'aide de la propriété \"delay\".",
             "tip-2": "Vous pouvez également modifier la macro à la main. C'est utile si vous souhaitez ajuster le timing des touches."
         },
-        "redirect": {
-            "description": "Ouvre un autre menu.",
-            "name": "Rediriger"
-        },
         "settings": {
-            "description": "Ouvre la fenêtre de configuration de Kando.",
-            "name": "Ouvrir les paramètres",
             "tip-1": "Ce type d'élément ouvre la fenêtre de configuration de Kando."
         },
         "submenu": {
@@ -149,22 +123,17 @@
             "tip-7": "Vous pouvez supprimer un menu ou un élément de menu à l'aide de l'icône corbeille située en dessous."
         },
         "text": {
-            "description": "Insère un texte donné.",
-            "name": "Coller le texte",
             "placeholder": "Insérez un texte…",
             "tip-1": "Cette action utilise votre presse-papiers pour coller le texte. Après avoir utilisé l'action, le presse-papiers contiendra toujours le texte."
         },
         "uri": {
-            "description": "Ouvre des sites web et plus encore.",
-            "name": "Ouvrir un URI",
             "tip-1": "Vous pouvez utiliser un élément de type URI pour ouvrir un site web à l'aide du protocole \"http://\".",
             "tip-2": "Vous pouvez l'utliser pour ouvrir des schémas d'URI comme slack:// ou zoommtg://.",
             "tip-3": "Il est possible d'utiliser un élément de type URI pour ouvrir un lien \"mailto:\".",
             "tip-4": "Utilisez {{app_name}} pour insérer le nom de l'application qui était active lorsque vous avez ouvert le menu.",
             "tip-5": "Utilisez {{window_name}} pour insérer le nom de la fenêtre qui était active lorsque vous avez ouvert le menu.",
             "tip-6": "Utilisez {{pointer_x}} et {{pointer_y}} pour insérer la position du curseur à l'endroit où le menu a été ouvert.",
-            "uri": "URI",
-            "placeholder": "Insérez un URI…"
+            "uri": "URI"
         },
         "common": {
             "delayed-option": "S'exécute après l'animation de sortie",
@@ -599,5 +568,48 @@
             "description": "Effectuez en moyenne {{n}} sélections consécutives plus rapidement que {{time}} millisecondes."
         },
         "completed-title": "Succès débloqué !"
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Ouvrir un fichier",
+            "description": "Ouvre un fichier ou dossier.",
+            "placeholder": "Choisir un fichier ou un dossier…"
+        },
+        "execute-command": {
+            "name": "Exécuter une Commande",
+            "description": "Lancer une application ou un scripte.",
+            "choose-app": "Choisir une application…",
+            "placeholder": "Insérer une commande…",
+            "isolated": "Exécution isolée",
+            "isolated-info": "La commande sera exécutée dans un environnement vierge, c'est-à-dire qu'elle n'héritera d'aucune variable d'environnement de Kando. Cela peut aider les commandes qui ne démarrent pas correctement.",
+            "detached-info": "Cela déconnectera la commande de Kando, elle continuera donc à s'exécuter même si Kando est fermé. Ceci peut résoudre des problèmes avec des commandes qui ne démarrent pas correctement.",
+            "detached": "Exécution détachée"
+        },
+        "open-menu": {
+            "name": "Rediriger",
+            "description": "Ouvre un autre menu."
+        },
+        "open-settings": {
+            "name": "Ouvrir les paramètres",
+            "description": "Ouvre la fenêtre de configuration de Kando."
+        },
+        "open-uri": {
+            "name": "Ouvrir un URI",
+            "description": "Ouvre des sites web et plus encore.",
+            "placeholder": "Insérez un URI…"
+        },
+        "simulate-hotkey": {
+            "name": "Simuler une touche de raccourci",
+            "description": "Exécute un raccourci clavier.",
+            "recording-placeholder": "Écrire le raccourci clavier…",
+            "hotkey": "Raccourci clavier",
+            "hotkey-info": "Ce raccourci clavier est déclenché lorsque l'élément est sélectionné. Lors de l'enregistrement, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps, vous pouvez également les appuyer l'une après l'autre. C'est utile si une touche de raccourci est déjà liée à une action globale !"
+        },
+        "execute-macro": {
+            "name": "Simuler une Macro",
+            "description": "Exécute une macro clavier.",
+            "placeholder": "Cliquez sur le rond pour commencer à enregistrer !",
+            "recording-placeholder": "Appuyez sur un touche…"
+        }
     }
 }

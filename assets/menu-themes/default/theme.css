@@ -98,13 +98,9 @@
     background-color: var(--hover-color);
   }
 
-  /* If the parent or a child node is clicked, we scale it down to normal size. */
+  /* If an item is clicked, we scale it down a bit. */
   &.parent.hovered.clicked>.icon-layer,
-  &.child.hovered.clicked>.icon-layer {
-    transform: scale(0.95);
-  }
-
-  /* If the center node is clicked, we scale it down a bit. */
+  &.child.hovered.clicked>.icon-layer,
   &.active.hovered.clicked>.icon-layer {
     transform: scale(0.95);
   }

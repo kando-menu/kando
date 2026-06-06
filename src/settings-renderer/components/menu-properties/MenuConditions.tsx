@@ -69,8 +69,7 @@ export default function MenuConditions() {
   const [screenConditionRef] = useAutoAnimate({ duration: 250 });
 
   return (
-    <>
-      <h1>{i18next.t('settings.menu-conditions')}</h1>
+    <div className={classes.container}>
       <Note marginBottom={5} marginTop={-5}>
         {i18next.t('settings.menu-conditions-info')}
       </Note>
@@ -310,6 +309,6 @@ export default function MenuConditions() {
           });
         }}
       />
-    </>
+    </div>
   );
 }

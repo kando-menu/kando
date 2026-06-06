@@ -324,14 +324,6 @@
     },
     "menu-items": {
         "command": {
-            "name": "Chạy lệnh",
-            "description": "Khởi chạy ứng dụng hoặc kịch bản.",
-            "choose-app": "Chọn một ứng dụng…",
-            "placeholder": "Chèn bất kỳ lệnh nào…",
-            "isolated-info": "Lệnh này sẽ chạy lệnh trong môi trường sạch, nghĩa là nó sẽ không kế thừa bất kỳ biến môi trường nào từ Kando. Điều này có thể trợ giúp với các lệnh không khởi động đúng cách.",
-            "isolated": "Chạy cô lập",
-            "detached-info": "Thao tác này sẽ ngắt kết nối lệnh khỏi Kando nên nó sẽ tiếp tục chạy ngay cả khi Kando bị đóng. Việc tắt tính năng này có thể giải quyết được sự cố với các lệnh không khởi động đúng cách.",
-            "detached": "Chạy tách rời",
             "tip-1": "Bạn có thể sử dụng loại mục Lệnh để khởi chạy ứng dụng hoặc kịch bản.",
             "tip-2": "Nếu đường dẫn đến tệp thực thi chứa khoảng trắng, bạn nên \"bọc nó trong dấu ngoặc kép\".",
             "tip-3": "Sử dụng {{app_name}} để chèn tên ứng dụng được chú ý khi bạn mở menu.",
@@ -340,36 +332,18 @@
             "tip-6": "Nhấp vào [đây]({{link}}) để tìm hiểu cách tìm các lệnh khởi chạy ứng dụng của bạn."
         },
         "file": {
-            "name": "Mở tệp",
-            "description": "Mở một tệp hoặc thư mục.",
-            "placeholder": "Chọn một tập tin hoặc thư mục…",
             "tip-1": "Bạn có thể sử dụng loại mục này để mở tập tin hoặc thư mục."
         },
         "hotkey": {
-            "name": "Mô phỏng phím tắt",
-            "description": "Nhấn tổ hợp phím.",
-            "hotkey-info": "Phím tắt này sẽ được kích hoạt khi mục được chọn. Khi ghi phím tắt, bạn không nhất thiết phải nhấn tất cả các phím cùng một lúc mà có thể nhấn lần lượt từng phím. Điều này rất hữu ích nếu một phím tắt đã được liên kết với một số hành động chung!",
-            "hotkey": "Phím tắt",
-            "recording-placeholder": "Nhập phím tắt…",
             "tip-1": "Khi ghi phím tắt, bạn không cần phải nhấn tất cả các phím cùng một lúc. Bạn có thể nhấn chúng lần lượt.",
             "tip-2": "Nếu bạn không thể ghi lại một khóa vì nó được hệ thống sử dụng, hãy thử nhập trực tiếp tên của nó.",
             "tip-3": "Nhấp vào [liên kết này]({{link}}) để xem tất cả các tên khóa hợp lệ."
         },
         "macro": {
-            "name": "Thực thi macro",
-            "description": "Nhập macro bàn phím.",
-            "placeholder": "Nhấn nút ghi để bắt đầu ghi!",
-            "recording-placeholder": "Nhấn phím bất kỳ…",
             "tip-1": "Theo mặc định, Kando thêm độ trễ 10 mili giây trước mỗi sự kiện quan trọng. Bạn có thể thay đổi điều này bằng thuộc tính \"độ trễ\".",
             "tip-2": "Bạn cũng có thể chỉnh sửa macro bằng tay. Điều này rất hữu ích nếu bạn muốn điều chỉnh thời gian của các phím."
         },
-        "redirect": {
-            "name": "Chuyển hướng",
-            "description": "Mở một menu khác."
-        },
         "settings": {
-            "name": "Mở Cài đặt",
-            "description": "Mở cửa sổ cài đặt Kando.",
             "tip-1": "Loại mục này sẽ mở cửa sổ cài đặt Kando."
         },
         "submenu": {
@@ -384,15 +358,10 @@
             "tip-7": "Bạn có thể xóa một menu hoặc một mục menu có biểu tượng thùng rác bên dưới."
         },
         "text": {
-            "name": "Dán văn bản",
-            "description": "Chèn văn bản đã cho.",
             "placeholder": "Chèn bất kỳ văn bản nào…",
             "tip-1": "Hành động này sử dụng bộ nhớ tạm của bạn để dán văn bản. Sau khi sử dụng tác vụ, bộ nhớ tạm sẽ chứa văn bản."
         },
         "uri": {
-            "name": "Mở URI",
-            "description": "Mở các trang web và hơn thế nữa.",
-            "placeholder": "Chèn bất kỳ URI nào…",
             "tip-1": "Bạn có thể sử dụng loại mục URI để mở một trang web bằng giao thức http://.",
             "tip-2": "Bạn có thể sử dụng điều này để gọi các lược đồ URI tùy chỉnh như Slack:// hoặc zoommtg://.",
             "tip-3": "Bạn có thể sử dụng loại mục URI để mở liên kết mailto:.",
@@ -580,6 +549,49 @@
         "speedy-selections-streak": {
             "name": "Nhanh hơn suy nghĩ {{tier}}",
             "description": "Thực hiện trung bình {{n}} lựa chọn liên tiếp nhanh hơn {{time}} ms."
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Mở tệp",
+            "description": "Mở một tệp hoặc thư mục.",
+            "placeholder": "Chọn một tập tin hoặc thư mục…"
+        },
+        "execute-command": {
+            "name": "Chạy lệnh",
+            "description": "Khởi chạy ứng dụng hoặc kịch bản.",
+            "choose-app": "Chọn một ứng dụng…",
+            "placeholder": "Chèn bất kỳ lệnh nào…",
+            "isolated": "Chạy cô lập",
+            "isolated-info": "Lệnh này sẽ chạy lệnh trong môi trường sạch, nghĩa là nó sẽ không kế thừa bất kỳ biến môi trường nào từ Kando. Điều này có thể trợ giúp với các lệnh không khởi động đúng cách.",
+            "detached-info": "Thao tác này sẽ ngắt kết nối lệnh khỏi Kando nên nó sẽ tiếp tục chạy ngay cả khi Kando bị đóng. Việc tắt tính năng này có thể giải quyết được sự cố với các lệnh không khởi động đúng cách.",
+            "detached": "Chạy tách rời"
+        },
+        "open-menu": {
+            "name": "Chuyển hướng",
+            "description": "Mở một menu khác."
+        },
+        "open-settings": {
+            "name": "Mở Cài đặt",
+            "description": "Mở cửa sổ cài đặt Kando."
+        },
+        "open-uri": {
+            "name": "Mở URI",
+            "description": "Mở các trang web và hơn thế nữa.",
+            "placeholder": "Chèn bất kỳ URI nào…"
+        },
+        "simulate-hotkey": {
+            "name": "Mô phỏng phím tắt",
+            "description": "Nhấn tổ hợp phím.",
+            "recording-placeholder": "Nhập phím tắt…",
+            "hotkey": "Phím tắt",
+            "hotkey-info": "Phím tắt này sẽ được kích hoạt khi mục được chọn. Khi ghi phím tắt, bạn không nhất thiết phải nhấn tất cả các phím cùng một lúc mà có thể nhấn lần lượt từng phím. Điều này rất hữu ích nếu một phím tắt đã được liên kết với một số hành động chung!"
+        },
+        "execute-macro": {
+            "name": "Thực thi macro",
+            "description": "Nhập macro bàn phím.",
+            "placeholder": "Nhấn nút ghi để bắt đầu ghi!",
+            "recording-placeholder": "Nhấn phím bất kỳ…"
         }
     }
 }

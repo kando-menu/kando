@@ -81,35 +81,19 @@
         "command": {
             "command": "Comando",
             "command-info": "Questo comando verrà eseguito.",
-            "description": "Esegue applicazioni o script.",
-            "name": "Esegui Comando",
             "tip-1": "Puoi usare l'oggetto di tipo Comando per lanciare applicazioni oppure eseguire script.",
             "tip-2": "Se il percorso ad un eseguibile contiene spazi, è necessario \"scriverlo tra virgolette\".",
             "tip-3": "Usa {{app_name}} per inserire il nome dell'applicazione che aveva il focus quando hai aperto il menu.",
             "tip-4": "Usa {{window_name}} per inserire il nome della finestra che aveva il focus quando hai aperto il menu.",
             "tip-5": "Usa {{pointer_x}} e {{pointer_y}} per inserire la posizione del puntatore dove il menu è stato aperto.",
-            "placeholder": "Inserisci un comando…",
-            "tip-6": "Clicca [qui]({{link}}) per imparare come trovare i comandi per lanciare le tue applicazioni.",
-            "isolated": "Esegui isolato",
-            "isolated-info": "Questo inseguirà il comando in un ambiente pulito, questo significa che non ID erediterà nessuna variabile di ambiente da Kando. Questo può essere di aiuto per comandi che non si avviano correttamente.",
-            "detached-info": "Questo scollegherà il comando da Kando, in modo che continui a girare anche quando Kando viene chiuso. Disabilitare questo può risolvere problemi con comandi che non si avviano correttamente.",
-            "detached": "Esegui distaccato"
+            "tip-6": "Clicca [qui]({{link}}) per imparare come trovare i comandi per lanciare le tue applicazioni."
         },
         "hotkey": {
-            "description": "Preme una combinazione di tasti.",
-            "hotkey": "Scorciatoia di Tastiera",
-            "name": "Simula una scorciatoia da tastiera",
-            "recording-placeholder": "Premi una combinazione di tasti…",
             "tip-1": "Quando si registra una scorciatoia da tastiera, non devi premere tutti i tasti contemporaneamente. Puoi premerli uno in seguito all'altro.",
             "tip-2": "Se non puoi registrare un tasto perchè è usato dal sistema, prova a scrivere il suo nome direttamente.",
-            "tip-3": "Clicca [questo link]({{link}}) per vedere tutti i nomi di tasti validi.",
-            "hotkey-info": "Questa scorciatoia sarà attivata quando l'elemento viene selezionato. Quando registri, non devi premere tutti i tasti in una volta, puoi anche premerli uno dopo l'altro. Questo è utile quando una scorciatoia è già associata a qualche azione globale!"
+            "tip-3": "Clicca [questo link]({{link}}) per vedere tutti i nomi di tasti validi."
         },
         "macro": {
-            "description": "Digita una macro.",
-            "name": "Simula una Macro",
-            "placeholder": "Premi il tasto Registra per iniziare a registrare!",
-            "recording-placeholder": "Premi i tasti…",
             "tip-1": "Di base, Kando aggiunge un ritardo di 10ms prima di ciascun evento di digitazione. Puoi cambiarlo con la proprietà \"delay\" (\"ritardo\").",
             "tip-2": "Puoi anche modificare la macro a mano. Questo è utile se vuoi aggiustare il tempismo dei tasti."
         },
@@ -128,37 +112,23 @@
             "tip-7": "Puoi eliminare un menu o un elemento del menu con l'icona del cestino qui sotto."
         },
         "text": {
-            "description": "Inserisci il testo fornito.",
-            "name": "Incolla il testo",
             "placeholder": "Inserisci un testo qualsiasi…",
             "tip-1": "Questa azione utilizza la tua clipboard per incollare il testo. Dopo aver utilizzato l'azione, la clipboard conterrà il testo."
         },
         "uri": {
-            "description": "Apri file o siti web.",
-            "name": "Apri URI",
             "tip-1": "Puoi usare l'oggetto di tipo URI per aprire un sito usando il protocollo http:// .",
             "tip-2": "Puoi usare l'oggetto di tipo URI per aprire un file o una cartella usando il protocollo file://.",
             "tip-3": "Puoi usare l'oggetto di tipo URI per aprire un link mailto: .",
             "tip-4": "Usa {{app_name}} per inserire il nome dell'applicazione che aveva il focus quando hai aperto il menu.",
             "tip-5": "Usa {{window_name}} per inserire il nome della finestra che aveva il focus quando hai aperto il menu.",
             "tip-6": "Usa {{pointer_x}} e {{pointer_y}} per inserire la posizione del puntatore all’apertura del menu.",
-            "uri": "URI",
-            "placeholder": "Inserisci un URI…"
+            "uri": "URI"
         },
         "file": {
-            "name": "Apri File",
-            "description": "Apri un file o una cartella.",
-            "placeholder": "Scegli un file o una cartella…",
             "tip-1": "Puoi usare questo elemento per aprire file o cartelle."
         },
-        "redirect": {
-            "name": "Ridireziona",
-            "description": "Apre un altro menu."
-        },
         "settings": {
-            "tip-1": "Questo elemento apre la finestra di impostazioni di Kando.",
-            "name": "Apri Impostazioni",
-            "description": "Apre la finestra di impostazioni di Kando."
+            "tip-1": "Questo elemento apre la finestra di impostazioni di Kando."
         },
         "common": {
             "delayed-option-info": "Utile se l'azione è rivolta a una finestra che ha bisogno di essere in primo piano.",
@@ -451,5 +421,47 @@
         "export-menu-error-title": "Fallita l'esportazione dei menù",
         "import-menu-error-title": "Fallita l'importazione dei menù",
         "import-menu-error-message": "Non è stato possibile importare il file selezionato. Non contiene un menù esportato valido di Kando."
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Apri File",
+            "description": "Apri un file o una cartella.",
+            "placeholder": "Scegli un file o una cartella…"
+        },
+        "execute-command": {
+            "name": "Esegui Comando",
+            "description": "Esegue applicazioni o script.",
+            "placeholder": "Inserisci un comando…",
+            "isolated": "Esegui isolato",
+            "isolated-info": "Questo inseguirà il comando in un ambiente pulito, questo significa che non ID erediterà nessuna variabile di ambiente da Kando. Questo può essere di aiuto per comandi che non si avviano correttamente.",
+            "detached-info": "Questo scollegherà il comando da Kando, in modo che continui a girare anche quando Kando viene chiuso. Disabilitare questo può risolvere problemi con comandi che non si avviano correttamente.",
+            "detached": "Esegui distaccato"
+        },
+        "open-menu": {
+            "name": "Ridireziona",
+            "description": "Apre un altro menu."
+        },
+        "open-settings": {
+            "name": "Apri Impostazioni",
+            "description": "Apre la finestra di impostazioni di Kando."
+        },
+        "open-uri": {
+            "name": "Apri URI",
+            "description": "Apri file o siti web.",
+            "placeholder": "Inserisci un URI…"
+        },
+        "simulate-hotkey": {
+            "name": "Simula una scorciatoia da tastiera",
+            "description": "Preme una combinazione di tasti.",
+            "recording-placeholder": "Premi una combinazione di tasti…",
+            "hotkey": "Scorciatoia di Tastiera",
+            "hotkey-info": "Questa scorciatoia sarà attivata quando l'elemento viene selezionato. Quando registri, non devi premere tutti i tasti in una volta, puoi anche premerli uno dopo l'altro. Questo è utile quando una scorciatoia è già associata a qualche azione globale!"
+        },
+        "execute-macro": {
+            "name": "Simula una Macro",
+            "description": "Digita una macro.",
+            "placeholder": "Premi il tasto Registra per iniziare a registrare!",
+            "recording-placeholder": "Premi i tasti…"
+        }
     }
 }

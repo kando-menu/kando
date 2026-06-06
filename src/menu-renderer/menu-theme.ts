@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuThemeDescription } from '../common';
+import { MenuItem, MenuThemeDescription } from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { getClosestEquivalentAngle } from '../common/math';
 import { RenderedMenuItem } from './rendered-menu-item';
@@ -173,7 +173,7 @@ export class MenuTheme {
    * @param item The menu item to create the html elements for.
    * @returns The created html element.
    */
-  public createItem(item: RenderedMenuItem) {
+  public createItem(item: MenuItem) {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
 
@@ -190,7 +190,7 @@ export class MenuTheme {
       if (layer.content === 'name') {
         // If the item has a quick select key, we underline the first occurrence of the
         // key in the name.
-        if (item.quickSelectKey) {
+        if ('quickSelectKey' in item) {
           const regex = new RegExp(`(${item.quickSelectKey})`, 'i');
           layerDiv.innerHTML = item.name.replace(regex, '<u>$1</u>');
         } else {
@@ -226,9 +226,9 @@ export class MenuTheme {
    * @param pointerAngle The angle towards the pointer.
    */
   public setChildProperties(item: RenderedMenuItem, pointerAngle: number) {
-    let angleDiff = Math.abs(item.angle - pointerAngle) % 360;
+    let angleDiff = Math.abs(item.renderData.computedAngle - pointerAngle) % 360;
     angleDiff = Math.min(angleDiff, 360 - angleDiff);
-    item.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
+    item.renderData.nodeDiv.style.setProperty('--angle-diff', angleDiff.toString());
   }
 
   /**
@@ -245,8 +245,14 @@ export class MenuTheme {
     hoverAngle: number,
     parentHovered: boolean
   ) {
-    hoverAngle = getClosestEquivalentAngle(hoverAngle, item.lastHoveredChildAngle);
-    pointerAngle = getClosestEquivalentAngle(pointerAngle, item.lastPointerAngle);
+    hoverAngle = getClosestEquivalentAngle(
+      hoverAngle,
+      item.renderData.lastHoveredChildAngle
+    );
+    pointerAngle = getClosestEquivalentAngle(
+      pointerAngle,
+      item.renderData.lastPointerAngle
+    );
 
     // If both angles are set, we want to make sure that they are not 360° apart. This
     // ensures that themes can use both and transition between them smoothly.
@@ -255,7 +261,9 @@ export class MenuTheme {
     }
 
     this.description.layers.forEach((layer) => {
-      const div = item.nodeDiv.querySelector(`:scope > .${layer.class}`) as HTMLElement;
+      const div = item.renderData.nodeDiv.querySelector(
+        `:scope > .${layer.class}`
+      ) as HTMLElement;
 
       // Sanity check.
       if (!div) {
@@ -276,11 +284,11 @@ export class MenuTheme {
     });
 
     if (pointerAngle != null) {
-      item.lastPointerAngle = pointerAngle;
+      item.renderData.lastPointerAngle = pointerAngle;
     }
 
     if (hoverAngle != null) {
-      item.lastHoveredChildAngle = hoverAngle;
+      item.renderData.lastHoveredChildAngle = hoverAngle;
     }
   }
 }

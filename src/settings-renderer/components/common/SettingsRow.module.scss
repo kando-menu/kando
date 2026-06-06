@@ -14,12 +14,12 @@
 .row {
   display: flex;
   gap: 8px;
+  align-items: center;
 
   color: $text-normal;
 
   .labelContainer {
     flex: 1;
-    align-self: stretch;
     white-space: nowrap;
 
     .label {
@@ -38,7 +38,7 @@
 
   .widget {
     min-width: 0px;
-    align-self: center;
+    line-height: 0;
 
     &.grow {
       flex: 2;

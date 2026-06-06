@@ -12,7 +12,17 @@
 
 @use './variables.scss' as *;
 
+@mixin background-transition {
+  transition: background-color 0.3s;
+
+  &:hover {
+    transition: background-color 0.1s;
+  }
+}
+
 @mixin text-input {
+  @include background-transition;
+
   color: $text-normal;
   background-color: $widget-normal;
 
@@ -31,14 +41,14 @@
 }
 
 @mixin normal-button {
+  @include background-transition;
+
   color: $text-normal;
   background-color: $widget-normal;
 
   border-radius: 8px;
   box-sizing: border-box;
   border: none;
-
-  transition: background-color 0.15s;
 
   &.pressed {
     background-color: $widget-normal-active;
@@ -96,13 +106,13 @@
   box-shadow: 0 2px 4px light-dark(rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.2));
   border: 1.5px solid
     light-dark(
-      color.adjust($base-light, $lightness: -5%),
-      color.adjust($base-dark, $lightness: -5%)
+      color.adjust($base-light, $lightness: -10%),
+      color.adjust($base-dark, $lightness: -10%)
     );
 
   &:not(.selected):hover {
     background-color: light-dark(
-      color.adjust($base-light, $lightness: -5%),
+      color.adjust($base-light, $lightness: -3%),
       color.adjust($base-dark, $lightness: 10%)
     );
   }

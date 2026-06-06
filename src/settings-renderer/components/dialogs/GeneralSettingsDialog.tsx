@@ -608,7 +608,7 @@ export default function GeneralSettingsDialog() {
               isGrouped
               icon={<FaDownload />}
               label={i18next.t('settings.general-settings-dialog.backup-menus')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.backupMenuSettings();
               }}
@@ -618,7 +618,7 @@ export default function GeneralSettingsDialog() {
               isGrouped
               icon={<TbRestore />}
               label={i18next.t('settings.general-settings-dialog.restore-menus')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.restoreMenuSettings();
               }}
@@ -634,7 +634,7 @@ export default function GeneralSettingsDialog() {
               isGrouped
               icon={<FaDownload />}
               label={i18next.t('settings.general-settings-dialog.backup-settings')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.backupGeneralSettings();
               }}
@@ -644,7 +644,7 @@ export default function GeneralSettingsDialog() {
               isGrouped
               icon={<TbRestore />}
               label={i18next.t('settings.general-settings-dialog.restore-settings')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.restoreGeneralSettings();
               }}
@@ -668,7 +668,7 @@ export default function GeneralSettingsDialog() {
               isGrouped
               icon={<TbReload />}
               label={i18next.t('settings.general-settings-dialog.reload-menu-theme')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.reloadMenuTheme();
               }}
@@ -678,7 +678,7 @@ export default function GeneralSettingsDialog() {
               isGrouped
               icon={<TbReload />}
               label={i18next.t('settings.general-settings-dialog.reload-sound-theme')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.reloadSoundTheme();
               }}
@@ -693,7 +693,7 @@ export default function GeneralSettingsDialog() {
               isGrouped
               icon={<TbPointer />}
               label={i18next.t('settings.general-settings-dialog.menu-window-dev-tools')}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.showDevTools('menu-window');
               }}
@@ -705,7 +705,7 @@ export default function GeneralSettingsDialog() {
               label={i18next.t(
                 'settings.general-settings-dialog.settings-window-dev-tools'
               )}
-              variant="floating"
+              variant="pill"
               onClick={() => {
                 window.settingsAPI.showDevTools('settings-window');
               }}

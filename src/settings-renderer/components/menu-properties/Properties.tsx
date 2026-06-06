@@ -12,23 +12,23 @@ import React from 'react';
 import i18next from 'i18next';
 
 import * as classes from './Properties.module.scss';
-import { TbCopy, TbTrash } from 'react-icons/tb';
 
 import { useAppState, useMenuSettings, getSelectedChild } from '../../state';
 import {
+  Accordion,
+  AccordionItem,
   Headerbar,
-  Button,
   IconChooserButton,
+  SettingsRow,
   TagInput,
   ShortcutPicker,
-  RandomTip,
   Swirl,
   Scrollbox,
   TextInput,
 } from '../common';
-import { getConfigComponent, getItemTips } from './item-configs';
 import MenuConditions from './MenuConditions';
 import MenuBehavior from './MenuBehavior';
+import WorkflowEditor from './WorkflowEditor';
 
 /**
  * This component shows the properties of the currently selected menu or menu item on the
@@ -39,12 +39,13 @@ export default function Properties() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const selectedChildPath = useAppState((state) => state.selectedChildPath);
-  const selectParent = useAppState((state) => state.selectParent);
-  const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
-  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
+
   const editMenu = useMenuSettings((state) => state.editMenu);
   const editMenuItem = useMenuSettings((state) => state.editMenuItem);
   const [menuTags, setMenuTags] = React.useState([]);
+  const [expandedMenuPropertiesIndex, setExpandedMenuPropertiesIndex] = React.useState<
+    number | null
+  >(null);
 
   // Update the tag editor whenever the selected menu changes.
   React.useEffect(() => {
@@ -55,20 +56,14 @@ export default function Properties() {
     return (
       <>
         <Headerbar />
-        <div className={classes.properties} />
+        <div className={classes.container} />
       </>
     );
   }
 
   // Get the currently selected menu item and whether it is the root item or not.
-  const { selectedItem, isRoot } = getSelectedChild(
-    menus,
-    selectedMenu,
-    selectedChildPath
-  );
-
-  const itemIndex =
-    selectedChildPath.length > 0 ? selectedChildPath[selectedChildPath.length - 1] : -1;
+  const selectedItem = getSelectedChild(menus, selectedMenu, selectedChildPath);
+  const isRoot = selectedItem?.type === 'root';
 
   // Returns a shortcut picker if the current backend supports shortcuts, else it will
   // return a text input for the shortcut ID.
@@ -93,18 +88,20 @@ export default function Properties() {
       );
     }
     return (
-      <TextInput
+      <SettingsRow
         info={backend.shortcutHint}
-        initialValue={menus[selectedMenu].shortcutID}
-        label={i18next.t('settings.shortcut-id-label')}
-        placeholder={i18next.t('settings.not-bound')}
-        onChange={(shortcutID) => {
-          editMenu(selectedMenu, (menu) => {
-            menu.shortcutID = shortcutID;
-            return menu;
-          });
-        }}
-      />
+        label={i18next.t('settings.shortcut-id-label')}>
+        <TextInput
+          initialValue={menus[selectedMenu].shortcutID}
+          placeholder={i18next.t('settings.not-bound')}
+          onChange={(shortcutID) => {
+            editMenu(selectedMenu, (menu) => {
+              menu.shortcutID = shortcutID;
+              return menu;
+            });
+          }}
+        />
+      </SettingsRow>
     );
   };
 
@@ -141,99 +138,39 @@ export default function Properties() {
           />
         </div>
         <Swirl marginBottom={10} marginTop={10} variant="2" width="min(250px, 80%)" />
+
         <Scrollbox>
-          <div className={classes.properties}>
-            {
-              // Show the hotkey selector for the root menu.
-              isRoot ? getShortcutPicker() : null
-            }
-            {
-              // If the selected item is the root of the menu, we show the tag editor.
-              isRoot ? (
-                <TagInput
-                  info={i18next.t('settings.tags-info')}
-                  label={i18next.t('settings.tags')}
-                  tags={menuTags}
-                  onChange={(newTags) => {
-                    editMenu(selectedMenu, (menu) => {
-                      menu.tags = newTags;
-                      return menu;
-                    });
-                    setMenuTags(newTags);
-                  }}
-                />
-              ) : null
-            }
-            {
-              // We also show the sections for the menu behavior and conditions.
-              isRoot ? (
-                <>
+          {isRoot ? (
+            <div className={classes.menuProperties}>
+              {getShortcutPicker()}
+              <TagInput
+                info={i18next.t('settings.tags-info')}
+                label={i18next.t('settings.tags')}
+                tags={menuTags}
+                onChange={(newTags) => {
+                  editMenu(selectedMenu, (menu) => {
+                    menu.tags = newTags;
+                    return menu;
+                  });
+                  setMenuTags(newTags);
+                }}
+              />
+              <div style={{ height: 5 }} />
+              <Accordion
+                expandedIndex={expandedMenuPropertiesIndex}
+                onExpandedIndexChange={setExpandedMenuPropertiesIndex}>
+                <AccordionItem title={i18next.t('settings.menu-behavior')}>
                   <MenuBehavior />
+                </AccordionItem>
+                <AccordionItem title={i18next.t('settings.menu-conditions')}>
                   <MenuConditions />
-                </>
-              ) : null
-            }
-            {
-              // For all other items, we show the config component that is specific to the
-              // item type.
-              !isRoot && selectedItem ? getConfigComponent(selectedItem.type) : null
-            }
-            {
-              // Also, each menu item has the quick-select key. The default value for this
-              // is the menu item's number.
-              !isRoot && selectedItem ? (
-                <ShortcutPicker
-                  info={i18next.t('settings.quick-select-key-info')}
-                  initialValue={selectedItem.quickSelectKey || ''}
-                  label={i18next.t('settings.quick-select-key-label')}
-                  mode="key-names"
-                  placeholder={
-                    itemIndex < 9 ? `${itemIndex + 1}` : i18next.t('settings.not-bound')
-                  }
-                  recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
-                  useModifiers={false}
-                  onChange={(shortcut) => {
-                    editMenuItem(selectedMenu, selectedChildPath, (item) => {
-                      item.quickSelectKey = shortcut;
-                      return item;
-                    });
-                  }}
-                />
-              ) : null
-            }
-            {
-              // Finally, we show the tips for the currently selected item type.
-              !isRoot && selectedItem ? (
-                <RandomTip marginTop={50} tips={getItemTips(selectedItem.type)} />
-              ) : null
-            }
-          </div>
+                </AccordionItem>
+              </Accordion>
+              <div style={{ height: 2 }} />
+            </div>
+          ) : null}
+          {selectedItem ? <WorkflowEditor /> : null}
         </Scrollbox>
-        {!isRoot && (
-          <div className={classes.floatingButton}>
-            <Button
-              isGrouped
-              icon={<TbCopy />}
-              size="large"
-              tooltip={i18next.t('settings.duplicate-menu-item')}
-              variant="floating"
-              onClick={() => {
-                duplicateMenuItem(selectedMenu, selectedChildPath);
-              }}
-            />
-            <Button
-              isGrouped
-              icon={<TbTrash />}
-              size="large"
-              tooltip={i18next.t('settings.delete-menu-item')}
-              variant="floating"
-              onClick={() => {
-                deleteMenuItem(selectedMenu, selectedChildPath);
-                selectParent();
-              }}
-            />
-          </div>
-        )}
       </div>
     </>
   );

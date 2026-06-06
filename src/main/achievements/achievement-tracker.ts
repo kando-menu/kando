@@ -226,6 +226,10 @@ export class AchievementTracker extends EventEmitter {
    * @param source The source used to make the selection.
    */
   public onSelectionMade(depth: 1 | 2 | 3, time: number, source: SelectionSource) {
+    if (source === SelectionSource.eUnknown) {
+      return;
+    }
+
     const keys: AchievementStatsNumberKeys[] = [];
 
     // Increment the source-based selection stats.

@@ -11,8 +11,6 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 
-import SettingsRow from './SettingsRow';
-
 import * as classes from './TextInput.module.scss';
 const cx = classNames.bind(classes);
 
@@ -29,12 +27,6 @@ type Props = {
   /** Optional placeholder text to display when the text input is empty. */
   readonly placeholder?: string;
 
-  /** Optional label text to display next to the text input. */
-  readonly label?: string;
-
-  /** Optional information to display next to the label. */
-  readonly info?: string;
-
   /** Whether the text input is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
 
@@ -42,9 +34,12 @@ type Props = {
   readonly variant?: 'normal' | 'invisible';
 
   /**
-   * Whether the text input should support multiple lines. In this case, the label will be
-   * displayed above the text input.
+   * Whether the text input is part of a group of inputs. This will make the corners of
+   * only the first and last input in the group round. Defaults to false.
    */
+  readonly isGrouped?: boolean;
+
+  /** Whether the text input should support multiple lines. */
   readonly isMultiline?: boolean;
 };
 
@@ -76,44 +71,42 @@ export default function TextInput(props: Props) {
     };
   }, [value, props]);
 
+  if (props.isMultiline) {
+    return (
+      <textarea
+        className={cx({
+          input: true,
+          invisible: props.variant === 'invisible',
+          grouped: props.isGrouped,
+        })}
+        disabled={props.isDisabled}
+        placeholder={props.placeholder}
+        spellCheck="false"
+        value={value}
+        onBlur={() => props.onChange?.(value)}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    );
+  }
+
   return (
-    <>
-      <SettingsRow isGrowing info={props.info} label={props.label}>
-        {!props.isMultiline && (
-          <input
-            className={cx({
-              input: true,
-              invisible: props.variant === 'invisible',
-            })}
-            disabled={props.isDisabled}
-            placeholder={props.placeholder}
-            spellCheck="false"
-            type="text"
-            value={value}
-            onBlur={() => props.onChange?.(value)}
-            onChange={(event) => setValue(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                (event.target as HTMLInputElement).blur();
-              }
-            }}
-          />
-        )}
-      </SettingsRow>
-      {props.isMultiline ? (
-        <textarea
-          className={cx({
-            input: true,
-            invisible: props.variant === 'invisible',
-          })}
-          disabled={props.isDisabled}
-          placeholder={props.placeholder}
-          spellCheck="false"
-          value={value}
-          onBlur={() => props.onChange?.(value)}
-          onChange={(event) => setValue(event.target.value)}
-        />
-      ) : null}
-    </>
+    <input
+      className={cx({
+        input: true,
+        invisible: props.variant === 'invisible',
+      })}
+      disabled={props.isDisabled}
+      placeholder={props.placeholder}
+      spellCheck="false"
+      type="text"
+      value={value}
+      onBlur={() => props.onChange?.(value)}
+      onChange={(event) => setValue(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          (event.target as HTMLInputElement).blur();
+        }
+      }}
+    />
   );
 }

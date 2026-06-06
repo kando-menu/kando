@@ -11,14 +11,12 @@
 import { EventEmitter } from 'events';
 
 import * as IPCTypes from './types';
-import { TypedEventEmitter, MenuItem, InteractionTarget } from '..';
+import { TypedEventEmitter, MenuInteractionType, RootMenuItem } from '..';
 import { createCrossWebSocket } from './cross-websocket';
 
 /** These events are emitted by the IPC client when menu interactions occur. */
 type IPCShowMenuClientEvents = {
-  cancel: [];
-  select: [target: InteractionTarget, path: number[]];
-  hover: [target: InteractionTarget, path: number[]];
+  interaction: [type: MenuInteractionType, path: number[]];
   error: [error: IPCTypes.IPCErrorReason];
 };
 
@@ -34,18 +32,17 @@ type IPCShowMenuClientEvents = {
  *     const client = new IPCShowMenuClient(12345, 1);
  *     await client.init();
  *     client.showMenu(menuItem);
- *     client.on('hover', (target, path) => { ... });
- *     client.on('select', (target, path) => { ... });
- *     client.on('cancel', () => { ... });
+ *     client.on('interaction', (type, path) => { ... });
+ *     client.on('error', (error) => { ... });
  */
 export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmitter<IPCShowMenuClientEvents>) {
   private ws: ReturnType<typeof createCrossWebSocket> | null = null;
 
   /**
-   * This is the API version of the client. For now, there is only version 1, but this
-   * allows for future compatibility checks if the protocol evolves.
+   * This is the API version of the client. With Kando 3.0.0, the API changed in a
+   * backwards-incompatible way, so it has been bumped to version 2.
    */
-  private clientApiVersion = 1;
+  private clientApiVersion = 2;
 
   /**
    * Constructs a new IPCShowMenuClient instance.
@@ -89,14 +86,9 @@ export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmit
       const handleMessage = (data: string): void => {
         const msg = JSON.parse(data);
 
-        if (IPCTypes.SELECT_ITEM_MESSAGE.safeParse(msg).success) {
-          const { target, path } = msg as IPCTypes.SelectItemMessage;
-          this.emit('select', target, path);
-        } else if (IPCTypes.CANCEL_MENU_MESSAGE.safeParse(msg).success) {
-          this.emit('cancel');
-        } else if (IPCTypes.HOVER_ITEM_MESSAGE.safeParse(msg).success) {
-          const { target, path } = msg as IPCTypes.HoverItemMessage;
-          this.emit('hover', target, path);
+        if (IPCTypes.MENU_INTERACTION_MESSAGE.safeParse(msg).success) {
+          const { interaction, path } = msg as IPCTypes.MenuInteractionMessage;
+          this.emit('interaction', interaction, path);
         } else if (IPCTypes.ERROR_MESSAGE.safeParse(msg).success) {
           const errorMsg = msg as IPCTypes.ErrorMessage;
           console.error(`IPC Error (${errorMsg.reason}): ${errorMsg.description}`);
@@ -117,12 +109,12 @@ export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmit
 
   /**
    * Sends a show-menu request to the IPC server. The menu structure must conform to the
-   * MenuItem type. Emits the 'error' event if the request is malformed or if the client
-   * is not connected.
+   * RootMenuItem type. Emits the 'error' event if the request is malformed or if the
+   * client is not connected.
    *
-   * @param menu The menu structure to show, as a MenuItem object.
+   * @param menu The menu structure to show, as a RootMenuItem object.
    */
-  public showMenu(menu: MenuItem): void {
+  public showMenu(menu: RootMenuItem): void {
     if (!this.ws) {
       this.emit('error', IPCTypes.IPCErrorReason.eNotConnected);
       return;

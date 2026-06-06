@@ -79,12 +79,6 @@ export class PointerInput extends InputMethod {
   private centerRadius = 0;
 
   /**
-   * This is set to true once a key is pressed. If the pointer is moved at least
-   * this.dragThreshold before the key is released, the turbo mode will be activated.
-   */
-  private anyKeyPressed = false;
-
-  /**
    * If set to a value greater than 0, this will be decremented by 1 every time the the
    * mouse moves and the corresponding event is ignored. See the documentation of the
    * ignoreNextMotionEvents() method for more information.
@@ -134,7 +128,6 @@ export class PointerInput extends InputMethod {
   public onShowMenu(deferTurboMode: boolean) {
     this.ignoreMotionEvents = 2;
     this.buttonState = ButtonState.eReleased;
-    this.anyKeyPressed = false;
     this.deferredTurboMode = deferTurboMode;
   }
 
@@ -188,7 +181,6 @@ export class PointerInput extends InputMethod {
     if (canEnterTurboMode) {
       if (
         this.enableHoverMode ||
-        this.anyKeyPressed ||
         event.ctrlKey ||
         event.metaKey ||
         event.shiftKey ||
@@ -293,7 +285,6 @@ export class PointerInput extends InputMethod {
   /** This method should be called when a key is pressed. */
   public onKeyDownEvent() {
     if (!this.deferredTurboMode) {
-      this.anyKeyPressed = true;
       this.keydownPosition = {
         x: this.pointerPosition.x,
         y: this.pointerPosition.y,
@@ -322,7 +313,6 @@ export class PointerInput extends InputMethod {
       event.altKey;
 
     if (!stillAnyModifierPressed) {
-      this.anyKeyPressed = false;
       this.deferredTurboMode = false;
 
       // Select the active item if turbo mode ended due to a key release. But do not
@@ -383,12 +373,14 @@ export class PointerInput extends InputMethod {
         this.buttonState = button;
         this.pointerPosition = pointer;
 
+        const toPointer = math.subtract(pointer, center);
+
         const state: InputState = {
           button,
           absolutePosition: pointer,
-          relativePosition: math.subtract(pointer, this.centerPosition),
-          distance: math.getLength(math.subtract(pointer, this.centerPosition)),
-          angle: math.getAngle(math.subtract(pointer, this.centerPosition)),
+          relativePosition: toPointer,
+          distance: math.getLength(toPointer),
+          angle: math.getAngle(toPointer),
         };
 
         this.stateCallback(state);

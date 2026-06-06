@@ -62,7 +62,7 @@ export default function Sidebar(props: Props) {
         document.body.style.cursor = 'col-resize';
       });
     }
-  }, []);
+  }, [props.position]);
 
   const positionClass = props.position === 'left' ? classes.left : classes.right;
   const directionClass = props.mainDirection === 'row' ? classes.row : classes.column;

@@ -14,6 +14,7 @@
 .macroPicker {
   display: flex;
   align-items: stretch;
+  gap: 2px;
 
   textarea {
     @include text-input;
@@ -21,16 +22,11 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 
-    min-width: 0px;
-    width: 100%;
-    flex-grow: 1;
-
-    overflow-x: auto;
     white-space: nowrap;
-
-    field-sizing: content;
+    flex-grow: 1;
+    overflow-x: scroll;
     resize: none;
-    min-height: 100px;
+    min-height: 200px;
 
     transition: box-shadow 150ms ease;
 

@@ -232,38 +232,22 @@
     "menu-items": {
         "macro": {
             "tip-1": "Per standard, legger Kando til 10 millisekunder ventetid før hvert tastetrykk. Du kan endre dette med \"delay\" egenskapen.",
-            "placeholder": "Trykk på opptaksknappen for å starte opptak!",
-            "tip-2": "Du kan også redigere makroen for hånd. Dette er nyttig hvis du vil justere timingen av tastene.",
-            "name": "Kjør Makro",
-            "description": "Trykker en tastaturmakro.",
-            "recording-placeholder": "Trykk noen taster…"
+            "tip-2": "Du kan også redigere makroen for hånd. Dette er nyttig hvis du vil justere timingen av tastene."
         },
         "settings": {
-            "name": "Åpne innstillinger",
-            "description": "Åpner Kando-innstillingene.",
             "tip-1": "Dette menyalternativet åpner Kando-innstillingene."
         },
         "text": {
-            "description": "Limer inn den valgte teksten.",
-            "name": "Lim Inn Tekst",
             "placeholder": "Skriv inn en tekst…",
             "tip-1": "Dette menyalternativet bruker utklippstavlen din for å lime inn teksten. Etter det er kjørt, vil utklippstavlen inneholde teksten."
         },
         "hotkey": {
-            "hotkey-info": "Denne hurtigtasten trykkes på når menyalternativet velges. Når du tar opp hurtigtasten, trenger du ikke å trykke på alle tastene samtidig, du kan også trykke på dem en etter en. Dette er nyttig hvis hurtigtasten allerede er knyttet til en global handling!",
-            "recording-placeholder": "Skriv en hurtigtast…",
             "tip-1": "Når du tar opp en hurtigtast, trenger du ikke å trykke på alle tastene samtidig. Du kan trykke på dem en etter en.",
             "tip-2": "Hvis du ikke kan ta opp en tast fordi den brukes av systemet, prøv å skriv navnet på tasten direkte.",
-            "name": "Simuler Hurtigtast",
-            "description": "Trykker en tastekombinasjon.",
-            "hotkey": "Hurtigtast",
             "tip-3": "Klikk [denne linken]({{link}}) for å se alle godkjente tastenavn."
         },
         "uri": {
             "tip-2": "Du kan bruke dette menyalternativet for egendefinerte URI-skjemaer slik som slack:// eller zopmmtg://.",
-            "placeholder": "Skriv inn en URI…",
-            "name": "Åpne URI",
-            "description": "Åpner nettsider og mer.",
             "tip-1": "Du kan bruke URI-menyalternativet for å åpne en nettside med http:// protokollen.",
             "tip-3": "Du kan bruke URI-menyalternativet for å åpne en mailto: link.",
             "tip-4": "Bruk {{app_name}} for å sette inn navnet på appen som var i fokus når du åpnet menyen.",
@@ -271,28 +255,14 @@
             "tip-6": "Bruk {{pointer_x}} og {{pointer_y}} for å sette inn musepekerposisjonen hvor menyen ble åpnet."
         },
         "command": {
-            "isolated-info": "Dette vil kjøre kommandoen i et rent miljø, det betyr at den ikke vil få noen miljøvariabler fra Kando. Dette kan hjelpe med kommandoer som ikke starter ordentlig.",
             "tip-5": "Bruk {{pointer_x}} og {{pointer_y}} for å sette inn posisjonen på musepekeren hvor menyen ble åpnet.",
-            "name": "Kjør Commando",
-            "description": "Kjør apper eller skripter.",
-            "placeholder": "Skriv en kommando…",
-            "isolated": "Kjør isolert",
-            "detached": "Kjør utenom Kando",
-            "detached-info": "Dette vil koble kommandoen fra Kando. Dette lar den kjøre selv om Kando lukkes. Slå dette av hvis kommandoer ikke starter ordentlig.",
             "tip-1": "Du kan bruke Kommando menyalternativet for å starte apper eller skripter.",
             "tip-2": "Hvis banen til en kjørbar fil inneholder mellomrom, burde du \"sette den i anførselstegn\".",
             "tip-3": "Bruk {{app_name}} for å sette inn navnet på appen som var i fokus når du åpnet menyen.",
             "tip-4": "Bruk {{window_name}} for å sette inn navnet på vinduet som var i fokus når du åpnet menyen.",
             "tip-6": "Klikk [her]({{link}}) for å finne kommandoene du kan bruke for å starte appene dine."
         },
-        "redirect": {
-            "name": "Omdirigering",
-            "description": "Åpner en annen meny."
-        },
         "file": {
-            "name": "Åpne Fil",
-            "description": "Åpner en fil eller mappe.",
-            "placeholder": "Velg en fil eller mappe…",
             "tip-1": "Du kan bruke dette menyalternativet for å åpne filer eller mapper."
         },
         "submenu": {
@@ -387,6 +357,48 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando kan ikke koble globale hurtigtaster i KDE/Wayland. I stedet, spesifiser en shortcut ID her og søk etter den i KWin delen av de globale snarveiene i KDE's systeminnstillinger. Der kan du sette hurtigtasten som åpner denne menyen."
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Åpne Fil",
+            "description": "Åpner en fil eller mappe.",
+            "placeholder": "Velg en fil eller mappe…"
+        },
+        "execute-command": {
+            "name": "Kjør Commando",
+            "description": "Kjør apper eller skripter.",
+            "placeholder": "Skriv en kommando…",
+            "isolated": "Kjør isolert",
+            "isolated-info": "Dette vil kjøre kommandoen i et rent miljø, det betyr at den ikke vil få noen miljøvariabler fra Kando. Dette kan hjelpe med kommandoer som ikke starter ordentlig.",
+            "detached-info": "Dette vil koble kommandoen fra Kando. Dette lar den kjøre selv om Kando lukkes. Slå dette av hvis kommandoer ikke starter ordentlig.",
+            "detached": "Kjør utenom Kando"
+        },
+        "open-menu": {
+            "name": "Omdirigering",
+            "description": "Åpner en annen meny."
+        },
+        "open-settings": {
+            "name": "Åpne innstillinger",
+            "description": "Åpner Kando-innstillingene."
+        },
+        "open-uri": {
+            "name": "Åpne URI",
+            "description": "Åpner nettsider og mer.",
+            "placeholder": "Skriv inn en URI…"
+        },
+        "simulate-hotkey": {
+            "name": "Simuler Hurtigtast",
+            "description": "Trykker en tastekombinasjon.",
+            "recording-placeholder": "Skriv en hurtigtast…",
+            "hotkey": "Hurtigtast",
+            "hotkey-info": "Denne hurtigtasten trykkes på når menyalternativet velges. Når du tar opp hurtigtasten, trenger du ikke å trykke på alle tastene samtidig, du kan også trykke på dem en etter en. Dette er nyttig hvis hurtigtasten allerede er knyttet til en global handling!"
+        },
+        "execute-macro": {
+            "name": "Kjør Makro",
+            "description": "Trykker en tastaturmakro.",
+            "placeholder": "Trykk på opptaksknappen for å starte opptak!",
+            "recording-placeholder": "Trykk noen taster…"
         }
     }
 }

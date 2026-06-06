@@ -52,13 +52,6 @@ body {
   &.hidden {
     transition: opacity var(--fade-out-duration) ease;
     opacity: 0;
-
-    // We also want to delay the fade-out animation if a node is selected. Else the
-    // selected node would disappear before the position transition is finished.
-    &.selected {
-      transition: opacity calc(var(--fade-out-duration) * 0.5) ease;
-      transition-delay: calc(var(--fade-out-duration) * 0.5);
-    }
   }
 
   &.no-transitions * {

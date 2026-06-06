@@ -85,54 +85,28 @@
         "command": {
             "command": "Comando",
             "command-info": "Isso será executado.",
-            "description": "Executa aplicativos ou scripts.",
-            "name": "Executar Comando",
             "tip-1": "Você pode usar o item do tipo Comando para iniciar aplicativos ou scripts.",
             "tip-2": "Se o caminho para um executável contem espaços, você deve \"colocar entre aspas\".",
             "tip-3": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
             "tip-4": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
             "tip-5": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
-            "placeholder": "Insira algum comando…",
-            "tip-6": "Clique [aqui]({{link}}) para descobrir como encontrar os comandos para iniciar seus aplicativos.",
-            "isolated": "Executar isoladamente",
-            "isolated-info": "Isto irá executar o comando em um ambiente limpo, não herdando nenhuma variável de ambiente do Kando. Isso pode ajudar com comandos que não iniciam corretamente.",
-            "detached": "Executar separadamente",
-            "detached-info": "Isto irá desconectar o comando do Kando, fazendo com que continue executando mesmo se o Kando estiver fechado. Desabilitar isso pode ajudar a resolver problemas com comandos que não iniciam corretamente.",
-            "choose-app": "Escolha um aplicativo…"
+            "tip-6": "Clique [aqui]({{link}}) para descobrir como encontrar os comandos para iniciar seus aplicativos."
         },
         "file": {
-            "description": "Abre um arquivo ou pasta.",
             "file": "Caminho do Arquivo",
-            "name": "Abrir Arquivo",
-            "tip-1": "Você pode usar esse tipo de item para abrir arquivos ou pastas.",
-            "placeholder": "Escolher arquivo ou pasta…"
+            "tip-1": "Você pode usar esse tipo de item para abrir arquivos ou pastas."
         },
         "hotkey": {
-            "description": "Pressione uma combinação de teclas.",
-            "hotkey": "Tecla de Atalho",
-            "name": "Simular atalho de teclado",
-            "recording-placeholder": "Pressione uma tecla de atalho…",
             "tip-1": "Ao gravar uma tecla de atalho, você não precisa pressionar todas as teclas ao mesmo tempo. Você pode pressionar uma após a outra.",
             "tip-2": "Se você não consegue gravar uma tecla porque ela é usada pelo sistema, tente digitar o nome da tecla diretamente.",
-            "tip-3": "Clique [nesse link]({{link}}) para ver todos os nomes de chave válidos.",
-            "hotkey-info": "Essa tecla de atalho será acionada quando o item é selecionado. Quando estiver gravando, você não precisa pressionar todas as teclas de uma vez, você também pode pressioná-las uma após a outra. Isso é útil se uma tecla de atalho já está atribuída a alguma ação global!"
+            "tip-3": "Clique [nesse link]({{link}}) para ver todos os nomes de chave válidos."
         },
         "macro": {
-            "description": "Digita um macro de teclado.",
-            "name": "Simular Macro",
-            "placeholder": "Aperte o botão de gravação para começar a gravar!",
-            "recording-placeholder": "Pressione as teclas…",
             "tip-1": "Por padrão, Kando adiciona 10ms de delay antes de cada evento de tecla. Você pode mudar isso com a propriedade \"delay\".",
             "tip-2": "Você pode editar esse macro manualmente. Isso é útil se você quer ajustar o tempo das teclas."
         },
-        "redirect": {
-            "description": "Abre outro menu.",
-            "name": "Redirecionar"
-        },
         "settings": {
-            "name": "Abrir Ajustes",
-            "tip-1": "Está ação abrirá a janela de configurações Kando.",
-            "description": "Abre a janela de configurações do Kando."
+            "tip-1": "Está ação abrirá a janela de configurações Kando."
         },
         "submenu": {
             "description": "Contém outros itens de menu.",
@@ -149,22 +123,17 @@
             "tip-7": "Você pode excluir um menu ou item do menu pelo ícone de lixeira abaixo."
         },
         "text": {
-            "description": "Insere o texto fornecido.",
-            "name": "Pasta texto",
             "placeholder": "Insira qualquer texto…",
             "tip-1": "Esta ação usa sua área de transferência para colar o texto. Depois de usar a ação, a área de transferência conterá o texto."
         },
         "uri": {
-            "description": "Abre sites e mais.",
-            "name": "Abrir URI",
             "tip-1": "Você pode usar o item URI para abrir um site usando o protocolo http://.",
             "tip-2": "Você pode usar o item URI para abrir um arquivo ou pasta usando o protocolo file://.",
             "tip-3": "Você pode usar o item URI para abrir um link do tipo mailto: .",
             "tip-4": "Use {{app_name}} para inserir o nome do aplicativo que estava focado quando abriu o menu.",
             "tip-5": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
             "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
-            "uri": "URI",
-            "placeholder": "Insira alguma URL…"
+            "uri": "URI"
         },
         "common": {
             "delayed-option": "Esperar pela animação de fade-out",
@@ -431,6 +400,49 @@
             "no-completed-achievements": "Você ainda não completou nenhuma conquista.",
             "in-progress-button": "Em Progresso",
             "completed-button": "Completas"
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Abrir Arquivo",
+            "description": "Abre um arquivo ou pasta.",
+            "placeholder": "Escolher arquivo ou pasta…"
+        },
+        "execute-command": {
+            "name": "Executar Comando",
+            "description": "Executa aplicativos ou scripts.",
+            "choose-app": "Escolha um aplicativo…",
+            "placeholder": "Insira algum comando…",
+            "isolated": "Executar isoladamente",
+            "isolated-info": "Isto irá executar o comando em um ambiente limpo, não herdando nenhuma variável de ambiente do Kando. Isso pode ajudar com comandos que não iniciam corretamente.",
+            "detached-info": "Isto irá desconectar o comando do Kando, fazendo com que continue executando mesmo se o Kando estiver fechado. Desabilitar isso pode ajudar a resolver problemas com comandos que não iniciam corretamente.",
+            "detached": "Executar separadamente"
+        },
+        "open-menu": {
+            "name": "Redirecionar",
+            "description": "Abre outro menu."
+        },
+        "open-settings": {
+            "name": "Abrir Ajustes",
+            "description": "Abre a janela de configurações do Kando."
+        },
+        "open-uri": {
+            "name": "Abrir URI",
+            "description": "Abre sites e mais.",
+            "placeholder": "Insira alguma URL…"
+        },
+        "simulate-hotkey": {
+            "name": "Simular atalho de teclado",
+            "description": "Pressione uma combinação de teclas.",
+            "recording-placeholder": "Pressione uma tecla de atalho…",
+            "hotkey": "Tecla de Atalho",
+            "hotkey-info": "Essa tecla de atalho será acionada quando o item é selecionado. Quando estiver gravando, você não precisa pressionar todas as teclas de uma vez, você também pode pressioná-las uma após a outra. Isso é útil se uma tecla de atalho já está atribuída a alguma ação global!"
+        },
+        "execute-macro": {
+            "name": "Simular Macro",
+            "description": "Digita um macro de teclado.",
+            "placeholder": "Aperte o botão de gravação para começar a gravar!",
+            "recording-placeholder": "Pressione as teclas…"
         }
     }
 }

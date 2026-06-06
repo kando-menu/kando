@@ -3,24 +3,14 @@
         "command": {
             "command": "Commando",
             "command-info": "Dit zal worden uitgevoerd.",
-            "name": "Commando uitvoeren",
             "tip-1": "Het commando-itemtype kan worden gebruikt om programma's of scripts te starten.",
             "tip-2": "Als er spaties in het pad naar een uitvoerbaar bestand staan, moet het \"tussen aanhalingstekens\" worden gezet.",
             "tip-3": "Gebruik {{app_name}} om de naam in te voegen van de app die gefocust was toen je het menu opende.",
             "tip-4": "Gebruik {{window_name}} om de naam in te voegen van het venster gefocust was toen je het menu opende.",
             "tip-5": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend.",
-            "description": "Lanceer apps of scripts.",
-            "placeholder": "Voeg een commando in…",
-            "tip-6": "Klik [hier]({{link}}) om te leren hoe u de commando's kunt vinden voor het starten van uw apps.",
-            "isolated": "Geïsoleerd runnen",
-            "detached": "Ontkoppeld runnen",
-            "detached-info": "Dit zal het commando van Kando ontbinden, dus het zal blijven vluchten zelfs als Kando gesloten is. Dit ontbinden kan problemen oplossen met commando's die niet goed beginnen.",
-            "isolated-info": "Dit zal het commando runnen in een schone omgeving, wat betekent dat het geen variabelen van Kando zal erven. Dit kan helpen met bevelen die niet goed starten."
+            "tip-6": "Klik [hier]({{link}}) om te leren hoe u de commando's kunt vinden voor het starten van uw apps."
         },
         "uri": {
-            "placeholder": "Voeg een URI in…",
-            "name": "URI openen",
-            "description": "Opent websites en meer.",
             "tip-3": "U kunt dit URI-itemtype gebruiken om een mailto: link te openen.",
             "tip-1": "U kunt het URI -itemtype gebruiken om een website te openen met behulp van het http:// protocol.",
             "tip-2": "U kunt dit gebruiken om aangepaste URI -schema's zoals Slack:// of zoommtg:// aan te roepen.",
@@ -29,27 +19,15 @@
             "tip-6": "Gebruik {{pointer_x}} en {{pointer_y}} om de cursorpositie in te voegen waar het menu werd geopend."
         },
         "file": {
-            "name": "Bestand openen",
-            "tip-1": "U kunt dit item-type gebruiken om bestanden of folders te openen.",
-            "description": "Opent een bestand of folder.",
-            "placeholder": "Selecteer een bestand of folder…"
+            "tip-1": "U kunt dit item-type gebruiken om bestanden of folders te openen."
         },
         "hotkey": {
-            "description": "Klikt op een knopcombinatie.",
             "tip-2": "Als u een sneltoets niet kunt opnemen omdat deze door het systeem gebruikt wordt, probeem de naam direct te typen.",
-            "recording-placeholder": "Type een sneltoets…",
             "tip-3": "Klik op [deze link]({{link}}) om alle geldige toetsnamen te zien.",
-            "tip-1": "Bij het openen van een sneltoets hoef je niet op alle toetsen tegelijk te drukken. U kunt deze achter elkaar indrukken.",
-            "name": "Hotkey simuleren",
-            "hotkey": "Sneltoets",
-            "hotkey-info": "Deze sneltoets wordt geactiveerd wanneer het item is geselecteerd. Bij het opnemen hoeft u niet op alle toetsen tegelijk te drukken, u kunt ze ook na de ander drukken. Dit is handig als een sneltoets al gebonden is aan een globale actie!"
+            "tip-1": "Bij het openen van een sneltoets hoef je niet op alle toetsen tegelijk te drukken. U kunt deze achter elkaar indrukken."
         },
         "macro": {
-            "name": "Macro uitvoeren",
             "tip-2": "Je kunt de macro ook handmatig bewerken. Dit is nuttig als je de timing van de toets wilt aanpassen.",
-            "description": "Typt een toetsenbord macro.",
-            "placeholder": "Druk op de opneemknop en te beginnen met opnemen!",
-            "recording-placeholder": "Druk op een toets…",
             "tip-1": "Per standaard voegt Kando een vertraging van 10 ms toe vóór elke toetsgebeurtenis. U kunt dit wijzigen met de eigenschap \"Vertraging\"."
         },
         "submenu": {
@@ -64,23 +42,15 @@
             "tip-4": "Vermijdt het toevoegen van meer dan twaalf items aan een submenu. Acht is een goed nummer."
         },
         "text": {
-            "name": "Tekst plakken",
-            "description": "Voegt de gegeven tekst in.",
             "placeholder": "Voeg een tekst in…",
             "tip-1": "Deze actie gebruikt uw klembord om de tekst te plakken. Na het gebruik van de actie bevat het klembord de tekst."
         },
         "settings": {
-            "name": "Instellingen openen",
-            "tip-1": "Dit item-type opent het Kando-instellingen venster.",
-            "description": "Opent het Kando-instellingen venster."
+            "tip-1": "Dit item-type opent het Kando-instellingen venster."
         },
         "common": {
             "delayed-option": "Wacht op vervagende animatie",
             "delayed-option-info": "Handig als de actie zich richt op een venster dat moet worden gefocust."
-        },
-        "redirect": {
-            "name": "Omleiden",
-            "description": "Opent een ander menu."
         }
     },
     "settings": {
@@ -389,6 +359,48 @@
         },
         "gnome": {
             "error": "Kon geen verbinding maken met Kando Integration GNOME Shell Extension. U kunt het hier krijgen: {{link}}"
+        }
+    },
+    "menu-actions": {
+        "open-file": {
+            "name": "Bestand openen",
+            "description": "Opent een bestand of folder.",
+            "placeholder": "Selecteer een bestand of folder…"
+        },
+        "execute-command": {
+            "name": "Commando uitvoeren",
+            "description": "Lanceer apps of scripts.",
+            "placeholder": "Voeg een commando in…",
+            "isolated": "Geïsoleerd runnen",
+            "isolated-info": "Dit zal het commando runnen in een schone omgeving, wat betekent dat het geen variabelen van Kando zal erven. Dit kan helpen met bevelen die niet goed starten.",
+            "detached-info": "Dit zal het commando van Kando ontbinden, dus het zal blijven vluchten zelfs als Kando gesloten is. Dit ontbinden kan problemen oplossen met commando's die niet goed beginnen.",
+            "detached": "Ontkoppeld runnen"
+        },
+        "open-menu": {
+            "name": "Omleiden",
+            "description": "Opent een ander menu."
+        },
+        "open-settings": {
+            "name": "Instellingen openen",
+            "description": "Opent het Kando-instellingen venster."
+        },
+        "open-uri": {
+            "name": "URI openen",
+            "description": "Opent websites en meer.",
+            "placeholder": "Voeg een URI in…"
+        },
+        "simulate-hotkey": {
+            "name": "Hotkey simuleren",
+            "description": "Klikt op een knopcombinatie.",
+            "recording-placeholder": "Type een sneltoets…",
+            "hotkey": "Sneltoets",
+            "hotkey-info": "Deze sneltoets wordt geactiveerd wanneer het item is geselecteerd. Bij het opnemen hoeft u niet op alle toetsen tegelijk te drukken, u kunt ze ook na de ander drukken. Dit is handig als een sneltoets al gebonden is aan een globale actie!"
+        },
+        "execute-macro": {
+            "name": "Macro uitvoeren",
+            "description": "Typt een toetsenbord macro.",
+            "placeholder": "Druk op de opneemknop en te beginnen met opnemen!",
+            "recording-placeholder": "Druk op een toets…"
         }
     }
 }

@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { IPCShowMenuClient } from '../../common/ipc/ipc-show-menu-client';
-import { MenuItem, InteractionTarget } from '../../common';
+import { MenuInteractionType, RootMenuItem } from '../../common';
 
 export type IPCButtonAction = {
   name: string;
@@ -29,10 +29,13 @@ export class IPCMenuManager {
 
   constructor(serverPort: number, serverApiVersion: number) {
     this.ipcClient = new IPCShowMenuClient(serverPort, serverApiVersion);
-    this.ipcClient.on('select', (target: InteractionTarget, path: number[]) =>
-      this.handleSelect(path)
-    );
-    this.ipcClient.on('cancel', () => this.handleCancel());
+    this.ipcClient.on('interaction', (type: MenuInteractionType, path: number[]) => {
+      if (type === 'selectButton') {
+        this.handleSelect(path);
+      } else if (type === 'closeMenu') {
+        this.handleCancel();
+      }
+    });
     this.ipcClient.on('error', (err) => {
       console.error('IPC Client error:', err);
     });
@@ -56,13 +59,13 @@ export class IPCMenuManager {
     actions: IPCButtonAction[]
   ): void {
     this.lastActions = actions;
-    const menu: MenuItem = {
-      type: 'submenu',
+    const menu: RootMenuItem = {
+      type: 'root',
       name,
       icon,
       iconTheme,
       children: actions.map((action) => ({
-        type: 'simple-button',
+        type: 'button',
         name: action.name,
         icon: action.icon,
         iconTheme: action.iconTheme,
@@ -81,7 +84,6 @@ export class IPCMenuManager {
     if (path.length === 1 && this.lastActions[path[0]]) {
       this.lastActions[path[0]].callback();
     }
-    this.lastActions = [];
   }
 
   private handleCancel(): void {

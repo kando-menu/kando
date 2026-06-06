@@ -17,7 +17,7 @@
     rgba(color.adjust($base-light, $lightness: -2%), 0.9),
     rgba(color.adjust($base-dark, $lightness: -5%), 0.9)
   );
-  width: 350px;
+  width: 370px;
   min-width: 250px;
   display: flex;
 }

@@ -11,6 +11,8 @@
 import React from 'react';
 import i18next from 'i18next';
 
+import * as classes from './MenuBehavior.module.scss';
+
 import { useAppState, useMenuSettings } from '../../state';
 import { Checkbox, Note } from '../common';
 
@@ -21,9 +23,8 @@ export default function MenuBehavior() {
   const editMenu = useMenuSettings((state) => state.editMenu);
 
   return (
-    <>
-      <h1>{i18next.t('settings.menu-behavior')}</h1>
-      <Note useMarkdown marginBottom={5} marginTop={-5}>
+    <div className={classes.container}>
+      <Note useMarkdown marginBottom={-5} marginTop={-5}>
         {i18next.t('settings.menu-behavior-info', {
           link: 'https://kando.menu/usage/',
         })}
@@ -61,6 +62,6 @@ export default function MenuBehavior() {
           });
         }}
       />
-    </>
+    </div>
   );
 }

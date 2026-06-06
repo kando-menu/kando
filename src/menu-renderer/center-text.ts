@@ -31,6 +31,12 @@ import { Vec2 } from '../common';
  */
 export class CenterText {
   /**
+   * The center text can be enabled or disabled. Any calls to `show` will be ignored and
+   * it will be hidden immediately if it is disabled.
+   */
+  private enabled: boolean = true;
+
+  /**
    * The div that contains the wrap-shapes and the inner div with the text. It will be
    * positioned absolutely and translated relative to the center of the pie menu's root
    * element.
@@ -48,6 +54,9 @@ export class CenterText {
   /** We query this once to compute the amount of lines which fit into the circle. */
   private maxFontSize: number = -1;
 
+  /** The diameter of the circle in which the text is displayed. */
+  private diameter: number;
+
   /**
    * This is used to cache the text elements so that we do not need to create new elements
    * every time the text changes.
@@ -56,12 +65,25 @@ export class CenterText {
 
   /**
    * @param container The parent element of the text element.
-   * @param diameter The diameter of the circle in which the text is displayed.
+   * @param diameter
    */
-  constructor(
-    private container: HTMLElement,
-    private diameter: number
-  ) {}
+  constructor(private container: HTMLElement) {}
+
+  /** Enables or disables the center text. */
+  public setEnabled(enabled: boolean) {
+    this.enabled = enabled;
+    if (!enabled) {
+      this.hide();
+    }
+  }
+
+  /** Updates the diameter of the circle in which the text is displayed. */
+  public setDiameter(diameter: number) {
+    this.diameter = diameter;
+
+    // Clear the cache, as the cached text elements have the wrong size for the new diameter.
+    this.cache = {};
+  }
 
   /** Removes the current text from the container. */
   public hide() {
@@ -81,6 +103,10 @@ export class CenterText {
    *   the given character will be underlined.
    */
   public async show(text: string, position: Vec2, accessKey?: string) {
+    if (!this.enabled) {
+      return;
+    }
+
     const currentCallCount = ++this.callCount;
     const key = text + (accessKey ?? '');
 
