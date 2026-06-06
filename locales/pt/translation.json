@@ -6,7 +6,8 @@
             "file-example": "ficheiro: URI de exemplo:",
             "url-example": "URL de exemplo:",
             "search-placeholder": "Pesquisar ícones…",
-            "hint": "Veja [aqui]({{link}}) como adicionar ou criar os seus próprios temas de ícones."
+            "hint": "Veja [aqui]({{link}}) como adicionar ou criar os seus próprios temas de ícones.",
+            "reload-button-tooltip": "Recarregar todos os temas de ícones"
         },
         "not-bound": "Não Atribuído",
         "invalid-dropdown-selection": "Selecione uma opção…",
@@ -109,7 +110,16 @@
             "localization-label": "Língua",
             "localization-info": "Reiniciar Kando para aplicar a nova língua.",
             "keep-input-focus": "Manter a aplicação ativa focada",
-            "keep-input-focus-info": "Se ativado, o menu não receberá o foco de entrada do teclado quando aberto. Isso desativa o modo turbo, mas pode ser útil se exigir que outras aplicações permaneçam focadas enquanto o menu estiver aberto."
+            "keep-input-focus-info": "Se ativado, o menu não receberá o foco de entrada do teclado quando aberto. Isso desativa o modo turbo, mas pode ser útil se exigir que outras aplicações permaneçam focadas enquanto o menu estiver aberto.",
+            "hardware-acceleration-info": "Esta opção pode melhorar o desempenho da app, mas também pode causar alguns artefatos de renderização. Precisa reiniciar o Kando para aplicar esta configuração.",
+            "hardware-acceleration": "Ativar aceleração de hardware",
+            "press-again-behavior-info": "Isto determina o que acontece quando o atalho é pressionado novamente enquanto um menu é exibido. Se vários menus estiverem atribuídos ao mesmo atalho , pode usar isto para percorrer todos os menus correspondentes. Certifique-se de manter pressionada uma tecla modificadora apenas se quiser usar o Modo Turbo junto com uma opção diferente de \"Não fazer nada\".",
+            "press-again-behavior": "Comportamento de pressionar atalho novamente",
+            "do-nothing": "Não faça nada",
+            "cycle-from-first": "Mostrar próximo menu (começar do início)",
+            "cycle-from-recent": "Mostrar próximo menu (continuar do último)",
+            "close-menu": "Fechar menu",
+            "center": "Centro"
         },
         "introduction-dialog": {
             "slide1-title": "Kando oferece uma forma única e eficiente de interagir com o seu computador.",
@@ -161,7 +171,11 @@
             "get-themes-online": "Obter temas online",
             "create-your-own-themes": "Crie os seus próprios temas",
             "open-theme-directory": "Abrir pasta de temas",
-            "author": "por {{author}}"
+            "author": "por {{author}}",
+            "save-preset-error-title": "Falha ao gravar predefinição",
+            "default-colors": "Cores predefinidas",
+            "enable-menu-animations-info": "Se desativado, todas as transições e a maioria das animações do tema do menu são impedidas.",
+            "enable-menu-animations": "Animações de menu"
         },
         "all-menus": "Todos os menus",
         "search-menus-placeholder": "Procurar menus…",
@@ -233,6 +247,21 @@
             "pick-app-name-title": "Selecionar um nome de aplicação",
             "pick-window-title-title": "Selecionar um título de janela",
             "confirm": "Usar este valor"
+        },
+        "achievements-dialog": {
+            "reset-confirmation-message": "Todas as conquistas e o progresso no nível serão perdidos. Esta ação não pode ser desfeita.",
+            "title": "Conquistas",
+            "xp": "XP",
+            "no-in-progress-achievements": "Parabéns! Completou todas as conquistas.",
+            "no-completed-achievements": "Ainda não completou nenhuma conquista.",
+            "in-progress-button": "Em Progresso",
+            "completed-button": "Completas"
+        },
+        "add-menu-item-hint": "Arraste este elemento para adicioná-lo ao menu acima!",
+        "app-picker": {
+            "hint": "Também pode arrastar e soltar uma app do seu menu Iniciar para o editor de menu do Kando!",
+            "search-placeholder": "Pesquisar uma app…",
+            "use-selected": "Usar selecionado"
         }
     },
     "menu-items": {
@@ -241,7 +270,9 @@
             "tip-3": "Use {{app_name}} para inserir o nome da aplicação que estava focado quando abriu o menu.",
             "tip-4": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
             "tip-5": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
-            "tip-6": "Clique [aqui]({{link}}) para descobrir como encontrar os comandos para iniciar as suas apps."
+            "tip-6": "Clique [aqui]({{link}}) para descobrir como encontrar os comandos para iniciar as suas apps.",
+            "choose-app": "Escolha uma app…",
+            "tip-2": "Se o caminho para um executável contem espaços, deve \"pôr entre aspas\"."
         },
         "file": {
             "tip-1": "Pode usar este tipo de elemento para abrir ficheiros ou pastas."
@@ -274,7 +305,8 @@
             "tip-3": "Pode usar o elemento URI para abrir uma ligação do tipo mailto:.",
             "tip-4": "Use {{app_name}} para inserir o nome da aplicação que estava focado quando abriu o menu.",
             "tip-5": "Use {{window_name}} para inserir o nome da janela que estava focada quando abriu o menu.",
-            "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto."
+            "tip-6": "Use {{pointer_x}} e {{pointer_y}} para inserir a posição do ponteiro onde o menu foi aberto.",
+            "tip-2": "Pode usar o elemento URI para abrir um ficheiro ou uma pasta usando o protocolo file://."
         },
         "common": {
             "delayed-option": "Esperar pela animação de fade-out",
@@ -357,6 +389,9 @@
         },
         "kde-wayland": {
             "shortcut-info": "Kando não pode atribuir atalhos globais diretamente no KDE/Wayland. Ao invés disso, especifique um ID de atalho aqui e procure por ele na secção de atalhos globais do KWin nas configurações de sistema do seu KDE. Lá pode atribuir um atalho que irá abrir este menu."
+        },
+        "niri": {
+            "shortcut-info": "O Niri ainda não apoia atalhos globais. Mas pode abrir este menu usando 'kando --menu \"Nome do Menu\"' na linha de comando ou na configuração do Niri."
         }
     },
     "menu-actions": {
