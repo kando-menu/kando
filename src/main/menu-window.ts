@@ -203,7 +203,7 @@ export class MenuWindow extends BrowserWindow {
 
         // If the 'sameShortcutBehavior' is set to 'close', we hide the menu.
         if (sameShortcutBehavior === 'close') {
-          this.webContents.send('menu-window.cancel-menu');
+          this.closeMenu();
           return;
         }
 
