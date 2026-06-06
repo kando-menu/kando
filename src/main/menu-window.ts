@@ -243,6 +243,10 @@ export class MenuWindow extends BrowserWindow {
 
       // Push the current shortcuts to the stack and inhibit the menu's shortcut
       if (shortcut && shortcut.length > 0) {
+        if (this.shortcutInhibitionID > 0) {
+          await this.kando.getBackend().releaseInhibition(this.shortcutInhibitionID);
+        }
+
         this.shortcutInhibitionID = await this.kando
           .getBackend()
           .inhibitShortcut(shortcut);
