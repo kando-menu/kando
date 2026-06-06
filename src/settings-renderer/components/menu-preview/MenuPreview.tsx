@@ -72,7 +72,6 @@ export default function MenuPreview() {
   const moveMenuItem = useMenuSettings((state) => state.moveMenuItem);
   const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
   const duplicateMenuItem = useMenuSettings((state) => state.duplicateMenuItem);
-  const deleteMenu = useMenuSettings((state) => state.deleteMenu);
 
   // When the user selects a submenu or navigates back to the parent menu, a short
   // transition animation is shown. The new menu fades in from the direction of the
@@ -491,14 +490,16 @@ export default function MenuPreview() {
   const renderChild = (child: RenderedMenuItem, index: number) => {
     let angleDragMayStart = false;
     let clickedDownContainer: HTMLDivElement | null = null;
-    const selected = selectedChild >= 0 && selectedChild === child.index;
+    const childIndex = child.index;
+    const isSelected = selectedChild >= 0 && selectedChild === childIndex;
+    const isSubmenu = centerItem.children[childIndex]?.type === 'submenu';
 
     return (
       <div
         key={child.key}
         className={cx({
           child: true,
-          selected,
+          selected: isSelected,
           dragging: isDraggedChild(child),
           dropping: dropInto && dropIndex === child.index,
         })}
@@ -514,7 +515,7 @@ export default function MenuPreview() {
           event.dataTransfer.effectAllowed = 'copyMove';
           event.dataTransfer.setData(
             'kando/child-path',
-            JSON.stringify(centerItemPath.concat(index))
+            JSON.stringify(centerItemPath.concat(childIndex))
           );
           setDragIndex(index);
           setDropIndex(index);
@@ -522,20 +523,25 @@ export default function MenuPreview() {
         }}
         onKeyDown={(event) => {
           // Select the child if the user presses enter or space. This is required for
-          // keyboard navigation in the menu preview.
+          // keyboard navigation in the menu preview. If the child is already selected
+          // and a submenu, the user can also open the submenu with enter or space.
           if (event.key === 'Enter' || event.key === ' ') {
-            selectChild(index);
+            if (isSubmenu && isSelected) {
+              editChild(childIndex);
+            } else {
+              selectChild(childIndex);
+            }
           }
 
           // Delete the item if the user presses the delete key.
-          if (event.key === 'Delete' || event.key === 'Backspace') {
-            deleteMenuItem(selectedMenu, centerItemPath.concat(index));
+          if (event.key === 'Delete') {
+            deleteMenuItem(selectedMenu, centerItemPath.concat(childIndex));
             selectCenter();
           }
         }}
         onDoubleClick={() => {
-          if (centerItem.children[child.index]?.type === 'submenu') {
-            editChild(index);
+          if (isSubmenu) {
+            editChild(childIndex);
           }
         }}
         onPointerDown={() => {
@@ -596,19 +602,16 @@ export default function MenuPreview() {
           // interaction, onPointerUp is also called at the end of a drag operation. In
           // this case we do not want to select the child.
           else if (
-            !selected &&
+            !isSelected &&
             dragIndex === null &&
             clickedDownContainer === currentContainer.current
           ) {
             // With right mouse button or long touch, the user can open submenus without
             // double-clicking.
-            if (
-              event.button === 2 &&
-              centerItem.children[child.index]?.type === 'submenu'
-            ) {
-              editChild(index);
+            if (event.button === 2 && isSubmenu) {
+              editChild(childIndex);
             } else {
-              selectChild(index);
+              selectChild(childIndex);
             }
           }
         }}>
@@ -646,7 +649,7 @@ export default function MenuPreview() {
           // If the item is locked, we unlock it. If it is not locked, we lock it. This is
           // done by removing the angle from the item or setting it to the current angle
           // of the item.
-          const itemPath = centerItemPath.concat(index);
+          const itemPath = centerItemPath.concat(renderedChild.index);
           editMenuItem(selectedMenu, itemPath, (item: ChildMenuItem) => {
             if (item.angle !== undefined) {
               delete item.angle;
@@ -737,6 +740,12 @@ export default function MenuPreview() {
             <div
               ref={currentContainer}
               className={classes.transitionContainer}
+              onKeyDown={(event) => {
+                // Select the parent item if the user presses the backspace key.
+                if (event.key === 'Backspace' && !showingRootMenu) {
+                  selectParent();
+                }
+              }}
               onDragEnter={(event) => {
                 // If we enter the container during an external drag, we check whether
                 // we could create a new item from the dragged data. If this is the case,
@@ -917,18 +926,6 @@ export default function MenuPreview() {
                   // required for keyboard navigation in the menu preview.
                   if (event.key === 'Enter' || event.key === ' ') {
                     selectCenter();
-                  }
-
-                  // Delete the menu if the user presses the delete key and the center
-                  // item is the root menu. If it is a submenu, we delete the submenu
-                  // instead.
-                  if (event.key === 'Delete' || event.key === 'Backspace') {
-                    if (showingRootMenu) {
-                      deleteMenu(selectedMenu);
-                    } else {
-                      deleteMenuItem(selectedMenu, centerItemPath);
-                      selectParent();
-                    }
                   }
                 }}>
                 <ThemedIcon
