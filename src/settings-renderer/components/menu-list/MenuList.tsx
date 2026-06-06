@@ -151,7 +151,7 @@ export default function MenuList() {
               <div key="-1" className={classes.message}>
                 <h1>{i18next.t('settings.no-menus')}</h1>
                 <Note>{i18next.t('settings.no-menus-note')}</Note>
-                <Swirl marginTop={10} variant="2" />
+                <Swirl marginTop={20} variant="2" />
               </div>
             )}
             {menus.length > 0 &&
@@ -160,7 +160,7 @@ export default function MenuList() {
                 <div key="-1" className={classes.message}>
                   <h1>{i18next.t('settings.no-matching-menus')}</h1>
                   <Note>{i18next.t('settings.no-matching-menus-note')}</Note>
-                  <Swirl marginTop={10} variant="2" />
+                  <Swirl marginTop={20} variant="2" />
                 </div>
               )}
             {menus.length > 0 &&
@@ -169,7 +169,7 @@ export default function MenuList() {
                 <div key="-1" className={classes.message}>
                   <h1>{i18next.t('settings.empty-collection')}</h1>
                   <Note>{i18next.t('settings.empty-collection-note')}</Note>
-                  <Swirl marginTop={10} variant="2" />
+                  <Swirl marginTop={20} variant="2" />
                 </div>
               )}
 
