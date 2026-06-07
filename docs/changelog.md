@@ -40,6 +40,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 - A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
 - The option to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
 - New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
+- A global option to **return the pointer to the menu opening position** after selecting a button.
 
 ### :wrench: Changed
 
