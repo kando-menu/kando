@@ -16,6 +16,7 @@ Security   - in case of vulnerabilities.
 
 Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
+The [Unreleased] section contains changes which are not released yet. If you want to test these changes, you can [build Kando from source](https://kando.menu/compile-from-source/).
 
 ## [Unreleased]
 
