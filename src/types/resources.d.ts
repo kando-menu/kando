@@ -207,6 +207,10 @@ export default interface Resources {
               "placeholder": "Hit the record button to start recording!",
               "recording-placeholder": "Press any keys…"
           },
+          "focus-window": {
+              "description": "menu-actions.focus-window.description",
+              "name": "menu-actions.focus-window.name"
+          },
           "inhibit-shortcuts": {
               "description": "Disables all Kando shortcuts for the remainder of this workflow's execution.",
               "name": "Inhibit Shortcuts"

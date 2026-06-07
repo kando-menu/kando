@@ -78,164 +78,137 @@ export class ActionTypeRegistry {
   private static instance: ActionTypeRegistry = null;
 
   /** The metadata for each workflow action type. */
-  private metadata: Map<WorkflowActionType, WorkflowActionTypeMeta> = null;
+  private metadata: Record<WorkflowActionType, WorkflowActionTypeMeta>;
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
    * instance of this class.
    */
   private constructor() {
-    this.metadata = new Map<WorkflowActionType, WorkflowActionTypeMeta>([
-      [
-        'close-menu',
-        {
-          name: i18next.t('menu-actions.close-menu.name'),
-          icon: 'close-menu-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.close-menu.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'close-menu' }),
-        },
-      ],
-      [
-        'close-submenu',
-        {
-          name: i18next.t('menu-actions.close-submenu.name'),
-          icon: 'close-submenu-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.close-submenu.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'close-submenu' }),
-        },
-      ],
-      [
-        'delay',
-        {
-          name: i18next.t('menu-actions.delay.name'),
-          icon: 'delay-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.delay.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'delay', duration: 1 }),
-        },
-      ],
-      [
-        'execute-command',
-        {
-          name: i18next.t('menu-actions.execute-command.name'),
-          icon: 'command-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.execute-command.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({
-            type: 'execute-command',
-            command: '',
-            detached: true,
-            isolated: false,
-          }),
-        },
-      ],
-      [
-        'execute-macro',
-        {
-          name: i18next.t('menu-actions.execute-macro.name'),
-          icon: 'macro-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.execute-macro.description'),
-          prefersDelayedExecution: true,
-          prefersInhibitedShortcuts: true,
-          createAction: () => ({ type: 'execute-macro', macro: [] }),
-        },
-      ],
-      [
-        'inhibit-shortcuts',
-        {
-          name: i18next.t('menu-actions.inhibit-shortcuts.name'),
-          icon: 'inhibit-shortcuts-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.inhibit-shortcuts.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'inhibit-shortcuts' }),
-        },
-      ],
-      [
-        'open-file',
-        {
-          name: i18next.t('menu-actions.open-file.name'),
-          icon: 'file-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.open-file.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'open-file', path: '' }),
-        },
-      ],
-      [
-        'open-menu',
-        {
-          name: i18next.t('menu-actions.open-menu.name'),
-          icon: 'redirect-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.open-menu.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'open-menu', menu: '' }),
-        },
-      ],
-      [
-        'open-settings',
-        {
-          name: i18next.t('menu-actions.open-settings.name'),
-          icon: 'settings-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.open-settings.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'open-settings' }),
-        },
-      ],
-      [
-        'open-uri',
-        {
-          name: i18next.t('menu-actions.open-uri.name'),
-          icon: 'uri-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.open-uri.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'open-uri', uri: '' }),
-        },
-      ],
-      [
-        'set-clipboard',
-        {
-          name: i18next.t('menu-actions.set-clipboard.name'),
-          icon: 'clipboard-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.set-clipboard.description'),
-          prefersDelayedExecution: false,
-          prefersInhibitedShortcuts: false,
-          createAction: () => ({ type: 'set-clipboard', text: '' }),
-        },
-      ],
-      [
-        'simulate-hotkey',
-        {
-          name: i18next.t('menu-actions.simulate-hotkey.name'),
-          icon: 'hotkey-item.svg',
-          iconTheme: 'kando',
-          description: i18next.t('menu-actions.simulate-hotkey.description'),
-          prefersDelayedExecution: true,
-          prefersInhibitedShortcuts: true,
-          createAction: () => ({ type: 'simulate-hotkey', hotkey: '' }),
-        },
-      ],
-    ]);
+    this.metadata = {
+      ['close-menu']: {
+        name: i18next.t('menu-actions.close-menu.name'),
+        icon: 'close-menu-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.close-menu.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'close-menu' }),
+      },
+      ['close-submenu']: {
+        name: i18next.t('menu-actions.close-submenu.name'),
+        icon: 'close-submenu-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.close-submenu.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'close-submenu' }),
+      },
+      ['delay']: {
+        name: i18next.t('menu-actions.delay.name'),
+        icon: 'delay-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.delay.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'delay', duration: 1 }),
+      },
+      ['execute-command']: {
+        name: i18next.t('menu-actions.execute-command.name'),
+        icon: 'command-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.execute-command.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({
+          type: 'execute-command',
+          command: '',
+          detached: true,
+          isolated: false,
+        }),
+      },
+      ['execute-macro']: {
+        name: i18next.t('menu-actions.execute-macro.name'),
+        icon: 'macro-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.execute-macro.description'),
+        prefersDelayedExecution: true,
+        prefersInhibitedShortcuts: true,
+        createAction: () => ({ type: 'execute-macro', macro: [] }),
+      },
+      ['focus-window']: {
+        name: i18next.t('menu-actions.focus-window.name'),
+        icon: 'focus-window-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.focus-window.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'focus-window', windowName: '', appName: '' }),
+      },
+      ['inhibit-shortcuts']: {
+        name: i18next.t('menu-actions.inhibit-shortcuts.name'),
+        icon: 'inhibit-shortcuts-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.inhibit-shortcuts.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'inhibit-shortcuts' }),
+      },
+      ['open-file']: {
+        name: i18next.t('menu-actions.open-file.name'),
+        icon: 'file-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.open-file.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'open-file', path: '' }),
+      },
+      ['open-menu']: {
+        name: i18next.t('menu-actions.open-menu.name'),
+        icon: 'redirect-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.open-menu.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'open-menu', menu: '' }),
+      },
+      ['open-settings']: {
+        name: i18next.t('menu-actions.open-settings.name'),
+        icon: 'settings-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.open-settings.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'open-settings' }),
+      },
+      ['open-uri']: {
+        name: i18next.t('menu-actions.open-uri.name'),
+        icon: 'uri-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.open-uri.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'open-uri', uri: '' }),
+      },
+      ['set-clipboard']: {
+        name: i18next.t('menu-actions.set-clipboard.name'),
+        icon: 'clipboard-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.set-clipboard.description'),
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'set-clipboard', text: '' }),
+      },
+      ['simulate-hotkey']: {
+        name: i18next.t('menu-actions.simulate-hotkey.name'),
+        icon: 'hotkey-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.simulate-hotkey.description'),
+        prefersDelayedExecution: true,
+        prefersInhibitedShortcuts: true,
+        createAction: () => ({ type: 'simulate-hotkey', hotkey: '' }),
+      },
+    };
   }
 
   /**
@@ -256,7 +229,7 @@ export class ActionTypeRegistry {
    *
    * @returns A map of all workflow action types to their meta information.
    */
-  public getAllMetadata(): Map<WorkflowActionType, WorkflowActionTypeMeta> {
+  public getAllMetadata(): Record<WorkflowActionType, WorkflowActionTypeMeta> {
     return this.metadata;
   }
 
@@ -269,7 +242,7 @@ export class ActionTypeRegistry {
    * @returns The meta information for the given workflow action type.
    */
   public getMetadata(type: WorkflowActionType): WorkflowActionTypeMeta {
-    return this.metadata.get(type);
+    return this.metadata[type];
   }
 
   /**

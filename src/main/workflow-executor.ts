@@ -17,6 +17,7 @@ import { execute as closeMenu } from './actions/close-menu';
 import { execute as closeSubmenu } from './actions/close-submenu';
 import { execute as executeCommand } from './actions/execute-command';
 import { execute as executeMacro } from './actions/execute-macro';
+import { execute as focusWindow } from './actions/focus-window';
 import { execute as inhibitShortcuts } from './actions/inhibit-shortcuts';
 import { execute as openFile } from './actions/open-file';
 import { execute as openMenu } from './actions/open-menu';
@@ -40,6 +41,7 @@ const ACTION_EXECUTORS = new Map<
   ['delay', delay],
   ['execute-command', executeCommand],
   ['execute-macro', executeMacro],
+  ['focus-window', focusWindow],
   ['inhibit-shortcuts', inhibitShortcuts],
   ['open-file', openFile],
   ['open-menu', openMenu],

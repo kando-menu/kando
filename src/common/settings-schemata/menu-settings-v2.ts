@@ -79,6 +79,17 @@ export const EXECUTE_MACRO_ACTION_SCHEMA_V2 = z.object({
   macro: z.array(MACRO_EVENT_SCHEMA_V2),
 });
 
+/** This action will focus a matching application window. */
+export const FOCUS_WINDOW_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('focus-window'),
+
+  /** Regex to match for a window name */
+  windowName: z.string().optional(),
+
+  /** Regex to match for an application name. */
+  appName: z.string().optional(),
+});
+
 /** This action will open a file when triggered. */
 export const OPEN_FILE_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('open-file'),
@@ -131,6 +142,7 @@ export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
   DELAY_ACTION_SCHEMA_V2,
   EXECUTE_COMMAND_ACTION_SCHEMA_V2,
   EXECUTE_MACRO_ACTION_SCHEMA_V2,
+  FOCUS_WINDOW_ACTION_SCHEMA_V2,
   INHIBIT_SHORTCUTS_ACTION_SCHEMA_V2,
   OPEN_FILE_ACTION_SCHEMA_V2,
   OPEN_MENU_ACTION_SCHEMA_V2,
@@ -396,6 +408,7 @@ export type CloseMenuActionV2 = z.infer<typeof CLOSE_MENU_ACTION_SCHEMA_V2>;
 export type CloseSubmenuActionV2 = z.infer<typeof CLOSE_SUBMENU_ACTION_SCHEMA_V2>;
 export type ExecuteCommandActionV2 = z.infer<typeof EXECUTE_COMMAND_ACTION_SCHEMA_V2>;
 export type ExecuteMacroActionV2 = z.infer<typeof EXECUTE_MACRO_ACTION_SCHEMA_V2>;
+export type FocusWindowActionV2 = z.infer<typeof FOCUS_WINDOW_ACTION_SCHEMA_V2>;
 export type InhibitShortcutsActionV2 = z.infer<typeof INHIBIT_SHORTCUTS_ACTION_SCHEMA_V2>;
 export type OpenFileActionV2 = z.infer<typeof OPEN_FILE_ACTION_SCHEMA_V2>;
 export type OpenMenuActionV2 = z.infer<typeof OPEN_MENU_ACTION_SCHEMA_V2>;

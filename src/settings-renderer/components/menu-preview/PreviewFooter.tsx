@@ -30,9 +30,13 @@ export default function PreviewFooter() {
   const [isDeleteDropActive, setIsDeleteDropActive] = React.useState(false);
   const dragDepth = React.useRef(0);
 
-  const workflowItemTypes = [
-    ...ActionTypeRegistry.getInstance().getAllMetadata().entries(),
-  ].map(([key, meta]) => ({ key, ...meta }));
+  const allMetadata = ActionTypeRegistry.getInstance().getAllMetadata();
+  const workflowItemTypes = (
+    Object.keys(allMetadata) as Array<keyof typeof allMetadata>
+  ).map((key) => ({
+    key,
+    ...allMetadata[key],
+  }));
 
   const isMenuItemDrag = (event: React.DragEvent<HTMLDivElement>) => {
     return event.dataTransfer.types.includes('kando/child-path');
@@ -51,6 +55,7 @@ export default function PreviewFooter() {
         type.key !== 'delay' &&
         type.key !== 'close-menu' &&
         type.key !== 'close-submenu' &&
+        type.key !== 'focus-window' &&
         type.key !== 'inhibit-shortcuts'
     ),
   ];
