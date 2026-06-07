@@ -110,6 +110,30 @@ export default function MenuPreview() {
   const [dragAngle, setDragAngle] = React.useState<number | null>(null);
   const [editedSubmenuPath, setEditedSubmenuPath] = React.useState<string | null>(null);
 
+  // The preview footer can delete items via drag-and-drop. This creates a problem: When
+  // the item is deleted, it's drag-end handler is not called and the menu preview is
+  // still in the "drag state". To solve this problem, we use a custom event which is
+  // dispatched when an item is deleted via drag-and-drop in the preview footer.
+  const resetDragState = React.useCallback(() => {
+    setDropIndex(null);
+    setDropInto(false);
+    setTempItem(null);
+    setDragIndex(null);
+    setDragAngle(null);
+  }, []);
+
+  React.useEffect(() => {
+    const onDragEnd = () => {
+      resetDragState();
+    };
+
+    window.addEventListener('kando/menu-item-drag-end', onDragEnd);
+
+    return () => {
+      window.removeEventListener('kando/menu-item-drag-end', onDragEnd);
+    };
+  }, [resetDragState]);
+
   const selectedChildPathKey = `${String(selectedMenu)}:${selectedChildPath.join('.')}`;
   const editingSelectedSubmenu = editedSubmenuPath === selectedChildPathKey;
 
@@ -503,9 +527,7 @@ export default function MenuPreview() {
         style={utils.makeCSSProperties('dir', childDirections[index])}
         tabIndex={0}
         onDragEnd={() => {
-          setDropIndex(null);
-          setDragIndex(null);
-          setDropInto(false);
+          resetDragState();
         }}
         onDragStart={(event) => {
           event.dataTransfer.effectAllowed = 'copyMove';
@@ -879,10 +901,7 @@ export default function MenuPreview() {
                   }
                 }
 
-                setDropIndex(null);
-                setDropInto(false);
-                setTempItem(null);
-                setDragIndex(null);
+                resetDragState();
 
                 event.preventDefault();
               }}>

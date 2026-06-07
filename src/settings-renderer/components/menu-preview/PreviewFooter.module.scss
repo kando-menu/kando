@@ -11,10 +11,31 @@
 @use '../../variables.scss' as *;
 
 .itemArea {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   color: #fff;
+
+  .deleteDropOverlay {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    backdrop-filter: blur(8px);
+
+    color: $text-normal;
+    font-weight: 700;
+    text-transform: uppercase;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
 
   .header {
     display: flex;

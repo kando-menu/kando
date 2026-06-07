@@ -300,6 +300,7 @@ export default interface Resources {
           "create-menu-button": "Add Menu",
           "delete-menu": "Delete menu",
           "delete-menu-item": "Delete menu item",
+          "drop-here-to-delete": "Drop here to delete",
           "duplicate-menu": "Duplicate menu",
           "duplicate-menu-item": "Duplicate menu item",
           "edit-submenu": "Edit submenu",
