@@ -156,8 +156,10 @@ try {
       fs.mkdirSync(path.join(getConfigDirectory(), dir), { recursive: true });
     });
   } catch (error) {
+    const errorCode =
+      error instanceof Error ? (error as NodeJS.ErrnoException).code : undefined;
     if (
-      (error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM') &&
+      (errorCode === 'EROFS' || errorCode === 'EACCES' || errorCode === 'EPERM') &&
       !generalSettings.get('ignoreWriteProtectedConfigFiles')
     ) {
       console.log('Failed to create the themes folders due to write-protected files.');

@@ -48,6 +48,12 @@ describe('normalize', () => {
       y: -0.7071067811865475,
     });
   });
+
+  it('should return NaN for zero-length vectors', () => {
+    const result = normalize({ x: 0, y: 0 });
+    expect(result.x).to.be.NaN;
+    expect(result.y).to.be.NaN;
+  });
 });
 
 describe('getClosestEquivalentAngle', () => {
