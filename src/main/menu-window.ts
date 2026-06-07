@@ -828,11 +828,11 @@ export class MenuWindow extends BrowserWindow {
             ? { ...this.menuOpeningPointerPosition }
             : undefined;
 
+          await this.returnPointerToMenuOpeningPosition(menuOpeningPointerPosition);
+
           if (item.selectWorkflow) {
             await this.executeWorkflow(item.selectWorkflow);
           }
-
-          await this.returnPointerToMenuOpeningPosition(menuOpeningPointerPosition);
 
           this.kando.achievementTracker.onSelectionMade(
             Math.min(Math.max(path.length, 1), 3) as 1 | 2 | 3, // depth between 1 and 3
