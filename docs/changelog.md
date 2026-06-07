@@ -38,6 +38,7 @@ This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com
 
 - Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
 - A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
+- A new option to move the mouse pointer back to where it opened the menu after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
 - The option to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
 - New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
 - A global option to **return the pointer to the menu opening position** after selecting a button.
