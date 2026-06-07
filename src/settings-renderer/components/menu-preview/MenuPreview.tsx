@@ -389,17 +389,14 @@ export default function MenuPreview() {
     }
   };
 
-  // Removes the last index from the selected menu path if it refers to a submenu. If it
-  // refers to an item, the last two indices are removed so that the parent submenu is
-  // selected.
+  // Navigates one visual level up by selecting the parent of the currently shown center
+  // item and opening it if it is still a submenu.
   const selectParent = () => {
-    setEditedSubmenuPath(null);
-
-    if (selectedChild === -1) {
-      selectChildPath(selectedChildPath.slice(0, -1));
-    } else {
-      selectChildPath(selectedChildPath.slice(0, -2));
-    }
+    const parentPath = centerItemPath.slice(0, -1);
+    setEditedSubmenuPath(
+      parentPath.length > 0 ? `${String(selectedMenu)}:${parentPath.join('.')}` : null
+    );
+    selectChildPath(parentPath);
 
     // Trigger a transition by changing the key of the CSSTransition component.
     setTransitionPing(!transitionPing);
