@@ -110,6 +110,30 @@ export default function MenuPreview() {
   const [dragAngle, setDragAngle] = React.useState<number | null>(null);
   const [editedSubmenuPath, setEditedSubmenuPath] = React.useState<string | null>(null);
 
+  // The preview footer can delete items via drag-and-drop. This creates a problem: When
+  // the item is deleted, it's drag-end handler is not called and the menu preview is
+  // still in the "drag state". To solve this problem, we use a custom event which is
+  // dispatched when an item is deleted via drag-and-drop in the preview footer.
+  const resetDragState = React.useCallback(() => {
+    setDropIndex(null);
+    setDropInto(false);
+    setTempItem(null);
+    setDragIndex(null);
+    setDragAngle(null);
+  }, []);
+
+  React.useEffect(() => {
+    const onDragEnd = () => {
+      resetDragState();
+    };
+
+    window.addEventListener('kando/menu-item-drag-end', onDragEnd);
+
+    return () => {
+      window.removeEventListener('kando/menu-item-drag-end', onDragEnd);
+    };
+  }, [resetDragState]);
+
   const selectedChildPathKey = `${String(selectedMenu)}:${selectedChildPath.join('.')}`;
   const editingSelectedSubmenu = editedSubmenuPath === selectedChildPathKey;
 
@@ -365,17 +389,14 @@ export default function MenuPreview() {
     }
   };
 
-  // Removes the last index from the selected menu path if it refers to a submenu. If it
-  // refers to an item, the last two indices are removed so that the parent submenu is
-  // selected.
+  // Navigates one visual level up by selecting the parent of the currently shown center
+  // item and opening it if it is still a submenu.
   const selectParent = () => {
-    setEditedSubmenuPath(null);
-
-    if (selectedChild === -1) {
-      selectChildPath(selectedChildPath.slice(0, -1));
-    } else {
-      selectChildPath(selectedChildPath.slice(0, -2));
-    }
+    const parentPath = centerItemPath.slice(0, -1);
+    setEditedSubmenuPath(
+      parentPath.length > 0 ? `${String(selectedMenu)}:${parentPath.join('.')}` : null
+    );
+    selectChildPath(parentPath);
 
     // Trigger a transition by changing the key of the CSSTransition component.
     setTransitionPing(!transitionPing);
@@ -503,9 +524,7 @@ export default function MenuPreview() {
         style={utils.makeCSSProperties('dir', childDirections[index])}
         tabIndex={0}
         onDragEnd={() => {
-          setDropIndex(null);
-          setDragIndex(null);
-          setDropInto(false);
+          resetDragState();
         }}
         onDragStart={(event) => {
           event.dataTransfer.effectAllowed = 'copyMove';
@@ -879,10 +898,7 @@ export default function MenuPreview() {
                   }
                 }
 
-                setDropIndex(null);
-                setDropInto(false);
-                setTempItem(null);
-                setDragIndex(null);
+                resetDragState();
 
                 event.preventDefault();
               }}>

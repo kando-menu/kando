@@ -16,6 +16,7 @@ import * as classes from './PreviewFooter.module.scss';
 import FooterButton from './FooterButton';
 
 import { ActionTypeRegistry } from '../../../common';
+import { useAppState, useMenuSettings } from '../../state';
 
 /**
  * This component encapsules the list of item types which can be dragged to the menu
@@ -23,9 +24,19 @@ import { ActionTypeRegistry } from '../../../common';
  */
 
 export default function PreviewFooter() {
+  const selectedMenu = useAppState((state) => state.selectedMenu);
+  const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
+
+  const [isDeleteDropActive, setIsDeleteDropActive] = React.useState(false);
+  const dragDepth = React.useRef(0);
+
   const workflowItemTypes = [
     ...ActionTypeRegistry.getInstance().getAllMetadata().entries(),
   ].map(([key, meta]) => ({ key, ...meta }));
+
+  const isMenuItemDrag = (event: React.DragEvent<HTMLDivElement>) => {
+    return event.dataTransfer.types.includes('kando/child-path');
+  };
 
   const allItemTypes = [
     {
@@ -45,7 +56,60 @@ export default function PreviewFooter() {
   ];
 
   return (
-    <div className={classes.itemArea}>
+    <div
+      className={classes.itemArea}
+      onDragEnter={(event) => {
+        if (!isMenuItemDrag(event)) {
+          return;
+        }
+
+        dragDepth.current += 1;
+
+        setIsDeleteDropActive(true);
+        event.preventDefault();
+      }}
+      onDragOver={(event) => {
+        if (!isMenuItemDrag(event)) {
+          return;
+        }
+
+        event.preventDefault();
+      }}
+      onDragLeave={(event) => {
+        if (!isMenuItemDrag(event)) {
+          return;
+        }
+
+        dragDepth.current = Math.max(0, dragDepth.current - 1);
+
+        if (dragDepth.current === 0) {
+          setIsDeleteDropActive(false);
+        }
+
+        event.preventDefault();
+      }}
+      onDrop={(event) => {
+        const childPathData = event.dataTransfer.getData('kando/child-path');
+        if (!childPathData) {
+          return;
+        }
+
+        deleteMenuItem(selectedMenu, JSON.parse(childPathData));
+
+        // This is kind of ugly: We Reset drag-state in the preview as its local drop
+        // handlers will not fire when the item is deleted.
+        window.dispatchEvent(new CustomEvent('kando/menu-item-drag-end'));
+
+        dragDepth.current = 0;
+        setIsDeleteDropActive(false);
+
+        event.preventDefault();
+      }}>
+      <div
+        className={classes.deleteDropOverlay}
+        style={{ opacity: isDeleteDropActive ? 1 : 0 }}>
+        {i18next.t('settings.drop-here-to-delete')}
+      </div>
       <div className={classes.header}>
         <div className={classes.leftLine} />
         <div className={classes.title}>{i18next.t('settings.add-menu-items')}</div>
