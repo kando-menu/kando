@@ -495,7 +495,11 @@
             "preset-name-empty": "Der Name der Voreinstellung darf nicht leer sein!",
             "preset-name-invalid": "Der Name kann nur Buchstaben, Zahlen, Bindestriche, Unterstriche und Leerzeichen enthalten!",
             "preset-name-exists": "Eine Voreinstellung mit diesem Namen existiert bereits.",
-            "preset-name-placeholder": "z.B. Meine Lieblingsfarben"
+            "preset-name-placeholder": "z.B. Meine Lieblingsfarben",
+            "enable-menu-animations-info": "Wenn deaktiviert, werden alle Transitionen und die meisten Animationen des Menüthemas unterdrückt.",
+            "enable-menu-animations": "Menü-Animationen",
+            "enable-pointer-reactive-effects-info": "Wenn deaktiviert, werden einige Zoom- oder Skalierungseffekte des Menüthemas, die auf der aktuellen Zeigerposition basieren, unterdrückt.",
+            "enable-pointer-reactive-effects": "Zeigerbasierte Effekte"
         },
         "not-bound": "Nicht gebunden",
         "redo": "Wiederholen",
@@ -552,7 +556,7 @@
         "restore-general-settings-success-message": "Ihre allgemeinen Einstellungen wurden aus der Sicherungsdatei wiederhergestellt.",
         "restore-menu-settings-warning-title": "Möchten Sie wirklich die Menüeinstellungen wiederherstellen?",
         "restore-menu-settings-warning-message": "Dies wird Ihre aktuellen Menüs und Menüsammlungen mit den Inhalten der ausgewählten Backup-Datei überschreiben!",
-        "restore-menu-settings-error-title": "Das Laden der Sicherungsdatei ist fehlgeschlagen!",
+        "restore-menu-settings-error-title": "Das Laden der Menü-Sicherungsdatei ist fehlgeschlagen!",
         "restore-menu-settings-success-title": "Erfolg!",
         "restore-menu-settings-success-message": "Ihre Menüs und Menüsammlungen wurden aus der Backup-Datei wiederhergestellt.",
         "export-menu-error-title": "Export des Menüs fehlgeschlagen",
