@@ -36,6 +36,7 @@
   }
 
   display: flex;
+  gap: 2px;
 
   input {
     @include text-input;
