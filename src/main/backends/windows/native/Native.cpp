@@ -20,6 +20,7 @@
 #include <windows.h>
 
 #include <sstream>
+#include <utility>
 #include <vector>
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -113,6 +114,102 @@ std::string WStringToString(const std::wstring& wstr) {
 
   return str;
 }
+
+bool getWindowAppAndName(HWND hwnd, std::string& appName, std::string& windowName) {
+  if (!hwnd || !IsWindowVisible(hwnd) || GetWindow(hwnd, GW_OWNER) != nullptr) {
+    return false;
+  }
+
+  int titleLength = GetWindowTextLengthW(hwnd);
+  if (titleLength <= 0) {
+    return false;
+  }
+
+  std::wstring windowTitle(titleLength + 1, L'\0');
+  GetWindowTextW(hwnd, &windowTitle[0], titleLength + 1);
+  windowTitle.resize(titleLength);
+
+  windowName = WStringToString(windowTitle);
+  if (windowName.empty()) {
+    return false;
+  }
+
+  DWORD pid = 0;
+  GetWindowThreadProcessId(hwnd, &pid);
+  if (pid == 0) {
+    return false;
+  }
+
+  CHAR  processFilename[MAX_PATH] = {};
+  DWORD charsCarried              = MAX_PATH;
+
+  HANDLE hProc = OpenProcess(
+      PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_QUERY_INFORMATION, false, pid);
+  if (!hProc) {
+    return false;
+  }
+
+  BOOL result = QueryFullProcessImageNameA(hProc, 0, processFilename, &charsCarried);
+  CloseHandle(hProc);
+
+  if (!result || charsCarried == 0) {
+    return false;
+  }
+
+  appName                   = processFilename;
+  const size_t lastSlashIdx = appName.find_last_of("\\/");
+
+  if (lastSlashIdx != std::string::npos) {
+    appName.erase(0, lastSlashIdx + 1);
+  }
+
+  return !appName.empty();
+}
+
+struct WindowListContext {
+  std::vector<std::pair<std::string, std::string>> windows;
+};
+
+BOOL CALLBACK enumerateWindowsForList(HWND hwnd, LPARAM lParam) {
+  auto* context = reinterpret_cast<WindowListContext*>(lParam);
+  if (!context) {
+    return FALSE;
+  }
+
+  std::string appName;
+  std::string windowName;
+  if (getWindowAppAndName(hwnd, appName, windowName)) {
+    context->windows.emplace_back(appName, windowName);
+  }
+
+  return TRUE;
+}
+
+struct FocusWindowContext {
+  std::string targetWindowName;
+  std::string targetAppName;
+  HWND        targetWindow = nullptr;
+};
+
+BOOL CALLBACK enumerateWindowsForFocus(HWND hwnd, LPARAM lParam) {
+  auto* context = reinterpret_cast<FocusWindowContext*>(lParam);
+  if (!context) {
+    return FALSE;
+  }
+
+  std::string appName;
+  std::string windowName;
+  if (!getWindowAppAndName(hwnd, appName, windowName)) {
+    return TRUE;
+  }
+
+  if (context->targetWindowName == windowName && context->targetAppName == appName) {
+    context->targetWindow = hwnd;
+    return FALSE;
+  }
+
+  return TRUE;
+}
 } // namespace
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -123,6 +220,8 @@ Native::Native(Napi::Env env, Napi::Object exports) {
           InstanceMethod("movePointer", &Native::movePointer),
           InstanceMethod("simulateKey", &Native::simulateKey),
           InstanceMethod("getWMInfo", &Native::getWMInfo),
+          InstanceMethod("getOpenWindows", &Native::getOpenWindows),
+          InstanceMethod("focusWindow", &Native::focusWindow),
           InstanceMethod("fixAcrylicEffect", &Native::fixAcrylicEffect),
           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
       });
@@ -180,38 +279,12 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
 
   HWND foreground_window = GetForegroundWindow();
 
-  // Get the window name.
-  {
-    WCHAR window_title[256];
-    GetWindowTextW(foreground_window, window_title, 256);
+  std::string appName;
+  std::string windowName;
+  getWindowAppAndName(foreground_window, appName, windowName);
 
-    std::wstring ws(window_title);
-    obj.Set("window", WStringToString(ws));
-  }
-
-  // Get the app name.
-  {
-    DWORD pid;
-    GetWindowThreadProcessId(foreground_window, &pid);
-
-    CHAR  process_filename[MAX_PATH];
-    DWORD charsCarried = MAX_PATH;
-
-    HANDLE hProc = OpenProcess(
-        PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_QUERY_INFORMATION, false, pid);
-
-    QueryFullProcessImageNameA(hProc, 0, process_filename, &charsCarried);
-
-    std::string fullpath = process_filename;
-
-    const size_t last_slash_idx = fullpath.find_last_of("\\/");
-
-    if (std::string::npos != last_slash_idx) {
-      fullpath.erase(0, last_slash_idx + 1);
-    }
-
-    obj.Set("app", fullpath);
-  }
+  obj.Set("window", windowName);
+  obj.Set("app", appName);
 
   // Get the pointer position.
   {
@@ -222,6 +295,54 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
   }
 
   return obj;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::getOpenWindows(const Napi::CallbackInfo& info) {
+  Napi::Env   env    = info.Env();
+  Napi::Array result = Napi::Array::New(env);
+
+  WindowListContext context;
+  EnumWindows(enumerateWindowsForList, reinterpret_cast<LPARAM>(&context));
+
+  uint32_t index = 0;
+  for (const auto& windowInfo : context.windows) {
+    Napi::Object obj = Napi::Object::New(env);
+    obj.Set("app", windowInfo.first);
+    obj.Set("window", windowInfo.second);
+    result.Set(index++, obj);
+  }
+
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::focusWindow(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 2 || !info[0].IsString() || !info[1].IsString()) {
+    Napi::TypeError::New(env, "Two strings expected").ThrowAsJavaScriptException();
+    return;
+  }
+
+  FocusWindowContext context;
+  context.targetWindowName = info[0].As<Napi::String>().Utf8Value();
+  context.targetAppName    = info[1].As<Napi::String>().Utf8Value();
+
+  EnumWindows(enumerateWindowsForFocus, reinterpret_cast<LPARAM>(&context));
+
+  if (!context.targetWindow) {
+    return;
+  }
+
+  if (IsIconic(context.targetWindow)) {
+    ShowWindow(context.targetWindow, SW_RESTORE);
+  }
+
+  SetForegroundWindow(context.targetWindow);
+  BringWindowToTop(context.targetWindow);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

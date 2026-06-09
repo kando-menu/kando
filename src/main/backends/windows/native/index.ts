@@ -16,6 +16,20 @@ export type Native = {
   getWMInfo(): { app: string; window: string; pointerX: number; pointerY: number };
 
   /**
+   * Returns an array of all currently open windows, each with an 'app' (executable name)
+   * and a 'window' (window title) property.
+   */
+  getOpenWindows(): Array<{ app: string; window: string }>;
+
+  /**
+   * Focuses the window with the given title and app name.
+   *
+   * @param windowName The window title.
+   * @param appName The executable name of the app.
+   */
+  focusWindow(windowName: string, appName: string): void;
+
+  /**
    * This simulates a mouse movement.
    *
    * @param dx The horizontal movement in pixels.

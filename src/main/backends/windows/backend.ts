@@ -19,6 +19,7 @@ import {
   MenuItem,
   AppDescription,
   ActionTypeRegistry,
+  WindowDescription,
 } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
 
@@ -108,6 +109,19 @@ export class WindowsBackend extends Backend {
       pointerY: point.y || 0,
       workArea: screen.getDisplayNearestPoint(point).workArea,
     };
+  }
+
+  /** Uses EnumWindows via the native addon to list all open windows. */
+  public override async getOpenWindows(): Promise<WindowDescription[]> {
+    return native.getOpenWindows().map(({ app, window }) => ({
+      appName: app,
+      windowName: window,
+    }));
+  }
+
+  /** Focuses the given window via the native addon. */
+  public override async focusWindow(window: WindowDescription): Promise<void> {
+    native.focusWindow(window.windowName, window.appName);
   }
 
   /**
