@@ -10,12 +10,16 @@
 
 #include "Native.hpp"
 
+#include <algorithm>
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
+#include <memory>
 #include <poll.h>
+#include <string>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <vector>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -74,6 +78,155 @@ wl_buffer* createPixelBuffer(wl_shm* shm, int width, int height, uint32_t color)
 
   return buffer;
 }
+
+struct ForeignToplevelWindow {
+  zwlr_foreign_toplevel_handle_v1* handle = nullptr;
+  std::string title;
+  std::string appId;
+  bool closed = false;
+};
+
+struct ForeignToplevelQueryData {
+  wl_display* display = nullptr;
+  wl_registry* registry = nullptr;
+  wl_seat* seat = nullptr;
+  zwlr_foreign_toplevel_manager_v1* manager = nullptr;
+  std::vector<std::unique_ptr<ForeignToplevelWindow>> windows;
+  wl_registry_listener registryListener{};
+};
+
+static const zwlr_foreign_toplevel_handle_v1_listener foreignToplevelHandleListener = {
+    .title = [](void* data, zwlr_foreign_toplevel_handle_v1*, const char* title) {
+      auto* window = static_cast<ForeignToplevelWindow*>(data);
+      window->title = title ? title : "";
+    },
+    .app_id = [](void* data, zwlr_foreign_toplevel_handle_v1*, const char* appId) {
+      auto* window = static_cast<ForeignToplevelWindow*>(data);
+      window->appId = appId ? appId : "";
+    },
+    .output_enter = [](void*, zwlr_foreign_toplevel_handle_v1*, wl_output*) {},
+    .output_leave = [](void*, zwlr_foreign_toplevel_handle_v1*, wl_output*) {},
+    .state = [](void*, zwlr_foreign_toplevel_handle_v1*, wl_array*) {},
+    .done = [](void*, zwlr_foreign_toplevel_handle_v1*) {},
+    .closed = [](void* data, zwlr_foreign_toplevel_handle_v1*) {
+      auto* window = static_cast<ForeignToplevelWindow*>(data);
+      window->closed = true;
+    },
+};
+
+static const zwlr_foreign_toplevel_manager_v1_listener foreignToplevelManagerListener = {
+    .toplevel = [](void* userData, zwlr_foreign_toplevel_manager_v1*,
+                    zwlr_foreign_toplevel_handle_v1* toplevel) {
+      auto* query = static_cast<ForeignToplevelQueryData*>(userData);
+      auto  window = std::make_unique<ForeignToplevelWindow>();
+      window->handle = toplevel;
+      auto* windowPtr = window.get();
+      query->windows.push_back(std::move(window));
+      zwlr_foreign_toplevel_handle_v1_add_listener(
+          toplevel, &foreignToplevelHandleListener, windowPtr);
+    },
+    .finished = [](void*, zwlr_foreign_toplevel_manager_v1*) {},
+};
+
+void bindForeignToplevelManager(ForeignToplevelQueryData* data, wl_registry* registry,
+    uint32_t name, uint32_t version) {
+  if (data->manager) {
+    return;
+  }
+
+  data->manager = static_cast<zwlr_foreign_toplevel_manager_v1*>(wl_registry_bind(
+      registry, name, &zwlr_foreign_toplevel_manager_v1_interface, std::min(version, 3u)));
+  zwlr_foreign_toplevel_manager_v1_add_listener(
+      data->manager, &foreignToplevelManagerListener, data);
+}
+
+void handleForeignToplevelGlobal(void* userData, wl_registry* registry, uint32_t name,
+    const char* interface, uint32_t version) {
+  auto* data = static_cast<ForeignToplevelQueryData*>(userData);
+
+  if (std::strcmp(interface, wl_seat_interface.name) == 0) {
+    if (!data->seat) {
+      data->seat = static_cast<wl_seat*>(
+          wl_registry_bind(registry, name, &wl_seat_interface, std::min(version, 4u)));
+    }
+  } else if (std::strcmp(interface, zwlr_foreign_toplevel_manager_v1_interface.name) ==
+             0) {
+    bindForeignToplevelManager(data, registry, name, version);
+  }
+}
+
+bool initializeForeignToplevelQuery(ForeignToplevelQueryData& data, Napi::Env env) {
+  data.display = wl_display_connect(nullptr);
+  if (!data.display) {
+    Napi::Error::New(env, "Failed to get Wayland display!").ThrowAsJavaScriptException();
+    return false;
+  }
+
+  data.registryListener = {
+      .global = handleForeignToplevelGlobal,
+      .global_remove = [](void*, wl_registry*, uint32_t) {},
+  };
+
+  data.registry = wl_display_get_registry(data.display);
+  wl_registry_add_listener(data.registry, &data.registryListener, &data);
+  wl_display_roundtrip(data.display);
+  wl_display_dispatch_pending(data.display);
+  return true;
+}
+
+void cleanupForeignToplevelQuery(ForeignToplevelQueryData& data) {
+  for (auto& window : data.windows) {
+    if (window && window->handle) {
+      zwlr_foreign_toplevel_handle_v1_destroy(window->handle);
+      window->handle = nullptr;
+    }
+  }
+
+  if (data.manager) {
+    zwlr_foreign_toplevel_manager_v1_destroy(data.manager);
+    data.manager = nullptr;
+  }
+
+  if (data.seat) {
+    wl_seat_release(data.seat);
+    data.seat = nullptr;
+  }
+
+  if (data.registry) {
+    wl_registry_destroy(data.registry);
+    data.registry = nullptr;
+  }
+
+  if (data.display) {
+    wl_display_disconnect(data.display);
+    data.display = nullptr;
+  }
+}
+
+ForeignToplevelWindow* findMatchingWindow(ForeignToplevelQueryData& data,
+    const std::string& windowName, const std::string& appName) {
+  for (auto& window : data.windows) {
+    if (!window || window->closed) {
+      continue;
+    }
+
+    if (window->title == windowName && window->appId == appName) {
+      return window.get();
+    }
+  }
+
+  for (auto& window : data.windows) {
+    if (!window || window->closed) {
+      continue;
+    }
+
+    if (window->title == windowName) {
+      return window.get();
+    }
+  }
+
+  return nullptr;
+}
 } // namespace
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -82,6 +235,8 @@ Native::Native(Napi::Env env, Napi::Object exports) {
   DefineAddon(exports, {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
+                           InstanceMethod("getOpenWindows", &Native::getOpenWindows),
+                           InstanceMethod("focusWindow", &Native::focusWindow),
                            InstanceMethod("getPointerPositionAndWorkAreaSize",
                                &Native::getPointerPositionAndWorkAreaSize),
                        });
@@ -388,6 +543,85 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
 
   // Make sure that the event is sent.
   wl_display_roundtrip(mData.mDisplay);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::getOpenWindows(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 0) {
+    Napi::TypeError::New(env, "No arguments expected").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  ForeignToplevelQueryData query{};
+  if (!initializeForeignToplevelQuery(query, env)) {
+    return env.Null();
+  }
+
+  if (!query.manager) {
+    cleanupForeignToplevelQuery(query);
+    return Napi::Array::New(env);
+  }
+
+  wl_display_roundtrip(query.display);
+  wl_display_dispatch_pending(query.display);
+
+  Napi::Array windows = Napi::Array::New(env);
+  uint32_t    index   = 0;
+  for (const auto& window : query.windows) {
+    if (!window || window->closed) {
+      continue;
+    }
+
+    Napi::Object entry = Napi::Object::New(env);
+    entry.Set("windowName", window->title);
+    entry.Set("appName", window->appId);
+    windows.Set(index++, entry);
+  }
+
+  cleanupForeignToplevelQuery(query);
+  return windows;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::focusWindow(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 2 || !info[0].IsString() || !info[1].IsString()) {
+    Napi::TypeError::New(env, "Two strings expected").ThrowAsJavaScriptException();
+    return;
+  }
+
+  const std::string windowName = info[0].As<Napi::String>().Utf8Value();
+  const std::string appName    = info[1].As<Napi::String>().Utf8Value();
+
+  ForeignToplevelQueryData query{};
+  if (!initializeForeignToplevelQuery(query, env)) {
+    return;
+  }
+
+  if (!query.seat || !query.manager) {
+    std::cerr << "foreign-toplevel protocol is not available on this compositor\n";
+    cleanupForeignToplevelQuery(query);
+    return;
+  }
+
+  wl_display_roundtrip(query.display);
+  wl_display_dispatch_pending(query.display);
+
+  auto* window = findMatchingWindow(query, windowName, appName);
+  if (!window || !window->handle) {
+    std::cerr << "Could not find window to focus via foreign-toplevel protocol\n";
+    cleanupForeignToplevelQuery(query);
+    return;
+  }
+
+  zwlr_foreign_toplevel_handle_v1_activate(window->handle, query.seat);
+  wl_display_roundtrip(query.display);
+  cleanupForeignToplevelQuery(query);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

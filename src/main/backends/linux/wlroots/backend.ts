@@ -10,7 +10,7 @@
 
 import { native } from './native';
 import { LinuxBackend } from '../backend';
-import { GeneralSettings, KeySequence } from '../../../../common';
+import { GeneralSettings, KeySequence, WindowDescription } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 import { Settings } from '../../../../main/settings';
 
@@ -36,6 +36,16 @@ export abstract class WLRBackend extends LinuxBackend {
   private previouslyReportedY = 0;
   public generalSettings: Settings<GeneralSettings>;
   public defaultBehavior: PointerTimeoutBehavior = 'center';
+
+  /** Uses the foreign-toplevel protocol to list currently open windows. */
+  public async getOpenWindows(): Promise<WindowDescription[]> {
+    return native.getOpenWindows();
+  }
+
+  /** Uses the foreign-toplevel protocol to focus the given window. */
+  public async focusWindow(window: WindowDescription): Promise<void> {
+    native.focusWindow(window.windowName, window.appName);
+  }
 
   /**
    * Moves the pointer by the given amount using the native module which uses the
