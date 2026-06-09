@@ -30,6 +30,21 @@ export type Native = {
    * @param down If true, a key press is simulated. Otherwise, a key release is simulated.
    */
   simulateKey(keycode: number, down: boolean): void;
+
+  /**
+   * Returns an array of all currently open windows, each with an 'app' (WM_CLASS instance
+   * name) and a 'window' (_NET_WM_NAME title) property.
+   */
+  getOpenWindows(): Array<{ app: string; window: string }>;
+
+  /**
+   * Focuses the window with the given title and app name by sending a _NET_ACTIVE_WINDOW
+   * client message to the root window.
+   *
+   * @param windowName The _NET_WM_NAME title of the window to focus.
+   * @param appName The WM_CLASS instance name of the window to focus.
+   */
+  focusWindow(windowName: string, appName: string): void;
 };
 
 const native: Native = require('./../../../../../../build/Release/NativeX11.node');
