@@ -47,6 +47,11 @@ export abstract class WLRBackend extends LinuxBackend {
     native.focusWindow(window.windowName, window.appName);
   }
 
+  /** Uses the foreign-toplevel protocol to get the currently focused window. */
+  protected async getFocusedWindow(): Promise<WindowDescription | null> {
+    return native.getFocusedWindow();
+  }
+
   /**
    * Moves the pointer by the given amount using the native module which uses the
    * wlr-virtual-pointer-unstable-v1 Wayland protocol.

@@ -83,6 +83,7 @@ struct ForeignToplevelWindow {
   zwlr_foreign_toplevel_handle_v1* handle = nullptr;
   std::string title;
   std::string appId;
+  bool activated = false;
   bool closed = false;
 };
 
@@ -106,7 +107,20 @@ static const zwlr_foreign_toplevel_handle_v1_listener foreignToplevelHandleListe
     },
     .output_enter = [](void*, zwlr_foreign_toplevel_handle_v1*, wl_output*) {},
     .output_leave = [](void*, zwlr_foreign_toplevel_handle_v1*, wl_output*) {},
-    .state = [](void*, zwlr_foreign_toplevel_handle_v1*, wl_array*) {},
+    .state = [](void* data, zwlr_foreign_toplevel_handle_v1*, wl_array* state) {
+      auto* window = static_cast<ForeignToplevelWindow*>(data);
+      window->activated = false;
+
+      auto* bytes = static_cast<uint8_t*>(state->data);
+      for (size_t offset = 0; offset + sizeof(uint32_t) <= state->size;
+           offset += sizeof(uint32_t)) {
+        const uint32_t value = *reinterpret_cast<uint32_t*>(bytes + offset);
+        if (value == ZWLR_FOREIGN_TOPLEVEL_HANDLE_V1_STATE_ACTIVATED) {
+          window->activated = true;
+          break;
+        }
+      }
+    },
     .done = [](void*, zwlr_foreign_toplevel_handle_v1*) {},
     .closed = [](void* data, zwlr_foreign_toplevel_handle_v1*) {
       auto* window = static_cast<ForeignToplevelWindow*>(data);
@@ -227,6 +241,20 @@ ForeignToplevelWindow* findMatchingWindow(ForeignToplevelQueryData& data,
 
   return nullptr;
 }
+
+ForeignToplevelWindow* findFocusedWindow(ForeignToplevelQueryData& data) {
+  for (auto& window : data.windows) {
+    if (!window || window->closed) {
+      continue;
+    }
+
+    if (window->activated) {
+      return window.get();
+    }
+  }
+
+  return nullptr;
+}
 } // namespace
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -236,6 +264,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
                            InstanceMethod("getOpenWindows", &Native::getOpenWindows),
+                 InstanceMethod("getFocusedWindow", &Native::getFocusedWindow),
                            InstanceMethod("focusWindow", &Native::focusWindow),
                            InstanceMethod("getPointerPositionAndWorkAreaSize",
                                &Native::getPointerPositionAndWorkAreaSize),
@@ -583,6 +612,43 @@ Napi::Value Native::getOpenWindows(const Napi::CallbackInfo& info) {
 
   cleanupForeignToplevelQuery(query);
   return windows;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::getFocusedWindow(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 0) {
+    Napi::TypeError::New(env, "No arguments expected").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  ForeignToplevelQueryData query{};
+  if (!initializeForeignToplevelQuery(query, env)) {
+    return env.Null();
+  }
+
+  if (!query.manager) {
+    cleanupForeignToplevelQuery(query);
+    return env.Null();
+  }
+
+  wl_display_roundtrip(query.display);
+  wl_display_dispatch_pending(query.display);
+
+  auto* focused = findFocusedWindow(query);
+  if (!focused) {
+    cleanupForeignToplevelQuery(query);
+    return env.Null();
+  }
+
+  Napi::Object window = Napi::Object::New(env);
+  window.Set("windowName", focused->title);
+  window.Set("appName", focused->appId);
+
+  cleanupForeignToplevelQuery(query);
+  return window;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

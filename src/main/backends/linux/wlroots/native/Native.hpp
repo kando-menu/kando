@@ -82,6 +82,11 @@ class Native : public Napi::Addon<Native> {
   Napi::Value getOpenWindows(const Napi::CallbackInfo& info);
 
   /**
+   * This function gets the currently focused window using the foreign-toplevel protocol.
+   */
+  Napi::Value getFocusedWindow(const Napi::CallbackInfo& info);
+
+  /**
    * This function focuses the given window using the foreign-toplevel protocol.
    */
   void focusWindow(const Napi::CallbackInfo& info);
