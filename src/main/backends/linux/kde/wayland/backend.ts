@@ -81,7 +81,7 @@ export class KDEWaylandBackend extends LinuxBackend {
     } catch (e) {
       throw new Error(
         i18next.t('backends.kde.error', {
-          link: 'https://extensions.gnome.org/extension/7068/kando-integration/',
+          link: 'https://github.com/kando-menu/kwin-integration',
           interpolation: { escapeValue: false },
         })
       );
