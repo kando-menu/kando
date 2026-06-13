@@ -7,29 +7,49 @@
     "name": "example-menu.name",
     "icon": "award_star",
     "iconTheme": "material-symbols-rounded",
+    "activateWorkflow": {
+      "quickSelectKey": "Backspace",
+      "actions": [
+        {
+          "type": "close-menu"
+        }
+      ]
+    },
     "children": [
       {
         "type": "submenu",
         "name": "example-menu.apps.submenu",
         "icon": "apps",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "A",
+        "openWorkflow": {
+          "quickSelectKey": "A",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
         "children": [
           {
             "type": "button",
             "name": "example-menu.apps.safari",
             "icon": "safari",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "S",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "S",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "open -a Safari",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -39,16 +59,17 @@
             "name": "example-menu.apps.email",
             "icon": "mail",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "M",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "M",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "open -a Mail",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -58,16 +79,17 @@
             "name": "example-menu.apps.apple-music",
             "icon": "itunes",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "U",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "U",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "open -a Music",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -77,16 +99,17 @@
             "name": "example-menu.apps.finder",
             "icon": "folder_shared",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "F",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "F",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "open -a Finder",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -96,16 +119,17 @@
             "name": "example-menu.apps.terminal",
             "icon": "terminal",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "T",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "T",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "open -a Terminal",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -117,21 +141,33 @@
         "name": "example-menu.web-links.submenu",
         "icon": "public",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "L",
+        "openWorkflow": {
+          "quickSelectKey": "L",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
         "children": [
           {
             "type": "button",
             "name": "Google",
             "icon": "google",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "G",
             "selectWorkflow": {
-              "waitForFadeout": false,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "G",
               "actions": [
                 {
                   "type": "open-uri",
                   "uri": "https://www.google.com"
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -141,14 +177,15 @@
             "name": "example-menu.web-links.kando-on-github",
             "icon": "github",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "H",
             "selectWorkflow": {
-              "waitForFadeout": false,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "H",
               "actions": [
                 {
                   "type": "open-uri",
                   "uri": "https://github.com/kando-menu/kando"
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -158,14 +195,15 @@
             "name": "example-menu.web-links.kando-on-kofi",
             "icon": "kofi",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "K",
             "selectWorkflow": {
-              "waitForFadeout": false,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "K",
               "actions": [
                 {
                   "type": "open-uri",
                   "uri": "https://ko-fi.com/schneegans"
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -175,14 +213,15 @@
             "name": "example-menu.web-links.kando-on-youtube",
             "icon": "youtube",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "Y",
             "selectWorkflow": {
-              "waitForFadeout": false,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "Y",
               "actions": [
                 {
                   "type": "open-uri",
                   "uri": "https://www.youtube.com/@simonschneegans"
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -192,14 +231,15 @@
             "name": "example-menu.web-links.kando-on-discord",
             "icon": "discord",
             "iconTheme": "simple-icons",
-            "quickSelectKey": "D",
             "selectWorkflow": {
-              "waitForFadeout": false,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "D",
               "actions": [
                 {
                   "type": "open-uri",
                   "uri": "https://discord.gg/hZwbVSDkhy"
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -211,16 +251,17 @@
         "name": "example-menu.next-workspace",
         "icon": "arrow_forward",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "N",
         "selectWorkflow": {
-          "waitForFadeout": true,
-          "inhibitShortcuts": false,
+          "quickSelectKey": "N",
           "actions": [
             {
               "type": "execute-command",
               "command": "osascript -e 'tell application \"System Events\" to key code 124 using control down'",
               "detached": true,
               "isolated": false
+            },
+            {
+              "type": "close-menu"
             }
           ]
         }
@@ -230,19 +271,31 @@
         "name": "example-menu.clipboard.submenu",
         "icon": "assignment",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "C",
+        "openWorkflow": {
+          "quickSelectKey": "C",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
         "children": [
           {
             "type": "button",
             "name": "example-menu.clipboard.paste",
             "icon": "content_paste_go",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "V",
             "angle": 90,
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "V",
               "actions": [
+                {
+                  "type": "close-menu"
+                },
                 {
                   "type": "simulate-hotkey",
                   "hotkey": "MetaLeft+KeyV"
@@ -255,11 +308,12 @@
             "name": "example-menu.clipboard.copy",
             "icon": "content_copy",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "C",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "C",
               "actions": [
+                {
+                  "type": "close-menu"
+                },
                 {
                   "type": "simulate-hotkey",
                   "hotkey": "MetaLeft+KeyC"
@@ -272,11 +326,12 @@
             "name": "example-menu.clipboard.cut",
             "icon": "cut",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "X",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "X",
               "actions": [
+                {
+                  "type": "close-menu"
+                },
                 {
                   "type": "simulate-hotkey",
                   "hotkey": "MetaLeft+KeyX"
@@ -291,23 +346,35 @@
         "name": "example-menu.audio.submenu",
         "icon": "play_circle",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "A",
+        "openWorkflow": {
+          "quickSelectKey": "A",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
         "children": [
           {
             "type": "button",
             "name": "example-menu.audio.next-track",
             "icon": "skip_next",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "N",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "N",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Music\" to next track'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -317,16 +384,17 @@
             "name": "example-menu.audio.play-pause",
             "icon": "play_pause",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "A",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "A",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Music\" to playpause'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -336,16 +404,17 @@
             "name": "example-menu.audio.previous-track",
             "icon": "skip_previous",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "P",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "P",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Music\" to previous track'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -357,24 +426,36 @@
         "name": "example-menu.windows.submenu",
         "icon": "select_window",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "W",
+        "openWorkflow": {
+          "quickSelectKey": "W",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
         "children": [
           {
             "type": "button",
             "name": "example-menu.windows.mission-control",
             "icon": "select_window",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "M",
             "angle": 0,
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "M",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"System Events\" to key code 126 using control down'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -384,12 +465,13 @@
             "name": "example-menu.windows.tile-right",
             "icon": "text_select_jump_to_end",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "R",
             "angle": 90,
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "R",
               "actions": [
+                {
+                  "type": "close-menu"
+                },
                 {
                   "type": "simulate-hotkey",
                   "hotkey": "ControlLeft+AltLeft+ArrowRight"
@@ -402,11 +484,12 @@
             "name": "example-menu.windows.close-window",
             "icon": "cancel_presentation",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "X",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "X",
               "actions": [
+                {
+                  "type": "close-menu"
+                },
                 {
                   "type": "simulate-hotkey",
                   "hotkey": "MetaLeft+KeyW"
@@ -419,12 +502,13 @@
             "name": "example-menu.windows.tile-left",
             "icon": "text_select_jump_to_beginning",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "L",
             "angle": 270,
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "L",
               "actions": [
+                {
+                  "type": "close-menu"
+                },
                 {
                   "type": "simulate-hotkey",
                   "hotkey": "ControlLeft+AltLeft+ArrowLeft"
@@ -439,16 +523,17 @@
         "name": "example-menu.previous-workspace",
         "icon": "arrow_back",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "P",
         "selectWorkflow": {
-          "waitForFadeout": true,
-          "inhibitShortcuts": false,
+          "quickSelectKey": "P",
           "actions": [
             {
               "type": "execute-command",
               "command": "osascript -e 'tell application \"System Events\" to key code 123 using control down'",
               "detached": true,
               "isolated": false
+            },
+            {
+              "type": "close-menu"
             }
           ]
         }
@@ -458,23 +543,35 @@
         "name": "example-menu.bookmarks.submenu",
         "icon": "folder_special",
         "iconTheme": "material-symbols-rounded",
-        "quickSelectKey": "B",
+        "openWorkflow": {
+          "quickSelectKey": "B",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
         "children": [
           {
             "type": "button",
             "name": "example-menu.bookmarks.downloads",
             "icon": "download",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "D",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "D",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Finder\" to open (path to downloads folder as text)'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -484,16 +581,17 @@
             "name": "example-menu.bookmarks.videos",
             "icon": "video_camera_front",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "V",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "V",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Finder\" to open (path to movies folder as text)'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -503,16 +601,17 @@
             "name": "example-menu.bookmarks.pictures",
             "icon": "imagesmode",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "P",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "P",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Finder\" to open (path to pictures folder as text)'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -522,16 +621,17 @@
             "name": "example-menu.bookmarks.documents",
             "icon": "text_ad",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "O",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "O",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Finder\" to open (path to documents folder as text)'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -541,16 +641,17 @@
             "name": "example-menu.bookmarks.desktop",
             "icon": "desktop_windows",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "E",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "E",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Finder\" to open (path to desktop folder as text)'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -560,16 +661,17 @@
             "name": "example-menu.bookmarks.home",
             "icon": "home",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "H",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "H",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "open $HOME",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
@@ -579,16 +681,17 @@
             "name": "example-menu.bookmarks.music",
             "icon": "music_note",
             "iconTheme": "material-symbols-rounded",
-            "quickSelectKey": "M",
             "selectWorkflow": {
-              "waitForFadeout": true,
-              "inhibitShortcuts": false,
+              "quickSelectKey": "M",
               "actions": [
                 {
                   "type": "execute-command",
                   "command": "osascript -e 'tell application \"Finder\" to open (path to music folder as text)'",
                   "detached": true,
                   "isolated": false
+                },
+                {
+                  "type": "close-menu"
                 }
               ]
             }
