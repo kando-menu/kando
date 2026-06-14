@@ -54,6 +54,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :bug: Fixed
 
+- A bug which could prevent Kando from starting up on KDE Wayland. If a desktop portal request failed (for instance the global-shortcuts portal returning "An app id is required"), the error was not propagated and Kando would hang during initialization instead of falling back gracefully.
 - Selecting menu items with the numpad keys. They now work the same as the normal number keys. Thanks to [@username1419](https://github.com/username1419) for this fix!
 
 ### :fire: Removed
