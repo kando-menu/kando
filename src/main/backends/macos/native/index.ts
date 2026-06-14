@@ -33,6 +33,21 @@ export type Native = {
   getActiveWindow(): { app: string; name: string };
 
   /**
+   * This retrieves all currently open windows.
+   *
+   * @returns An array containing app and window names.
+   */
+  getOpenWindows(): { app: string; window: string }[];
+
+  /**
+   * This focuses a currently open window.
+   *
+   * @param windowName The window title to focus.
+   * @param appName The app name or bundle identifier owning the window.
+   */
+  focusWindow(windowName: string, appName: string): void;
+
+  /**
    * This lists all installed applications.
    *
    * @returns An array of objects containing the application's ID, name, and

@@ -57,6 +57,25 @@ class Native : public Napi::Addon<Native> {
   Napi::Value getActiveWindow(const Napi::CallbackInfo& info);
 
   /**
+   * This function is called when the getOpenWindows function is called from JavaScript.
+   * It returns an array of objects, each with an 'app' and a 'window' property,
+   * representing all currently open windows.
+   *
+   * @param info The arguments passed to the getOpenWindows function. It should contain
+   *             no arguments.
+   */
+  Napi::Value getOpenWindows(const Napi::CallbackInfo& info);
+
+  /**
+   * This function is called when the focusWindow function is called from JavaScript.
+   * It focuses the window with the given window title and app name.
+   *
+   * @param info The arguments passed to the focusWindow function. It should contain
+   *             two strings: the window title and the app name.
+   */
+  void focusWindow(const Napi::CallbackInfo& info);
+
+  /**
    * This function returns a list of all installed applications.
    *
    * @param info The arguments passed to the listInstalledApplications function. It should
