@@ -169,7 +169,7 @@ export class GlobalShortcuts extends DesktopPortal {
       this.interface = undefined;
       this.session = undefined;
 
-      console.error('Failed to connect to remote desktop portal:', e);
+      console.error('Failed to connect to global shortcuts portal:', e);
     }
   }
 
