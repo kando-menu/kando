@@ -50,12 +50,13 @@ export class DesktopPortal extends EventEmitter {
    *
    * @param method This will be called when the request is ready to be dispatched. A
    *   request token is given to this method, this is usually required for the options
-   *   vardict of the actual request method.
+   *   vardict of the actual request method. The method should return the promise of the
+   *   underlying D-Bus call so that errors can be propagated.
    * @returns A promise which resolves when the request has been processed.
    * @see https://flatpak.github.io/xdg-desktop-portal/#idm9
    */
   protected async makeRequest(
-    method: (request: { token: string; path: string }) => void
+    method: (request: { token: string; path: string }) => Promise<unknown> | void
   ) {
     return new Promise<DBus.Message>((resolve, reject) => {
       const request = this.generateToken('request');
@@ -73,7 +74,13 @@ export class DesktopPortal extends EventEmitter {
 
       this.bus.addListener('message', responseListener);
 
-      method(request);
+      // If the D-Bus call itself fails (for instance because the portal returns an error
+      // instead of replying with a Response signal), we have to reject the promise here.
+      // Otherwise it would never resolve and the unhandled rejection would crash the app.
+      Promise.resolve(method(request)).catch((error) => {
+        this.bus.removeListener('message', responseListener);
+        reject(error);
+      });
     });
   }
 

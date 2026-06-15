@@ -79,7 +79,7 @@ export class GlobalShortcuts extends DesktopPortal {
 
     if (this.interface) {
       const result = await this.makeRequest((request) => {
-        this.interface.ListShortcuts(this.session.path, {
+        return this.interface.ListShortcuts(this.session.path, {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           handle_token: new DBus.Variant('s', request.token),
         });
@@ -110,7 +110,7 @@ export class GlobalShortcuts extends DesktopPortal {
 
     if (this.interface) {
       await this.makeRequest((request) => {
-        this.interface.BindShortcuts(
+        return this.interface.BindShortcuts(
           this.session.path,
           shortcuts.map((shortcut) => [
             shortcut.id,
@@ -181,7 +181,7 @@ export class GlobalShortcuts extends DesktopPortal {
    */
   private async createSession() {
     return this.makeRequest((request) => {
-      this.interface.CreateSession({
+      return this.interface.CreateSession({
         // eslint-disable-next-line @typescript-eslint/naming-convention
         handle_token: new DBus.Variant('s', request.token),
         // eslint-disable-next-line @typescript-eslint/naming-convention
