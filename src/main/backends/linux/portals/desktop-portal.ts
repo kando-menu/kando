@@ -154,50 +154,35 @@ export class DesktopPortal extends EventEmitter {
   }
 
   /**
-   * This method implements the actual registration logic. It ensures that a .desktop file
-   * for the app ID exists and then tries to register it with the portal registry.
+   * This method implements the actual registration logic. It first tries to register the
+   * app ID with the portal registry and only creates a fallback .desktop file if that
+   * initial attempt fails.
    *
    * @param portals Proxy object for org.freedesktop.portal.Desktop.
    */
   private async registerAppImpl(portals: DBus.ProxyObject) {
+    const registry = portals.getInterface('org.freedesktop.host.portal.Registry');
+
     try {
-      this.ensureDesktopFile(APP_ID);
-      const registry = portals.getInterface('org.freedesktop.host.portal.Registry');
       await registry.Register(APP_ID, {});
     } catch (e) {
-      // Failing to register is not fatal. On older portal versions the interface may not
-      // exist; on newer versions, individual portal calls will report a clear error.
-      console.warn('Failed to register with xdg-desktop-portal registry:', e);
+      try {
+        this.ensureDesktopFile(APP_ID);
+        await registry.Register(APP_ID, {});
+      } catch (retryError) {
+        // Failing to register is not fatal. On older portal versions the interface may
+        // not exist; on newer versions, individual portal calls will report a clear
+        // error.
+        console.warn('Failed to register with xdg-desktop-portal registry:', retryError);
+      }
     }
   }
 
-  /**
-   * Ensures a .desktop file exists for APP_ID in any XDG applications directory. If none
-   * exists, a minimal fallback file is created in ~/.local/share/applications/.
-   */
+  /** Creates or updates the fallback .desktop file in ~/.local/share/applications/. */
   private ensureDesktopFile(appId: string) {
     const fileName = `${appId}.desktop`;
-    const xdgDataHome =
-      process.env.XDG_DATA_HOME || path.join(os.homedir(), '.local', 'share');
-    const xdgDataDirs = (
-      process.env.XDG_DATA_DIRS || '/usr/local/share:/usr/share'
-    ).split(':');
     const userAppsDir = path.join(os.homedir(), '.local', 'share', 'applications');
     const userDesktopFile = path.join(userAppsDir, fileName);
-
-    const searchDirs = new Set<string>();
-    searchDirs.add(path.join(xdgDataHome, 'applications'));
-
-    for (const dir of xdgDataDirs) {
-      searchDirs.add(path.join(dir, 'applications'));
-    }
-
-    // If a system-provided desktop entry exists, do not override it.
-    for (const dir of searchDirs) {
-      if (fs.existsSync(path.join(dir, fileName))) {
-        return;
-      }
-    }
 
     fs.mkdirSync(userAppsDir, { recursive: true });
     fs.writeFileSync(userDesktopFile, FALLBACK_DESKTOP_CONTENT, 'utf-8');
