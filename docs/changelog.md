@@ -42,10 +42,12 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - A new option to move the mouse pointer back to where it opened the menu after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
 - The option to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
 - New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
+- Support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 
 - A global option to **return the pointer to the menu opening position** after selecting a button.
 
 ### :wrench: Changed
 
+- :collision: **On KDE Wayland, Kando now requires a [KWin plugin](https://github.com/kando-menu/kwin-integration) to be installed on your system**. This plugin is similar to the extension used on GNOME. It enables the stylus support as well as the new focus-window action. Also, it makes the previously used (and very hacky) KWin script obsolete and thus fixes a rare but fatal crash which could bring down your entire desktop. For now, the plugin is only available for KWin 6+. If there are many requests for backporting it to KWin 5, we can look into it. Else, if you are still on KWin 5, you will have to use X11 for now. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing to this!
 - Many of the icons of the Kando icon theme. These are used for the actions and for the example menu items which can be created from the preview footer area.
 - The position of the delete-menu-item and duplicate-menu-item buttons in the settings dialog. They are now shown next to selected menu items in the preview area.
 - The position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
