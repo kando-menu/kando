@@ -36,7 +36,7 @@ jobs:
         run: |
           tools/make-app-image.sh
       - name: Upload Packages
-        uses: svenstaro/upload-release-action@2.9.0
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de #v2.11.5
         with:
           file: out/make/**/*
           tag: ${{ github.ref }}
@@ -92,14 +92,14 @@ jobs:
           wait-for-completion: true
           output-artifact-directory: 'out/make/signed'
       - name: Upload Zip
-        uses: svenstaro/upload-release-action@2.9.0
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de #v2.11.5
         with:
           file: out/make/signed/**/*.zip
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Squirrel Installer
-        uses: svenstaro/upload-release-action@2.9.0
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de #v2.11.5
         with:
           file: out/make/signed/**/*.exe
           tag: ${{ github.ref }}
@@ -141,14 +141,14 @@ jobs:
         run: |
           npm run make
       - name: Upload DMG
-        uses: svenstaro/upload-release-action@2.9.0
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de #v2.11.5
         with:
           file: out/make/*.dmg
           tag: ${{ github.ref }}
           file_glob: true
           prerelease: true
       - name: Upload Zip
-        uses: svenstaro/upload-release-action@2.9.0
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de #v2.11.5
         with:
           file: out/make/zip/darwin/**/*.zip
           tag: ${{ github.ref }}

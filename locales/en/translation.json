@@ -535,7 +535,7 @@
     },
     "backends": {
         "gnome": {
-            "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: {{link}}"
+            "error": "Could not connect to GNOME Shell Kando extension. You can get it from here: {{link}}"
         },
         "hyprland": {
             "shortcut-info": "Kando cannot directly bind global shortcuts on Hyprland. Instead, specify a shortcut ID here and bind a shortcut in your hyprland.conf with something like \"bind = CTRL, Space, global, kando:example-menu\". Replace example-menu with the ID chosen here."
@@ -545,6 +545,9 @@
         },
         "niri": {
             "shortcut-info": "Niri does not yet support global shortcuts. But you can open this menu using 'kando --menu \"Menu Name\"' from the command line or from your niri config."
+        },
+        "kde": {
+            "error": "Could not connect to KWin Kando plugin. You can get it from here: {{link}}"
         }
     },
     "menu-actions": {
