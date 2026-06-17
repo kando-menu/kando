@@ -98,10 +98,13 @@ export default interface Resources {
       },
       "backends": {
           "gnome": {
-              "error": "Could not connect to Kando Integration GNOME Shell extension. You can get it from here: {{link}}"
+              "error": "Could not connect to GNOME Shell Kando extension. You can get it from here: {{link}}"
           },
           "hyprland": {
               "shortcut-info": "Kando cannot directly bind global shortcuts on Hyprland. Instead, specify a shortcut ID here and bind a shortcut in your hyprland.conf with something like \"bind = CTRL, Space, global, kando:example-menu\". Replace example-menu with the ID chosen here."
+          },
+          "kde": {
+              "error": "Could not connect to KWin Kando plugin. You can get it from here: {{link}}"
           },
           "kde-wayland": {
               "shortcut-info": "Kando cannot directly bind global shortcuts on KDE/Wayland. Instead, specify a shortcut ID here and then search for it in the KWin section of the global shortcuts in your KDE's system settings. There you can assign the shortcut which will open this menu."
@@ -284,7 +287,7 @@ export default interface Resources {
           "anchored-mode": "Anchored Mode",
           "anchored-mode-info": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode and Turbo Mode.",
           "app-condition": "Limit to Specific Apps",
-          "app-condition-info": "Show the menu only if a specific application is focused. This supports regular expressions like /firefox|chrome/i.",
+          "app-condition-info": "Show the menu only if a specific application is focused. This supports regex like /firefox|chrome/i.",
           "app-condition-placeholder": "App name",
           "app-condition-tooltip": "Select an app",
           "app-picker": {
@@ -406,7 +409,7 @@ export default interface Resources {
               "restore-menus": "Restore menus.json…",
               "restore-settings": "Restore config.json…",
               "return-pointer-after-selection": "Return pointer after selection",
-              "return-pointer-after-selection-info": "If checked, the mouse pointer will move back to where it was when the menu was opened after you select a button.",
+              "return-pointer-after-selection-info": "After you make a selection, the mouse pointer will move back to where it was when the menu was opened.",
               "right-mouse-button-selects-parent": "Right mouse button selects parent",
               "right-mouse-button-selects-parent-info": "If unchecked, the right mouse button will close the menu instead.",
               "sakura-dark": "Sakura Dark",
@@ -567,7 +570,7 @@ export default interface Resources {
           "tags-info": "Tags can be used to group menus in menu collections.",
           "undo": "Undo",
           "window-condition": "Limit to Specific Window Titles",
-          "window-condition-info": "Show the menu only if the focused window's title contains a given text. This supports regular expressions like /youtube|vimeo/i.",
+          "window-condition-info": "Show the menu only if the focused window's title contains a given text. This supports regex like /youtube|vimeo/i.",
           "window-condition-placeholder": "Window title",
           "window-condition-tooltip": "Select a window",
           "window-picker-dialog": {
