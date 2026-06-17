@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <protocol name="wlr_foreign_toplevel_management_unstable_v1">
   <copyright>
+    SPDX-License-Identifier: MIT
+    
     Copyright © 2018 Ilia Bozhinov
 
     Permission to use, copy, modify, distribute, and sell this
