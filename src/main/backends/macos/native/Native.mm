@@ -98,6 +98,109 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
   return Napi::Object();
 }
 
+std::string getAppNameFromPID(pid_t pid) {
+  NSRunningApplication* app =
+      [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
+
+  if (app.bundleIdentifier) {
+    return app.bundleIdentifier.UTF8String;
+  }
+
+  if (app.localizedName) {
+    return app.localizedName.UTF8String;
+  }
+
+  return "";
+}
+
+bool appMatches(NSRunningApplication* app, const std::string& targetAppName) {
+  if (!app) {
+    return false;
+  }
+
+  if (app.bundleIdentifier) {
+    if (targetAppName == app.bundleIdentifier.UTF8String) {
+      return true;
+    }
+  }
+
+  if (app.localizedName) {
+    if (targetAppName == app.localizedName.UTF8String) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool raiseWindow(NSRunningApplication* app, NSString* targetWindowName) {
+  if (!app) {
+    return false;
+  }
+
+  AXUIElementRef appElement = AXUIElementCreateApplication(app.processIdentifier);
+  if (!appElement) {
+    return false;
+  }
+
+  CFTypeRef windowsValue = nullptr;
+  AXError   windowsError = AXUIElementCopyAttributeValue(
+      appElement, kAXWindowsAttribute, &windowsValue);
+
+  if (windowsError != kAXErrorSuccess || !windowsValue ||
+      CFGetTypeID(windowsValue) != CFArrayGetTypeID()) {
+    if (windowsValue) {
+      CFRelease(windowsValue);
+    }
+    CFRelease(appElement);
+    return false;
+  }
+
+  CFArrayRef windows = static_cast<CFArrayRef>(windowsValue);
+  bool       focused = false;
+
+  for (CFIndex i = 0; i < CFArrayGetCount(windows); ++i) {
+    AXUIElementRef window =
+        static_cast<AXUIElementRef>(const_cast<void*>(CFArrayGetValueAtIndex(windows, i)));
+
+    if (!window) {
+      continue;
+    }
+
+    CFTypeRef titleValue = nullptr;
+    AXError   titleError =
+        AXUIElementCopyAttributeValue(window, kAXTitleAttribute, &titleValue);
+
+    if (titleError != kAXErrorSuccess || !titleValue ||
+        CFGetTypeID(titleValue) != CFStringGetTypeID()) {
+      if (titleValue) {
+        CFRelease(titleValue);
+      }
+      continue;
+    }
+
+    NSString* title = (__bridge NSString*)titleValue;
+    bool      isMatch = title && [title isEqualToString:targetWindowName];
+    CFRelease(titleValue);
+
+    if (!isMatch) {
+      continue;
+    }
+
+    [app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+    AXUIElementPerformAction(window, kAXRaiseAction);
+
+    AXUIElementSetAttributeValue(window, kAXMainAttribute, kCFBooleanTrue);
+    AXUIElementSetAttributeValue(window, kAXFocusedAttribute, kCFBooleanTrue);
+    focused = true;
+    break;
+  }
+
+  CFRelease(windowsValue);
+  CFRelease(appElement);
+  return focused;
+}
+
 } // namespace
 
 Native::Native(Napi::Env env, Napi::Object exports) {
@@ -106,6 +209,8 @@ Native::Native(Napi::Env env, Napi::Object exports) {
           InstanceMethod("movePointer", &Native::movePointer),
           InstanceMethod("simulateKey", &Native::simulateKey),
           InstanceMethod("getActiveWindow", &Native::getActiveWindow),
+          InstanceMethod("getOpenWindows", &Native::getOpenWindows),
+          InstanceMethod("focusWindow", &Native::focusWindow),
           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
       });
 }
@@ -297,6 +402,99 @@ Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
   }
 
   return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::getOpenWindows(const Napi::CallbackInfo& info) {
+  Napi::Env   env    = info.Env();
+  Napi::Array result = Napi::Array::New(env);
+
+  // Include off-screen/minimized windows as well and avoid desktop-only elements.
+  CGWindowListOption listOptions = static_cast<CGWindowListOption>(
+      kCGWindowListOptionAll | kCGWindowListExcludeDesktopElements);
+
+  CFArrayRef windows =
+      CGWindowListCopyWindowInfo(listOptions, kCGNullWindowID);
+
+  if (!windows) {
+    return result;
+  }
+
+  uint32_t index = 0;
+  for (NSDictionary* entry in (NSArray*)windows) {
+    NSString* windowName = [entry objectForKey:(id)kCGWindowName];
+
+    NSInteger pid = [[entry objectForKey:(id)kCGWindowOwnerPID] integerValue];
+    if (pid <= 0) {
+      continue;
+    }
+
+    std::string appName = getAppNameFromPID(static_cast<pid_t>(pid));
+    if (appName.empty()) {
+      NSString* ownerName = [entry objectForKey:(id)kCGWindowOwnerName];
+      if (!ownerName || [ownerName length] == 0) {
+        continue;
+      }
+      appName = ownerName.UTF8String;
+    }
+
+    NSString* resolvedWindowName = windowName;
+    if (!resolvedWindowName || [resolvedWindowName length] == 0) {
+      NSString* ownerName = [entry objectForKey:(id)kCGWindowOwnerName];
+      if (ownerName && [ownerName length] > 0) {
+        resolvedWindowName = ownerName;
+      } else {
+        resolvedWindowName = @"Untitled Window";
+      }
+    }
+
+    Napi::Object obj = Napi::Object::New(env);
+    obj.Set("app", Napi::String::New(env, appName));
+    obj.Set("window", Napi::String::New(env, resolvedWindowName.UTF8String));
+    result.Set(index++, obj);
+  }
+
+  CFRelease(windows);
+  return result;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::focusWindow(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 2 || !info[0].IsString() || !info[1].IsString()) {
+    Napi::TypeError::New(env, "Two strings expected").ThrowAsJavaScriptException();
+    return;
+  }
+
+  std::string targetWindowName = info[0].As<Napi::String>().Utf8Value();
+  std::string targetAppName    = info[1].As<Napi::String>().Utf8Value();
+
+  if (targetWindowName.empty() || targetAppName.empty()) {
+    return;
+  }
+
+  NSString* targetWindowNameNs =
+      [NSString stringWithUTF8String:targetWindowName.c_str()];
+
+  NSArray<NSRunningApplication*>* runningApps =
+      [[NSWorkspace sharedWorkspace] runningApplications];
+
+  for (NSRunningApplication* app in runningApps) {
+    if (!appMatches(app, targetAppName)) {
+      continue;
+    }
+
+    if (raiseWindow(app, targetWindowNameNs)) {
+      return;
+    }
+
+    // Fallback: At least activate the app if focusing a specific window failed.
+    [app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+    return;
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

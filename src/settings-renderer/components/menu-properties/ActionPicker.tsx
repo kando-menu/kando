@@ -36,7 +36,10 @@ export default function ActionPicker(props: Props) {
   const registry = ActionTypeRegistry.getInstance();
   const [filterTerm, setFilterTerm] = React.useState('');
 
-  const actionTypes = Array.from(registry.getAllMetadata().entries())
+  const allMetadata = registry.getAllMetadata();
+
+  const actionTypes = (Object.keys(allMetadata) as WorkflowActionType[])
+    .map((actionType) => [actionType, allMetadata[actionType]] as const)
     .filter(([, metadata]) =>
       metadata.name.toLowerCase().includes(filterTerm.toLowerCase())
     )

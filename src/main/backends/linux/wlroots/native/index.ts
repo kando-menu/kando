@@ -39,6 +39,15 @@ export type Native = {
     workAreaWidth: number;
     workAreaHeight: number;
   };
+
+  /** Lists all currently open windows using the foreign-toplevel protocol. */
+  getOpenWindows(): Array<{ windowName: string; appName: string }>;
+
+  /** Gets the currently focused window using the foreign-toplevel protocol. */
+  getFocusedWindow(): { windowName: string; appName: string } | null;
+
+  /** Focuses the given window using the foreign-toplevel protocol. */
+  focusWindow(windowName: string, appName: string): void;
 };
 
 const native: Native = require('./../../../../../../build/Release/NativeWLR.node');

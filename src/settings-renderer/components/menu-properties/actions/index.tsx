@@ -13,6 +13,7 @@ import React from 'react';
 import { DelayActionConfig } from './DelayActionConfig';
 import { ExecuteCommandActionConfig } from './ExecuteCommandActionConfig';
 import { ExecuteMacroActionConfig } from './ExecuteMacroActionConfig';
+import { FocusWindowActionConfig } from './FocusWindowActionConfig';
 import { OpenFileActionConfig } from './OpenFileActionConfig';
 import { OpenMenuActionConfig } from './OpenMenuActionConfig';
 import { OpenURIActionConfig } from './OpenURIActionConfig';
@@ -49,6 +50,10 @@ export function getConfigComponent(
 
   if (action.type === 'execute-macro') {
     return <ExecuteMacroActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
+  if (action.type === 'focus-window') {
+    return <FocusWindowActionConfig action={action} onUpdateAction={onUpdateAction} />;
   }
 
   if (action.type === 'open-file') {

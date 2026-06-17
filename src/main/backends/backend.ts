@@ -19,6 +19,7 @@ import {
   WMInfo,
   MenuItem,
   AppDescription,
+  WindowDescription,
   GeneralSettings,
 } from '../../common';
 import { Settings } from '../settings';
@@ -81,6 +82,22 @@ export abstract class Backend extends EventEmitter {
    *   as well as to the current pointer position.
    */
   public abstract getWMInfo(): Promise<WMInfo>;
+
+  /**
+   * Each backend must provide a way to get a list of all currently open windows.
+   *
+   * @returns A promise which resolves to a list of all currently open windows, including
+   *   their names and the apps they belong to.
+   */
+  public abstract getOpenWindows(): Promise<WindowDescription[]>;
+
+  /**
+   * Each backend must provide a way to focus a given window.
+   *
+   * @param window The window to focus.
+   * @returns A promise which resolves when the window has been focused.
+   */
+  public abstract focusWindow(window: WindowDescription): Promise<void>;
 
   /**
    * Each backend must provide a way to get a list of all installed applications. This is

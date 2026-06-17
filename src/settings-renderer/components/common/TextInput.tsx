@@ -94,6 +94,7 @@ export default function TextInput(props: Props) {
       className={cx({
         input: true,
         invisible: props.variant === 'invisible',
+        grouped: props.isGrouped,
       })}
       disabled={props.isDisabled}
       placeholder={props.placeholder}

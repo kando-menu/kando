@@ -12,7 +12,7 @@ import i18next from 'i18next';
 import DBus from 'dbus-final';
 
 import { LinuxBackend } from '../../backend';
-import { KeySequence } from '../../../../../common';
+import { KeySequence, WindowDescription } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
 import { screen } from 'electron';
 
@@ -127,6 +127,30 @@ export class GnomeBackend extends LinuxBackend {
       pointerY: info[3],
       workArea,
     };
+  }
+
+  /**
+   * Lists all currently open windows.
+   *
+   * @returns A promise which resolves to a list of all currently open windows, including
+   *   their names and the apps they belong to.
+   */
+  public async getOpenWindows(): Promise<WindowDescription[]> {
+    const pairs = await this.interface.GetOpenWindows();
+    return pairs.map(([windowName, appName]: [string, string]) => ({
+      appName,
+      windowName,
+    }));
+  }
+
+  /**
+   * Focuses the given window.
+   *
+   * @param window The window to focus.
+   * @returns A promise which resolves when the window has been focused.
+   */
+  public async focusWindow(window: WindowDescription): Promise<void> {
+    await this.interface.FocusWindow(window.windowName, window.appName);
   }
 
   /**

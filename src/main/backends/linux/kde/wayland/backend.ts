@@ -15,7 +15,7 @@ import lodash from 'lodash';
 import { LinuxBackend } from '../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { GlobalShortcuts } from '../../portals/global-shortcuts';
-import { KeySequence } from '../../../../../common';
+import { KeySequence, WindowDescription } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
 
 /**
@@ -139,6 +139,50 @@ export class KDEWaylandBackend extends LinuxBackend {
   }
 
   /**
+   * Lists all currently open windows.
+   *
+   * @returns A promise which resolves to a list of all currently open windows, including
+   *   their names and the apps they belong to.
+   */
+  public async getOpenWindows(): Promise<WindowDescription[]> {
+    const windows = (await this.interface.GetOpenWindows()) as unknown[];
+
+    return windows
+      .map((entry) => {
+        const pair = this.unwrapDBusValue(entry);
+        if (!Array.isArray(pair) || pair.length < 2) {
+          return null;
+        }
+
+        const windowName = this.unwrapDBusValue(pair[0]);
+        const appName = this.unwrapDBusValue(pair[1]);
+
+        if (typeof windowName !== 'string' || typeof appName !== 'string') {
+          return null;
+        }
+
+        return { windowName, appName };
+      })
+      .filter((window): window is WindowDescription => window !== null);
+  }
+
+  /**
+   * Focuses the given window.
+   *
+   * @param window The window to focus.
+   * @returns A promise which resolves when the window has been focused.
+   */
+  public async focusWindow(window: WindowDescription): Promise<void> {
+    const result = this.unwrapDBusValue(
+      await this.interface.FocusWindow(window.windowName, window.appName)
+    );
+
+    if (result === false) {
+      throw new Error(`Window not found: ${window.appName} - ${window.windowName}`);
+    }
+  }
+
+  /**
    * Moves the pointer by the given amount. This uses the remote desktop portal. As such,
    * it may present a dialog to the user, asking for permission to control the pointer.
    *
@@ -230,4 +274,16 @@ export class KDEWaylandBackend extends LinuxBackend {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previouslyInhibited: string[]
   ) {}
+
+  /**
+   * Unwraps DBus values returned by dbus-final. Some values are plain JavaScript values,
+   * while others are wrapped in an object containing a `value` property.
+   */
+  private unwrapDBusValue(value: unknown): unknown {
+    if (typeof value === 'object' && value !== null && 'value' in value) {
+      return (value as { value: unknown }).value;
+    }
+
+    return value;
+  }
 }

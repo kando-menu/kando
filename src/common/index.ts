@@ -433,6 +433,18 @@ export type AppDescription = {
 };
 
 /**
+ * This type is used to describe an open window. It is used when listing the open windows,
+ * for instance for the focus-window action.
+ */
+export type WindowDescription = {
+  /** The title of the window. */
+  readonly windowName: string;
+
+  /** The application the window belongs to. */
+  readonly appName: string;
+};
+
+/**
  * Each achievement can have one of three states. If it's 'locked', it will not be shown
  * in the user interface. Once some specific requirements are fulfilled, it will become
  * 'active' and eventually 'completed'.

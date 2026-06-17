@@ -65,25 +65,22 @@ for more information.
   public async deinit() {}
 
   /**
-   * This uses the hyprctl commandline tool to get the current pointer position relative
-   * to the currently focused monitor as well as name and app of the currently focused
-   * window.
+   * This uses the hyprctl commandline tool to get the current pointer position and the
+   * foreign-toplevel protocol to query the currently focused window.
    *
    * @returns The name and app of the currently focused window as well as the current
    *   pointer position.
    */
   public async getWMInfo() {
-    // We need to call hyprctl multiple times to get all the information we need.
     try {
-      const [activewindow, cursorpos] = await Promise.all([
-        this.hyprctl('activewindow'),
+      const [focusedWindow, cursorpos] = await Promise.all([
+        this.getFocusedWindow(),
         this.hyprctl('cursorpos'),
       ]);
 
       return {
-        windowName:
-          (activewindow['initialTitle'] || '') + ' - ' + (activewindow['title'] || ''),
-        appName: activewindow['initialClass'] || '',
+        windowName: focusedWindow?.windowName || '',
+        appName: focusedWindow?.appName || '',
         pointerX: cursorpos['x'],
         pointerY: cursorpos['y'],
         workArea: screen.getDisplayNearestPoint({

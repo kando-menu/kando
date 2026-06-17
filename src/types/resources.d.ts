@@ -210,6 +210,11 @@ export default interface Resources {
               "placeholder": "Hit the record button to start recording!",
               "recording-placeholder": "Press any keys…"
           },
+          "focus-window": {
+              "description": "Brings the specified window to the foreground. You can use this to focus the target application before executing a hotkey or macro action.",
+              "hint": "Kando will try to find a window which matches the given title or application name (or both). You can use regexes for more powerful matching, for example /firefox|chrome/i to match any web browser.",
+              "name": "Focus Window"
+          },
           "inhibit-shortcuts": {
               "description": "Disables all Kando shortcuts for the remainder of this workflow's execution.",
               "name": "Inhibit Shortcuts"

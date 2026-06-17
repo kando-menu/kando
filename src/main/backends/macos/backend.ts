@@ -16,6 +16,7 @@ import { Backend } from '../backend';
 import {
   KeySequence,
   AppDescription,
+  WindowDescription,
   MenuItem,
   ActionTypeRegistry,
 } from '../../../common';
@@ -97,6 +98,19 @@ export class MacosBackend extends Backend {
         y: pointer.y,
       }).workArea,
     };
+  }
+
+  /** Uses the native addon to list all open windows on macOS. */
+  public override async getOpenWindows(): Promise<WindowDescription[]> {
+    return native.getOpenWindows().map(({ app, window }) => ({
+      appName: app,
+      windowName: window,
+    }));
+  }
+
+  /** Focuses the given window via the native addon. */
+  public override async focusWindow(window: WindowDescription): Promise<void> {
+    native.focusWindow(window.windowName, window.appName);
   }
 
   /**

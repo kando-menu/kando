@@ -9,7 +9,6 @@
 // SPDX-License-Identifier: MIT
 
 import i18next from 'i18next';
-import { exec } from 'child_process';
 import lodash from 'lodash';
 
 import { WLRBackend } from '../wlroots/backend';
@@ -72,15 +71,15 @@ for more information.
 
   /**
    * The pointer position as well as the work-area size are retrieved via a native addon
-   * which spawns a temporary wlr_layer_shell overlay surface. The niri msg command-line
-   * tool is used for getting the name and app of the currently focused window.
+   * which spawns a temporary wlr_layer_shell overlay surface. The currently focused
+   * window is queried via the foreign-toplevel protocol.
    *
    * @returns The name and app of the currently focused window as well as the current
    *   pointer position and work area.
    */
   public async getWMInfo() {
     try {
-      const activewindow = await this.nirimsg('focused-window');
+      const focusedWindow = await this.getFocusedWindow();
       const { pointerX, pointerY, workAreaWidth, workAreaHeight } =
         this.getPointerPositionAndWorkAreaSize();
       const workArea = screen.getDisplayNearestPoint({
@@ -93,8 +92,8 @@ for more information.
       return {
         pointerX,
         pointerY,
-        windowName: activewindow?.['title'] || '',
-        appName: activewindow?.['app_id'] || '',
+        windowName: focusedWindow?.windowName || '',
+        appName: focusedWindow?.appName || '',
         workArea,
       };
     } catch (error) {
@@ -155,32 +154,4 @@ for more information.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previouslyInhibited: string[]
   ) {}
-
-  /**
-   * This uses the niri msg command line tool to execute a command and parse its JSON
-   * output.
-   *
-   * @param subcommand One of the nirimsg subcommands.
-   * @returns A promise which resolves to the parsed JSON output of nirimsg.
-   */
-  private async nirimsg(subcommand: string): Promise<never> {
-    return new Promise((resolve, reject) => {
-      let command = `niri msg -j ${subcommand}`;
-
-      // If we are inside a flatpak container, we cannot execute commands directly on the host.
-      // Instead we need to use flatpak-spawn.
-      if (process.env.container && process.env.container === 'flatpak') {
-        command = 'flatpak-spawn --host ' + command;
-      }
-
-      exec(command, (error, stdout) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        resolve(JSON.parse(stdout));
-      });
-    });
-  }
 }

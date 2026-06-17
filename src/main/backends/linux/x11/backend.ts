@@ -10,7 +10,7 @@
 
 import { native } from './native';
 import { LinuxBackend } from '../backend';
-import { KeySequence } from '../../../../common';
+import { KeySequence, WindowDescription } from '../../../../common';
 import { mapKeys } from '../../../../common/key-codes';
 import { screen } from 'electron';
 
@@ -42,6 +42,19 @@ export class X11Backend extends LinuxBackend {
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public async deinit(): Promise<void> {
     await this.bindShortcuts([]);
+  }
+
+  /** Uses _NET_CLIENT_LIST to enumerate all open windows. */
+  public async getOpenWindows() {
+    return native.getOpenWindows().map(({ app, window }) => ({
+      appName: app,
+      windowName: window,
+    }));
+  }
+
+  /** Sends a _NET_ACTIVE_WINDOW client message to focus the given window. */
+  public async focusWindow(window: WindowDescription) {
+    native.focusWindow(window.windowName, window.appName);
   }
 
   /**

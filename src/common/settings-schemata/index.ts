@@ -16,6 +16,7 @@ export type {
   CloseSubmenuActionV2 as CloseSubmenuAction,
   ExecuteCommandActionV2 as ExecuteCommandAction,
   ExecuteMacroActionV2 as ExecuteMacroAction,
+  FocusWindowActionV2 as FocusWindowAction,
   InhibitShortcutsActionV2 as InhibitShortcutsAction,
   OpenFileActionV2 as OpenFileAction,
   OpenMenuActionV2 as OpenMenuAction,

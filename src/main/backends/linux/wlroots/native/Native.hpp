@@ -12,6 +12,7 @@
 #define NATIVE_HPP
 
 #include "virtual-keyboard-unstable-v1.h"
+#include "wlr-foreign-toplevel-management-unstable-v1.h"
 #include "wlr-layer-shell-unstable-v1.h"
 #include "wlr-virtual-pointer-unstable-v1.h"
 #include "xdg-shell.h"
@@ -73,6 +74,22 @@ class Native : public Napi::Addon<Native> {
    *             number and a boolean.
    */
   void simulateKey(const Napi::CallbackInfo& info);
+
+  /**
+   * This function gets a list of all currently open windows using the foreign-toplevel
+   * protocol.
+   */
+  Napi::Value getOpenWindows(const Napi::CallbackInfo& info);
+
+  /**
+   * This function gets the currently focused window using the foreign-toplevel protocol.
+   */
+  Napi::Value getFocusedWindow(const Napi::CallbackInfo& info);
+
+  /**
+   * This function focuses the given window using the foreign-toplevel protocol.
+   */
+  void focusWindow(const Napi::CallbackInfo& info);
 
   /**
    * This function gets the pointer's location and work area size by spawning a wlr layer
