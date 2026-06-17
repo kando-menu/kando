@@ -79,7 +79,12 @@
             "backup-settings": "Ḥrez config.json…",
             "restore-menus": "Err-d menus.json…",
             "restore-settings": "Err-d config.json…",
-            "developer-options": "Tinefrunin n uneflay"
+            "developer-options": "Tinefrunin n uneflay",
+            "title": "Iɣewwaren imuta",
+            "close-menu": "Mdel umuɣ",
+            "menu-sounds": "Umuɣ n yimesliyen",
+            "sound-theme": "Asentel n yimesliyen",
+            "app-settings": "Iɣewwaren n wesnas"
         },
         "introduction-dialog": {
             "slide3-hint1": "Tzemreḍ daɣen ad tsiteḍ dagi akken ad tmedleḍ umuɣ.",
@@ -144,7 +149,7 @@
         "no-matching-menus-note": "Ahat ɛreḍ irem-nniḍen n unadi?",
         "empty-collection": "Tagrumma-agi d tilemt.",
         "empty-collection-note": "Ẓreg ticṛaḍ yellan ddaw-a neɣ rnu umuɣ amaynut ɣer tagrumma-agi s tqeffalt ddaw-a.",
-        "create-menu-button": "Umuɣ amaynut",
+        "create-menu-button": "Rnu umuɣ",
         "duplicate-menu": "Sisleg umuɣ",
         "export-menu": "Sifeḍ umuɣ",
         "import-menu": "Kter umuɣ",
@@ -206,7 +211,18 @@
         "area-condition-top-placeholder": "Uksawen",
         "area-condition-left-placeholder": "Azelmaḍ",
         "area-condition-bottom-placeholder": "Ukessar",
-        "area-condition-right-placeholder": "Ayeffus"
+        "area-condition-right-placeholder": "Ayeffus",
+        "workflow-editor": {
+            "add-action": "Rnu tigawt"
+        },
+        "about-dialog": {
+            "title": "Ɣef Kando",
+            "kando-version": "Lqem n Kando"
+        },
+        "file-picker": {
+            "select-file": "Fren afaylu",
+            "select-directory": "Fren akaram"
+        }
     },
     "menu-items": {
         "command": {
@@ -443,6 +459,9 @@
             "description": "Aru amakṛu n unasiw.",
             "placeholder": "Tekki ɣef tqeffalt n usekles akken ad tebduḍ asekles!",
             "recording-placeholder": "Tekki ɣef kra n tsura…"
+        },
+        "close-menu": {
+            "name": "Mdel umuɣ"
         }
     }
 }
