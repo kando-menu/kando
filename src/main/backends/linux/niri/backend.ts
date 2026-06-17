@@ -154,5 +154,4 @@ for more information.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previouslyInhibited: string[]
   ) {}
-
 }
