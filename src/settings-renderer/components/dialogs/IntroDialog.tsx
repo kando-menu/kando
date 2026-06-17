@@ -46,7 +46,7 @@ export default function IntroDialog() {
     if (showIntroductionDialog) {
       setIntroDialogVisible(true);
     }
-  });
+  }, [showIntroductionDialog, setIntroDialogVisible]);
 
   const makeVideoSlide = (videoNumber: number, text: string) => {
     return (
