@@ -48,8 +48,6 @@ function testStringCondition(condition: string, value: string) {
 export async function execute(action: DeepReadonly<FocusWindowAction>, app: KandoApp) {
   const openWindows = await app.getBackend().getOpenWindows();
 
-  console.log(openWindows);
-
   for (const window of openWindows) {
     if (
       testStringCondition(action.appName, window.appName) &&
