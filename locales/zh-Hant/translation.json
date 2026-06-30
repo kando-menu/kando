@@ -147,7 +147,11 @@
             "input-options": "輸入選項",
             "learn-interaction-mode": "點擊[此處]({{link}})，深入了解 Kando 的互動模式！",
             "backup-menus-note": "這將備份或還原您的所有選單。包含所有已設定的快捷鍵、選單佈局及收藏夾。",
-            "backup-settings-note": "這將備份或還原 Kando 的設定。包含所有一般設定及選單主題配置。"
+            "backup-settings-note": "這將備份或還原 Kando 的設定。包含所有一般設定及選單主題配置。",
+            "return-pointer-after-selection-info": "當完成選取後，滑鼠指標將會自動移回開啟選單時的原本位置。",
+            "return-pointer-after-selection": "選取後指標歸位",
+            "settings-dialog-and-tray-icon": "設定對話框與系統匣圖示",
+            "achievements": "成就"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 為您提供了一種獨特且高效的方式與電腦互動。",
@@ -325,7 +329,14 @@
         "export-menu-error-title": "匯出選單失敗",
         "quick-select-key-recording": "按下按鍵…",
         "quick-select-key-info": "可透過此按鍵快速選取選單項目。",
-        "quick-select-key-label": "快速選取鍵"
+        "quick-select-key-label": "快速選取鍵",
+        "workflow-editor": {
+            "add-action": "新增動作",
+            "button-select-workflow": {
+                "description": "選取此項目後，將會執行以下動作。",
+                "empty-hint": "目前，選取此項目不會執行任何動作。請使用上方按鈕為此工作流程新增動作！"
+            }
+        }
     },
     "menu-items": {
         "text": {
