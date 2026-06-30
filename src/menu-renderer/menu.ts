@@ -414,7 +414,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         let path = item.renderData.path;
 
         if (item === this.centerItem) {
-          interaction = MenuInteractionType.eActivateSubmenu;
+          interaction = MenuInteractionType.eActivateMenu;
         } else if (item.type === 'button') {
           interaction = MenuInteractionType.eSelectButton;
         } else if (item === this.centerItem.renderData.parent) {
@@ -473,7 +473,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             eventKey
           ) {
             this.emitItemInteractionEvent(
-              MenuInteractionType.eActivateSubmenu,
+              MenuInteractionType.eActivateMenu,
               this.centerItem.renderData.path
             );
             return;
@@ -535,7 +535,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         if (this.hoveredItem) {
           if (this.hoveredItem === this.centerItem) {
             this.emitItemInteractionEvent(
-              MenuInteractionType.eActivateSubmenu,
+              MenuInteractionType.eActivateMenu,
               this.hoveredItem.renderData.path
             );
           } else if (this.hoveredItem.type === 'submenu') {
@@ -1542,7 +1542,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       | MenuInteractionType.eHoverCenter
       | MenuInteractionType.eHoverButton
       | MenuInteractionType.eHoverSubmenu
-      | MenuInteractionType.eActivateSubmenu,
+      | MenuInteractionType.eActivateMenu,
     path: number[]
   ) {
     this.emit('interaction', type, path, 0, SelectionSource.eUnknown);

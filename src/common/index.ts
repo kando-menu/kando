@@ -195,7 +195,7 @@ export enum MenuInteractionType {
   eHoverButton = 'hoverButton',
   eHoverSubmenu = 'hoverSubmenu',
   eSelectButton = 'selectButton',
-  eActivateSubmenu = 'activateSubmenu',
+  eActivateMenu = 'activateMenu',
 }
 
 /**

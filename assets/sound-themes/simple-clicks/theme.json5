@@ -20,10 +20,8 @@
       volume: 0.3,
     },
     closeMenu: {
-      file: 'select.wav',
-      volume: 0.3,
-      minPitch: 0.7,
-      maxPitch: 0.7,
+      file: 'final.wav',
+      volume: 0.5,
     },
     openSubmenu: {
       file: 'select.wav',
@@ -47,18 +45,10 @@
       minPitch: 0.9,
       maxPitch: 1.0,
     },
-    selectButton: {
-      file: 'final.wav',
-      volume: 0.7,
-    },
     hoverSubmenu: {
       file: 'hover.wav',
       minPitch: 0.9,
       maxPitch: 0.9,
-    },
-    activateSubmenu: {
-      file: 'final.wav',
-      volume: 0.7,
     },
   },
 }

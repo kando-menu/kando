@@ -788,7 +788,7 @@ export class MenuWindow extends BrowserWindow {
         }
 
         // The user clicked the root menu item.
-        if (type === MenuInteractionType.eActivateSubmenu && item.type === 'root') {
+        if (type === MenuInteractionType.eActivateMenu && item.type === 'root') {
           if (this.lastMenu.root.activateWorkflow) {
             this.executeWorkflow(this.lastMenu.root.activateWorkflow);
           }
@@ -815,7 +815,7 @@ export class MenuWindow extends BrowserWindow {
         }
 
         // For submenus, there is also the activate-workflow.
-        if (type === MenuInteractionType.eActivateSubmenu && item.type === 'submenu') {
+        if (type === MenuInteractionType.eActivateMenu && item.type === 'submenu') {
           if (item.activateWorkflow) {
             this.executeWorkflow(item.activateWorkflow);
           }
