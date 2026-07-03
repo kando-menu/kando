@@ -146,7 +146,7 @@ export default function WorkflowEditor() {
   if (selectedItem.type === 'button') {
     workflowTypes.push('buttonSelect', 'buttonHover');
   } else if (selectedItem.type === 'submenu') {
-    workflowTypes.push('submenuOpen', 'submenuHover', 'submenuActivate');
+    workflowTypes.push('submenuActivate', 'submenuOpen', 'submenuHover');
   } else if (selectedItem.type === 'root') {
     workflowTypes.push('rootActivate');
   }

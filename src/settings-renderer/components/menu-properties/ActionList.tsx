@@ -220,10 +220,7 @@ export default function ActionList(props: Props) {
             firstWorkflowType: props.isFirstWorkflowType,
             lastWorkflowType: props.isLastWorkflowType,
           })}>
-          <div className={classes.actionItemContent}>
-            <Note marginBottom={8} marginTop={8}>
-              {props.description}
-            </Note>
+          <div className={classes.actionItemContent} style={{ paddingTop: 10 }}>
             <ShortcutPicker
               initialValue={props.workflow?.quickSelectKey || ''}
               label={i18next.t('settings.quick-select-key-label')}
@@ -239,6 +236,7 @@ export default function ActionList(props: Props) {
                 });
               }}
             />
+            <Note marginTop={4}>{props.description}</Note>
           </div>
         </div>
 
