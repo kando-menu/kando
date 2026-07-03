@@ -145,7 +145,8 @@ export class CenterText {
     // key in the text. For this, we wrap it in a <u> element. We also need to use
     // innerHTML instead of textContent in this case.
     if (accessKey) {
-      const regex = new RegExp(`(${accessKey})`, 'i');
+      const escapedAccessKey = accessKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedAccessKey})`, 'i');
       formattedText = formattedText.replace(regex, '<u>$1</u>');
       p.innerHTML = formattedText;
     } else {

@@ -58,6 +58,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 - A bug which could prevent Kando from starting up on Linux when using a newer version of `xdg-desktop-portal` (error message: "An app id is required"). This new version of the portal now requires that the app has a desktop file with the correct application ID. When Kando is not installed, such a desktop file is not present, so the portal would refuse to connect and Kando would fail to start. In this case, Kando will now automatically create a hidden desktop file with the correct application ID in the user's applications directory.
 - Selecting menu items with the numpad keys. They now work the same as the normal number keys. Thanks to [@username1419](https://github.com/username1419) for this fix!
+- A bug which caused the center text to not be drawn properly if the quick-select key of the item was a character which has special meaning in regular expressions. Thanks to [@GZ0759](https://github.com/GZ0759) for this fix!
 
 ### :fire: Removed
 
