@@ -61,7 +61,7 @@
     "css-loader": "^7.1.4",
     "dbus-final": "github:Jelmerro/dbus-final",
     "drag-drop-touch": "github:kando-menu/dragdroptouch",
-    "electron": "^42.4.0",
+    "electron": "^43.0.0",
     "electron-devtools-installer": "^4.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "emojilib": "^4.0.3",
