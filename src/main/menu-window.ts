@@ -265,18 +265,16 @@ export class MenuWindow extends BrowserWindow {
     this.menuOpeningPointerPosition = { x: info.pointerX, y: info.pointerY };
     this.noopInteraction = true;
 
-    // On Windows, we have to show the window before we can move it. Otherwise, the
-    // window will not be moved to the correct monitor.
-    if (process.platform === 'win32') {
-      this.show();
+    this.show();
 
-      // Also, there is this long-standing issue with Windows where the window is not
-      // scaled correctly when it is moved to another monitor with a different DPI
-      // scale: https://github.com/electron/electron/issues/10862
-      // To work around this, we first move the window to the top-left corner of the
-      // screen and make sure that it is only on this monitor by reducing its size to
-      // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
-      // scale the window to the correct size.
+    // Also, there is this long-standing issue with Windows where the window is not
+    // scaled correctly when it is moved to another monitor with a different DPI
+    // scale: https://github.com/electron/electron/issues/10862
+    // To work around this, we first move the window to the top-left corner of the
+    // screen and make sure that it is only on this monitor by reducing its size to
+    // 1x1 pixel. This seems to apply the correct DPI scaling. Afterward, we can
+    // scale the window to the correct size.
+    if (process.platform === 'win32') {
       this.setBounds({
         x: info.workArea.x,
         y: info.workArea.y,
@@ -292,11 +290,6 @@ export class MenuWindow extends BrowserWindow {
     // really maximized. Else the window will be placed next to the stage manager area.
     if (os.platform() == 'darwin') {
       setTimeout(() => this.setBounds(info.workArea, false));
-    }
-
-    // On all platforms except Windows, we show the window after we moved it.
-    if (process.platform !== 'win32') {
-      this.show();
     }
 
     // Usually, the menu is shown at the pointer position.
@@ -673,19 +666,6 @@ export class MenuWindow extends BrowserWindow {
 
     // Else, we select the first menu from the list of best menus.
     return bestMenus[0];
-  }
-
-  /**
-   * This converts a path string to an array of numbers.
-   *
-   * @param path The path string to convert.
-   * @returns The array of numbers.
-   */
-  private pathToArray(path: string): number[] {
-    return path
-      .split('/')
-      .filter((x) => x.length > 0)
-      .map((x: string) => parseInt(x));
   }
 
   /**
