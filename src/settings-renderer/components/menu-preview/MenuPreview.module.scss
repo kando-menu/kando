@@ -30,7 +30,7 @@ $backlink-offset: 30cqmin;
   }
 
   to {
-    opacity: 0.5;
+    opacity: 0.7;
   }
 }
 
@@ -142,7 +142,7 @@ $backlink-offset: 30cqmin;
 
       background-color: transparent;
       color: $text-normal;
-      opacity: 0.5;
+      opacity: 0.7;
       animation: fade-in-control 0.2s ease;
 
       &.locked {
@@ -180,7 +180,7 @@ $backlink-offset: 30cqmin;
         calc($tool-offset * var(--dir-y))
       );
 
-      opacity: 0.5;
+      opacity: 0.7;
       animation: fade-in-control 0.2s ease;
 
       background-color: transparent;

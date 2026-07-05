@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+SPDX-License-Identifier: CC0-1.0
+-->
+
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="edit-submenu.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showguides="true"
+     inkscape:zoom="22.627417"
+     inkscape:cx="18.185903"
+     inkscape:cy="11.424194"
+     inkscape:window-width="1565"
+     inkscape:window-height="1392"
+     inkscape:window-x="26"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg12">
+    <sodipodi:guide
+       position="12,16.20843"
+       orientation="-1,0"
+       id="guide12"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="14.103157,12"
+       orientation="0,1"
+       id="guide13"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+  </sodipodi:namedview>
+  <circle
+     fill="currentColor"
+     id="circle7"
+     cx="8.4855347"
+     cy="-23.273966"
+     r="1.6170518"
+     inkscape:transform-center-y="2.2198803"
+     style="stroke-width:1"
+     transform="rotate(105)"
+     inkscape:transform-center-x="-8.2847067" />
+  <circle
+     fill="currentColor"
+     id="circle8"
+     cx="-8.4852123"
+     cy="-23.274149"
+     r="1.6170518"
+     inkscape:transform-center-y="8.2847046"
+     style="stroke-width:1"
+     transform="rotate(165)"
+     inkscape:transform-center-x="-2.2198797" />
+  <circle
+     fill="currentColor"
+     id="circle9"
+     cx="-16.970747"
+     cy="-8.5771437"
+     r="1.6170518"
+     style="stroke-width:1"
+     transform="rotate(-135)"
+     inkscape:transform-center-x="6.0648256"
+     inkscape:transform-center-y="6.0648248" />
+  <circle
+     fill="currentColor"
+     id="circle10"
+     cx="-8.4855347"
+     cy="6.120049"
+     r="1.6170518"
+     style="stroke-width:1"
+     transform="rotate(-75)"
+     inkscape:transform-center-x="8.2847036"
+     inkscape:transform-center-y="-2.2198799" />
+  <circle
+     fill="currentColor"
+     id="circle11"
+     cx="8.4852133"
+     cy="6.120234"
+     r="1.6170518"
+     style="stroke-width:1"
+     transform="rotate(-15)"
+     inkscape:transform-center-x="2.2198798"
+     inkscape:transform-center-y="-8.2847055" />
+  <g
+     id="g3"
+     transform="matrix(0.6007545,0,0,0.6007545,8.9888823,0.62419416)"
+     style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1">
+    <path
+       d="M 4,20 H 8 L 18.5,9.5 a 2.8284271,2.8284271 0 1 0 -4,-4 L 4,16 v 4"
+       id="path2-3"
+       style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="m 13.5,6.5 4,4"
+       id="path3"
+       style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

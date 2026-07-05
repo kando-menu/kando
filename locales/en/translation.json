@@ -330,7 +330,7 @@
                 "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the hover workflow."
             },
             "submenu-open-workflow": {
-                "description": "The actions below will be executed when the submenu item is selected.",
+                "description": "The actions below will be executed when the submenu is opened.",
                 "empty-hint": "Currently, no additional actions will be executed when opening this submenu. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key will open the submenu."
             },

@@ -415,9 +415,12 @@ export default function MenuPreview() {
       return null;
     }
 
-    const trashDir = math.getDirection(angle + 25, 1);
+    const toolOffset =
+      centerItem.children[renderedChild.index]?.type === 'submenu' ? 30 : 20;
+
+    const trashDir = math.getDirection(angle + toolOffset, 1);
     const editDir = math.getDirection(angle, 1);
-    const copyDir = math.getDirection(angle - 25, 1);
+    const copyDir = math.getDirection(angle - toolOffset, 1);
 
     return (
       <>
@@ -435,14 +438,14 @@ export default function MenuPreview() {
         {/* The edit button is only shown for submenus as only they can be edited. */}
         {centerItem.children[renderedChild.index]?.type === 'submenu' ? (
           <div
-            className={classes.tool}
+            className={cx({ tool: true, primary: true })}
             style={utils.makeCSSProperties('dir', editDir)}
             data-tooltip-content={i18next.t('settings.edit-submenu')}
             data-tooltip-id="main-tooltip"
             onClick={() => {
               editChild(renderedChild.index);
             }}>
-            <TbPencil />
+            <ThemedIcon theme="kando" name="edit-submenu.svg" size="100%" />
           </div>
         ) : null}
         <div
