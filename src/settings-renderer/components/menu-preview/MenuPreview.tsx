@@ -14,7 +14,7 @@ declare const window: WindowWithAPIs;
 import React from 'react';
 import i18next from 'i18next';
 import classNames from 'classnames/bind';
-import { TbCopy, TbTrash, TbPencil } from 'react-icons/tb';
+import { TbCopy, TbTrash } from 'react-icons/tb';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import * as classes from './MenuPreview.module.scss';
