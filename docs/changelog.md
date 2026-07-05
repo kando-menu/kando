@@ -48,6 +48,8 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 ### :wrench: Changed
 
 - :collision: **On KDE Wayland, Kando now requires a [KWin plugin](https://github.com/kando-menu/kwin-integration) to be installed on your system**. This plugin is similar to the extension used on GNOME. It enables the stylus support as well as the new focus-window action. Also, it makes the previously used (and very hacky) KWin script obsolete and thus fixes a rare but fatal crash which could bring down your entire desktop. For now, the plugin is only available for KWin 6+. If there are many requests for backporting it to KWin 5, we can look into it. Else, if you are still on KWin 5, you will have to use X11 for now. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing to this!
+- :collision: As part of the workflow changes, the IPC interface has changed significantly. If you are using the IPC interface, please check the [documentation](https://kando.menu/ipc-interface/) for the new specification.
+- :collision: Also as a consequence of the workflow changes, the sound-theme configuration has changed. Sound themes have to be updated to the new format. Check the [documentation](https://kando.menu/sound-themes/) for more information.
 - Many of the icons of the Kando icon theme. These are used for the actions and for the example menu items which can be created from the preview footer area.
 - The position of the delete-menu-item and duplicate-menu-item buttons in the settings dialog. They are now shown next to selected menu items in the preview area.
 - The position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
