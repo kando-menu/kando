@@ -148,7 +148,7 @@
             "learn-interaction-mode": "點擊[此處]({{link}})，深入了解 Kando 的互動模式！",
             "backup-menus-note": "這將備份或還原您的所有選單。包含所有已設定的快捷鍵、選單佈局及收藏夾。",
             "backup-settings-note": "這將備份或還原 Kando 的設定。包含所有一般設定及選單主題配置。",
-            "return-pointer-after-selection-info": "當完成選取後，滑鼠指標將會自動移回開啟選單時的原本位置。",
+            "return-pointer-after-selection-info": "完成選取後，滑鼠指標將會移回原本開啟選單的位置。",
             "return-pointer-after-selection": "選取後指標歸位",
             "settings-dialog-and-tray-icon": "設定對話框與系統匣圖示",
             "achievements": "成就"
@@ -334,7 +334,27 @@
             "add-action": "新增動作",
             "button-select-workflow": {
                 "description": "選取此項目後，將會執行以下動作。",
-                "empty-hint": "目前，選取此項目不會執行任何動作。請使用上方按鈕為此工作流程新增動作！"
+                "empty-hint": "目前選取此項目後無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當上層選單開啟時，按下此按鍵也會觸發選取工作流程。"
+            },
+            "button-hover-workflow": {
+                "description": "當指標懸停在項目上時，將會執行以下動作。",
+                "empty-hint": "目前懸停於此項目無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當上層選單開啟時，按下此按鍵也會觸發懸停工作流程。"
+            },
+            "submenu-open-workflow": {
+                "description": "選取此子選單項目後，將會執行以下動作。",
+                "empty-hint": "目前開啟此子選單時無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "按下此按鍵將會開啟子選單。"
+            },
+            "submenu-hover-workflow": {
+                "description": "當指標懸停在子選單項目上時，將會執行以下動作。",
+                "empty-hint": "目前懸停於此子選單無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當上層選單開啟時，按下此按鍵也會觸發懸停工作流程。"
+            },
+            "submenu-activate-workflow": {
+                "description": "點擊此子選單中心後，將會執行以下動作。",
+                "empty-hint": "目前點擊此子選單中心後無可執行的動作。請使用上方按鈕為此工作流程新增動作！"
             }
         }
     },
