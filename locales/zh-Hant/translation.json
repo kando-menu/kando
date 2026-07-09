@@ -1,7 +1,7 @@
 {
     "settings": {
         "icon-picker-dialog": {
-            "base64-hint": "Base64 編碼圖示讓您能輕鬆地將各種圖示加入選單。您可使用如 [www.base64-image.de]({{link}}) 這樣的服務，將任何圖片轉換為 Base64 字串，甚至支援動態 GIF！",
+            "base64-hint": "Base64 編碼圖示讓您能輕鬆地將各種圖示加入選單。可使用如 [www.base64-image.de]({{link}}) 這樣的服務，將任何圖片轉換為 Base64 字串，甚至支援動態 GIF！",
             "base64-example": "Base64 範例：",
             "file-example": "文件 URI 範例：",
             "url-example": "URL 範例：",
@@ -148,7 +148,7 @@
             "learn-interaction-mode": "點擊[此處]({{link}})，深入了解 Kando 的互動模式！",
             "backup-menus-note": "這將備份或還原您的所有選單。包含所有已設定的快捷鍵、選單佈局及收藏夾。",
             "backup-settings-note": "這將備份或還原 Kando 的設定。包含所有一般設定及選單主題配置。",
-            "return-pointer-after-selection-info": "當完成選取後，滑鼠指標將會自動移回開啟選單時的原本位置。",
+            "return-pointer-after-selection-info": "完成選取後，滑鼠指標將會移回原本開啟選單的位置。",
             "return-pointer-after-selection": "選取後指標歸位",
             "settings-dialog-and-tray-icon": "設定對話框與系統匣圖示",
             "achievements": "成就"
@@ -334,9 +334,45 @@
             "add-action": "新增動作",
             "button-select-workflow": {
                 "description": "選取此項目後，將會執行以下動作。",
-                "empty-hint": "目前，選取此項目不會執行任何動作。請使用上方按鈕為此工作流程新增動作！"
-            }
-        }
+                "empty-hint": "目前選取此項目後無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當上層選單開啟時，按下此按鍵也會觸發選取工作流程。"
+            },
+            "button-hover-workflow": {
+                "description": "當指標懸停在項目上時，將會執行以下動作。",
+                "empty-hint": "目前懸停於此項目無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當上層選單開啟時，按下此按鍵也會觸發懸停工作流程。"
+            },
+            "submenu-open-workflow": {
+                "description": "開啟此子選單後，將會執行以下動作。",
+                "empty-hint": "目前開啟此子選單時無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "按下此按鍵將會開啟子選單。"
+            },
+            "submenu-hover-workflow": {
+                "description": "當指標懸停在子選單項目上時，將會執行以下動作。",
+                "empty-hint": "目前懸停於此子選單無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當上層選單開啟時，按下此按鍵也會觸發懸停工作流程。"
+            },
+            "submenu-activate-workflow": {
+                "description": "點擊此子選單中心後，將會執行以下動作。",
+                "empty-hint": "目前點擊此子選單中心後無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當子選單開啟時，按下此按鍵也會觸發中心點擊工作流程。"
+            },
+            "root-activate-workflow": {
+                "description": "點擊頂層選單中心後，將會執行以下動作。",
+                "empty-hint": "目前點擊此頂層選單中心無可執行的動作。請使用上方按鈕為此工作流程新增動作！",
+                "quick-select-key-hint": "當頂層選單開啟時，按下此按鍵也會觸發中心點擊工作流程。"
+            },
+            "action-picker": {
+                "search-placeholder": "搜尋動作…"
+            },
+            "select-workflow-name": "選取工作流程",
+            "hover-workflow-name": "懸停工作流程",
+            "activate-workflow-name": "中心點擊工作流程",
+            "open-workflow-name": "開啟工作流程"
+        },
+        "fix-menu-item-angle": "固定此選單項目的角度。啟用此選項後，拖曳項目即可更新角度。",
+        "edit-submenu": "編輯子選單",
+        "drop-here-to-delete": "拖曳至此處以刪除"
     },
     "menu-items": {
         "text": {
@@ -448,10 +484,13 @@
             "shortcut-info": "在 KDE / Wayland 上，Kando 無法直接綁定全域快捷鍵。請改為在此處指定一個快捷鍵 ID，並至 KDE 系統設定的全域快捷鍵中，於 KWin 區塊內搜尋此 ID。在該處指派快捷鍵以開啟此選單。"
         },
         "gnome": {
-            "error": "無法連線至 GNOME Shell 擴充功能 Kando Integration。可從此處取得：{{link}}"
+            "error": "無法連線至 Kando 的 GNOME Shell 擴充功能。可從此處取得：{{link}}"
         },
         "niri": {
             "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列或您的 Niri 設定檔，執行 'kando --menu \"選單名稱\"' 來開啟此選單。"
+        },
+        "kde": {
+            "error": "無法連線至 Kando 的 KWin 外掛程式。可從此處取得：{{link}}"
         }
     },
     "achievements": {
@@ -580,16 +619,44 @@
         },
         "simulate-hotkey": {
             "name": "模擬快捷鍵",
-            "description": "按下組合鍵。",
+            "description": "自動按下組合鍵。若希望執行目標是當前作用中的應用程式而非選單本身，請務必在此動作前加入「關閉選單」動作！",
             "recording-placeholder": "輸入快捷鍵…",
             "hotkey": "快捷鍵",
             "hotkey-info": "當此項目被選取時，將會觸發此快捷鍵。錄製時，不需一次按下所有按鍵，也可一個接一個地按。若某個快捷鍵已被綁定至全域操作，此功能會有所幫助！"
         },
         "execute-macro": {
             "name": "執行巨集",
-            "description": "輸入一段鍵盤巨集。",
+            "description": "自動依序輸入多個按鍵。若希望執行目標是當前作用中的應用程式而非選單本身，請務必在此動作前加入「關閉選單」動作！",
             "placeholder": "按下錄製按鈕即可開始錄製！",
             "recording-placeholder": "按下任意按鍵…"
+        },
+        "set-clipboard": {
+            "name": "設定剪貼簿",
+            "description": "將指定的文字儲存至剪貼簿中。在此動作後加入一個 Ctrl+V 的快捷鍵動作即可貼上文字。",
+            "placeholder": "輸入任何文字…"
+        },
+        "delay": {
+            "name": "延遲",
+            "description": "暫停工作流程一段指定的時間。",
+            "duration-info": "工作流程將延遲在這段時間後執行。",
+            "duration-label": "秒"
+        },
+        "close-menu": {
+            "name": "關閉選單",
+            "description": "關閉目前的選單。此動作在工作流程中的位置非常重要！後續動作將會等待選單完全淡出後才執行。"
+        },
+        "close-submenu": {
+            "name": "關閉子選單",
+            "description": "返回上一層選單。"
+        },
+        "inhibit-shortcuts": {
+            "name": "暫停快捷鍵",
+            "description": "在此工作流程的執行期間，停用所有 Kando 快捷鍵。"
+        },
+        "focus-window": {
+            "name": "聚焦視窗",
+            "description": "將指定視窗移至前景。在執行快捷鍵或巨集動作前，可使用此動作聚焦至目標應用程式。",
+            "hint": "Kando 將嘗試尋找符合指定標題或應用程式名稱（或兩者皆符合）的視窗。可使用正規表達式進行更強大的匹配，例如 /firefox|chrome/i 以匹配任何網頁瀏覽器。"
         }
     }
 }
