@@ -324,7 +324,7 @@ export function computeItemAngles(
 
   // Make sure that the fixed angles increase monotonically. If a fixed angle is larger
   // than the next one, the next one will be ignored.
-  for (let i = 0; i < fixedAngles.length - 1; ) {
+  for (let i = 0; i < fixedAngles.length - 1;) {
     if (fixedAngles[i].angle > fixedAngles[i + 1].angle) {
       fixedAngles.splice(i + 1, 1);
     } else {
