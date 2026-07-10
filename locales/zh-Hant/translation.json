@@ -22,7 +22,7 @@
             "electron-version": "Electron 版本",
             "chrome-version": "Chrome 版本",
             "check-latest-release": "檢查最新版本",
-            "message": "我完全憑著純粹的熱忱在開發 Kando。如果您喜歡使用它，就像我熱愛創造它一樣，歡迎請我[喝杯咖啡]({{link}})！\n\n💖 Simon",
+            "message": "我憑著純粹的熱忱在開發 Kando。如果您喜歡使用它，就如同我享受打造它一樣，歡迎[請我喝杯咖啡]({{link}})！\n\n💖 Simon",
             "read-release-notes": "閱讀版本資訊"
         },
         "general-settings-dialog": {
@@ -116,7 +116,7 @@
             "app-settings": "應用程式設定",
             "cycle-from-recent": "顯示下一個選單（記住最後）",
             "cycle-from-first": "顯示下一個選單（從頭開始）",
-            "keep-input-focus": "保持原應用程式焦點",
+            "keep-input-focus": "保持作用中應用程式的焦點",
             "keep-input-focus-info": "啟用後，選單在開啟時將不會取得鍵盤輸入焦點。此設定會停用「極速模式」，若需在選單開啟期間對其他應用程式保持焦點，此選項會有所幫助。",
             "hardware-acceleration": "啟用硬體加速",
             "hardware-acceleration-info": "此選項可提升應用程式的效能，但也可能導致部分顯示異常。需重新啟動 Kando 才會生效。",
@@ -446,7 +446,7 @@
         },
         "windows": {
             "submenu": "視窗",
-            "mission-control": "指揮中心",
+            "mission-control": "Mission Control",
             "close-window": "關閉視窗",
             "tile-left": "向左貼齊",
             "toggle-maximize": "切換最大化",
@@ -631,14 +631,14 @@
             "recording-placeholder": "按下任意按鍵…"
         },
         "set-clipboard": {
-            "name": "複製至剪貼簿",
+            "name": "寫入剪貼簿",
             "description": "將指定的文字儲存至剪貼簿中。在此動作後加入一個 Ctrl+V 的快捷鍵動作即可貼上文字。",
             "placeholder": "輸入任何文字…"
         },
         "delay": {
             "name": "延遲",
             "description": "暫停工作流程一段指定的時間。",
-            "duration-info": "工作流程將延遲在這段時間後執行。",
+            "duration-info": "工作流程的執行將會延遲這段時間。",
             "duration-label": "秒"
         },
         "close-menu": {
