@@ -37,6 +37,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
   Also interesting is that each workflow has its own quick-select key. So usually, you would want to assign quick-select keys to the open-workflow of submenus and select-workflows of buttons. Yet you can also change the quick-select key of the workflow which gets triggered when you click the center of a submenu! Per default, this will be backspace (for closing the submenu).
 
+- Support for **switching window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
 - Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
 - A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
 - A new option to move the mouse pointer back to where it opened the menu after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
