@@ -281,7 +281,16 @@
             "windows-ink-workaround-info": "此选项会启用一项兼容性修正，可以解决在 Windows Ink 启用时无法取得触控笔位置的问题。此项会在开启菜单前增加 100 毫秒的延迟，因此如果您不使用触控笔，可关闭此选项提升菜单开启速度。",
             "windows-ink-workaround": "Windows Ink 兼容支持",
             "max-selection-radius-info": "若设置为大于 0 的值，点击此半径外的区域将关闭菜单。默认值为 0，表示不限制最大选取半径。",
-            "max-selection-radius": "最大选取半径"
+            "max-selection-radius": "最大选取半径",
+            "return-pointer-after-selection-info": "完成选择后，鼠标指针将回归至最初开启菜单时所在的位置。",
+            "return-pointer-after-selection": "选择后令鼠标指针归位",
+            "interaction-modes": "交互模式",
+            "input-options": "输入选项",
+            "learn-interaction-mode": "点击 [此处]({{link}}) 以了解Kando的交互方式！",
+            "backup-menus-note": "这将备份或还原您所有的菜单。包括所有由您配置的快捷键、菜单布局和菜单合集。",
+            "backup-settings-note": "这将备份或还原 Kando 的设置项，包括所有由您配置的通用设置和菜单主题配置。",
+            "settings-dialog-and-tray-icon": "设置对话框和托盘图标",
+            "achievements": "成就"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -361,7 +370,11 @@
             "preset-name-empty": "预设集名称不能为空！",
             "preset-name-invalid": "预设集名称只能包含英文字母、数字、连字符、下划线和空格！",
             "preset-name-exists": "已存在相同名称的预设集。",
-            "preset-name-placeholder": "例：My Custom Colors"
+            "preset-name-placeholder": "例：My Custom Colors",
+            "enable-menu-animations-info": "如果禁用，来自菜单主题的所有变换和大部分动画效果将被阻止。",
+            "enable-menu-animations": "菜单动画",
+            "enable-pointer-reactive-effects-info": "如果禁用，来自菜单主题提供的基于鼠标指针位置的部分缩放效果将被阻止。",
+            "enable-pointer-reactive-effects": "指针互动效果"
         },
         "not-bound": "未绑定快捷键",
         "shortcut-id-label": "快捷键 ID",
@@ -411,10 +424,10 @@
         "search-menus-placeholder": "搜索菜单…",
         "add-collection-tooltip": "创建一个新的菜单合集。使用合集以按标签将您的菜单分组！",
         "menu-behavior-info": "在您启用这些选项之前，我们建议您了解我们喜欢 Kando 默认行为的 [原因]({{link}})!",
-        "app-condition-info": "仅在特定应用程序被聚焦时显示菜单。支持类似于 /firefox|chrome/i 的正则表达式。",
+        "app-condition-info": "仅在特定应用程序被聚焦时显示菜单。支持正则表达式，例如 /firefox|chrome/i。",
         "app-condition-placeholder": "应用名称",
         "app-condition-tooltip": "选取应用",
-        "window-condition-info": "仅当聚焦窗口的标题包含给定文本时显示菜单。支持类似于 /youtube|vimeo/i 的正则表达式。",
+        "window-condition-info": "仅当聚焦窗口的标题包含给定文本时显示菜单。支持正则表达式，例如 /youtube|vimeo/i。",
         "tags": "标签",
         "duplicate-menu": "复制菜单",
         "tags-info": "标签可以用于在菜单合集中对菜单进行分组。",
@@ -461,7 +474,13 @@
         "import-menu": "导入菜单",
         "quick-select-key-info": "此按键可让您快速选择菜单项。",
         "quick-select-key-label": "快速选择键",
-        "quick-select-key-recording": "按下按键…"
+        "quick-select-key-recording": "按下按键…",
+        "workflow-editor": {
+            "add-action": "新增动作",
+            "button-select-workflow": {
+                "description": "选择此菜单项后，将触发下列动作。"
+            }
+        }
     },
     "achievements": {
         "attributes": {
