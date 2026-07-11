@@ -453,8 +453,7 @@ export default function MenuPreview() {
           style={utils.makeCSSProperties('dir', copyDir)}
           data-tooltip-content={i18next.t('settings.duplicate-menu-item')}
           data-tooltip-id="main-tooltip"
-          onClick={(event) => {
-            event.stopPropagation();
+          onClick={() => {
             duplicateMenuItem(selectedMenu, selectedChildPath);
           }}>
           <TbCopy />

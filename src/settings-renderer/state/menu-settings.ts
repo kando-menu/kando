@@ -10,7 +10,7 @@
 
 import { useRef } from 'react';
 import { create } from 'zustand';
-import { produce } from 'immer';
+import { current, produce } from 'immer';
 import { temporal } from 'zundo';
 import lodash from 'lodash';
 
@@ -304,7 +304,7 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
               parent.children.splice(
                 itemPath[itemPath.length - 1],
                 0,
-                lodash.cloneDeep(item)
+                lodash.cloneDeep(current(item))
               );
             }
           })
