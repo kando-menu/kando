@@ -45,6 +45,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
 - Support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 
 - A global option to **return the pointer to the menu opening position** after selecting a button.
+- Many translation updates: **Thanks to all the contributors!**
 
 ### :wrench: Changed
 
