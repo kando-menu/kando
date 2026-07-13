@@ -70,6 +70,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :fire: Removed
 
+- Single-key turbo mode. This was not working reliably anyways as it relied on the key-repeat events which are only send by the OS after some delay. You can enable Hover mode instead which is more reliable and works very similar to the old single-key turbo mode.
 - The preview button for menus. I think it's not super useful and there is not much space where it used to be.
 
 ## [Kando 2.3.1](https://github.com/kando-menu/kando/releases/tag/v2.3.1)
