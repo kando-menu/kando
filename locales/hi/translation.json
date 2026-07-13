@@ -1,0 +1,21 @@
+{
+    "settings": {
+        "menu-themes-dialog": {
+            "save-preset": "प्रीसेट सेव करें",
+            "open-presets-directory": "प्रीसेट फोल्डर",
+            "no-accent-colors": "इस थीम में एक्सेंट कलर सपोर्टेड नहीं है।",
+            "title": "थीम्स",
+            "fade-in-time-info": "मेनू फेड-इन होने का समय. सामान्य रूप से 150ms।",
+            "fade-in-time": "फेड-इन होने का समय"
+        },
+        "icon-picker-dialog": {
+            "base64-hint": "Base64 आईकंस का उपयोग करें। आप [www.base64-image.de]({{link}}) पर जाकर किसी भी इमेज को Base64 स्ट्रिंग में परिवर्तन कर सकते हैं। यह एनिमेटेड gifs पर भी इस्तेमाल किया जा सकता है!",
+            "base64-example": "Base64 उदाहरण:",
+            "file-example": "फाइल: URI उदाहरण:",
+            "url-example": "URL उदाहरण:",
+            "reload-button-tooltip": "सभी आइकॉन थीम्स को रीलोड करें",
+            "search-placeholder": "आइकॉनस ढूंढे…",
+            "hint": "अपनी खुद की आइकॉन थीम्स बनाना यहाँ [सीखें]({{link}})।"
+        }
+    }
+}
