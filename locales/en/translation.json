@@ -137,7 +137,7 @@
             "windows-ink-workaround": "Windows-Ink workaround",
             "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This will prevent the menu from stealing focus from the active application, yet it will disable some features such as Turbo Mode and the ability to use the keyboard to select items.",
             "keep-input-focus": "Keep active application focused",
-            "keep-input-focus-warning": "This disables some features such as Turbo Mode and the ability to use the keyboard to select items. Use only if you know what you are doing!",
+            "keep-input-focus-warning": "This disables some features such as Turbo Mode and the ability to use the keyboard to select items. Activate this only if you know what you are doing!",
             "enable-marking-mode-info": "With Marking Mode enabled, you can select items by dragging the mouse over them.",
             "enable-marking-mode": "Enable Marking Mode",
             "enable-turbo-mode-info": "With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl.",
@@ -218,7 +218,7 @@
             "achievements": "Achievements",
             "trigger-center-click-on-key-release-info": "This will trigger the center-click workflow when a key is released while hovering over the center of a menu.",
             "trigger-center-click-on-key-release": "Trigger center-click workflow on key release",
-            "trigger-center-click-on-key-release-warning": "This option will instantly close the menu when you release the shortcut. Use only if you know what you are doing!"
+            "trigger-center-click-on-key-release-warning": "This option will instantly close the menu when you release the shortcut. Activate this only if you know what you are doing!"
         },
         "introduction-dialog": {
             "slide1-title": "Kando offers a unique and efficient way for interacting with your computer.",
