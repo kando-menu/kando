@@ -106,7 +106,7 @@
     "simple-icons-font": "^16.25.0",
     "string-replace-loader": "^3.3.0",
     "style-loader": "^4.0.0",
-    "swiper": "^12.1.4",
+    "swiper": "^14.0.5",
     "ts-loader": "^9.6.2",
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
