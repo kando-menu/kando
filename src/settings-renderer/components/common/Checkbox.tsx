@@ -27,6 +27,9 @@ type Props = {
   /** Optional information to display next to the label. */
   readonly info?: string;
 
+  /** Optional warning to display next to the widget. */
+  readonly warning?: string;
+
   /** Whether the checkbox is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
 
@@ -45,6 +48,7 @@ export default function Checkbox(props: Props) {
     <SettingsRow
       isLabelClickable
       info={props.info}
+      warning={props.warning}
       isDisabled={props.isDisabled}
       isFlipped={props.isFlipped}
       label={props.label}>

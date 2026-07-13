@@ -9,13 +9,18 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import { TbInfoSquareRoundedFilled } from 'react-icons/tb';
+import classNames from 'classnames/bind';
+import { TbInfoSquareRoundedFilled, TbAlertTriangleFilled } from 'react-icons/tb';
 
 import * as classes from './InfoItem.module.scss';
+const cx = classNames.bind(classes);
 
 type Props = {
   /** Text to display in the tooltip. */
   readonly info: string;
+
+  /** If true, it will show a warning-sign instead of an info icon. */
+  readonly isWarning?: boolean;
 };
 
 /**
@@ -27,10 +32,13 @@ type Props = {
 export default function InfoItem(props: Props) {
   return (
     <span
-      className={classes.info}
+      className={cx({
+        info: true,
+        warning: props.isWarning,
+      })}
       data-tooltip-content={props.info}
       data-tooltip-id="main-tooltip">
-      <TbInfoSquareRoundedFilled />
+      {props.isWarning ? <TbAlertTriangleFilled /> : <TbInfoSquareRoundedFilled />}
     </span>
   );
 }

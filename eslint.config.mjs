@@ -37,7 +37,7 @@ export default defineConfig([
     rules: {
       'react/boolean-prop-naming': [
         'error',
-        { rule: '^(is|has|do|use|hide|initial)[A-Z]([A-Za-z0-9]?)+' },
+        { rule: '^(is|has|do|use|hide|initial|show)[A-Z]([A-Za-z0-9]?)+' },
       ],
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-require-imports': 'off',

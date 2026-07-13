@@ -26,6 +26,9 @@ type Props = {
   /** Optional information to display next to the label. */
   readonly info?: string;
 
+  /** Optional warning to display next to the widget. */
+  readonly warning?: string;
+
   /**
    * If set to true, the settings row will be wrapped inside a label element so that
    * clicking the label will focus the widget. Defaults to false.
@@ -70,6 +73,10 @@ export default function SettingsRow(props: Props) {
         {props.info ? <InfoItem info={props.info} /> : null}
       </div>
     );
+  }
+
+  if (props.warning) {
+    widgets.push(<InfoItem key="warning" isWarning info={props.warning} />);
   }
 
   if (props.children) {

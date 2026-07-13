@@ -344,6 +344,11 @@ export default function GeneralSettingsDialog() {
             settingsKey="enableMarkingMode"
           />
           <SettingsCheckbox
+            warning={
+              keepInputFocus
+                ? i18next.t('settings.general-settings-dialog.enable-turbo-mode-warning')
+                : undefined
+            }
             info={i18next.t('settings.general-settings-dialog.enable-turbo-mode-info')}
             isDisabled={keepInputFocus}
             label={i18next.t('settings.general-settings-dialog.enable-turbo-mode')}
@@ -360,6 +365,11 @@ export default function GeneralSettingsDialog() {
           />
           <h1>{i18next.t('settings.general-settings-dialog.input-options')}</h1>
           <SettingsCheckbox
+            warning={
+              keepInputFocus
+                ? i18next.t('settings.general-settings-dialog.keep-input-focus-warning')
+                : undefined
+            }
             info={i18next.t('settings.general-settings-dialog.keep-input-focus-info')}
             label={i18next.t('settings.general-settings-dialog.keep-input-focus')}
             settingsKey="keepInputFocus"
