@@ -40,7 +40,8 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - Support for **switching window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
 - Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
 - A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
-- A new option to move the mouse pointer back to where it opened the menu after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
+- A new option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
+- A new option to **move the mouse pointer back to where it opened the menu** after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
 - The option to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
 - New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
 - Support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 

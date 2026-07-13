@@ -48,6 +48,12 @@ export class PointerInput extends InputMethod {
   public hoverModeNeedsConfirmation = false;
 
   /**
+   * If enabled, pressing a key while hovering over the center of a menu will trigger the
+   * center-click workflow.
+   */
+  public triggerCenterClickOnKeyRelease = false;
+
+  /**
    * This is used to detect gestures in "Marking Mode" and "Turbo Mode". It is fed with
    * motion events and emits a selection event if either the mouse pointer was stationary
    * for some time or if the mouse pointer made a sharp turn.
@@ -315,12 +321,20 @@ export class PointerInput extends InputMethod {
     if (!stillAnyModifierPressed) {
       this.deferredTurboMode = false;
 
-      // Select the active item if turbo mode ended due to a key release. But do not
-      // trigger selections on the center item in turbo mode.
-      if (
-        this.buttonState === ButtonState.eDragged &&
-        math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius
-      ) {
+      // Only if triggerCenterClickOnKeyRelease is enabled, we trigger the center-click-
+      // workflow when a key is released while hovering over the center of a menu. Else,
+      // we do not trigger selections on the center item in turbo mode.
+      let triggerSelection = false;
+
+      if (this.triggerCenterClickOnKeyRelease) {
+        triggerSelection = true;
+      } else {
+        triggerSelection =
+          this.buttonState === ButtonState.eDragged &&
+          math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
+      }
+
+      if (triggerSelection) {
         this.gestureDetector.reset();
         this.selectCallback(
           this.pointerPosition,

@@ -46,6 +46,9 @@ export default function GeneralSettingsDialog() {
   const setSettingsDialogVisible = useAppState((state) => state.setSettingsDialogVisible);
   const soundThemes = useAppState((state) => state.soundThemes);
   const [keepInputFocus] = useGeneralSetting('keepInputFocus');
+  const [triggerCenterClickOnKeyRelease] = useGeneralSetting(
+    'triggerCenterClickOnKeyRelease'
+  );
   const backend = useAppState((state) => state.backendInfo);
   const [activeCategory, setActiveCategory] = React.useState(0);
   const [transitionDirection, setTransitionDirection] =
@@ -362,6 +365,25 @@ export default function GeneralSettingsDialog() {
               'settings.general-settings-dialog.require-click-for-hover-mode'
             )}
             settingsKey="hoverModeNeedsConfirmation"
+          />
+          <SettingsCheckbox
+            warning={
+              keepInputFocus
+                ? i18next.t('settings.general-settings-dialog.enable-turbo-mode-warning')
+                : triggerCenterClickOnKeyRelease
+                  ? i18next.t(
+                      'settings.general-settings-dialog.trigger-center-click-on-key-release-warning'
+                    )
+                  : undefined
+            }
+            info={i18next.t(
+              'settings.general-settings-dialog.trigger-center-click-on-key-release-info'
+            )}
+            isDisabled={keepInputFocus}
+            label={i18next.t(
+              'settings.general-settings-dialog.trigger-center-click-on-key-release'
+            )}
+            settingsKey="triggerCenterClickOnKeyRelease"
           />
           <h1>{i18next.t('settings.general-settings-dialog.input-options')}</h1>
           <SettingsCheckbox

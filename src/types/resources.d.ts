@@ -358,6 +358,7 @@ export default interface Resources {
               "enable-marking-mode-info": "With Marking Mode enabled, you can select items by dragging the mouse over them.",
               "enable-turbo-mode": "Enable Turbo Mode",
               "enable-turbo-mode-info": "With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl.",
+              "enable-turbo-mode-warning": "Disabled due to the 'Keep active application focused' option being enabled.",
               "fixed-stroke-length": "Fixed Stroke Length",
               "fixed-stroke-length-info": "Usually, items are selected when you stop the movement or make a turn. If you set this to a value greater than 0, this behavior will change: Now items will only be selected if you dragged an item this far away from the center. Default is 0px.",
               "gesture-jitter-threshold": "Gesture Jitter Threshold",
@@ -372,7 +373,8 @@ export default interface Resources {
               "invisible-settings-button": "Invisible settings button",
               "invisible-settings-button-info": "You can still use the button, it will appear when you move the mouse over it.",
               "keep-input-focus": "Keep active application focused",
-              "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
+              "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This will prevent the menu from stealing focus from the active application, yet it will disable some features such as Turbo Mode and the ability to use the keyboard to select items.",
+              "keep-input-focus-warning": "This disables some features such as Turbo Mode and the ability to use the keyboard to select items. Use only if you know what you are doing!",
               "lazy-initialization": "Lazy initialization",
               "lazy-initialization-info": "If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled.",
               "learn-how-to-add-sound-themes": "Learn how to add new sound themes to Kando [here]({{link}})!",
@@ -434,6 +436,9 @@ export default interface Resources {
               "transparent-system": "Transparent System",
               "tray-icon-flavor": "Tray icon flavor",
               "tray-icon-flavor-info": "You can also choose to hide the tray icon completely.",
+              "trigger-center-click-on-key-release": "Trigger center-click workflow on key release",
+              "trigger-center-click-on-key-release-info": "This will trigger the center-click workflow when a key is released while hovering over the center of a menu.",
+              "trigger-center-click-on-key-release-warning": "This option will instantly close the menu when you release the shortcut. Use only if you know what you are doing!",
               "volume": "Volume",
               "volume-info": "The overall volume of the sound theme. Default is 0.5.",
               "white": "White",
@@ -509,9 +514,9 @@ export default interface Resources {
               "enable-pointer-reactive-effects": "Pointer-Reactive Effects",
               "enable-pointer-reactive-effects-info": "If disabled, some zooming or scaling effects of the menu theme which are based on the current pointer position are prevented.",
               "fade-in-time": "Fade-in time",
-              "fade-in-time-info": "The time it takes for the menu to fade in. Default is 150ms.",
+              "fade-in-time-info": "The time it takes for the menu to fade in. Default is 75ms.",
               "fade-out-time": "Fade-out time",
-              "fade-out-time-info": "The time it takes for the menu to fade out. Default is 200ms.",
+              "fade-out-time-info": "The time it takes for the menu to fade out. Default is 100ms.",
               "get-themes-online": "Get themes online",
               "light": "Light Mode",
               "light-dark-mode": "Enable light/dark mode",
@@ -617,7 +622,7 @@ export default interface Resources {
                   "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the hover workflow."
               },
               "submenu-open-workflow": {
-                  "description": "The actions below will be executed when the submenu item is selected.",
+                  "description": "The actions below will be executed when the submenu is opened.",
                   "empty-hint": "Currently, no additional actions will be executed when opening this submenu. Use the button above to add actions to this workflow!",
                   "quick-select-key-hint": "Pressing this key will open the submenu."
               }
