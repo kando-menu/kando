@@ -196,6 +196,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.pointerInput.enableHoverMode = showMenuOptions.hoverMode;
     this.pointerInput.hoverModeNeedsConfirmation =
       this.settings.hoverModeNeedsConfirmation;
+    this.pointerInput.triggerCenterClickOnKeyRelease =
+      this.settings.triggerCenterClickOnKeyRelease;
 
     this.root = root;
     this.createRenderData(this.root, this.container);
@@ -313,6 +315,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.pointerInput.dragThreshold = this.settings.dragThreshold;
     this.pointerInput.hoverModeNeedsConfirmation =
       this.settings.hoverModeNeedsConfirmation;
+    this.pointerInput.triggerCenterClickOnKeyRelease =
+      this.settings.triggerCenterClickOnKeyRelease;
 
     this.pointerInput.gestureDetector.minStrokeLength =
       this.settings.gestureMinStrokeLength;
@@ -495,8 +499,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
               selectionKeys.push(`${i + 1}`);
               selectionKeys.push(`num${i + 1}`);
             }
-
-            console.log('selectionKeys', selectionKeys, eventKey);
 
             if (selectionKeys.includes(eventKey)) {
               this.emitSelectionEvent(child, SelectionSource.eKeyboard);

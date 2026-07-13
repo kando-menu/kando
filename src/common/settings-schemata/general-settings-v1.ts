@@ -175,6 +175,13 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
   /** If enabled, menus using the hover mode require a final click for selecting items. */
   hoverModeNeedsConfirmation: z.boolean().default(false),
 
+  /**
+   * If enabled, the center-click-workflow will be executed when a key is released while
+   * hovering over the center of a menu. This can be used to hide the menu without
+   * selecting an item in turbo mode.
+   */
+  triggerCenterClickOnKeyRelease: z.boolean().default(false),
+
   /** Shorter gestures will not lead to selections. */
   gestureMinStrokeLength: z.number().min(0).default(150),
 

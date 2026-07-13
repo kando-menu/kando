@@ -135,12 +135,14 @@
             "menu-behavior": "Menu Behavior",
             "windows-ink-workaround-info": "This enables a workaround for the issue where getting the stylus position is not possible with Windows Ink enabled. This introduces a delay of 100ms before opening the menu, so if you don't use a stylus, you can disable it to make the menu open faster.",
             "windows-ink-workaround": "Windows-Ink workaround",
-            "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This disables Turbo Mode, but it may be useful if you require that other applications remain focused while the menu is open.",
+            "keep-input-focus-info": "If enabled, the menu will not receive keyboard input focus when opened. This will prevent the menu from stealing focus from the active application, yet it will disable some features such as Turbo Mode and the ability to use the keyboard to select items.",
             "keep-input-focus": "Keep active application focused",
+            "keep-input-focus-warning": "This disables some features such as Turbo Mode and the ability to use the keyboard to select items. Activate this only if you know what you are doing!",
             "enable-marking-mode-info": "With Marking Mode enabled, you can select items by dragging the mouse over them.",
             "enable-marking-mode": "Enable Marking Mode",
             "enable-turbo-mode-info": "With Turbo Mode enabled, you can perform gestures as long as you hold down a modifier key such as Shift or Ctrl.",
             "enable-turbo-mode": "Enable Turbo Mode",
+            "enable-turbo-mode-warning": "Disabled due to the 'Keep active application focused' option being enabled.",
             "move-pointer-to-menu-center-info": "If checked, the mouse pointer will be moved to the center of a menu or submenu when necessary. This could be the case if a menu is opened too close to the edge of the screen or if a menu is opened in Centered Mode.",
             "move-pointer-to-menu-center": "Move pointer to the menu center",
             "return-pointer-after-selection-info": "After you make a selection, the mouse pointer will move back to where it was when the menu was opened.",
@@ -213,7 +215,10 @@
             "backup-menus-note": "This will backup or restore all your menus at once. This includes all your configured shortcuts, menu layouts, and your menu collections.",
             "backup-settings-note": "This will backup or restore Kando's settings, which include all your general settings and your menu-theme configuration.",
             "settings-dialog-and-tray-icon": "Settings Dialog & Tray Icon",
-            "achievements": "Achievements"
+            "achievements": "Achievements",
+            "trigger-center-click-on-key-release-info": "This will trigger the center-click workflow when a key is released while hovering over the center of a menu.",
+            "trigger-center-click-on-key-release": "Trigger center-click workflow on key release",
+            "trigger-center-click-on-key-release-warning": "This option will instantly close the menu when you release the shortcut. Activate this only if you know what you are doing!"
         },
         "introduction-dialog": {
             "slide1-title": "Kando offers a unique and efficient way for interacting with your computer.",

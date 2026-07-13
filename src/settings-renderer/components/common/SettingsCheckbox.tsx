@@ -24,6 +24,9 @@ type Props<K extends keyof GeneralSettings> = {
   /** Optional information to display next to the label. */
   readonly info?: string;
 
+  /** Optional warning to display next to the widget. */
+  readonly warning?: string;
+
   /** Whether the checkbox is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
 
@@ -54,6 +57,7 @@ export default function SettingsCheckbox<K extends BooleanKeys<GeneralSettings>>
   return (
     <Checkbox
       info={props.info}
+      warning={props.warning}
       initialValue={state}
       isDisabled={props.isDisabled}
       isFlipped={props.isFlipped}
