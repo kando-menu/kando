@@ -500,8 +500,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
               selectionKeys.push(`num${i + 1}`);
             }
 
-            console.log('selectionKeys', selectionKeys, eventKey);
-
             if (selectionKeys.includes(eventKey)) {
               this.emitSelectionEvent(child, SelectionSource.eKeyboard);
               this.selectItem(child, this.getCenterItemPosition());
