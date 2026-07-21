@@ -224,6 +224,7 @@ try {
           'de-CH': ['de', 'en'],
           'de-AT': ['de', 'en'],
           'zh-CN': ['zh-Hans', 'en'],
+          'zh-TW': ['zh-Hant', 'en'],
           zh: ['zh-Hans', 'en'],
           pt: ['pt-BR', 'en'],
           /* eslint-enable @typescript-eslint/naming-convention */
