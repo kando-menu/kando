@@ -39,6 +39,7 @@ import {
   SystemInfo,
   VersionInfo,
   RootMenuItem,
+  formatShortcutForDisplay,
 } from '../common';
 import {
   Settings,
@@ -1308,10 +1309,11 @@ export class KandoApp {
 
     // Add an entry for each menu.
     for (const menu of this.menuSettings.get('menus')) {
-      const trigger =
-        (this.backend.getBackendInfo().supportsShortcuts
-          ? menu.shortcut
-          : menu.shortcutID) || i18next.t('settings.not-bound');
+      const supportsShortcuts = this.backend.getBackendInfo().supportsShortcuts;
+      const shortcut = supportsShortcuts
+        ? formatShortcutForDisplay(menu.shortcut, process.platform === 'darwin')
+        : menu.shortcutID;
+      const trigger = shortcut || i18next.t('settings.not-bound');
       template.push({
         label: `${menu.root.name} (${trigger})`,
         click: () => {

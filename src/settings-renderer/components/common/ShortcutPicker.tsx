@@ -15,10 +15,18 @@ import classNames from 'classnames/bind';
 
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
 import KeyMapper from '../../../common/key-mapper';
+import { formatShortcutForDisplay } from '../../../common/shortcut';
 import { Button, SettingsRow } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';
 const cx = classNames.bind(classes);
+
+const MAC_MODIFIER_NAMES = new Map([
+  ['⌘', 'Command'],
+  ['⌥', 'Option'],
+  ['⌃', 'Control'],
+  ['⇧', 'Shift'],
+]);
 
 type Props = {
   /**
@@ -83,20 +91,25 @@ type Props = {
  * @returns A React component that allows the user to enter a shortcut.
  */
 export default function ShortcutPicker(props: Props) {
-  const [shortcut, setShortcut] = React.useState(props.initialValue);
-  const [recording, setRecording] = React.useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  // Update the value when the initialValue prop changes. This is necessary because the
-  // initialValue prop might change after the component has been initialized.
-  React.useEffect(() => setShortcut(props.initialValue), [props.initialValue]);
-
   // Depending on the mode, we use different implementations for recording the input.
   const impl = React.useMemo(() => {
     return props.mode === 'key-names'
       ? new KeyNameImpl(props.useModifiers)
       : new KeyCodeImpl(props.useModifiers);
   }, [props.mode, props.useModifiers]);
+
+  const [shortcut, setShortcut] = React.useState(() =>
+    impl.normalizeInput(props.initialValue)
+  );
+  const [recording, setRecording] = React.useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  // Update the value when the initialValue prop changes. This is necessary because the
+  // initialValue prop might change after the component has been initialized.
+  React.useEffect(
+    () => setShortcut(impl.normalizeInput(props.initialValue)),
+    [impl, props.initialValue]
+  );
 
   // This method checks if the given hotkey is valid. A hotkey is valid if it contains
   // exactly one key and any number of modifier keys. The key and modifier keys must be
@@ -146,7 +159,7 @@ export default function ShortcutPicker(props: Props) {
           spellCheck="false"
           style={!props.isGrowing ? { maxWidth: '100px' } : undefined}
           type="text"
-          value={shortcut}
+          value={impl.formatInput(shortcut)}
           onBlur={(event) => {
             // If the user clicked the record button, the next focused element is the
             // button. In this case, we ignore this event and handle stopping the
@@ -155,14 +168,14 @@ export default function ShortcutPicker(props: Props) {
               return;
             }
 
-            const newShortcut = event.currentTarget.value;
+            const newShortcut = impl.normalizeInput(event.currentTarget.value);
 
             // If we were not recording, it is allowed that the shortcut is empty. In this
             // case the shortcut was unbound.
             if ((newShortcut || !recording) && isValid(newShortcut)) {
               props.onChange?.(newShortcut);
             } else {
-              setShortcut(props.initialValue);
+              setShortcut(impl.normalizeInput(props.initialValue));
               props.onChange?.(props.initialValue);
             }
 
@@ -191,7 +204,7 @@ export default function ShortcutPicker(props: Props) {
               const isComplete = impl.recordInput(event);
               if (isComplete) {
                 setRecording(false);
-                setShortcut(event.currentTarget.value);
+                setShortcut(impl.normalizeInput(event.currentTarget.value));
                 event.currentTarget.blur();
               }
               event.preventDefault();
@@ -212,7 +225,7 @@ export default function ShortcutPicker(props: Props) {
               if (shortcut && isValid(shortcut)) {
                 props.onChange?.(shortcut);
               } else {
-                setShortcut(props.initialValue);
+                setShortcut(impl.normalizeInput(props.initialValue));
                 props.onChange?.(props.initialValue);
               }
             }
@@ -250,7 +263,9 @@ class KeyNameImpl {
    * @returns True if the shortcut is complete, false otherwise.
    */
   public recordInput(event: React.KeyboardEvent<HTMLInputElement>) {
-    const parts = event.currentTarget.value.split('+').filter((part) => part !== '');
+    const parts = this.normalizeInput(event.currentTarget.value)
+      .split('+')
+      .filter((part) => part !== '');
 
     const push = (part: string) => {
       if (!parts.includes(part)) {
@@ -268,11 +283,11 @@ class KeyNameImpl {
       }
 
       if (event.altKey) {
-        push('Alt');
+        push(cIsMac ? 'Option' : 'Alt');
       }
 
       if (event.metaKey) {
-        push('Meta');
+        push(cIsMac ? 'Command' : 'Meta');
       }
     }
 
@@ -287,9 +302,34 @@ class KeyNameImpl {
       parts.push(key);
     }
 
-    event.currentTarget.value = parts.join('+');
+    event.currentTarget.value = this.formatInput(parts.join('+'));
 
     return isComplete;
+  }
+
+  /**
+   * This method formats a shortcut for display. On macOS, modifier names are replaced
+   * with the standard keyboard symbols while the stored accelerator remains unchanged.
+   *
+   * @param shortcut The normalized shortcut to format.
+   * @returns The shortcut as it should be displayed in the input field.
+   */
+  public formatInput(shortcut: string): string {
+    if (!cIsMac) {
+      return shortcut;
+    }
+
+    const parts = shortcut.split('+');
+    const keyCount = parts.filter((part) => this.isValidKey(part)).length;
+    const canUseSymbols =
+      keyCount <= 1 &&
+      parts.every((part) => this.isValidModifier(part) || this.isValidKey(part));
+
+    if (!canUseSymbols) {
+      return shortcut;
+    }
+
+    return formatShortcutForDisplay(shortcut, true);
   }
 
   /**
@@ -301,6 +341,17 @@ class KeyNameImpl {
    * @returns The normalized shortcut.
    */
   public normalizeInput(shortcut: string): string {
+    // Accept the standard macOS keyboard symbols used by formatInput().
+    if (cIsMac) {
+      for (const [symbol, name] of MAC_MODIFIER_NAMES) {
+        shortcut = shortcut.split(symbol).join(`${name}+`);
+      }
+
+      // A user may type a separator after a symbol even though the formatted value does
+      // not contain one.
+      shortcut = shortcut.replace(/\++/g, '+');
+    }
+
     // We first remove any whitespace and transform the shortcut to lowercase.
     shortcut = shortcut.replace(/\s/g, '').toLowerCase();
 
@@ -342,6 +393,17 @@ class KeyNameImpl {
     ]);
 
     parts = parts.map((part) => shorthands.get(part) || part);
+
+    // Use the native macOS modifier names in the settings UI. Electron accepts both
+    // variants, but Option and Command are less confusing to macOS users.
+    if (cIsMac) {
+      const macModifiers = new Map([
+        ['Alt', 'Option'],
+        ['Meta', 'Command'],
+      ]);
+
+      parts = parts.map((part) => macModifiers.get(part) || part);
+    }
 
     return parts.join('+');
   }
@@ -416,6 +478,17 @@ class KeyCodeImpl {
     event.currentTarget.value = parts.join('+');
 
     return this.isValidKey(event.code);
+  }
+
+  /**
+   * Key codes describe physical keys, so they should be displayed without
+   * platform-specific substitutions.
+   *
+   * @param shortcut The shortcut to format.
+   * @returns The unchanged shortcut.
+   */
+  public formatInput(shortcut: string): string {
+    return shortcut;
   }
 
   /**
