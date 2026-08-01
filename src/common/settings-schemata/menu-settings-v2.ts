@@ -316,14 +316,6 @@ export const MENU_SCHEMA_V2 = z.object({
   shortcutID: z.string().default(''),
 
   /**
-   * If true, the menu will open in the screen's center. Else it will open at the mouse
-   * pointer.
-   *
-   * @deprecated This is superseded by {@link isFixedPosition}.
-   */
-  centered: z.boolean().default(false),
-
-  /**
    * If true, the menu will open at a fixed position determined by
    * {@link fixedMenuPosition}.
    */

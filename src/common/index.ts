@@ -236,14 +236,6 @@ export type ShowMenuOptions = {
   readonly zoomFactor: number;
 
   /**
-   * If true, the menu will open in the screen's center. Else it will open at the mouse
-   * pointer.
-   *
-   * @deprecated This is superseded by {@link isFixedPosition}.
-   */
-  readonly centeredMode: boolean;
-
-  /**
    * If true, the menu will open at a fixed position determined by
    * {@link fixedMenuPosition}.
    */

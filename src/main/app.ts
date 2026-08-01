@@ -213,7 +213,6 @@ export class KandoApp {
         root: menuItem,
         shortcut: '',
         shortcutID: '',
-        centered: false,
         isFixedPosition: false,
         fixedMenuPosition: { x: 0.5, y: 0.5 },
         anchored: false,

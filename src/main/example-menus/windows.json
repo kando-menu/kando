@@ -1,7 +1,11 @@
 {
   "shortcut": "Control+Space",
   "shortcutID": "example-menu",
-  "centered": false,
+  "isFixedPosition": false,
+  "fixedMenuPosition": {
+    "x": 0.5,
+    "y": 0.5
+  },
   "root": {
     "type": "root",
     "name": "example-menu.name",

@@ -180,7 +180,6 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
             const newMenu: Menu = {
               shortcut: '',
               shortcutID: '',
-              centered: false,
               isFixedPosition: false,
               fixedMenuPosition: { x: 0.5, y: 0.5 },
               anchored: false,
