@@ -241,6 +241,9 @@ export type ShowMenuOptions = {
    */
   readonly centeredMode: boolean;
 
+  /** The position the menu should open at. This is a value between 0-1 for both x and y. */
+  readonly fixedMenuPosition: Vec2;
+
   /**
    * If this is set, the menu will be "anchored". This means that any submenus will be
    * opened at the same position as the parent menu.
@@ -589,4 +592,44 @@ export enum SelectionSource {
   eKeyboard = 'keyboard',
   eGesture = 'gesture',
   eGamepad = 'gamepad',
+}
+
+export enum FixedPosition {
+  centered = 'Centered',
+  topRight = 'Top Right',
+  topLeft = 'Top Left',
+  bottomLeft = 'Bottom Left',
+  bottomRight = 'Bottom Right',
+  custom = 'Custom',
+}
+
+export function FixedPositionToVec2(fixedPositionValue: FixedPosition | string): Vec2 {
+  switch (fixedPositionValue) {
+    case FixedPosition.centered:
+      return { x: 0.5, y: 0.5 };
+    case FixedPosition.topLeft:
+      return { x: 0, y: 0 };
+    case FixedPosition.topRight:
+      return { x: 1, y: 0 };
+    case FixedPosition.bottomLeft:
+      return { x: 0, y: 1 };
+    case FixedPosition.bottomRight:
+      return { x: 1, y: 1 };
+  }
+}
+
+export function Vec2ToFixedPosition(vecPositionValue: Vec2): string {
+  if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0.5, y: 0.5 })) {
+    return FixedPosition['centered'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0, y: 0 })) {
+    return FixedPosition['topLeft'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 1, y: 0 })) {
+    return FixedPosition['topRight'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0, y: 1 })) {
+    return FixedPosition['bottomLeft'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 1, y: 1 })) {
+    return FixedPosition['bottomRight'];
+  } else {
+    return FixedPosition['centered'];
+  }
 }

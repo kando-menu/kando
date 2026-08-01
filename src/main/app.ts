@@ -214,6 +214,7 @@ export class KandoApp {
         shortcut: '',
         shortcutID: '',
         centered: false,
+        fixedMenuPosition: { x: 0.5, y: 0.5 },
         anchored: false,
         hoverMode: false,
         tags: [],

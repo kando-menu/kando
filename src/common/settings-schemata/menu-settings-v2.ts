@@ -321,6 +321,11 @@ export const MENU_SCHEMA_V2 = z.object({
    */
   centered: z.boolean().default(false),
 
+  /** Position at which the menu will open. */
+  fixedMenuPosition: z
+    .object({ x: z.number(), y: z.number() })
+    .default({ x: 0.5, y: 0.5 }),
+
   /**
    * If true, the menu will be "anchored". This means that any submenus will be opened at
    * the same position as the parent menu.

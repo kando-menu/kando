@@ -1484,8 +1484,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
   private getInitialMenuPosition() {
     if (this.showMenuOptions.centeredMode) {
       return {
-        x: this.showMenuOptions.windowSize.x * 0.5,
-        y: this.showMenuOptions.windowSize.y * 0.5,
+        x: this.showMenuOptions.windowSize.x * this.showMenuOptions.fixedMenuPosition.x,
+        y: this.showMenuOptions.windowSize.y * this.showMenuOptions.fixedMenuPosition.y,
       };
     }
 

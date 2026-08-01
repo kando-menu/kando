@@ -14,7 +14,8 @@ import i18next from 'i18next';
 import * as classes from './MenuBehavior.module.scss';
 
 import { useAppState, useMenuSettings } from '../../state';
-import { Checkbox, Note } from '../common';
+import { Checkbox, Dropdown, Note } from '../common';
+import { Vec2ToFixedPosition, FixedPositionToVec2, FixedPosition } from '../../../common';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
@@ -36,6 +37,22 @@ export default function MenuBehavior() {
         onChange={(centered) => {
           editMenu(selectedMenu, (menu) => {
             menu.centered = centered;
+            return menu;
+          });
+        }}
+      />
+      <Dropdown
+        isDisabled={!menus[selectedMenu].centered}
+        initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
+        options={(Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>).map(
+          (key) => ({
+            value: FixedPosition[key],
+            label: FixedPosition[key],
+          })
+        )}
+        onChange={(newPosition) => {
+          editMenu(selectedMenu, (menu) => {
+            menu.fixedMenuPosition = FixedPositionToVec2(newPosition);
             return menu;
           });
         }}
