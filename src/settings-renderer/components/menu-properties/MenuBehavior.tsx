@@ -34,15 +34,15 @@ export default function MenuBehavior() {
         info={i18next.t('settings.centered-mode-info')}
         initialValue={menus[selectedMenu].isFixedPosition}
         label={i18next.t('settings.centered-mode')}
-        onChange={(centered) => {
+        onChange={(enableFixedPosition) => {
           editMenu(selectedMenu, (menu) => {
-            menu.isFixedPosition = centered;
+            menu.isFixedPosition = enableFixedPosition;
             return menu;
           });
         }}
       />
       <Dropdown
-        isDisabled={!menus[selectedMenu].centered}
+        isDisabled={!menus[selectedMenu].isFixedPosition}
         initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
         options={(Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>).map(
           (key) => ({
