@@ -32,11 +32,11 @@ export default function MenuBehavior() {
       </Note>
       <Checkbox
         info={i18next.t('settings.centered-mode-info')}
-        initialValue={menus[selectedMenu].centered}
+        initialValue={menus[selectedMenu].isFixedPosition}
         label={i18next.t('settings.centered-mode')}
         onChange={(centered) => {
           editMenu(selectedMenu, (menu) => {
-            menu.centered = centered;
+            menu.isFixedPosition = centered;
             return menu;
           });
         }}

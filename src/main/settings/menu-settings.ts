@@ -393,6 +393,7 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
       shortcut: oldMenu.shortcut,
       shortcutID: oldMenu.shortcutID,
       centered: oldMenu.centered,
+      isFixedPosition: oldMenu.centered,
       fixedMenuPosition: { x: 0.5, y: 0.5 },
       anchored: oldMenu.anchored,
       hoverMode: oldMenu.hoverMode,

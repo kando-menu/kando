@@ -318,10 +318,21 @@ export const MENU_SCHEMA_V2 = z.object({
   /**
    * If true, the menu will open in the screen's center. Else it will open at the mouse
    * pointer.
+   *
+   * @deprecated This is superseded by {@link isFixedPosition}.
    */
   centered: z.boolean().default(false),
 
-  /** Position at which the menu will open. */
+  /**
+   * If true, the menu will open at a fixed position determined by
+   * {@link fixedMenuPosition}.
+   */
+  isFixedPosition: z.boolean().default(false),
+
+  /**
+   * Position at which the menu will open if {@link isFixedPosition} is true. Value should
+   * be between 0-1 for both x
+   */
   fixedMenuPosition: z
     .object({ x: z.number(), y: z.number() })
     .default({ x: 0.5, y: 0.5 }),

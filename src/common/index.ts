@@ -236,12 +236,23 @@ export type ShowMenuOptions = {
   readonly zoomFactor: number;
 
   /**
-   * If this is set, the menu will be opened in the screen's center. Else it will be
-   * opened at the mouse pointer.
+   * If true, the menu will open in the screen's center. Else it will open at the mouse
+   * pointer.
+   *
+   * @deprecated This is superseded by {@link isFixedPosition}.
    */
   readonly centeredMode: boolean;
 
-  /** The position the menu should open at. This is a value between 0-1 for both x and y. */
+  /**
+   * If true, the menu will open at a fixed position determined by
+   * {@link fixedMenuPosition}.
+   */
+  isFixedPosition: boolean;
+
+  /**
+   * Position at which the menu will open if {@link isFixedPosition} is true. Value should
+   * be between 0-1 for both x
+   */
   readonly fixedMenuPosition: Vec2;
 
   /**
@@ -600,7 +611,6 @@ export enum FixedPosition {
   topLeft = 'Top Left',
   bottomLeft = 'Bottom Left',
   bottomRight = 'Bottom Right',
-  custom = 'Custom',
 }
 
 export function FixedPositionToVec2(fixedPositionValue: FixedPosition | string): Vec2 {
