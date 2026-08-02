@@ -275,6 +275,8 @@
         },
         "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
         "centered-mode": "Centered Mode",
+        "fixed-position-mode": "Fixed Position Mode",
+        "fixed-position-mode-info": "Open the menu at a fixed position on the screen, instead of at the cursor.",
         "anchored-mode-info": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode and Turbo Mode.",
         "anchored-mode": "Anchored Mode",
         "hover-mode-info": "For power users only! Select items by hovering over them.",

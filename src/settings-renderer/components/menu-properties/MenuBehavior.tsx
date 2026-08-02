@@ -31,9 +31,9 @@ export default function MenuBehavior() {
         })}
       </Note>
       <Checkbox
-        info={i18next.t('settings.centered-mode-info')}
+        info={i18next.t('settings.fixed-position-mode-info')}
         initialValue={menus[selectedMenu].isFixedPosition}
-        label={i18next.t('settings.centered-mode')}
+        label={i18next.t('settings.fixed-position-mode')}
         onChange={(enableFixedPosition) => {
           editMenu(selectedMenu, (menu) => {
             menu.isFixedPosition = enableFixedPosition;
