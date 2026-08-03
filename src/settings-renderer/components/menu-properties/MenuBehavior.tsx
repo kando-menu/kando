@@ -47,7 +47,7 @@ export default function MenuBehavior() {
         options={(Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>).map(
           (key) => ({
             value: FixedPosition[key],
-            label: FixedPosition[key],
+            label: i18next.t(`${FixedPosition[key]}`),
           })
         )}
         onChange={(newPosition) => {

@@ -597,14 +597,24 @@ export enum SelectionSource {
   eGamepad = 'gamepad',
 }
 
+/**
+ * Positions that the menu can be opened at. Stores a string containing the translation
+ * key.
+ */
 export enum FixedPosition {
-  centered = 'Centered',
-  topRight = 'Top Right',
-  topLeft = 'Top Left',
-  bottomLeft = 'Bottom Left',
-  bottomRight = 'Bottom Right',
+  centered = 'settings.fixed-position-centered',
+  topRight = 'settings.fixed-position-top-right',
+  topLeft = 'settings.fixed-position-top-left',
+  bottomLeft = 'settings.fixed-position-bottom-left',
+  bottomRight = 'settings.fixed-position-bottom-right',
 }
 
+/**
+ * Converts a given FixedPosition to screen-space coordinates.
+ *
+ * @param fixedPositionValue The FixedPosition to convert.
+ * @returns The screen-space Vec2 coordinates associated with the given FixedPosition.
+ */
 export function FixedPositionToVec2(fixedPositionValue: FixedPosition | string): Vec2 {
   switch (fixedPositionValue) {
     case FixedPosition.centered:
@@ -620,6 +630,12 @@ export function FixedPositionToVec2(fixedPositionValue: FixedPosition | string):
   }
 }
 
+/**
+ * Converts a given screen-space coordinate to FixedPosition.
+ *
+ * @param vecPositionValue The Vec2 to convert.
+ * @returns The FixedPosition associated with the given Vec2 screen-space coordinates.
+ */
 export function Vec2ToFixedPosition(vecPositionValue: Vec2): string {
   if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0.5, y: 0.5 })) {
     return FixedPosition['centered'];
