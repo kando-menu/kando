@@ -230,7 +230,7 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
 
   /** Determines the behavior of pressing the trigger shortcut once the menu is open. */
   sameShortcutBehavior: z
-    .enum(['cycle-from-first', 'cycle-from-recent', 'close', 'nothing'])
+    .enum(['cycle-from-first', 'cycle-from-recent', 're-open', 'close', 'nothing'])
     .default('nothing'),
 
   /**

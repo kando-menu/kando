@@ -208,8 +208,14 @@ export class MenuWindow extends BrowserWindow {
 
         // If the 'sameShortcutBehavior' is set to 'close', we hide the menu.
         if (sameShortcutBehavior === 'close') {
-          this.closeMenu();
+          await this.closeMenu();
           return;
+        }
+
+        // If the 'sameShortcutBehavior' is set to 're-open', we hide the menu and show it
+        // again. This is useful if the menu is currently open on another monitor.
+        if (sameShortcutBehavior === 're-open') {
+          await this.closeMenu();
         }
 
         // If the 'sameShortcutBehavior' is set to 'cycle', we will show the next menu which
