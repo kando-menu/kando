@@ -236,10 +236,16 @@ export type ShowMenuOptions = {
   readonly zoomFactor: number;
 
   /**
-   * If this is set, the menu will be opened in the screen's center. Else it will be
-   * opened at the mouse pointer.
+   * If true, the menu will open at a fixed position determined by
+   * {@link fixedMenuPosition}.
    */
-  readonly centeredMode: boolean;
+  isFixedPosition: boolean;
+
+  /**
+   * Position at which the menu will open if {@link isFixedPosition} is true. Value should
+   * be between 0-1 for both x and y.
+   */
+  readonly fixedMenuPosition: Vec2;
 
   /**
    * If this is set, the menu will be "anchored". This means that any submenus will be
@@ -589,4 +595,59 @@ export enum SelectionSource {
   eKeyboard = 'keyboard',
   eGesture = 'gesture',
   eGamepad = 'gamepad',
+}
+
+/**
+ * Positions that the menu can be opened at. Stores a string containing the translation
+ * key.
+ */
+export enum FixedPosition {
+  centered = 'settings.fixed-position-centered',
+  topRight = 'settings.fixed-position-top-right',
+  topLeft = 'settings.fixed-position-top-left',
+  bottomLeft = 'settings.fixed-position-bottom-left',
+  bottomRight = 'settings.fixed-position-bottom-right',
+}
+
+/**
+ * Converts a given FixedPosition to screen-space coordinates.
+ *
+ * @param fixedPositionValue The FixedPosition to convert.
+ * @returns The screen-space Vec2 coordinates associated with the given FixedPosition.
+ */
+export function FixedPositionToVec2(fixedPositionValue: FixedPosition | string): Vec2 {
+  switch (fixedPositionValue) {
+    case FixedPosition.centered:
+      return { x: 0.5, y: 0.5 };
+    case FixedPosition.topLeft:
+      return { x: 0, y: 0 };
+    case FixedPosition.topRight:
+      return { x: 1, y: 0 };
+    case FixedPosition.bottomLeft:
+      return { x: 0, y: 1 };
+    case FixedPosition.bottomRight:
+      return { x: 1, y: 1 };
+  }
+}
+
+/**
+ * Converts a given screen-space coordinate to FixedPosition.
+ *
+ * @param vecPositionValue The Vec2 to convert.
+ * @returns The FixedPosition associated with the given Vec2 screen-space coordinates.
+ */
+export function Vec2ToFixedPosition(vecPositionValue: Vec2): string {
+  if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0.5, y: 0.5 })) {
+    return FixedPosition['centered'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0, y: 0 })) {
+    return FixedPosition['topLeft'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 1, y: 0 })) {
+    return FixedPosition['topRight'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0, y: 1 })) {
+    return FixedPosition['bottomLeft'];
+  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 1, y: 1 })) {
+    return FixedPosition['bottomRight'];
+  } else {
+    return FixedPosition['centered'];
+  }
 }

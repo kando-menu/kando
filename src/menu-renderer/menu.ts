@@ -181,7 +181,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
     // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
-    const deferTurboMode = !this.settings.warpMouse && showMenuOptions.centeredMode;
+    const deferTurboMode = !this.settings.warpMouse && showMenuOptions.isFixedPosition;
     this.pointerInput.onShowMenu(deferTurboMode);
 
     // In anchored mode, we have to disable turbo and marking mode.
@@ -231,7 +231,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       }
 
       // If required, move the pointer to the center of the menu.
-      if (this.settings.warpMouse && this.showMenuOptions.centeredMode) {
+      if (this.settings.warpMouse && this.showMenuOptions.isFixedPosition) {
         const offset = math.subtract(
           this.getInitialMenuPosition(),
           this.showMenuOptions.mousePosition
@@ -1482,10 +1482,10 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    * @returns The initial position of the root item.
    */
   private getInitialMenuPosition() {
-    if (this.showMenuOptions.centeredMode) {
+    if (this.showMenuOptions.isFixedPosition) {
       return {
-        x: this.showMenuOptions.windowSize.x * 0.5,
-        y: this.showMenuOptions.windowSize.y * 0.5,
+        x: this.showMenuOptions.windowSize.x * this.showMenuOptions.fixedMenuPosition.x,
+        y: this.showMenuOptions.windowSize.y * this.showMenuOptions.fixedMenuPosition.y,
       };
     }
 

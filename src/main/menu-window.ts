@@ -320,7 +320,11 @@ export class MenuWindow extends BrowserWindow {
         mousePosition,
         windowSize,
         zoomFactor: this.webContents.getZoomFactor(),
-        centeredMode: this.lastMenu.centered,
+        isFixedPosition: this.lastMenu.isFixedPosition,
+        fixedMenuPosition: {
+          x: this.lastMenu.fixedMenuPosition.x,
+          y: this.lastMenu.fixedMenuPosition.y,
+        },
         anchoredMode: this.lastMenu.anchored,
         hoverMode: this.lastMenu.hoverMode,
         systemIconsChanged,
