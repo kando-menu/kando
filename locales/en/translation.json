@@ -158,6 +158,7 @@
             "do-nothing": "Do nothing",
             "cycle-from-first": "Show next menu (begin at first)",
             "cycle-from-recent": "Show next menu (continue from last)",
+            "re-open-menu": "Re-open menu",
             "close-menu": "Close menu",
             "menu-sounds": "Menu Sounds",
             "learn-how-to-add-sound-themes": "Learn how to add new sound themes to Kando [here]({{link}})!",
