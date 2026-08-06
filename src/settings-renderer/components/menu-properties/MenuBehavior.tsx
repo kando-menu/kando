@@ -32,17 +32,17 @@ export default function MenuBehavior() {
       </Note>
       <Checkbox
         info={i18next.t('settings.fixed-position-mode-info')}
-        initialValue={menus[selectedMenu].isFixedPosition}
+        initialValue={menus[selectedMenu].useFixedPosition}
         label={i18next.t('settings.fixed-position-mode')}
         onChange={(enableFixedPosition) => {
           editMenu(selectedMenu, (menu) => {
-            menu.isFixedPosition = enableFixedPosition;
+            menu.useFixedPosition = enableFixedPosition;
             return menu;
           });
         }}
       />
       <Dropdown
-        isDisabled={!menus[selectedMenu].isFixedPosition}
+        isDisabled={!menus[selectedMenu].useFixedPosition}
         initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
         options={(Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>).map(
           (key) => ({

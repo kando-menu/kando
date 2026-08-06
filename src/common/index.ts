@@ -239,10 +239,10 @@ export type ShowMenuOptions = {
    * If true, the menu will open at a fixed position determined by
    * {@link fixedMenuPosition}.
    */
-  isFixedPosition: boolean;
+  useFixedPosition: boolean;
 
   /**
-   * Position at which the menu will open if {@link isFixedPosition} is true. Value should
+   * Position at which the menu will open if {@link useFixedPosition} is true. Value should
    * be between 0-1 for both x and y.
    */
   readonly fixedMenuPosition: Vec2;
