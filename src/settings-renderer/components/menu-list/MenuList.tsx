@@ -25,6 +25,7 @@ import { useAppState, useMenuSettings, useMappedMenuProperties } from '../../sta
 import { Scrollbox, ThemedIcon, Swirl, Note, Button } from '../common';
 import CollectionDetails from './CollectionDetails';
 import { ensureUniqueKeys } from '../../utils';
+import { formatShortcutForDisplay } from '../../../common/shortcut';
 
 /** For rendering the menus, a list of these objects is created. */
 type RenderedMenu = {
@@ -90,9 +91,10 @@ export default function MenuList() {
   // We will compile a list of all menus which are currently visible. We will use a list
   // of IRenderedMenu objects for this.
   let renderedMenus = menus.map((menu, index) => {
-    const shortcut =
-      (backend.supportsShortcuts ? menu.shortcut : menu.shortcutID) ||
-      i18next.t('settings.not-bound');
+    const configuredShortcut = backend.supportsShortcuts
+      ? formatShortcutForDisplay(menu.shortcut, cIsMac)
+      : menu.shortcutID;
+    const shortcut = configuredShortcut || i18next.t('settings.not-bound');
     const renderedMenu: RenderedMenu = {
       key: menu.name + menu.icon + menu.iconTheme + shortcut,
       index,
