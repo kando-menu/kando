@@ -10,18 +10,29 @@
 
 import React from 'react';
 import i18next from 'i18next';
+import classNames from 'classnames/bind';
 
 import * as classes from './MenuBehavior.module.scss';
+const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
 import { Checkbox, Dropdown, Note } from '../common';
 import { Vec2ToFixedPosition, FixedPositionToVec2, FixedPosition } from '../../../common';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
   const menus = useMenuSettings((state) => state.menus);
   const selectedMenu = useAppState((state) => state.selectedMenu);
   const editMenu = useMenuSettings((state) => state.editMenu);
+
+  const [fixedPositionInputVisible, setFixedPositionInputVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    setFixedPositionInputVisible(menus[selectedMenu].useFixedPosition);
+  }, [selectedMenu, menus]);
+
+  const [menuPositionBehaviorRef] = useAutoAnimate({ duration: 250 });
 
   return (
     <div className={classes.container}>
@@ -35,28 +46,33 @@ export default function MenuBehavior() {
         initialValue={menus[selectedMenu].useFixedPosition}
         label={i18next.t('settings.fixed-position-mode')}
         onChange={(enableFixedPosition) => {
+          setFixedPositionInputVisible(enableFixedPosition);
           editMenu(selectedMenu, (menu) => {
             menu.useFixedPosition = enableFixedPosition;
             return menu;
           });
         }}
       />
-      <Dropdown
-        isDisabled={!menus[selectedMenu].useFixedPosition}
-        initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
-        options={(Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>).map(
-          (key) => ({
-            value: FixedPosition[key],
-            label: i18next.t(`${FixedPosition[key]}`),
-          })
-        )}
-        onChange={(newPosition) => {
-          editMenu(selectedMenu, (menu) => {
-            menu.fixedMenuPosition = FixedPositionToVec2(newPosition);
-            return menu;
-          });
-        }}
-      />
+      <div ref={menuPositionBehaviorRef} className={cx(classes.fixedPositionInput)}>
+        {fixedPositionInputVisible ? (
+          <Dropdown
+            isDisabled={!menus[selectedMenu].useFixedPosition}
+            initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
+            options={(
+              Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>
+            ).map((key) => ({
+              value: FixedPosition[key],
+              label: i18next.t(`${FixedPosition[key]}`),
+            }))}
+            onChange={(newPosition) => {
+              editMenu(selectedMenu, (menu) => {
+                menu.fixedMenuPosition = FixedPositionToVec2(newPosition);
+                return menu;
+              });
+            }}
+          />
+        ) : null}
+      </div>
       <Checkbox
         info={i18next.t('settings.anchored-mode-info')}
         initialValue={menus[selectedMenu].anchored}
