@@ -321,6 +321,13 @@ export default interface Resources {
               "select-file": "Select a file"
           },
           "fix-menu-item-angle": "Fix the angle of this menu item. After enabling this, drag the item to update the angle.",
+          "fixed-position-bottom-left": "Bottom Left",
+          "fixed-position-bottom-right": "Bottom Right",
+          "fixed-position-centered": "Centered",
+          "fixed-position-mode": "Fixed Position Mode",
+          "fixed-position-mode-info": "Open the menu at a fixed position on the screen, instead of at the cursor.",
+          "fixed-position-top-left": "Top Left",
+          "fixed-position-top-right": "Top Right",
           "general-settings-dialog": {
               "achievements": "Achievements",
               "advanced-menu-options": "Advanced Menu Options",
