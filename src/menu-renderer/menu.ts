@@ -202,6 +202,14 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.root = root;
     this.createRenderData(this.root, this.container);
 
+    if (this.theme.drawSelectionWedges && this.settings.enableSelectionWedges) {
+      this.selectionWedges = new SelectionWedges(this.container);
+    }
+
+    if (this.theme.drawWedgeSeparators && this.settings.enableSelectionWedges) {
+      this.wedgeSeparators = new WedgeSeparators(this.container);
+    }
+
     // On Windows, the menu position passed from the main process is sometimes not
     // correct. For instance, this happens when using pen input with Windows Ink enabled.
     // To work around this, we wait a few milliseconds until the first mouse enter event
@@ -718,6 +726,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       }
 
       this.selectionWedges?.setCenter(clampedPosition);
+      this.selectionWedges?.unhover();
       this.wedgeSeparators?.setSeparators(separators, clampedPosition);
     }
 
@@ -762,15 +771,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     // Tell the selection wedges about the hovered wedge.
     if (this.selectionWedges) {
       if (item === this.centerItem.renderData.parent) {
-        // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
-        // case if we did not just entered a submenu. It looks better this way. Else the
-        // parent wedge would be highlighted already when entering a submenu.
-        if (this.centerItem.renderData.parentWedge && this.hoveredItem !== null) {
+        if (this.centerItem.renderData.parentWedge) {
           this.selectionWedges.hover(this.centerItem.renderData.parentWedge);
         } else {
           this.selectionWedges.unhover();
         }
-      } else if (item.type !== 'root' && item.renderData.wedge) {
+      } else if (item.renderData.wedge && item !== this.centerItem) {
         this.selectionWedges.hover(item.renderData.wedge);
       } else {
         this.selectionWedges.unhover();
