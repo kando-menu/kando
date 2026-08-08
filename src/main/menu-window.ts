@@ -355,16 +355,12 @@ export class MenuWindow extends BrowserWindow {
       this.setIgnoreMouseEvents(false);
     }
 
-    // On MacOS we need to ensure the window is on the current workspace before showing.
-    // This is the fix to issue #461: https://github.com/kando-menu/kando/issues/461
-    if (process.platform === 'darwin') {
-      this.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
-      setTimeout(() => {
-        this.setVisibleOnAllWorkspaces(false, {
-          skipTransformProcessType: true,
-        });
-      }, 100);
-    }
+    // This does not work on windows nor on Linux/Wayland. At least, it seems to work on
+    // Linux/X11 and macOS.
+    this.setVisibleOnAllWorkspaces(true, {
+      skipTransformProcessType: true,
+      visibleOnFullScreen: true,
+    });
 
     super.show();
 
