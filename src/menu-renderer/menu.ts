@@ -496,7 +496,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         // the quick select key.
         if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
           for (let i = 0; i < this.centerItem.children.length; i++) {
-            const child = this.centerItem.children[i];
+            const child = this.centerItem.children[i] as RenderedChildMenuItem;
 
             const selectionKeys = [];
             if (child.type === 'button' && child.selectWorkflow?.quickSelectKey) {
@@ -510,7 +510,11 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
             if (selectionKeys.includes(eventKey)) {
               this.emitSelectionEvent(child, SelectionSource.eKeyboard);
-              this.selectItem(child, this.getCenterItemPosition());
+              if (child.type === 'button') {
+                this.hoverAngle(child.renderData.computedAngle);
+              } else {
+                this.selectItem(child, this.getCenterItemPosition());
+              }
               return;
             }
           }
