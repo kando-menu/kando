@@ -343,9 +343,6 @@ function migrateToMenuSettingsV2(oldSettings: MenuSettingsV1): MenuSettingsV2 {
             type: 'open-menu',
             menu: (oldItem.data as { menu?: string }).menu ?? '',
           },
-          {
-            type: 'close-menu',
-          },
         ],
       };
     } else if (oldItem.type === 'settings') {
