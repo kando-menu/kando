@@ -22,7 +22,7 @@ export type IPCCallback = (interaction: MenuInteractionType, path: number[]) => 
 /** These events are emitted by the IPC server when clients send requests. */
 type IPCServerEvents = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  'show-menu': [menu: RootMenuItem];
+  'show-custom-menu': [menu: RootMenuItem];
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'start-observing': [observerID: number, callback: IPCCallback];
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -31,14 +31,14 @@ type IPCServerEvents = {
 
 /**
  * IPCServer listens for WebSocket connections on localhost and emits events when a
- * show-menu request is received. It allows reporting menu selections back to the client
- * via the WebSocket.
+ * show-custom-menu request is received. It allows reporting menu selections back to the
+ * client via the WebSocket.
  *
  * This class is an event emitter that emits the following events:
  *
- * - 'show-menu': Emitted when a valid show-menu request is received from a client. The
- *   event handler receives the menu to show and callbacks for selection, hover, and close
- *   events.
+ * - 'show-custom-menu': Emitted when a valid show-custom-menu request is received from a
+ *   client. The event handler receives the menu to show and callbacks for selection,
+ *   hover, and close events.
  */
 export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCServerEvents>) {
   /**
@@ -104,7 +104,9 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
         // Retrieve the assigned port and write it to ipc-info.json.
         const address = this.wss.address() as AddressInfo;
         this.port = address.port;
-        console.log(`Listening for show-menu requests on ws://127.0.0.1:${this.port}`);
+        console.log(
+          `Listening for show-custom-menu requests on ws://127.0.0.1:${this.port}`
+        );
         try {
           const info: IPCTypes.IPCInfo = {
             port: this.port,
@@ -146,8 +148,8 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
    * This method is responsible for:
    *
    * - Validating all incoming messages using zod schemas.
-   * - Emitting 'show-menu' events for valid show-menu requests, with callbacks for menu
-   *   selection, hover, and close events.
+   * - Emitting 'show-custom-menu' events for valid show-custom-menu requests, with
+   *   callbacks for menu selection, hover, and close events.
    * - Sending appropriate error messages for malformed requests.
    *
    * @param ws The connected WebSocket instance.
@@ -203,11 +205,11 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
         return;
       }
 
-      // Handle 'show-menu' messages: client requests to show a menu.
-      const showMenuParse = IPCTypes.SHOW_MENU_MESSAGE.safeParse(msg);
+      // Handle 'show-custom-menu' messages: client requests to show a menu.
+      const showMenuParse = IPCTypes.SHOW_CUSTOM_MENU_MESSAGE.safeParse(msg);
       if (showMenuParse.success) {
         const showMenuMsg = showMenuParse.data;
-        this.emit('show-menu', showMenuMsg.menu);
+        this.emit('show-custom-menu', showMenuMsg.menu);
         startObserving(true); // One-time observer for this menu interaction.
         return;
       }

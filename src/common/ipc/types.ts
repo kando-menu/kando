@@ -41,8 +41,8 @@ export const IPC_INFO_SCHEMA = z.object({
  * Sent by the client to request that a menu be shown. The menu structure is provided as a
  * MENU_ITEM_SCHEMA object.
  */
-export const SHOW_MENU_MESSAGE = z.object({
-  type: z.literal('show-menu'),
+export const SHOW_CUSTOM_MENU_MESSAGE = z.object({
+  type: z.literal('show-custom-menu'),
   menu: ROOT_MENU_ITEM_SCHEMA,
 });
 
@@ -81,10 +81,14 @@ export const ERROR_MESSAGE = z.object({
 });
 
 export type IPCInfo = z.infer<typeof IPC_INFO_SCHEMA>;
-export type ShowMenuMessage = z.infer<typeof SHOW_MENU_MESSAGE>;
+export type ShowMenuMessage = z.infer<typeof SHOW_CUSTOM_MENU_MESSAGE>;
 export type StartObservingMessage = z.infer<typeof START_OBSERVING_MESSAGE>;
 export type StopObservingMessage = z.infer<typeof STOP_OBSERVING_MESSAGE>;
 export type MenuInteractionMessage = z.infer<typeof MENU_INTERACTION_MESSAGE>;
 export type ErrorMessage = z.infer<typeof ERROR_MESSAGE>;
 
-export const IPC_MESSAGES = [SHOW_MENU_MESSAGE, MENU_INTERACTION_MESSAGE, ERROR_MESSAGE];
+export const IPC_MESSAGES = [
+  SHOW_CUSTOM_MENU_MESSAGE,
+  MENU_INTERACTION_MESSAGE,
+  ERROR_MESSAGE,
+];

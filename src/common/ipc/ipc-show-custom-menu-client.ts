@@ -15,27 +15,27 @@ import { TypedEventEmitter, MenuInteractionType, RootMenuItem } from '..';
 import { createCrossWebSocket } from './cross-websocket';
 
 /** These events are emitted by the IPC client when menu interactions occur. */
-type IPCShowMenuClientEvents = {
+type IPCShowCustomMenuClientEvents = {
   interaction: [type: MenuInteractionType, path: number[]];
   error: [error: IPCTypes.IPCErrorReason];
 };
 
 /**
- * IPCShowMenuClient provides a reference implementation for connecting to the Kando IPC
- * server via WebSockets in order to open custom menus. It handles menu requests and event
- * emission for menu interactions. This class is used by Kando itself to show menus from
- * the settings renderer process and can serve as a template for plugin authors.
+ * IPCShowCustomMenuClient provides a reference implementation for connecting to the Kando
+ * IPC server via WebSockets in order to open custom menus. It handles menu requests and
+ * event emission for menu interactions. This class is used by Kando itself to show menus
+ * from the settings renderer process and can serve as a template for plugin authors.
  *
  * Usage:
  *
  *     // Port and API version must match the one in ipc-info.json
- *     const client = new IPCShowMenuClient(12345, 1);
+ *     const client = new IPCShowCustomMenuClient(12345, 1);
  *     await client.init();
  *     client.showMenu(menuItem);
  *     client.on('interaction', (type, path) => { ... });
  *     client.on('error', (error) => { ... });
  */
-export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmitter<IPCShowMenuClientEvents>) {
+export class IPCShowCustomMenuClient extends (EventEmitter as new () => TypedEventEmitter<IPCShowCustomMenuClientEvents>) {
   private ws: ReturnType<typeof createCrossWebSocket> | null = null;
 
   /**
@@ -45,7 +45,7 @@ export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmit
   private clientApiVersion = 2;
 
   /**
-   * Constructs a new IPCShowMenuClient instance.
+   * Constructs a new IPCShowCustomMenuClient instance.
    *
    * @param serverPort The port used by the IPC server.
    * @param serverApiVersion The API version supported by the server, for compatibility
@@ -108,9 +108,9 @@ export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmit
   }
 
   /**
-   * Sends a show-menu request to the IPC server. The menu structure must conform to the
-   * RootMenuItem type. Emits the 'error' event if the request is malformed or if the
-   * client is not connected.
+   * Sends a show-custom-menu request to the IPC server. The menu structure must conform
+   * to the RootMenuItem type. Emits the 'error' event if the request is malformed or if
+   * the client is not connected.
    *
    * @param menu The menu structure to show, as a RootMenuItem object.
    */
@@ -119,7 +119,7 @@ export class IPCShowMenuClient extends (EventEmitter as new () => TypedEventEmit
       this.emit('error', IPCTypes.IPCErrorReason.eNotConnected);
       return;
     }
-    this.ws.send(JSON.stringify({ type: 'show-menu', menu }));
+    this.ws.send(JSON.stringify({ type: 'show-custom-menu', menu }));
   }
 
   /** Closes the WebSocket connection, allowing tests and processes to exit cleanly. */

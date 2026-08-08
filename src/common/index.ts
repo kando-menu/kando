@@ -127,10 +127,10 @@ export type SystemInfo = {
   /** Whether the system supports launching isolated processes. */
   readonly supportsIsolatedProcesses: boolean;
 
-  /** The IPC port used by Kando's own IPC show-menu interface. */
+  /** The IPC port used by Kando's own IPC show-custom-menu interface. */
   readonly ipcPort: number;
 
-  /** The API version supported by Kando's own IPC show-menu interface. */
+  /** The API version supported by Kando's own IPC show-custom-menu interface. */
   readonly ipcApiVersion: number;
 };
 

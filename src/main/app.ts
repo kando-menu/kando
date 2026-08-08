@@ -209,7 +209,7 @@ export class KandoApp {
     await this.ipcServer.init();
 
     // When a menu is requested via IPC, we show it.
-    this.ipcServer.on('show-menu', (menuItem) => {
+    this.ipcServer.on('show-custom-menu', (menuItem) => {
       const menu: MenuType = {
         root: menuItem,
         shortcut: '',

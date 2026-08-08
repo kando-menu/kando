@@ -16,9 +16,9 @@ import path from 'path';
 import * as IPCTypes from '../src/common/ipc/types';
 import { MenuInteractionType, RootMenuItem } from '../src/common';
 import { IPCServer } from '../src/common/ipc/ipc-server';
-import { IPCShowMenuClient } from '../src/common/ipc/ipc-show-menu-client';
+import { IPCShowCustomMenuClient } from '../src/common/ipc/ipc-show-custom-menu-client';
 
-describe('IPC Show-Menu Protocol', function () {
+describe('IPC show-custom-menu Protocol', function () {
   const tmpDir = path.join(os.tmpdir(), 'kando_ipc_test');
   const infoPath = path.join(tmpDir, 'ipc-info.json');
   let server: IPCServer;
@@ -45,7 +45,7 @@ describe('IPC Show-Menu Protocol', function () {
 
   it('should fail gracefully if the port is wrong', async function () {
     const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
-    const client = new IPCShowMenuClient(info.port + 1, info.apiVersion); // Use a wrong port
+    const client = new IPCShowCustomMenuClient(info.port + 1, info.apiVersion); // Use a wrong port
 
     let errorReceived = false;
 
@@ -63,7 +63,7 @@ describe('IPC Show-Menu Protocol', function () {
 
   it('should not connect to a wrong api version', async function () {
     const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
-    const client = new IPCShowMenuClient(info.port, 999); // Use an unsupported API version
+    const client = new IPCShowCustomMenuClient(info.port, 999); // Use an unsupported API version
 
     let errorReceived = false;
 
@@ -79,14 +79,14 @@ describe('IPC Show-Menu Protocol', function () {
     client.close();
   });
 
-  it('should allow show-menu', async function () {
+  it('should allow show-custom-menu', async function () {
     const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
-    const client = new IPCShowMenuClient(info.port, info.apiVersion);
+    const client = new IPCShowCustomMenuClient(info.port, info.apiVersion);
     await client.init();
 
-    // Listen for show-menu event on server.
+    // Listen for show-custom-menu event on server.
     let menuReceived = false;
-    server.on('show-menu', (menu) => {
+    server.on('show-custom-menu', (menu) => {
       menuReceived = true;
       expect(menu.name).to.equal('TestMenu');
     });
@@ -140,7 +140,7 @@ describe('IPC Show-Menu Protocol', function () {
 
   it('should reject a malformed message', async function () {
     const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
-    const client = new IPCShowMenuClient(info.port, info.apiVersion);
+    const client = new IPCShowCustomMenuClient(info.port, info.apiVersion);
     await client.init();
 
     // Listen for error events on client.
