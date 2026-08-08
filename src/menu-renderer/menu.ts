@@ -509,11 +509,15 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             }
 
             if (selectionKeys.includes(eventKey)) {
-              this.emitSelectionEvent(child, SelectionSource.eKeyboard);
-              if (child.type === 'button') {
-                this.hoverAngle(child.renderData.computedAngle);
-              } else {
+              if (child.type === 'submenu') {
+                this.emitItemInteractionEvent(
+                  MenuInteractionType.eOpenSubmenu,
+                  child.renderData.path
+                );
                 this.selectItem(child, this.getCenterItemPosition());
+              } else {
+                this.emitSelectionEvent(child, SelectionSource.eKeyboard);
+                this.hoverAngle(child.renderData.computedAngle);
               }
               return;
             }
@@ -560,7 +564,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             this.selectItem(this.hoveredItem);
           } else {
             this.emitSelectionEvent(this.hoveredItem, SelectionSource.eKeyboard);
-            this.selectItem(this.hoveredItem);
           }
 
           return;
