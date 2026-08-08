@@ -9,4 +9,4 @@
 // SPDX-License-Identifier: MIT
 
 export { IPCServer, IPCCallback } from './ipc-server';
-export { IPCShowMenuClient } from './ipc-show-menu-client';
+export { IPCShowCustomMenuClient } from './ipc-show-custom-menu-client';
