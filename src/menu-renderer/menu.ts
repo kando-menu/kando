@@ -228,7 +228,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       };
 
       this.container.classList.add('no-transitions');
-      this.selectItem(this.root, menuPosition);
+      this.openSubmenu(this.root, menuPosition);
 
       // To ensure that all DOM changes are applied, flush the browser's rendering
       // pipeline first.
@@ -415,7 +415,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
         this.emitItemInteractionEvent(interaction, path);
 
-        this.selectItem(item, coords);
+        this.openSubmenu(item, coords);
 
         return;
       }
@@ -441,7 +441,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         }
 
         if (item.type !== 'button') {
-          this.selectItem(item, coords);
+          this.openSubmenu(item, coords);
         }
 
         return;
@@ -496,7 +496,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         // the quick select key.
         if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
           for (let i = 0; i < this.centerItem.children.length; i++) {
-            const child = this.centerItem.children[i];
+            const child = this.centerItem.children[i] as RenderedChildMenuItem;
 
             const selectionKeys = [];
             if (child.type === 'button' && child.selectWorkflow?.quickSelectKey) {
@@ -509,8 +509,16 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             }
 
             if (selectionKeys.includes(eventKey)) {
-              this.emitSelectionEvent(child, SelectionSource.eKeyboard);
-              this.selectItem(child, this.getCenterItemPosition());
+              if (child.type === 'submenu') {
+                this.emitItemInteractionEvent(
+                  MenuInteractionType.eOpenSubmenu,
+                  child.renderData.path
+                );
+                this.openSubmenu(child, this.getCenterItemPosition());
+              } else {
+                this.emitSelectionEvent(child, SelectionSource.eKeyboard);
+                this.hoverAngle(child.renderData.computedAngle);
+              }
               return;
             }
           }
@@ -553,10 +561,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
               MenuInteractionType.eOpenSubmenu,
               this.hoveredItem.renderData.path
             );
-            this.selectItem(this.hoveredItem);
+            this.openSubmenu(this.hoveredItem);
           } else {
             this.emitSelectionEvent(this.hoveredItem, SelectionSource.eKeyboard);
-            this.selectItem(this.hoveredItem);
           }
 
           return;
@@ -625,7 +632,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectItem(item: RenderedMenuItem, coords?: Vec2) {
+  private openSubmenu(item: RenderedMenuItem, coords?: Vec2) {
     if (this.centerItem === item) {
       return;
     }
@@ -754,7 +761,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       MenuInteractionType.eCloseSubmenu,
       this.centerItem.renderData.path
     );
-    this.selectItem(this.centerItem.renderData.parent, coords);
+    this.openSubmenu(this.centerItem.renderData.parent, coords);
   }
 
   /**
