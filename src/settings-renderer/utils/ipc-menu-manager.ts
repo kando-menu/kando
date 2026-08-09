@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { IPCShowMenuClient } from '../../common/ipc/ipc-show-menu-client';
+import { IPCShowCustomMenuClient } from '../../common/ipc/ipc-show-custom-menu-client';
 import { MenuInteractionType, RootMenuItem } from '../../common';
 
 export type IPCButtonAction = {
@@ -24,11 +24,11 @@ export type IPCButtonAction = {
  * corresponding callback is called.
  */
 export class IPCMenuManager {
-  private ipcClient: IPCShowMenuClient;
+  private ipcClient: IPCShowCustomMenuClient;
   private lastActions: IPCButtonAction[] = [];
 
   constructor(serverPort: number, serverApiVersion: number) {
-    this.ipcClient = new IPCShowMenuClient(serverPort, serverApiVersion);
+    this.ipcClient = new IPCShowCustomMenuClient(serverPort, serverApiVersion);
     this.ipcClient.on('interaction', (type: MenuInteractionType, path: number[]) => {
       if (type === 'selectButton') {
         this.handleSelect(path);

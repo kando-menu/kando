@@ -334,6 +334,10 @@ export default function GeneralSettingsDialog() {
                 label: i18next.t('settings.general-settings-dialog.cycle-from-recent'),
               },
               {
+                value: 're-open',
+                label: i18next.t('settings.general-settings-dialog.re-open-menu'),
+              },
+              {
                 value: 'close',
                 label: i18next.t('settings.general-settings-dialog.close-menu'),
               },

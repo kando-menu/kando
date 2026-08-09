@@ -11,6 +11,7 @@
 export * from './settings-schemata';
 export * from './typed-event-emitter';
 export * from './action-type-registry';
+export * from './shortcut';
 
 import { numericFormatter } from 'react-number-format';
 import { AchievementStats, Menu } from './settings-schemata';
@@ -127,10 +128,10 @@ export type SystemInfo = {
   /** Whether the system supports launching isolated processes. */
   readonly supportsIsolatedProcesses: boolean;
 
-  /** The IPC port used by Kando's own IPC show-menu interface. */
+  /** The IPC port used by Kando's own IPC show-custom-menu interface. */
   readonly ipcPort: number;
 
-  /** The API version supported by Kando's own IPC show-menu interface. */
+  /** The API version supported by Kando's own IPC show-custom-menu interface. */
   readonly ipcApiVersion: number;
 };
 

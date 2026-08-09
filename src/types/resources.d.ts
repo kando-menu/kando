@@ -417,6 +417,7 @@ export default interface Resources {
               "press-again-behavior": "Press-shortcut-again behavior",
               "press-again-behavior-info": "This determines what happens when the shortcut is pressed again while a menu is shown. If multiple menus are assigned to the same shortcut, you can use this to cycle through all matching menus. Make sure to only hold down a modifier key if you want to use Turbo Mode together with an option other than 'Do nothing'.",
               "previously-reported": "Previously reported",
+              "re-open-menu": "Re-open menu",
               "reload-menu-theme": "Reload menu theme",
               "reload-note": "When you reload the menu theme, CSS changes will be applied even if a menu is currently shown. For changes made to the theme.json file, you need to re-open the menu.",
               "reload-sound-theme": "Reload sound theme",

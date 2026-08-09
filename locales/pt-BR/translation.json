@@ -11,6 +11,9 @@
         },
         "niri": {
             "shortcut-info": "O Niri ainda não suporta atalhos globais. Mas você pode abrir este menu usando 'kando --menu \"Nome do Menu\"' na linha de comando ou na configuração do Niri."
+        },
+        "kde": {
+            "error": "Não foi possível conectar ao plugin KWin Kando. Você pode obtê-lo aqui: {{link}}"
         }
     },
     "example-menu": {
@@ -113,7 +116,7 @@
             "detailed-description_one": "",
             "detailed-description_many": "Contém {{count}} itens de menu.",
             "detailed-description_other": "",
-            "name": "",
+            "name": "Submenu",
             "tip-1": "Submenus podem ser usados para agrupar itens.",
             "tip-2": "Você também pode aninhar submenus dentro de submenus.",
             "tip-3": "Submenus podem ser usados para criar estruturas de menu complexas.",
@@ -144,7 +147,7 @@
         "about-dialog": {
             "chrome-version": "Versão Chrome",
             "electron-version": "Versão Electron",
-            "kando-backend": "Backend do Kando",
+            "kando-backend": "Back-end do Kando",
             "kando-version": "Versão do Kando",
             "message": "Eu estou criando o Kando por pura paixão. Se você gostar de usá-lo tanto quanto eu adoro criá-lo, você pode [me pagar um café]({{link}})!\n\n💖 Simon",
             "title": "Sobre o Kando",
@@ -255,7 +258,44 @@
             "do-nothing": "Não faça nada",
             "cycle-from-first": "Mostrar próximo menu (começar do início)",
             "cycle-from-recent": "Mostrar próximo menu (continuar do último)",
-            "close-menu": "Fechar menu"
+            "close-menu": "Fechar menu",
+            "enable-achievements-info": "Se ativado, o Kando acompanhará seu progresso em direção às conquistas.",
+            "enable-achievements": "Acompanhar conquistas",
+            "enable-achievement-notifications-info": "Se ativado, as notificações são exibidas quando as conquistas são desbloqueadas.",
+            "enable-achievement-notifications": "Mostrar notificações de conquista",
+            "windows-ink-workaround-info": "Isso permite uma solução alternativa para o problema em que a obtenção da posição da caneta não é possível com o Windows Ink ativado. Isso introduz um atraso de 100ms antes de abrir o menu, portanto, se você não usa uma caneta, pode desativá-lo para fazer o menu abrir mais rápido.",
+            "windows-ink-workaround": "Solução alternativa para Windows Ink",
+            "keep-input-focus-warning": "Isso desativa alguns recursos, como o Modo Turbo e a capacidade de usar o teclado para selecionar itens. Ative isto apenas se souber o que está fazendo!",
+            "enable-turbo-mode-warning": "Desativado devido à opção 'Manter o aplicativo ativo em foco' estar ativada.",
+            "return-pointer-after-selection-info": "Após fazer uma seleção, o ponteiro do mouse voltará para onde estava quando o menu foi aberto.",
+            "return-pointer-after-selection": "Retornar ponteiro após a seleção",
+            "max-selection-radius-info": "Se definido para um valor maior que 0, cliques fora deste raio fecharão o menu. O padrão é 0, o que significa que não há raio máximo de seleção.",
+            "max-selection-radius": "Raio máximo de seleção",
+            "wlroots-specific-options": "Opções para backends baseados em wlroots",
+            "options-that-will-only-affect-the-wlroots-backend": "Estas opções afetam apenas os backends baseados em wlroots e não têm efeito sobre outros backends.",
+            "wlroots-pointer-get-timeout-mouse-info": "O tempo máximo em milissegundos para aguardar a posição do ponteiro do mouse de backends baseados em wlroots. Se o tempo limite for atingido, uma posição alternativa será usada. O padrão é 500ms.",
+            "wlroots-pointer-get-timeout-mouse": "Tempo limite da posição do ponteiro",
+            "wlroots-pointer-get-timeout-touch-info": "O tempo máximo em milissegundos para aguardar a posição do ponteiro de toque de backends baseados em wlroots. Se o tempo limite for atingido, uma posição de fallback será usada. O padrão é 1500ms.",
+            "wlroots-pointer-get-timeout-touch": "Tempo limite de obtenção da posição de toque",
+            "wlroots-pointer-get-timeout-default-behavior-info": "Determina onde deve-se presumir que o ponteiro está se nenhuma posição puder ser obtida a partir dos backends baseados em wlroots dentro do tempo limite configurado.",
+            "wlroots-pointer-get-timeout-default-behavior": "Posição de fallback do ponteiro",
+            "center": "Centro",
+            "backup-and-restore": "Backup e Restauração",
+            "backup-menus": "Fazer backup do menus.json…",
+            "backup-settings": "Fazer backup do config.json…",
+            "restore-menus": "Restaurar o menus.json…",
+            "restore-settings": "Restaurar o config.json…",
+            "interaction-modes": "Modos de Interação",
+            "input-options": "Opções de Entrada",
+            "learn-interaction-mode": "Saiba mais sobre os modos de interação do Kando [aqui]({{link}})!",
+            "backup-menus-note": "Isso fará o backup ou a restauração de todos os seus menus de uma só vez. Isso inclui todos os seus atalhos configurados, layouts de menu e suas coleções de menus.",
+            "backup-settings-note": "Isso fará o backup ou a restauração das configurações do Kando, que incluem todas as suas configurações gerais e a configuração do tema do menu.",
+            "settings-dialog-and-tray-icon": "Caixa de diálogo de configurações e ícone da bandeja",
+            "achievements": "Conquistas",
+            "trigger-center-click-on-key-release-info": "Isso acionará o fluxo de trabalho de clique central quando uma tecla for solta ao passar o mouse sobre o centro de um menu.",
+            "trigger-center-click-on-key-release": "Acionar o fluxo de trabalho de clique com o botão central ao soltar a tecla",
+            "trigger-center-click-on-key-release-warning": "Esta opção fechará o menu instantaneamente quando você soltar o atalho. Ative isto apenas se souber o que está fazendo!",
+            "previously-reported": "Anteriormente relatado"
         },
         "hover-mode-info": "Para usuários avançados apenas! Selecione itens flutuando sobre eles.",
         "icon-picker-dialog": {
@@ -305,7 +345,7 @@
             "author": "por {{author}}",
             "light-dark-mode-info": "Se ativado, você pode escolher um tema e cor diferente dependendo se o seu sistema estiver no modo de cor clara ou escura.",
             "reset-color-picker": "Resetar todas as cores aos seus padrões",
-            "title": "Temas de Menu",
+            "title": "Temas do Menu",
             "light": "Modo Claro",
             "accent-colors-info": "Cada tema pode ter diferentes cores de destaque.",
             "light-dark-mode": "Ativar modo escuro/claro",
@@ -320,9 +360,26 @@
             "fade-in-time-info": "O tempo que leva para que o menu apareça. Padrão é 150ms.",
             "fade-out-time": "Tempo de Fade-out",
             "no-accent-colors": "Esse tema não suporta cores de destaque.",
-            "fade-in-time": "Tempo de Fade-in"
+            "fade-in-time": "Tempo de Fade-in",
+            "save-preset-error-title": "Falha ao salvar a predefinição",
+            "save-preset-error-message": "Falha ao salvar a predefinição de cor. Verifique se o diretório tem permissão de escrita. Erro: {{error}}",
+            "default-colors": "Cores padrão",
+            "enable-menu-animations-info": "Se desativado, todas as transições e a maioria das animações do tema do menu são evitadas.",
+            "enable-menu-animations": "Animações de Menu",
+            "enable-pointer-reactive-effects-info": "Se desativado, alguns efeitos de zoom ou escala do tema do menu que se baseiam na posição atual do ponteiro são evitados.",
+            "enable-pointer-reactive-effects": "Efeitos reativos ao ponteiro",
+            "choose-preset": "Escolher predefinição…",
+            "reload-presets": "Recarregar predefinições",
+            "save-preset": "Salvar predefinição",
+            "open-presets-directory": "Abrir diretório de predefinições",
+            "selection-wedges-info": "Se ativado e suportado pelo tema selecionado, a área selecionável dos itens do menu será destacada.",
+            "selection-wedges": "Desenhar cunhas dos itens",
+            "preset-name-empty": "O nome da predefinição não pode estar vazio!",
+            "preset-name-invalid": "O nome predefinido só pode conter letras, números, hífens, sublinhados e espaços!",
+            "preset-name-exists": "Já existe uma predefinição com este nome.",
+            "preset-name-placeholder": "por exemplo, Minhas Cores Personalizadas"
         },
-        "not-bound": "Não Atribuído",
+        "not-bound": "Não Vinculado",
         "shortcut-id-label": "ID de Atalho de Teclado",
         "shortcut-label": "Atalho de Teclado",
         "shortcut-recording": "Pressione um atalho de teclado…",
@@ -368,7 +425,7 @@
             "result": "Você selecionou \"{{name}}\"."
         },
         "all-menus": "Todos os menus",
-        "create-menu-button": "Novo menu",
+        "create-menu-button": "Adicionar menu",
         "add-menu-items": "Adicionar itens do menu",
         "undo": "Desfazer",
         "hover-mode": "Modo Hover",
@@ -399,8 +456,72 @@
             "no-in-progress-achievements": "Parabéns! Você completou todas as conquistas.",
             "no-completed-achievements": "Você ainda não completou nenhuma conquista.",
             "in-progress-button": "Em Progresso",
-            "completed-button": "Completas"
-        }
+            "completed-button": "Completas",
+            "reset-button": "redefinir progresso",
+            "reset-confirmation-title": "Você realmente deseja redefinir todo o progresso?",
+            "reset-button-tooltip": "Redefinir todas as conquistas e o progresso de nível"
+        },
+        "quick-select-key-label": "Tecla de atalho rápido",
+        "quick-select-key-recording": "Escolher atalho…",
+        "restore-backup": "Restaurar Backup…",
+        "restore-general-settings-warning-title": "Você realmente deseja restaurar as configurações gerais?",
+        "restore-general-settings-warning-message": "Isso substituirá as configurações atuais do seu aplicativo pelo conteúdo do arquivo de backup selecionado! Seus menus e coleções de menus não serão afetados.",
+        "restore-general-settings-error-title": "Falha ao carregar o backup das configurações gerais!",
+        "restore-general-settings-success-title": "Sucesso!",
+        "restore-general-settings-success-message": "Suas configurações gerais foram restauradas a partir do arquivo de backup.",
+        "restore-menu-settings-warning-title": "Você realmente deseja restaurar as configurações do menu?",
+        "restore-menu-settings-warning-message": "Isso substituirá seus menus atuais e coleções de menus pelo conteúdo do arquivo de backup selecionado!",
+        "restore-menu-settings-error-title": "Falha ao carregar o backup dos menus!",
+        "restore-menu-settings-success-title": "Sucesso!",
+        "restore-menu-settings-success-message": "Seus menus e coleções de menus foram restaurados a partir do arquivo de backup.",
+        "export-menu-error-title": "Falha ao exportar o menu",
+        "import-menu-error-title": "Falha ao importar o menu",
+        "import-menu-error-message": "O arquivo selecionado não pôde ser importado. Ele não contém um menu exportado do Kando válido.",
+        "import-menu": "Importar menu",
+        "workflow-editor": {
+            "add-action": "Adicionar Ação",
+            "button-select-workflow": {
+                "description": "As ações abaixo serão executadas quando você selecionar o item.",
+                "empty-hint": "Atualmente, nenhuma ação será executada ao selecionar este item. Use o botão acima para adicionar ações a este fluxo de trabalho!",
+                "quick-select-key-hint": "Pressionar esta tecla enquanto o menu principal estiver aberto também acionará o fluxo de trabalho de seleção."
+            },
+            "button-hover-workflow": {
+                "description": "As ações abaixo serão executadas quando você mover o ponteiro sobre o item.",
+                "empty-hint": "Atualmente, nenhuma ação será executada ao passar o mouse sobre este item. Use o botão acima para adicionar ações a este fluxo de trabalho!",
+                "quick-select-key-hint": "Pressionar esta tecla enquanto o menu pai estiver aberto também acionará o fluxo de trabalho de foco."
+            },
+            "submenu-open-workflow": {
+                "description": "As ações abaixo serão executadas quando o submenu for aberto.",
+                "empty-hint": "Atualmente, nenhuma ação adicional será executada ao abrir este submenu. Use o botão acima para adicionar ações a este fluxo de trabalho!",
+                "quick-select-key-hint": "Pressionar esta tecla abrirá o submenu."
+            },
+            "submenu-hover-workflow": {
+                "description": "As ações abaixo serão executadas quando você mover o ponteiro sobre o item do submenu.",
+                "empty-hint": "Atualmente, nenhuma ação será executada ao passar o mouse sobre este submenu. Use o botão acima para adicionar ações a este fluxo de trabalho!",
+                "quick-select-key-hint": "Pressionar esta tecla enquanto o menu principal estiver aberto também acionará o fluxo de trabalho de foco."
+            },
+            "submenu-activate-workflow": {
+                "description": "As ações abaixo serão executadas quando você clicar no centro do submenu.",
+                "empty-hint": "Atualmente, nada acontecerá quando você clicar no centro do submenu. Use o botão acima para adicionar ações a este fluxo de trabalho!",
+                "quick-select-key-hint": "Pressionar esta tecla enquanto o submenu estiver aberto também acionará o fluxo de trabalho de clique central."
+            },
+            "root-activate-workflow": {
+                "description": "As ações abaixo serão executadas quando você clicar no centro do menu raiz.",
+                "empty-hint": "Atualmente, nada acontecerá quando você clicar no centro do menu raiz. Use o botão acima para adicionar ações a este fluxo de trabalho!",
+                "quick-select-key-hint": "Pressionar esta tecla enquanto o menu raiz estiver aberto também acionará o fluxo de trabalho de clique central."
+            },
+            "action-picker": {
+                "search-placeholder": "Pesquisar por uma ação…"
+            },
+            "select-workflow-name": "Selecionar Fluxo de Trabalho",
+            "hover-workflow-name": "Fluxo de Trabalho Flutuante",
+            "activate-workflow-name": "Fluxo de trabalho com clique central",
+            "open-workflow-name": "Abrir Fluxo de Trabalho"
+        },
+        "export-menu": "Menu de exportação",
+        "fix-menu-item-angle": "Corrija o ângulo deste item de menu. Depois de ativar isto, arraste o item para atualizar o ângulo.",
+        "edit-submenu": "Editar submenu",
+        "drop-here-to-delete": "Solte aqui para excluir"
     },
     "menu-actions": {
         "open-file": {
@@ -410,7 +531,7 @@
         },
         "execute-command": {
             "name": "Executar Comando",
-            "description": "Executa aplicativos ou scripts.",
+            "description": "Inicia aplicativos ou executa scripts. ",
             "choose-app": "Escolha um aplicativo…",
             "placeholder": "Insira algum comando…",
             "isolated": "Executar isoladamente",
@@ -433,16 +554,139 @@
         },
         "simulate-hotkey": {
             "name": "Simular atalho de teclado",
-            "description": "Pressione uma combinação de teclas.",
+            "description": "Pressiona uma combinação de teclas para você. Certifique-se de adicionar uma ação de fechar menu antes disso, se quiser que o atalho seja direcionado para o aplicativo ativo e não para o menu!",
             "recording-placeholder": "Pressione uma tecla de atalho…",
             "hotkey": "Tecla de Atalho",
             "hotkey-info": "Essa tecla de atalho será acionada quando o item é selecionado. Quando estiver gravando, você não precisa pressionar todas as teclas de uma vez, você também pode pressioná-las uma após a outra. Isso é útil se uma tecla de atalho já está atribuída a alguma ação global!"
         },
         "execute-macro": {
             "name": "Simular Macro",
-            "description": "Digita um macro de teclado.",
+            "description": "Digita várias teclas em sequência. Certifique-se de adicionar uma ação de fechar menu antes disso, se quiser que o atalho seja direcionado para o aplicativo ativo e não para o menu!",
             "placeholder": "Aperte o botão de gravação para começar a gravar!",
             "recording-placeholder": "Pressione as teclas…"
+        },
+        "set-clipboard": {
+            "name": "Definir área de transferência",
+            "description": "Armazena o texto fornecido na sua área de transferência. Você pode usar uma ação de atalho Ctrl+V para colar o texto após defini-lo na área de transferência.",
+            "placeholder": "Insira qualquer texto…"
+        },
+        "delay": {
+            "name": "Atraso",
+            "description": "Pausa a execução do fluxo de trabalho por uma duração especificada.",
+            "duration-info": "A execução do fluxo de trabalho será adiada por este período de tempo.",
+            "duration-label": "Segundos"
+        },
+        "close-menu": {
+            "name": "Fechar Menu",
+            "description": "Fecha o menu atual. É importante onde você coloca isso no seu fluxo de trabalho! Ações após esta esperarão até que o menu desapareça completamente antes de serem executadas."
+        },
+        "close-submenu": {
+            "name": "Fechar submenu",
+            "description": "Navega um nível acima na hierarquia do menu."
+        },
+        "inhibit-shortcuts": {
+            "name": "Desativar Atalhos",
+            "description": "Desativa todos os atalhos do Kando pelo resto da execução deste fluxo de trabalho."
+        },
+        "focus-window": {
+            "name": "Janela de Foco",
+            "description": "Traz a janela especificada para o primeiro plano. Você pode usar isso para focar o aplicativo de destino antes de executar um atalho de teclado ou uma ação de macro.",
+            "hint": "O Kando tentará encontrar uma janela que corresponda ao título ou nome do aplicativo fornecido (ou ambos). Você pode usar expressões regulares para uma correspondência mais poderosa, por exemplo, /firefox|chrome/i para corresponder a qualquer navegador web."
         }
+    },
+    "achievements": {
+        "attributes": {
+            "novice": "Iniciante",
+            "capable": "Capacitado",
+            "skilled": "Experiente",
+            "expert": "Especialista",
+            "master": "Sensei"
+        },
+        "tier": {
+            "I": "I",
+            "II": "II",
+            "III": "III",
+            "IV": "IV",
+            "V": "V"
+        },
+        "cancelor": {
+            "name": "Estrada do Vazio {{tier}}",
+            "description": "Cancelar uma seleção {{n}} vezes."
+        },
+        "selector": {
+            "name": "{{attribute}} Samurai",
+            "description": "Selecione {{n}} itens."
+        },
+        "depth-selector": {
+            "name1": "{{attribute}} Fatiador",
+            "name2": "{{attribute}} Fatiador de Duas Camadas",
+            "name3": "{{attribute}} Deep Slicer",
+            "description": "Selecione {{n}} itens na profundidade {{depth}} em menos de {{time}} ms."
+        },
+        "click-selector": {
+            "name": "{{attribute}} Campeão do Clique-Clique",
+            "description": "Selecione {{n}} itens usando cliques do mouse."
+        },
+        "keyboard-selector": {
+            "name": "{{attribute}} Herói do Atalho",
+            "description": "Selecione {{n}} itens usando seu teclado."
+        },
+        "gamepad-selector": {
+            "name": "{{attribute}} Guerreiro do Gamepad",
+            "description": "Selecione {{n}} itens usando um controle."
+        },
+        "gesture-selector": {
+            "name": "{{attribute}} Poder Ninja",
+            "description": "Selecione {{n}} itens usando o modo turbo ou de marcação."
+        },
+        "settings-opened": {
+            "name": "A Jornada é a Recompensa {{tier}}",
+            "description": "Abra a caixa de diálogo de configurações {{n}} vezes."
+        },
+        "backup": {
+            "name": "Caminho da Presciência {{tier}}",
+            "description": "Faça backup de seus menus ou configurações {{n}} vezes."
+        },
+        "restore": {
+            "name": "Segunda Chance {{tier}}",
+            "description": "Restaurar um backup {{n}} vezes."
+        },
+        "added-items": {
+            "name": "Andarilho do Kando {{tier}}",
+            "description": "Crie {{n}} itens no editor de menu."
+        },
+        "deleted-all-menus": {
+            "name": "Limpe o Dojo",
+            "description": "Exclua todos os seus menus."
+        },
+        "full-menu": {
+            "name": "Amplitude em vez de profundidade",
+            "description": "Crie um menu com mais de doze itens."
+        },
+        "deep-menu": {
+            "name": "Mestre da Profundidade",
+            "description": "Adicionar um item de menu a um submenu de quatro níveis de profundidade."
+        },
+        "sponsors-viewed": {
+            "name": "Guardião de Kando",
+            "description": "Considere se tornar um patrocinador da Kando."
+        },
+        "menu-themes-selected": {
+            "name": "Caminho de Aesthete",
+            "description": "Alterne o tema do menu {{n}} vezes."
+        },
+        "tutorial-viewed": {
+            "name": "A Jornada Começa",
+            "description": "Conclua o tutorial de introdução ao Kando."
+        },
+        "many-selections-streak": {
+            "name": "Mãos de Relâmpago {{tier}}",
+            "description": "Selecione {{n}} itens em {{time}} s."
+        },
+        "speedy-selections-streak": {
+            "name": "Mais rápido que o pensamento {{tier}}",
+            "description": "Faça {{n}} seleções consecutivas em média mais rápido que {{time}} ms."
+        },
+        "completed-title": "Conquista desbloqueada!"
     }
 }

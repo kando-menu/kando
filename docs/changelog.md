@@ -46,6 +46,8 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
 - Support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 
 - A global option to **return the pointer to the menu opening position** after selecting a button.
+- The possibility to **open user-configured menus via the IPC interface**. This allows you to open one of your configured menus by its name. This is similar to the `--menu <menu name>` command-line option, but is faster as it does not require starting a new Kando instance. This is especially useful if you want to open menus from other applications or scripts.
+- An option to re-open a menu if the same shortcut is pressed while the menu is already open. This is useful if the menu sometimes gets lost on multi-monitor setups.
 - Some warning signs in the settings dialog which indicate that a potentially dangerous setting is enabled. For instance, if you enable the keep-focus option, a warning sign will show that this disables all keyboard input.
 - Many translation updates: **Thanks to all the contributors!**
 
@@ -59,6 +61,8 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - The position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
 - What happens when you select a submenu in the menu preview in the settings: before, the submenu would open immediately. Now, it will be selected just as other menu items. To edit its content, you have to either double-click it or use the tiny edit button which appears when you select the submenu.
 - The default fade-in and fade-out times of the menu. They are now 75ms and 100ms respectively. This makes the menu feel snappier and more responsive.
+- If the system supports it, Kando menus will now be shown on all workspaces.
+- Systems using the `zh-TW` locale will now fall back to `zh-Hant` before using English strings. Thanks to [@ClixTW](https://github.com/ClixTW) for this contribution!
 - Updated many dependencies to their latest versions. This includes an update to Electron 43 which amongst other things brings rounded window corners on Linux! Feel free to report any issues you encounter!
 
 ### :bug: Fixed
@@ -67,6 +71,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - Selecting menu items with the numpad keys. They now work the same as the normal number keys. Thanks to [@username1419](https://github.com/username1419) for this fix!
 - A bug which caused the center text to not be drawn properly if the quick-select key of the item was a character which has special meaning in regular expressions. Thanks to [@GZ0759](https://github.com/GZ0759) for this fix!
 - An issue which caused the menu window to be wrongly sized and positioned on KDE Wayland with some screen configurations.
+- A regression on KDE Wayland 6.7.4 which would cause global shortcuts to not work after Kando was started.
 
 ### :fire: Removed
 
