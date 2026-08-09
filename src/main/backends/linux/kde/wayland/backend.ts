@@ -243,19 +243,11 @@ export class KDEWaylandBackend extends LinuxBackend {
       return;
     }
 
-    // Check if any of the currentShortcuts are new. If they are, we bind them via the portal.
-    const oldShortcuts = await this.globalShortcuts.listShortcuts();
-    const hasNewShortcut = currentShortcuts.some(
-      (shortcut) => !oldShortcuts.includes(shortcut)
+    this.globalShortcuts.bindShortcuts(
+      currentShortcuts.map((shortcut) => {
+        return { id: shortcut, description: shortcut };
+      })
     );
-
-    if (hasNewShortcut) {
-      this.globalShortcuts.bindShortcuts(
-        currentShortcuts.map((shortcut) => {
-          return { id: shortcut, description: shortcut };
-        })
-      );
-    }
   }
 
   /**
