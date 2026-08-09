@@ -12,6 +12,7 @@ export * from './settings-schemata';
 export * from './typed-event-emitter';
 export * from './action-type-registry';
 
+import { numericFormatter } from 'react-number-format';
 import { AchievementStats, Menu } from './settings-schemata';
 
 /** This type is used to pass command line arguments to the app. */
@@ -598,56 +599,15 @@ export enum SelectionSource {
 }
 
 /**
- * Positions that the menu can be opened at. Stores a string containing the translation
- * key.
- */
-export enum FixedPosition {
-  centered = 'settings.fixed-position-centered',
-  topRight = 'settings.fixed-position-top-right',
-  topLeft = 'settings.fixed-position-top-left',
-  bottomLeft = 'settings.fixed-position-bottom-left',
-  bottomRight = 'settings.fixed-position-bottom-right',
-}
-
-/**
- * Converts a given FixedPosition to screen-space coordinates.
+ * Format a number representing a fixed position value. Used for making human readable
+ * versions of the {@link fixedMenuPosition} values.
  *
- * @param fixedPositionValue The FixedPosition to convert.
- * @returns The screen-space Vec2 coordinates associated with the given FixedPosition.
+ * @param menuPos The number to format into the display string.
+ * @returns Returns the formatted number as a string.
  */
-export function FixedPositionToVec2(fixedPositionValue: FixedPosition | string): Vec2 {
-  switch (fixedPositionValue) {
-    case FixedPosition.centered:
-      return { x: 0.5, y: 0.5 };
-    case FixedPosition.topLeft:
-      return { x: 0, y: 0 };
-    case FixedPosition.topRight:
-      return { x: 1, y: 0 };
-    case FixedPosition.bottomLeft:
-      return { x: 0, y: 1 };
-    case FixedPosition.bottomRight:
-      return { x: 1, y: 1 };
-  }
-}
-
-/**
- * Converts a given screen-space coordinate to FixedPosition.
- *
- * @param vecPositionValue The Vec2 to convert.
- * @returns The FixedPosition associated with the given Vec2 screen-space coordinates.
- */
-export function Vec2ToFixedPosition(vecPositionValue: Vec2): string {
-  if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0.5, y: 0.5 })) {
-    return FixedPosition['centered'];
-  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0, y: 0 })) {
-    return FixedPosition['topLeft'];
-  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 1, y: 0 })) {
-    return FixedPosition['topRight'];
-  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 0, y: 1 })) {
-    return FixedPosition['bottomLeft'];
-  } else if (JSON.stringify(vecPositionValue) == JSON.stringify({ x: 1, y: 1 })) {
-    return FixedPosition['bottomRight'];
-  } else {
-    return FixedPosition['centered'];
-  }
+export function fixedMenuPositionToString(menuPos: number): string {
+  return numericFormatter(String(menuPos), {
+    fixedDecimalScale: true,
+    decimalScale: 4,
+  });
 }

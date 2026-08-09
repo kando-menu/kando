@@ -21,7 +21,7 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import ScreenPositionPicker from './ScreenPositionPicker';
 import { BiTargetLock } from 'react-icons/bi';
 import { clamp, isNaN, toNumber } from 'lodash';
-import { numericFormatter } from 'react-number-format';
+import { fixedMenuPositionToString } from '../../../common';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
@@ -34,13 +34,6 @@ export default function MenuBehavior() {
     React.useState(false);
   const [fixedPositionValueX, setFixedPositionValueX] = React.useState('');
   const [fixedPositionValueY, setFixedPositionValueY] = React.useState('');
-
-  function fixedMenuPositionToString(menuPos: number): string {
-    return numericFormatter(String(menuPos), {
-      fixedDecimalScale: true,
-      decimalScale: 4,
-    });
-  }
 
   React.useEffect(() => {
     setFixedPositionInputVisible(menus[selectedMenu].useFixedPosition);
