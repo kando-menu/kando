@@ -19,7 +19,6 @@ import {
   SelectionSource,
   MenuInteractionType,
   TypedEventEmitter,
-  ChildMenuItem,
 } from '../common';
 import {
   RenderedChildMenuItem,
