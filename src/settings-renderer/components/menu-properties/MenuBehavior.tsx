@@ -68,7 +68,7 @@ export default function MenuBehavior() {
       />
       <div
         ref={menuPositionBehaviorRef}
-        className={cx(classes.conditionInput, classes.screenCondition)}>
+        className={cx(classes.behaviorInput, classes.fixedPositionCondition)}>
         {fixedPositionInputVisible ? (
           <>
             {[
