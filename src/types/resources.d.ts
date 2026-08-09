@@ -573,6 +573,9 @@ export default interface Resources {
               "top-left-value": "Left: {{x}}, Top: {{y}}",
               "valid": "Great! You have selected a valid area."
           },
+          "screen-position-picker": {
+              "value": "X: {{x}} - Y: {{y}}"
+          },
           "search-menus-placeholder": "Search menus…",
           "shortcut-id-label": "Shortcut ID",
           "shortcut-info": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",

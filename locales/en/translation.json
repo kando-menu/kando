@@ -320,6 +320,9 @@
             "invalid": "Make sure the top left corner is above and to the left of the bottom right corner.",
             "confirm": "Use this area"
         },
+        "screen-position-picker": {
+          "value": "X: {{x}} - Y: {{y}}",
+        },
         "window-picker-dialog": {
             "result": "You selected \"{{name}}\".",
             "instructions": "Hit the button below and focus the target window within the next five seconds.",

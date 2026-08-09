@@ -1,0 +1,75 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.value {
+  color: $text-normal;
+  width: 200px;
+  margin: 20px 0;
+  text-align: center;
+  align-self: center;
+}
+
+.area {
+  color: $text-normal;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  justify-content: center;
+  position: relative;
+  width: 250px;
+  aspect-ratio: 16/9;
+  border-radius: 5px;
+  margin: 10px auto;
+  border: 2px solid $text-link;
+  background-color: light-dark(rgba($key-dark, 0.1), rgba($key-light, 0.1));
+}
+
+.positionPicker {
+  background-color: $widget-normal;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: $widget-normal-hover;
+  }
+}
+
+.picker {
+  position: fixed;
+}
+
+.crosshair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  color: $text-normal;
+  font-size: 2em;
+  width: 100%;
+  height: 100%;
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 5px;
+}

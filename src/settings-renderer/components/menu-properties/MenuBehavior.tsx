@@ -16,9 +16,11 @@ import * as classes from './MenuBehavior.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import { Checkbox, Dropdown, Note } from '../common';
+import { Button, Checkbox, Dropdown, Note } from '../common';
 import { Vec2ToFixedPosition, FixedPositionToVec2, FixedPosition } from '../../../common';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import ScreenPositionPicker from './ScreenPositionPicker';
+import { BiTargetLock } from 'react-icons/bi';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
@@ -27,6 +29,8 @@ export default function MenuBehavior() {
   const editMenu = useMenuSettings((state) => state.editMenu);
 
   const [fixedPositionInputVisible, setFixedPositionInputVisible] = React.useState(false);
+  const [fixedPositionPickerVisible, setFixedPositionPickerVisible] =
+    React.useState(false);
 
   React.useEffect(() => {
     setFixedPositionInputVisible(menus[selectedMenu].useFixedPosition);
@@ -55,22 +59,33 @@ export default function MenuBehavior() {
       />
       <div ref={menuPositionBehaviorRef} className={cx(classes.fixedPositionInput)}>
         {fixedPositionInputVisible ? (
-          <Dropdown
-            isDisabled={!menus[selectedMenu].useFixedPosition}
-            initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
-            options={(
-              Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>
-            ).map((key) => ({
-              value: FixedPosition[key],
-              label: i18next.t(`${FixedPosition[key]}`),
-            }))}
-            onChange={(newPosition) => {
-              editMenu(selectedMenu, (menu) => {
-                menu.fixedMenuPosition = FixedPositionToVec2(newPosition);
-                return menu;
-              });
-            }}
-          />
+          <>
+            <Dropdown
+              isDisabled={!menus[selectedMenu].useFixedPosition}
+              initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
+              options={(
+                Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>
+              ).map((key) => ({
+                value: FixedPosition[key],
+                label: i18next.t(`${FixedPosition[key]}`),
+              }))}
+              onChange={(newPosition) => {
+                editMenu(selectedMenu, (menu) => {
+                  menu.fixedMenuPosition = FixedPositionToVec2(newPosition);
+                  return menu;
+                });
+              }}
+            />
+            <Button
+              isGrouped
+              icon={<BiTargetLock />}
+              tooltip={i18next.t('settings.area-condition-tooltip')}
+              variant="secondary"
+              onClick={() => {
+                setFixedPositionPickerVisible(true);
+              }}
+            />
+          </>
         ) : null}
       </div>
       <Checkbox
@@ -93,6 +108,23 @@ export default function MenuBehavior() {
             menu.hoverMode = hoverMode;
             return menu;
           });
+        }}
+      />
+      <ScreenPositionPicker
+        isVisible={fixedPositionPickerVisible}
+        onClose={() => setFixedPositionPickerVisible(false)}
+        onSelect={(newPosition) => {
+          console.log(newPosition);
+          // editMenu(selectedMenu, (menu) => {
+          //   menu.conditions = menu.conditions || {};
+          //   menu.conditions.screenArea = {
+          //     xMin: left,
+          //     yMin: top,
+          //     xMax: right,
+          //     yMax: bottom,
+          //   };
+          //   return menu;
+          // });
         }}
       />
     </div>
