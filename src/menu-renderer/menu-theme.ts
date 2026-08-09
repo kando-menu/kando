@@ -190,8 +190,13 @@ export class MenuTheme {
       if (layer.content === 'name') {
         // If the item has a quick select key, we underline the first occurrence of the
         // key in the name.
-        if ('quickSelectKey' in item) {
-          const regex = new RegExp(`(${item.quickSelectKey})`, 'i');
+        const quickSelectKey = MenuTheme.getQuickSelectKey(item);
+        if (quickSelectKey) {
+          const escapedQuickSelectKey = quickSelectKey.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            '\\$&'
+          );
+          const regex = new RegExp(`(${escapedQuickSelectKey})`, 'i');
           layerDiv.innerHTML = item.name.replace(regex, '<u>$1</u>');
         } else {
           layerDiv.innerText = item.name;
@@ -290,5 +295,30 @@ export class MenuTheme {
     if (hoverAngle != null) {
       item.renderData.lastHoveredChildAngle = hoverAngle;
     }
+  }
+
+  /**
+   * Returns the primary quick-select key for a given item. It prioritizes the
+   * select-workflow over the hover-workflow over the center-click-workflow.
+   *
+   * @param item The menu item to get the quick-select key for.
+   * @returns The primary quick-select key for the given item, or null if there is no
+   *   quick-select key.
+   */
+  public static getQuickSelectKey(item: MenuItem): string | null {
+    if (item.type === 'button') {
+      return (
+        item.selectWorkflow?.quickSelectKey || item.hoverWorkflow?.quickSelectKey || null
+      );
+    } else if (item.type === 'submenu') {
+      return (
+        item.openWorkflow?.quickSelectKey ||
+        item.hoverWorkflow?.quickSelectKey ||
+        item.activateWorkflow?.quickSelectKey ||
+        null
+      );
+    }
+
+    return null;
   }
 }

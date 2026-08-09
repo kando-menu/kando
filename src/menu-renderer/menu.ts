@@ -1054,7 +1054,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       this.centerText.show(
         newHoveredItem.name,
         position,
-        this.getQuickSelectKey(newHoveredItem)
+        MenuTheme.getQuickSelectKey(newHoveredItem)
       );
     }
 
@@ -1503,33 +1503,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     }
 
     return this.showMenuOptions.mousePosition;
-  }
-
-  /**
-   * Returns the primary quick-select key for a given item. It prioritizes the
-   * select-workflow over the hover-workflow over the center-click-workflow. This is used
-   * to determine which quick-select key to show in the center text when hovering an
-   * item.
-   *
-   * @param item The menu item to get the quick-select key for.
-   * @returns The primary quick-select key for the given item, or null if there is no
-   *   quick-select key.
-   */
-  private getQuickSelectKey(item: ChildMenuItem): string | null {
-    if (item.type === 'button') {
-      return (
-        item.selectWorkflow?.quickSelectKey || item.hoverWorkflow?.quickSelectKey || null
-      );
-    } else if (item.type === 'submenu') {
-      return (
-        item.openWorkflow?.quickSelectKey ||
-        item.hoverWorkflow?.quickSelectKey ||
-        item.activateWorkflow?.quickSelectKey ||
-        null
-      );
-    }
-
-    return null;
   }
 
   /**
