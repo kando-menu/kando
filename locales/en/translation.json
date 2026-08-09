@@ -277,11 +277,18 @@
         "centered-mode": "Centered Mode",
         "fixed-position-mode": "Fixed Position Mode",
         "fixed-position-mode-info": "Open the menu at a fixed position on the screen, instead of at the cursor.",
-        "fixed-position-centered": "Centered",
-        "fixed-position-top-right": "Top Right",
-        "fixed-position-top-left": "Top Left",
-        "fixed-position-bottom-left": "Bottom Left",
-        "fixed-position-bottom-right": "Bottom Right",
+        "fixed-position-picker": {
+          "centered-preset-tooltip": "Set position to center",
+          "top-right-preset-tooltip": "Set position to top right",
+          "top-left-preset-tooltip": "Set position to top left",
+          "bottom-left-preset-tooltip": "Set position to bottom left",
+          "bottom-right-preset-tooltip": "Set position to bottom right",
+          "picker-tooltip": "Drag this to an area on your screen to set position",
+          "confirm": "Use this position"
+        },
+        "fixed-position-x-placeholder": "X",
+        "fixed-position-y-placeholder": "Y",
+        "fixed-position-tooltip": "Select a fixed position",
         "anchored-mode-info": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode and Turbo Mode.",
         "anchored-mode": "Anchored Mode",
         "hover-mode-info": "For power users only! Select items by hovering over them.",
@@ -321,7 +328,7 @@
             "confirm": "Use this area"
         },
         "screen-position-picker": {
-          "value": "X: {{x}} - Y: {{y}}"
+          "value": "X: {{x}} | Y: {{y}}"
         },
         "window-picker-dialog": {
             "result": "You selected \"{{name}}\".",

@@ -81,55 +81,62 @@ export default function ScreenPositionPicker(props: Props) {
       <div className={classes.container}>
         <div className={classes.value}>{getNewPositionValue()}</div>
         <div className={classes.area}>
-          <div className={classes.centerPresetButton}>
-            <Button
-              icon={<IoAdd />}
-              variant="invisible"
-              onClick={() => {
-                setNewPosition({ x: 0.5, y: 0.5 });
-              }}
-            />
-          </div>
-          <div className={classes.topLeftPresetButton}>
-            <Button
-              icon={<IoAdd />}
-              variant="invisible"
-              onClick={() => {
-                setNewPosition({ x: 0, y: 0 });
-              }}
-            />
-          </div>
-          <div className={classes.topRightPresetButton}>
-            <Button
-              icon={<IoAdd />}
-              variant="invisible"
-              onClick={() => {
-                setNewPosition({ x: 1, y: 0 });
-              }}
-            />
-          </div>
-          <div className={classes.bottomLeftPresetButton}>
-            <Button
-              icon={<IoAdd />}
-              variant="invisible"
-              onClick={() => {
-                setNewPosition({ x: 0, y: 1 });
-              }}
-            />
-          </div>
-          <div className={classes.bottomRightPresetButton}>
-            <Button
-              icon={<IoAdd />}
-              variant="invisible"
-              onClick={() => {
-                setNewPosition({ x: 1, y: 1 });
-              }}
-            />
-          </div>
+          {[
+            {
+              classname: classes.centerPresetButton,
+              positionToSet: { x: 0.5, y: 0.5 },
+              tooltip: i18next.t(
+                'settings.fixed-position-picker.centered-preset-tooltip'
+              ),
+            },
+            {
+              classname: classes.topLeftPresetButton,
+              positionToSet: { x: 0, y: 0 },
+              tooltip: i18next.t(
+                'settings.fixed-position-picker.top-right-preset-tooltip'
+              ),
+            },
+            {
+              classname: classes.topRightPresetButton,
+              positionToSet: { x: 1, y: 0 },
+              tooltip: i18next.t(
+                'settings.fixed-position-picker.top-left-preset-tooltip'
+              ),
+            },
+            {
+              classname: classes.bottomLeftPresetButton,
+              positionToSet: { x: 0, y: 1 },
+              tooltip: i18next.t(
+                'settings.fixed-position-picker.bottom-left-preset-tooltip'
+              ),
+            },
+            {
+              classname: classes.bottomRightPresetButton,
+              positionToSet: { x: 1, y: 1 },
+              tooltip: i18next.t(
+                'settings.fixed-position-picker.bottom-right-preset-tooltip'
+              ),
+            },
+          ].map(({ classname, positionToSet, tooltip }, index) => (
+            <div key={`list-${String(index)}`} className={classname}>
+              <Button
+                icon={<IoAdd />}
+                variant="invisible"
+                tooltip={tooltip}
+                onClick={() => {
+                  setNewPosition(positionToSet);
+                }}
+              />
+            </div>
+          ))}
           <div className={classes.positionPicker}>
             <div
               draggable
               className={classes.crosshair}
+              data-tooltip-content={i18next.t(
+                'settings.fixed-position-picker.picker-tooltip'
+              )}
+              data-tooltip-id="main-tooltip"
               onDragEnd={(event) => {
                 window.settingsAPI.getWindowPosition().then((position) => {
                   window.settingsAPI.getWMInfo().then((info) => {
@@ -156,7 +163,7 @@ export default function ScreenPositionPicker(props: Props) {
             isBlock
             icon={<TbCheck />}
             isDisabled={!isValid()}
-            label={i18next.t('settings.screen-area-picker.confirm')}
+            label={i18next.t('settings.fixed-position-picker.confirm')}
             variant="primary"
             onClick={() => {
               props.onSelect(newPosition);

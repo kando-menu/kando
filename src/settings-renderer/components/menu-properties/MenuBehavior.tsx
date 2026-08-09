@@ -82,12 +82,12 @@ export default function MenuBehavior() {
               {
                 value: fixedPositionValueX,
                 setValue: setFixedPositionValueX,
-                label: i18next.t('settings.area-condition-top-placeholder'),
+                label: i18next.t('settings.fixed-position-x-placeholder'),
               },
               {
                 value: fixedPositionValueY,
                 setValue: setFixedPositionValueY,
-                label: i18next.t('settings.area-condition-left-placeholder'),
+                label: i18next.t('settings.fixed-position-y-placeholder'),
               },
             ].map(({ value, setValue, label }, index) => (
               <input
@@ -125,7 +125,7 @@ export default function MenuBehavior() {
             <Button
               isGrouped
               icon={<BiTargetLock />}
-              tooltip={i18next.t('settings.area-condition-tooltip')}
+              tooltip={i18next.t('settings.fixed-position-tooltip')}
               variant="secondary"
               onClick={() => {
                 setFixedPositionPickerVisible(true);
