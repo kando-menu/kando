@@ -6,6 +6,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: Jonathan Hurst <jpch2k4@gmail.com>
 // SPDX-License-Identifier: MIT
 
 import { WindowWithAPIs } from '../../settings-window-api';
