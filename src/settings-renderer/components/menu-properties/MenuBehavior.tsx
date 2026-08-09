@@ -114,17 +114,10 @@ export default function MenuBehavior() {
         isVisible={fixedPositionPickerVisible}
         onClose={() => setFixedPositionPickerVisible(false)}
         onSelect={(newPosition) => {
-          console.log(newPosition);
-          // editMenu(selectedMenu, (menu) => {
-          //   menu.conditions = menu.conditions || {};
-          //   menu.conditions.screenArea = {
-          //     xMin: left,
-          //     yMin: top,
-          //     xMax: right,
-          //     yMax: bottom,
-          //   };
-          //   return menu;
-          // });
+          editMenu(selectedMenu, (menu) => {
+            menu.fixedMenuPosition = newPosition;
+            return menu;
+          });
         }}
       />
     </div>
