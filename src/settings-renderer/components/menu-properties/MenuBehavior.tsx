@@ -16,11 +16,12 @@ import * as classes from './MenuBehavior.module.scss';
 const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings } from '../../state';
-import { Button, Checkbox, Dropdown, Note } from '../common';
-import { Vec2ToFixedPosition, FixedPositionToVec2, FixedPosition } from '../../../common';
+import { Button, Checkbox, Note } from '../common';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import ScreenPositionPicker from './ScreenPositionPicker';
 import { BiTargetLock } from 'react-icons/bi';
+import { clamp, isNaN, toNumber } from 'lodash';
+import { numericFormatter } from 'react-number-format';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
@@ -31,9 +32,24 @@ export default function MenuBehavior() {
   const [fixedPositionInputVisible, setFixedPositionInputVisible] = React.useState(false);
   const [fixedPositionPickerVisible, setFixedPositionPickerVisible] =
     React.useState(false);
+  const [fixedPositionValueX, setFixedPositionValueX] = React.useState('');
+  const [fixedPositionValueY, setFixedPositionValueY] = React.useState('');
+
+  function fixedMenuPositionToString(menuPos: number): string {
+    return numericFormatter(String(menuPos), {
+      fixedDecimalScale: true,
+      decimalScale: 4,
+    });
+  }
 
   React.useEffect(() => {
     setFixedPositionInputVisible(menus[selectedMenu].useFixedPosition);
+    setFixedPositionValueX(
+      fixedMenuPositionToString(menus[selectedMenu].fixedMenuPosition.x)
+    );
+    setFixedPositionValueY(
+      fixedMenuPositionToString(menus[selectedMenu].fixedMenuPosition.y)
+    );
   }, [selectedMenu, menus]);
 
   const [menuPositionBehaviorRef] = useAutoAnimate({ duration: 250 });
@@ -57,25 +73,55 @@ export default function MenuBehavior() {
           });
         }}
       />
-      <div ref={menuPositionBehaviorRef} className={cx(classes.fixedPositionInput)}>
+      <div
+        ref={menuPositionBehaviorRef}
+        className={cx(classes.conditionInput, classes.screenCondition)}>
         {fixedPositionInputVisible ? (
           <>
-            <Dropdown
-              isDisabled={!menus[selectedMenu].useFixedPosition}
-              initialValue={Vec2ToFixedPosition(menus[selectedMenu].fixedMenuPosition)}
-              options={(
-                Object.keys(FixedPosition) as Array<keyof typeof FixedPosition>
-              ).map((key) => ({
-                value: FixedPosition[key],
-                label: i18next.t(`${FixedPosition[key]}`),
-              }))}
-              onChange={(newPosition) => {
-                editMenu(selectedMenu, (menu) => {
-                  menu.fixedMenuPosition = FixedPositionToVec2(newPosition);
-                  return menu;
-                });
-              }}
-            />
+            {[
+              {
+                value: fixedPositionValueX,
+                setValue: setFixedPositionValueX,
+                label: i18next.t('settings.area-condition-top-placeholder'),
+              },
+              {
+                value: fixedPositionValueY,
+                setValue: setFixedPositionValueY,
+                label: i18next.t('settings.area-condition-left-placeholder'),
+              },
+            ].map(({ value, setValue, label }, index) => (
+              <input
+                key={`list-${String(index)}`}
+                placeholder={label}
+                type="text"
+                value={value}
+                onBlur={() => {
+                  editMenu(selectedMenu, (menu) => {
+                    let xVal = toNumber(fixedPositionValueX);
+                    let yVal = toNumber(fixedPositionValueY);
+
+                    // Default to center of the screen.
+                    if (isNaN(xVal)) {
+                      xVal = 0.5;
+                    }
+                    if (isNaN(yVal)) {
+                      yVal = 0.5;
+                    }
+
+                    menu.fixedMenuPosition = {
+                      x: clamp(xVal, 0, 1),
+                      y: clamp(yVal, 0, 1),
+                    };
+                    return menu;
+                  });
+                }}
+                onChange={(event) => {
+                  if (!event.target.value || event.target.value.match(/^\d*\.?\d*$/)) {
+                    setValue(event.target.value);
+                  }
+                }}
+              />
+            ))}
             <Button
               isGrouped
               icon={<BiTargetLock />}
@@ -114,6 +160,8 @@ export default function MenuBehavior() {
         isVisible={fixedPositionPickerVisible}
         onClose={() => setFixedPositionPickerVisible(false)}
         onSelect={(newPosition) => {
+          setFixedPositionValueX(fixedMenuPositionToString(newPosition.x));
+          setFixedPositionValueY(fixedMenuPositionToString(newPosition.y));
           editMenu(selectedMenu, (menu) => {
             menu.fixedMenuPosition = newPosition;
             return menu;
