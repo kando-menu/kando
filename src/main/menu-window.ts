@@ -145,10 +145,6 @@ export class MenuWindow extends BrowserWindow {
     this.kando.getGeneralSettings().onChange('keepInputFocus', (newValue) => {
       this.setFocusable(!newValue);
     });
-
-    // We set the window to be always on top. This way, Kando will be visible even on
-    // fullscreen applications.
-    this.setAlwaysOnTop(true, 'screen-saver');
   }
 
   /**
@@ -361,6 +357,10 @@ export class MenuWindow extends BrowserWindow {
       skipTransformProcessType: true,
       visibleOnFullScreen: true,
     });
+
+    // We set the window to be always on top. This way, Kando will be visible even on
+    // fullscreen applications.
+    this.setAlwaysOnTop(true, 'screen-saver');
 
     super.show();
 
