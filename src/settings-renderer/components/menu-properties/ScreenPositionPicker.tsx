@@ -16,12 +16,13 @@ import i18next from 'i18next';
 import { TbCheck, TbX } from 'react-icons/tb';
 import { BiTargetLock } from 'react-icons/bi';
 
-import { Modal, Button } from '../common';
+import { Button, Modal } from '../common';
 
 import * as classes from './ScreenPositionPicker.module.scss';
 import { Vec2 } from '../../../common';
 import { useAppState, useMenuSettings } from '../../state';
-import { round } from 'lodash';
+import { IoAdd } from 'react-icons/io5';
+import { numericFormatter } from 'react-number-format';
 
 type Props = {
   /** Function to call when a new position is selected. */
@@ -54,8 +55,14 @@ export default function ScreenPositionPicker(props: Props) {
   const getNewPositionValue = () => {
     if (newPosition) {
       return i18next.t('settings.screen-position-picker.value', {
-        x: String(round(newPosition.x, 4)).padEnd(6, '0'),
-        y: String(round(newPosition.y, 4)).padEnd(6, '0'),
+        x: numericFormatter(String(newPosition.x), {
+          fixedDecimalScale: true,
+          decimalScale: 4,
+        }),
+        y: numericFormatter(String(newPosition.y), {
+          fixedDecimalScale: true,
+          decimalScale: 4,
+        }),
       });
     } else {
       return 'NULL';
@@ -74,7 +81,52 @@ export default function ScreenPositionPicker(props: Props) {
       <div className={classes.container}>
         <div className={classes.value}>{getNewPositionValue()}</div>
         <div className={classes.area}>
-          <div className={classes.picker}>
+          <div className={classes.centerPresetButton}>
+            <Button
+              icon={<IoAdd />}
+              variant="invisible"
+              onClick={() => {
+                setNewPosition({ x: 0.5, y: 0.5 });
+              }}
+            />
+          </div>
+          <div className={classes.topLeftPresetButton}>
+            <Button
+              icon={<IoAdd />}
+              variant="invisible"
+              onClick={() => {
+                setNewPosition({ x: 0, y: 0 });
+              }}
+            />
+          </div>
+          <div className={classes.topRightPresetButton}>
+            <Button
+              icon={<IoAdd />}
+              variant="invisible"
+              onClick={() => {
+                setNewPosition({ x: 1, y: 0 });
+              }}
+            />
+          </div>
+          <div className={classes.bottomLeftPresetButton}>
+            <Button
+              icon={<IoAdd />}
+              variant="invisible"
+              onClick={() => {
+                setNewPosition({ x: 0, y: 1 });
+              }}
+            />
+          </div>
+          <div className={classes.bottomRightPresetButton}>
+            <Button
+              icon={<IoAdd />}
+              variant="invisible"
+              onClick={() => {
+                setNewPosition({ x: 1, y: 1 });
+              }}
+            />
+          </div>
+          <div className={classes.positionPicker}>
             <div
               draggable
               className={classes.crosshair}

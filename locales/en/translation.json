@@ -321,7 +321,7 @@
             "confirm": "Use this area"
         },
         "screen-position-picker": {
-          "value": "X: {{x}} - Y: {{y}}",
+          "value": "X: {{x}} - Y: {{y}}"
         },
         "window-picker-dialog": {
             "result": "You selected \"{{name}}\".",

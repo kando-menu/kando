@@ -28,8 +28,8 @@ type Props = {
   readonly tooltip?: string;
 
   /**
-   * Variant style of the button. Primary uses a more prominent color, flat has only a
-   * background when hovered, tool has no background at all. Defaults to 'secondary'.
+   * Variant style of the button. Primary uses a more prominent color, invisible has only
+   * a background when hovered, tool has no background at all. Defaults to 'secondary'.
    * Floating has a dark background and more rounded corners.
    */
   readonly variant?: 'primary' | 'secondary' | 'invisible' | 'tool' | 'pill';

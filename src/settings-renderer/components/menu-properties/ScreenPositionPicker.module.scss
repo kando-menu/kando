@@ -40,18 +40,44 @@
 }
 
 .positionPicker {
+  position: absolute;
   background-color: $widget-normal;
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  top: 5px;
 
   &:hover {
     background-color: $widget-normal-hover;
   }
 }
 
-.picker {
-  position: fixed;
+.topLeftPresetButton,
+.topRightPresetButton,
+.bottomLeftPresetButton,
+.bottomRightPresetButton,
+.centerPresetButton {
+  position: absolute;
+}
+
+.topLeftPresetButton {
+  top: 0px;
+  left: 0px;
+}
+
+.topRightPresetButton {
+  top: 0px;
+  right: 0px;
+}
+
+.bottomLeftPresetButton {
+  bottom: 0px;
+  left: 0px;
+}
+
+.bottomRightPresetButton {
+  bottom: 0px;
+  right: 0px;
 }
 
 .crosshair {
