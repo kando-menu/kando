@@ -352,7 +352,8 @@
             "save-preset-error-message": "Uložení předvolby barvy selhalo. Prosím zkontrolujte zda je adresář zapisovatelný. Chyba: {{error}}",
             "default-colors": "Výchozí barvy",
             "enable-menu-animations-info": "Pokud je zakázáno, bude zabráněno všem přechodům a většině animací menu motivu.",
-            "enable-menu-animations": "Menu Animace"
+            "enable-menu-animations": "Menu Animace",
+            "enable-pointer-reactive-effects-info": "Pokud zakázáno, některým zoomováním nebo škálovacím efektům motivu menu, které jsou založeny na aktuální pozici kurzoru, bude zabráněno."
         },
         "not-bound": "Nepřiřazeno",
         "shortcut-id-label": "Zkratka ID",

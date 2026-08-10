@@ -319,10 +319,10 @@ export const MENU_SCHEMA_V2 = z.object({
    * If true, the menu will open at a fixed position determined by
    * {@link fixedMenuPosition}.
    */
-  isFixedPosition: z.boolean().default(false),
+  useFixedPosition: z.boolean().default(false),
 
   /**
-   * Position at which the menu will open if {@link isFixedPosition} is true. Value should
+   * Position at which the menu will open if {@link useFixedPosition} is true. Value should
    * be between 0-1 for both x and y.
    */
   fixedMenuPosition: z

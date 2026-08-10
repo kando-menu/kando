@@ -208,8 +208,14 @@ export class MenuWindow extends BrowserWindow {
 
         // If the 'sameShortcutBehavior' is set to 'close', we hide the menu.
         if (sameShortcutBehavior === 'close') {
-          this.closeMenu();
+          await this.closeMenu();
           return;
+        }
+
+        // If the 'sameShortcutBehavior' is set to 're-open', we hide the menu and show it
+        // again. This is useful if the menu is currently open on another monitor.
+        if (sameShortcutBehavior === 're-open') {
+          await this.closeMenu();
         }
 
         // If the 'sameShortcutBehavior' is set to 'cycle', we will show the next menu which
@@ -320,7 +326,7 @@ export class MenuWindow extends BrowserWindow {
         mousePosition,
         windowSize,
         zoomFactor: this.webContents.getZoomFactor(),
-        isFixedPosition: this.lastMenu.isFixedPosition,
+        useFixedPosition: this.lastMenu.useFixedPosition,
         fixedMenuPosition: {
           x: this.lastMenu.fixedMenuPosition.x,
           y: this.lastMenu.fixedMenuPosition.y,
@@ -353,16 +359,12 @@ export class MenuWindow extends BrowserWindow {
       this.setIgnoreMouseEvents(false);
     }
 
-    // On MacOS we need to ensure the window is on the current workspace before showing.
-    // This is the fix to issue #461: https://github.com/kando-menu/kando/issues/461
-    if (process.platform === 'darwin') {
-      this.setVisibleOnAllWorkspaces(true, { skipTransformProcessType: true });
-      setTimeout(() => {
-        this.setVisibleOnAllWorkspaces(false, {
-          skipTransformProcessType: true,
-        });
-      }, 100);
-    }
+    // This does not work on windows nor on Linux/Wayland. At least, it seems to work on
+    // Linux/X11 and macOS.
+    this.setVisibleOnAllWorkspaces(true, {
+      skipTransformProcessType: true,
+      visibleOnFullScreen: true,
+    });
 
     super.show();
 

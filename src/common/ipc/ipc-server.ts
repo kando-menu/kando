@@ -22,7 +22,9 @@ export type IPCCallback = (interaction: MenuInteractionType, path: number[]) => 
 /** These events are emitted by the IPC server when clients send requests. */
 type IPCServerEvents = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  'show-menu': [menu: RootMenuItem];
+  'show-menu': [name: string];
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  'show-custom-menu': [menu: RootMenuItem];
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'start-observing': [observerID: number, callback: IPCCallback];
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -30,15 +32,20 @@ type IPCServerEvents = {
 };
 
 /**
- * IPCServer listens for WebSocket connections on localhost and emits events when a
- * show-menu request is received. It allows reporting menu selections back to the client
- * via the WebSocket.
+ * IPCServer listens for WebSocket connections on localhost and emits events when one of
+ * the {@link IPCServerEvents} is received. It allows reporting menu selections back to the
+ * client via the WebSocket.
  *
  * This class is an event emitter that emits the following events:
  *
  * - 'show-menu': Emitted when a valid show-menu request is received from a client. The
- *   event handler receives the menu to show and callbacks for selection, hover, and close
- *   events.
+ *   event handler receives the name of the menu to show.
+ * - 'show-custom-menu': Emitted when a valid show-custom-menu request is received from a
+ *   client. The event handler receives the menu to show and callbacks for selection,
+ *   hover, and close events.
+ * - 'start-observing': Emitted when a client requests to start observing menu events.
+ * - 'stop-observing': Emitted when a client requests to stop observing menu events or
+ *   disconnects.
  */
 export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCServerEvents>) {
   /**
@@ -104,7 +111,9 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
         // Retrieve the assigned port and write it to ipc-info.json.
         const address = this.wss.address() as AddressInfo;
         this.port = address.port;
-        console.log(`Listening for show-menu requests on ws://127.0.0.1:${this.port}`);
+        console.log(
+          `Listening for IPC requests on ws://127.0.0.1:${this.port}. Learn more on https://kando.menu/ipc-interface/.`
+        );
         try {
           const info: IPCTypes.IPCInfo = {
             port: this.port,
@@ -146,7 +155,7 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
    * This method is responsible for:
    *
    * - Validating all incoming messages using zod schemas.
-   * - Emitting 'show-menu' events for valid show-menu requests, with callbacks for menu
+   * - Emitting {@link IPCServerEvents} for valid requests, with callbacks for menu
    *   selection, hover, and close events.
    * - Sending appropriate error messages for malformed requests.
    *
@@ -203,11 +212,19 @@ export class IPCServer extends (EventEmitter as new () => TypedEventEmitter<IPCS
         return;
       }
 
-      // Handle 'show-menu' messages: client requests to show a menu.
+      // Handle 'show-menu' messages: client requests to show a menu by name.
       const showMenuParse = IPCTypes.SHOW_MENU_MESSAGE.safeParse(msg);
       if (showMenuParse.success) {
         const showMenuMsg = showMenuParse.data;
-        this.emit('show-menu', showMenuMsg.menu);
+        this.emit('show-menu', showMenuMsg.name);
+        return;
+      }
+
+      // Handle 'show-custom-menu' messages: client requests to show a menu.
+      const showCustomMenuParse = IPCTypes.SHOW_CUSTOM_MENU_MESSAGE.safeParse(msg);
+      if (showCustomMenuParse.success) {
+        const showCustomMenuMsg = showCustomMenuParse.data;
+        this.emit('show-custom-menu', showCustomMenuMsg.menu);
         startObserving(true); // One-time observer for this menu interaction.
         return;
       }

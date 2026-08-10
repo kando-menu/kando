@@ -1,7 +1,7 @@
 {
   "shortcut": "Control+Space",
   "shortcutID": "example-menu",
-  "isFixedPosition": false,
+  "useFixedPosition": false,
   "fixedMenuPosition": {
     "x": 0.5,
     "y": 0.5

@@ -95,6 +95,7 @@
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
     "react-markdown": "^10.1.0",
+    "react-number-format": "^5.4.5",
     "react-tooltip": "^6.0.8",
     "react-transition-group": "^4.4.5",
     "react-virtualized-auto-sizer": "^1.0.25",

@@ -19,7 +19,6 @@ import {
   SelectionSource,
   MenuInteractionType,
   TypedEventEmitter,
-  ChildMenuItem,
 } from '../common';
 import {
   RenderedChildMenuItem,
@@ -181,7 +180,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
     // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
-    const deferTurboMode = !this.settings.warpMouse && showMenuOptions.isFixedPosition;
+    const deferTurboMode = !this.settings.warpMouse && showMenuOptions.useFixedPosition;
     this.pointerInput.onShowMenu(deferTurboMode);
 
     // In anchored mode, we have to disable turbo and marking mode.
@@ -202,6 +201,14 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.root = root;
     this.createRenderData(this.root, this.container);
 
+    if (this.theme.drawSelectionWedges && this.settings.enableSelectionWedges) {
+      this.selectionWedges = new SelectionWedges(this.container);
+    }
+
+    if (this.theme.drawWedgeSeparators && this.settings.enableSelectionWedges) {
+      this.wedgeSeparators = new WedgeSeparators(this.container);
+    }
+
     // On Windows, the menu position passed from the main process is sometimes not
     // correct. For instance, this happens when using pen input with Windows Ink enabled.
     // To work around this, we wait a few milliseconds until the first mouse enter event
@@ -220,7 +227,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       };
 
       this.container.classList.add('no-transitions');
-      this.selectItem(this.root, menuPosition);
+      this.openSubmenu(this.root, menuPosition);
 
       // To ensure that all DOM changes are applied, flush the browser's rendering
       // pipeline first.
@@ -231,7 +238,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       }
 
       // If required, move the pointer to the center of the menu.
-      if (this.settings.warpMouse && this.showMenuOptions.isFixedPosition) {
+      if (this.settings.warpMouse && this.showMenuOptions.useFixedPosition) {
         const offset = math.subtract(
           this.getInitialMenuPosition(),
           this.showMenuOptions.mousePosition
@@ -407,7 +414,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
         this.emitItemInteractionEvent(interaction, path);
 
-        this.selectItem(item, coords);
+        this.openSubmenu(item, coords);
 
         return;
       }
@@ -433,7 +440,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         }
 
         if (item.type !== 'button') {
-          this.selectItem(item, coords);
+          this.openSubmenu(item, coords);
         }
 
         return;
@@ -488,7 +495,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         // the quick select key.
         if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
           for (let i = 0; i < this.centerItem.children.length; i++) {
-            const child = this.centerItem.children[i];
+            const child = this.centerItem.children[i] as RenderedChildMenuItem;
 
             const selectionKeys = [];
             if (child.type === 'button' && child.selectWorkflow?.quickSelectKey) {
@@ -501,8 +508,16 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             }
 
             if (selectionKeys.includes(eventKey)) {
-              this.emitSelectionEvent(child, SelectionSource.eKeyboard);
-              this.selectItem(child, this.getCenterItemPosition());
+              if (child.type === 'submenu') {
+                this.emitItemInteractionEvent(
+                  MenuInteractionType.eOpenSubmenu,
+                  child.renderData.path
+                );
+                this.openSubmenu(child, this.getCenterItemPosition());
+              } else {
+                this.emitSelectionEvent(child, SelectionSource.eKeyboard);
+                this.hoverAngle(child.renderData.computedAngle);
+              }
               return;
             }
           }
@@ -545,10 +560,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
               MenuInteractionType.eOpenSubmenu,
               this.hoveredItem.renderData.path
             );
-            this.selectItem(this.hoveredItem);
+            this.openSubmenu(this.hoveredItem);
           } else {
             this.emitSelectionEvent(this.hoveredItem, SelectionSource.eKeyboard);
-            this.selectItem(this.hoveredItem);
           }
 
           return;
@@ -617,7 +631,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    * @param coords The position where the selection most likely happened. If it is not
    *   given, the latest pointer input position is used.
    */
-  private selectItem(item: RenderedMenuItem, coords?: Vec2) {
+  private openSubmenu(item: RenderedMenuItem, coords?: Vec2) {
     if (this.centerItem === item) {
       return;
     }
@@ -713,11 +727,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         return (child as RenderedChildMenuItem).renderData.wedge.start;
       });
 
-      if (item.renderData.parentWedge) {
+      if (item.type !== 'root') {
         separators.push(item.renderData.parentWedge.start);
       }
 
       this.selectionWedges?.setCenter(clampedPosition);
+      this.selectionWedges?.unhover();
       this.wedgeSeparators?.setSeparators(separators, clampedPosition);
     }
 
@@ -745,7 +760,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       MenuInteractionType.eCloseSubmenu,
       this.centerItem.renderData.path
     );
-    this.selectItem(this.centerItem.renderData.parent, coords);
+    this.openSubmenu(this.centerItem.renderData.parent, coords);
   }
 
   /**
@@ -762,15 +777,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     // Tell the selection wedges about the hovered wedge.
     if (this.selectionWedges) {
       if (item === this.centerItem.renderData.parent) {
-        // Only highlight the parent wedge if this.hoveredItem !== null. This is only the
-        // case if we did not just entered a submenu. It looks better this way. Else the
-        // parent wedge would be highlighted already when entering a submenu.
-        if (this.centerItem.renderData.parentWedge && this.hoveredItem !== null) {
+        if (this.centerItem.renderData.parentWedge) {
           this.selectionWedges.hover(this.centerItem.renderData.parentWedge);
         } else {
           this.selectionWedges.unhover();
         }
-      } else if (item.type !== 'root' && item.renderData.wedge) {
+      } else if (item.renderData.wedge && item !== this.centerItem) {
         this.selectionWedges.hover(item.renderData.wedge);
       } else {
         this.selectionWedges.unhover();
@@ -1041,7 +1053,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       this.centerText.show(
         newHoveredItem.name,
         position,
-        this.getQuickSelectKey(newHoveredItem)
+        MenuTheme.getQuickSelectKey(newHoveredItem)
       );
     }
 
@@ -1482,7 +1494,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    * @returns The initial position of the root item.
    */
   private getInitialMenuPosition() {
-    if (this.showMenuOptions.isFixedPosition) {
+    if (this.showMenuOptions.useFixedPosition) {
       return {
         x: this.showMenuOptions.windowSize.x * this.showMenuOptions.fixedMenuPosition.x,
         y: this.showMenuOptions.windowSize.y * this.showMenuOptions.fixedMenuPosition.y,
@@ -1490,33 +1502,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     }
 
     return this.showMenuOptions.mousePosition;
-  }
-
-  /**
-   * Returns the primary quick-select key for a given item. It prioritizes the
-   * select-workflow over the hover-workflow over the center-click-workflow. This is used
-   * to determine which quick-select key to show in the center text when hovering an
-   * item.
-   *
-   * @param item The menu item to get the quick-select key for.
-   * @returns The primary quick-select key for the given item, or null if there is no
-   *   quick-select key.
-   */
-  private getQuickSelectKey(item: ChildMenuItem): string | null {
-    if (item.type === 'button') {
-      return (
-        item.selectWorkflow?.quickSelectKey || item.hoverWorkflow?.quickSelectKey || null
-      );
-    } else if (item.type === 'submenu') {
-      return (
-        item.openWorkflow?.quickSelectKey ||
-        item.hoverWorkflow?.quickSelectKey ||
-        item.activateWorkflow?.quickSelectKey ||
-        null
-      );
-    }
-
-    return null;
   }
 
   /**
