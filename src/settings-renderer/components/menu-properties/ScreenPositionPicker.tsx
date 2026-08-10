@@ -132,13 +132,11 @@ export default function ScreenPositionPicker(props: Props) {
                 'settings.fixed-position-picker.picker-tooltip'
               )}
               data-tooltip-id="main-tooltip"
-              onDragEnd={(event) => {
-                window.settingsAPI.getWindowPosition().then((position) => {
-                  window.settingsAPI.getWMInfo().then((info) => {
-                    const x = (event.clientX + position.x) / info.workArea.width;
-                    const y = (event.clientY + position.y) / info.workArea.height;
-                    setNewPosition({ x, y });
-                  });
+              onDragEnd={() => {
+                window.settingsAPI.getWMInfo().then((info) => {
+                  const x = (info.pointerX - info.workArea.x) / info.workArea.width;
+                  const y = (info.pointerY - info.workArea.y) / info.workArea.height;
+                  setNewPosition({ x, y });
                 });
               }}>
               <BiTargetLock />
