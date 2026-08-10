@@ -307,6 +307,7 @@ export class KandoApp {
     this.isQuitting = true;
 
     this.menuWindow?.destroy();
+    this.settingsWindow?.saveState();
     this.settingsWindow?.destroy();
 
     if (this.backend != null) {
