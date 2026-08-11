@@ -23,7 +23,6 @@ import * as classes from './ScreenPositionPicker.module.scss';
 import { Vec2 } from '../../../common';
 import { useAppState, useMenuSettings } from '../../state';
 import { IoAdd } from 'react-icons/io5';
-import { fixedMenuPositionToString } from '../../../common';
 
 type Props = {
   /** Function to call when a new position is selected. */
@@ -56,8 +55,8 @@ export default function ScreenPositionPicker(props: Props) {
   const getNewPositionValue = () => {
     if (newPosition) {
       return i18next.t('settings.screen-position-picker.value', {
-        x: fixedMenuPositionToString(newPosition.x),
-        y: fixedMenuPositionToString(newPosition.y),
+        x: newPosition.x.toFixed(4),
+        y: newPosition.y.toFixed(4),
       });
     } else {
       return 'NULL';

@@ -21,7 +21,6 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import ScreenPositionPicker from './ScreenPositionPicker';
 import { BiTargetLock } from 'react-icons/bi';
 import { clamp, isNaN, toNumber } from 'lodash';
-import { fixedMenuPositionToString } from '../../../common';
 
 /** This component shows the behavior options for the currently selected menu. */
 export default function MenuBehavior() {
@@ -37,12 +36,8 @@ export default function MenuBehavior() {
 
   React.useEffect(() => {
     setFixedPositionInputVisible(menus[selectedMenu].useFixedPosition);
-    setFixedPositionValueX(
-      fixedMenuPositionToString(menus[selectedMenu].fixedMenuPosition.x)
-    );
-    setFixedPositionValueY(
-      fixedMenuPositionToString(menus[selectedMenu].fixedMenuPosition.y)
-    );
+    setFixedPositionValueX(menus[selectedMenu].fixedMenuPosition.x.toFixed(4));
+    setFixedPositionValueY(menus[selectedMenu].fixedMenuPosition.y.toFixed(4));
   }, [selectedMenu, menus]);
 
   const [menuPositionBehaviorRef] = useAutoAnimate({ duration: 250 });
@@ -153,8 +148,8 @@ export default function MenuBehavior() {
         isVisible={fixedPositionPickerVisible}
         onClose={() => setFixedPositionPickerVisible(false)}
         onSelect={(newPosition) => {
-          setFixedPositionValueX(fixedMenuPositionToString(newPosition.x));
-          setFixedPositionValueY(fixedMenuPositionToString(newPosition.y));
+          setFixedPositionValueX(newPosition.x.toFixed(4));
+          setFixedPositionValueY(newPosition.y.toFixed(4));
           editMenu(selectedMenu, (menu) => {
             menu.fixedMenuPosition = newPosition;
             return menu;

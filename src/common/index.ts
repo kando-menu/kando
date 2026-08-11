@@ -598,17 +598,3 @@ export enum SelectionSource {
   eGesture = 'gesture',
   eGamepad = 'gamepad',
 }
-
-/**
- * Format a number representing a fixed position value. Used for making human readable
- * versions of the {@link fixedMenuPosition} values.
- *
- * @param menuPos The number to format into the display string.
- * @returns Returns the formatted number as a string.
- */
-export function fixedMenuPositionToString(menuPos: number): string {
-  return numericFormatter(String(menuPos), {
-    fixedDecimalScale: true,
-    decimalScale: 4,
-  });
-}
