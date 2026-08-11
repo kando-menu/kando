@@ -284,7 +284,7 @@
           "top-left-preset-tooltip": "Set position to top left",
           "bottom-left-preset-tooltip": "Set position to bottom left",
           "bottom-right-preset-tooltip": "Set position to bottom right",
-          "picker-tooltip": "Drag this to an area on your screen to set position",
+          "picker-tooltip": "Drag this to a position on your screen to set the position",
           "confirm": "Use this position"
         },
         "fixed-position-x-placeholder": "X",
