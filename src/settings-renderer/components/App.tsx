@@ -16,6 +16,7 @@ import { Tooltip } from 'react-tooltip';
 import MouseTrap from 'mousetrap';
 import classNames from 'classnames/bind';
 
+import type { SettingsWindowSidebarWidths } from '../../common';
 import { useGeneralSetting, useMenuSettings } from '../state';
 import {
   AboutDialog,
@@ -41,6 +42,7 @@ const cx = classNames.bind(classes);
 export default function App() {
   const [settingsWindowColorScheme] = useGeneralSetting('settingsWindowColorScheme');
   const [settingsWindowFlavor] = useGeneralSetting('settingsWindowFlavor');
+  const [sidebarWidths, setSidebarWidths] = React.useState<SettingsWindowSidebarWidths>();
 
   // Bind global undo/redo shortcuts.
   React.useEffect(() => {
@@ -73,10 +75,40 @@ export default function App() {
     };
   }, [settingsWindowColorScheme]);
 
-  // Notify the main process that our app is ready to be displayed.
+  // Restore the sidebar widths before notifying the main process that the window can be
+  // displayed. This prevents the default widths from flashing briefly during startup.
   React.useEffect(() => {
-    window.settingsAPI.settingsWindowReady();
+    let active = true;
+
+    void window.settingsAPI
+      .getSidebarWidths()
+      .catch((error) => {
+        console.error('Failed to load settings window sidebar widths:', error);
+        return {};
+      })
+      .then((widths) => {
+        if (active) {
+          setSidebarWidths(widths);
+          window.settingsAPI.settingsWindowReady();
+        }
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
+
+  const onLeftSidebarWidthChanged = React.useCallback((width: number) => {
+    window.settingsAPI.setSidebarWidth('left', width);
+  }, []);
+
+  const onRightSidebarWidthChanged = React.useCallback((width: number) => {
+    window.settingsAPI.setSidebarWidth('right', width);
+  }, []);
+
+  if (sidebarWidths === undefined) {
+    return null;
+  }
 
   return (
     <>
@@ -90,7 +122,11 @@ export default function App() {
           sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
           sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
         })}>
-        <Sidebar mainDirection="row" position="left">
+        <Sidebar
+          initialWidth={sidebarWidths.left}
+          mainDirection="row"
+          position="left"
+          onWidthChanged={onLeftSidebarWidthChanged}>
           <CollectionList />
           <MenuList />
         </Sidebar>
@@ -102,7 +138,11 @@ export default function App() {
           <MenuPreview />
           <PreviewFooter />
         </div>
-        <Sidebar mainDirection="column" position="right">
+        <Sidebar
+          initialWidth={sidebarWidths.right}
+          mainDirection="column"
+          position="right"
+          onWidthChanged={onRightSidebarWidthChanged}>
           <Properties />
         </Sidebar>
         <GeneralSettingsDialog />

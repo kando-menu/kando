@@ -40,6 +40,7 @@ describe('SettingsWindowStateStore', () => {
     const state = {
       bounds: { x: -1200, y: 80, width: 1100, height: 760 },
       maximized: true,
+      sidebarWidths: { left: 320, right: 410 },
     };
 
     store.save(state);
@@ -53,6 +54,23 @@ describe('SettingsWindowStateStore', () => {
     fs.writeJSONSync(store.filePath, {
       bounds: { x: 0, y: 0, width: -1, height: 700 },
       maximized: 'yes',
+    });
+
+    const originalConsoleError = console.error;
+    console.error = () => {};
+
+    try {
+      expect(store.load()).to.deep.equal({ maximized: false });
+    } finally {
+      console.error = originalConsoleError;
+    }
+  });
+
+  it('rejects invalid persisted sidebar widths', () => {
+    const store = new SettingsWindowStateStore(directory);
+    fs.writeJSONSync(store.filePath, {
+      maximized: false,
+      sidebarWidths: { left: -10 },
     });
 
     const originalConsoleError = console.error;

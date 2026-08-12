@@ -568,6 +568,19 @@ export class KandoApp {
       } as SystemInfo;
     });
 
+    // Allow the renderer to restore and persist the widths of its resizable sidebars.
+    ipcMain.handle('settings-window.get-sidebar-widths', () => {
+      return this.settingsWindow?.getSidebarWidths() ?? {};
+    });
+    ipcMain.on(
+      'settings-window.set-sidebar-width',
+      (_event, position: unknown, width: unknown) => {
+        if ((position === 'left' || position === 'right') && typeof width === 'number') {
+          this.settingsWindow?.setSidebarWidth(position, width);
+        }
+      }
+    );
+
     // This should return the index of the currently selected menu. For now, we just
     // return the index of a menu with the same name as the last menu. If the user uses
     // the same name for multiple menus, this will not work as expected.

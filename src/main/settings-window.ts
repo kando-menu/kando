@@ -11,9 +11,10 @@
 import os from 'node:os';
 import { BrowserWindow, shell, ipcMain, screen } from 'electron';
 
-import { GeneralSettings } from '../common';
+import { GeneralSettings, SettingsWindowSidebarWidths } from '../common';
 import {
   Settings,
+  SettingsWindowState,
   SettingsWindowStateStore,
   fitWindowBoundsToWorkArea,
   getConfigDirectory,
@@ -26,8 +27,11 @@ declare const SETTINGS_WINDOW_WEBPACK_ENTRY: string;
 
 /** This is window which contains the settings of Kando. */
 export class SettingsWindow extends BrowserWindow {
-  /** Stores the size, position, and maximized state independently of user settings. */
+  /** Stores window geometry and sidebar widths independently of user settings. */
   private readonly stateStore: SettingsWindowStateStore;
+
+  /** The current machine-local state of this settings window. */
+  private state: SettingsWindowState;
 
   /** This will resolve once the window has fully loaded. */
   public onWindowLoaded = new Promise<void>((resolve) => {
@@ -100,6 +104,7 @@ export class SettingsWindow extends BrowserWindow {
     });
 
     this.stateStore = stateStore;
+    this.state = windowState;
 
     // Persist the normal bounds so that closing a maximized window does not replace the
     // user's preferred normal size with the display-sized maximized bounds.
@@ -142,9 +147,33 @@ export class SettingsWindow extends BrowserWindow {
       return;
     }
 
-    this.stateStore.save({
+    this.state = {
+      ...this.state,
       bounds: this.getNormalBounds(),
       maximized: this.isMaximized(),
-    });
+    };
+    this.stateStore.save(this.state);
+  }
+
+  /** Returns the persisted widths of the settings window sidebars. */
+  public getSidebarWidths(): SettingsWindowSidebarWidths {
+    return { ...this.state.sidebarWidths };
+  }
+
+  /** Persists the width of one settings window sidebar. */
+  public setSidebarWidth(position: 'left' | 'right', width: number) {
+    const roundedWidth = Math.round(width);
+    if (!Number.isFinite(roundedWidth) || roundedWidth <= 0) {
+      return;
+    }
+
+    this.state = {
+      ...this.state,
+      sidebarWidths: {
+        ...this.state.sidebarWidths,
+        [position]: roundedWidth,
+      },
+    };
+    this.saveState();
   }
 }

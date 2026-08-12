@@ -23,6 +23,12 @@ const SETTINGS_WINDOW_STATE_SCHEMA = z.object({
     })
     .optional(),
   maximized: z.boolean().default(false),
+  sidebarWidths: z
+    .object({
+      left: z.number().int().positive().optional(),
+      right: z.number().int().positive().optional(),
+    })
+    .optional(),
 });
 
 /** The machine-local state of the settings window. */
