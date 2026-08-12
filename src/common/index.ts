@@ -13,7 +13,6 @@ export * from './typed-event-emitter';
 export * from './action-type-registry';
 export * from './shortcut';
 
-import { numericFormatter } from 'react-number-format';
 import { AchievementStats, Menu } from './settings-schemata';
 
 /** This type is used to pass command line arguments to the app. */
