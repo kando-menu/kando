@@ -39,6 +39,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 - Support for **switching window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
 - Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
+- The **possibility to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
 - A new option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
 - A new option to **move the mouse pointer back to where it opened the menu** after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
