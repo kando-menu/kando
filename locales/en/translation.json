@@ -276,6 +276,20 @@
         },
         "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
         "centered-mode": "Centered Mode",
+        "fixed-position-mode": "Fixed Position Mode",
+        "fixed-position-mode-info": "Open the menu at a fixed position on the screen, instead of at the cursor.",
+        "fixed-position-picker": {
+          "centered-preset-tooltip": "Set position to center",
+          "top-right-preset-tooltip": "Set position to top right",
+          "top-left-preset-tooltip": "Set position to top left",
+          "bottom-left-preset-tooltip": "Set position to bottom left",
+          "bottom-right-preset-tooltip": "Set position to bottom right",
+          "picker-tooltip": "Drag this to a position on your screen to set the position",
+          "confirm": "Use this position"
+        },
+        "fixed-position-x-placeholder": "X",
+        "fixed-position-y-placeholder": "Y",
+        "fixed-position-tooltip": "Select a fixed position",
         "anchored-mode-info": "Open submenus at the same position as the parent menu. Checking this, will disable Marking Mode and Turbo Mode.",
         "anchored-mode": "Anchored Mode",
         "hover-mode-info": "For power users only! Select items by hovering over them.",
@@ -313,6 +327,9 @@
             "valid": "Great! You have selected a valid area.",
             "invalid": "Make sure the top left corner is above and to the left of the bottom right corner.",
             "confirm": "Use this area"
+        },
+        "screen-position-picker": {
+          "value": "X: {{x}} | Y: {{y}}"
         },
         "window-picker-dialog": {
             "result": "You selected \"{{name}}\".",

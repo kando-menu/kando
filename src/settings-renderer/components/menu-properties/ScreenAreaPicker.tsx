@@ -103,11 +103,9 @@ export default function ScreenAreaPicker(props: Props) {
             <div
               draggable
               className={classes.crosshair}
-              onDragEnd={(event) => {
-                window.settingsAPI.getWindowPosition().then((position) => {
-                  const x = event.clientX + position.x;
-                  const y = event.clientY + position.y;
-                  setLeftTop({ x, y });
+              onDragEnd={() => {
+                window.settingsAPI.getWMInfo().then((info) => {
+                  setLeftTop({ x: info.pointerX, y: info.pointerY });
                 });
               }}>
               <BiTargetLock />
@@ -117,11 +115,9 @@ export default function ScreenAreaPicker(props: Props) {
             <div
               draggable
               className={classes.crosshair}
-              onDragEnd={(event) => {
-                window.settingsAPI.getWindowPosition().then((position) => {
-                  const x = event.clientX + position.x;
-                  const y = event.clientY + position.y;
-                  setRightBottom({ x, y });
+              onDragEnd={() => {
+                window.settingsAPI.getWMInfo().then((info) => {
+                  setRightBottom({ x: info.pointerX, y: info.pointerY });
                 });
               }}>
               <BiTargetLock />

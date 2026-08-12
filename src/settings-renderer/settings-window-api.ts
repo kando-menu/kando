@@ -57,11 +57,6 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-system-info');
   },
 
-  /** Returns the position of the top left corner of the settings window. */
-  getWindowPosition: (): Promise<{ x: number; y: number }> => {
-    return ipcRenderer.invoke('settings-window.get-position');
-  },
-
   /** Returns the index of the last opened menu. */
   getCurrentMenu: function (): Promise<number> {
     return ipcRenderer.invoke('settings-window.get-current-menu');

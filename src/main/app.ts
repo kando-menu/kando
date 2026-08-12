@@ -219,7 +219,8 @@ export class KandoApp {
         root: menuItem,
         shortcut: '',
         shortcutID: '',
-        centered: false,
+        useFixedPosition: false,
+        fixedMenuPosition: { x: 0.5, y: 0.5 },
         anchored: false,
         hoverMode: false,
         tags: [],
@@ -564,16 +565,6 @@ export class KandoApp {
         ipcPort,
         ipcApiVersion,
       } as SystemInfo;
-    });
-
-    // Allow the renderer to retrieve the position of the settings window.
-    ipcMain.handle('settings-window.get-position', () => {
-      if (!this.settingsWindow) {
-        return { x: 0, y: 0 };
-      }
-
-      const bounds = this.settingsWindow.getBounds();
-      return { x: bounds.x, y: bounds.y };
     });
 
     // This should return the index of the currently selected menu. For now, we just

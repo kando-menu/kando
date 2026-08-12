@@ -321,6 +321,20 @@ export default interface Resources {
               "select-file": "Select a file"
           },
           "fix-menu-item-angle": "Fix the angle of this menu item. After enabling this, drag the item to update the angle.",
+          "fixed-position-mode": "Fixed Position Mode",
+          "fixed-position-mode-info": "Open the menu at a fixed position on the screen, instead of at the cursor.",
+          "fixed-position-picker": {
+              "bottom-left-preset-tooltip": "Set position to bottom left",
+              "bottom-right-preset-tooltip": "Set position to bottom right",
+              "centered-preset-tooltip": "Set position to center",
+              "confirm": "Use this position",
+              "picker-tooltip": "Drag this to an area on your screen to set position",
+              "top-left-preset-tooltip": "Set position to top left",
+              "top-right-preset-tooltip": "Set position to top right"
+          },
+          "fixed-position-tooltip": "Select a fixed position",
+          "fixed-position-x-placeholder": "X",
+          "fixed-position-y-placeholder": "Y",
           "general-settings-dialog": {
               "achievements": "Achievements",
               "advanced-menu-options": "Advanced Menu Options",
@@ -566,6 +580,9 @@ export default interface Resources {
               "top-left": "Drag this to the top left corner of your area.",
               "top-left-value": "Left: {{x}}, Top: {{y}}",
               "valid": "Great! You have selected a valid area."
+          },
+          "screen-position-picker": {
+              "value": "X: {{x}} | Y: {{y}}"
           },
           "search-menus-placeholder": "Search menus…",
           "shortcut-id-label": "Shortcut ID",
