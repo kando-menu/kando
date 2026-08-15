@@ -328,7 +328,7 @@ export default interface Resources {
               "bottom-right-preset-tooltip": "Set position to bottom right",
               "centered-preset-tooltip": "Set position to center",
               "confirm": "Use this position",
-              "picker-tooltip": "Drag this to an area on your screen to set position",
+              "picker-tooltip": "Drag this to a position on your screen to set the position",
               "top-left-preset-tooltip": "Set position to top left",
               "top-right-preset-tooltip": "Set position to top right"
           },
@@ -551,7 +551,9 @@ export default interface Resources {
               "save-preset-error-title": "Failed to save preset",
               "selection-wedges": "Draw item wedges",
               "selection-wedges-info": "If enabled and supported by the selected theme, the selectable area of menu items will be highlighted.",
-              "title": "Menu Themes"
+              "title": "Menu Themes",
+              "underline-quick-key": "Underline quick key",
+              "underline-quick-key-info": "If enabled, the first letter of the menu items name that matches the menu items quick key with be underlined."
           },
           "no-matching-menus": "No menus found.",
           "no-matching-menus-note": "Maybe try a different search term?",

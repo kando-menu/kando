@@ -12,6 +12,7 @@ import { MenuItem, MenuThemeDescription } from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { getClosestEquivalentAngle } from '../common/math';
 import { RenderedMenuItem } from './rendered-menu-item';
+import { getGeneralSettings } from '../main/settings';
 
 /**
  * Menu themes in Kando are responsible for rendering the menu items. A theme consists of
@@ -190,14 +191,12 @@ export class MenuTheme {
       if (layer.content === 'name') {
         // If the item has a quick select key, we underline the first occurrence of the
         // key in the name.
-        const quickSelectKey = MenuTheme.getQuickSelectKey(item);
-        if (quickSelectKey) {
-          const escapedQuickSelectKey = quickSelectKey.replace(
-            /[.*+?^${}()|[\]\\]/g,
-            '\\$&'
+        const quickSelectKey = MenuTheme.getOpenSelectWorkflowKey(item);
+        if (quickSelectKey && getGeneralSettings()?.get().enableUnderlineQuickSelectKey) {
+          layerDiv.innerHTML = MenuTheme.underlineQuickSelectKey(
+            item.name,
+            quickSelectKey
           );
-          const regex = new RegExp(`(${escapedQuickSelectKey})`, 'i');
-          layerDiv.innerHTML = item.name.replace(regex, '<u>$1</u>');
         } else {
           layerDiv.innerText = item.name;
         }
@@ -207,6 +206,14 @@ export class MenuTheme {
           item.icon
         );
         layerDiv.appendChild(icon);
+      } else if (layer.content === 'quick-select-key') {
+        // Only create the quickSelectKey div, if the item has a quickSelectKey assigned.
+        const quickSelectKey = MenuTheme.getOpenSelectWorkflowKey(item);
+        if (quickSelectKey) {
+          layerDiv.innerText = quickSelectKey;
+        } else {
+          continue;
+        }
       }
 
       nodeDiv.appendChild(layerDiv);
@@ -298,27 +305,36 @@ export class MenuTheme {
   }
 
   /**
-   * Returns the primary quick-select key for a given item. It prioritizes the
-   * select-workflow over the hover-workflow over the center-click-workflow.
+   * Returns the primary open-workflow or select workflow quick-select key for a given
+   * item. Dependent on what type of MenuItem is given.
    *
    * @param item The menu item to get the quick-select key for.
    * @returns The primary quick-select key for the given item, or null if there is no
    *   quick-select key.
    */
-  public static getQuickSelectKey(item: MenuItem): string | null {
+  public static getOpenSelectWorkflowKey(item: MenuItem): string | null {
     if (item.type === 'button') {
-      return (
-        item.selectWorkflow?.quickSelectKey || item.hoverWorkflow?.quickSelectKey || null
-      );
+      return item.selectWorkflow?.quickSelectKey || null;
     } else if (item.type === 'submenu') {
-      return (
-        item.openWorkflow?.quickSelectKey ||
-        item.hoverWorkflow?.quickSelectKey ||
-        item.activateWorkflow?.quickSelectKey ||
-        null
-      );
+      return item.openWorkflow?.quickSelectKey || null;
     }
 
     return null;
+  }
+
+  /**
+   * Takes a string and underlines the first instance of the quickSelectKey in the name
+   * string
+   *
+   * @param name The name of the menu item.
+   * @param quickSelectKey The key to underline.
+   * @returns The name string with the first instance of quickSelectKey underlined, or the
+   *   original name if there are no instances of the quickSelectKey within the name
+   *   string.
+   */
+  public static underlineQuickSelectKey(name: string, quickSelectKey: string): string {
+    const escapedSelectKey = quickSelectKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedSelectKey})`, 'i');
+    return name.replace(regex, '<u>$1</u>');
   }
 }

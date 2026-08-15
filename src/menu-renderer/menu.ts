@@ -1068,7 +1068,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       this.centerText.show(
         newHoveredItem.name,
         position,
-        MenuTheme.getQuickSelectKey(newHoveredItem)
+        this.settings.enableUnderlineQuickSelectKey
+          ? MenuTheme.getOpenSelectWorkflowKey(newHoveredItem)
+          : null
       );
     }
 

@@ -394,6 +394,11 @@ export default function MenuThemesDialog() {
             label={i18next.t('settings.menu-themes-dialog.selection-wedges')}
             settingsKey="enableSelectionWedges"
           />
+          <SettingsCheckbox
+            info={i18next.t('settings.menu-themes-dialog.underline-quick-key-info')}
+            label={i18next.t('settings.menu-themes-dialog.underline-quick-key')}
+            settingsKey="enableUnderlineQuickSelectKey"
+          />
 
           {accentColorsNode}
 
