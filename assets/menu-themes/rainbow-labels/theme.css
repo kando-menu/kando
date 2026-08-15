@@ -158,6 +158,15 @@
     transform: scale(0.95);
   }
 
+  &.hovered.clicked>.label-layer {
+    border-color: white;
+    box-shadow: 0 0 20px hsla(var(--angle), 80%, 80%, 0.4) inset;
+  }
+
+  &.hovered.clicked>.icon-layer {
+    background-color: white;
+  }
+
   /* We disable any transition for dragged submenu items. */
   &.dragged.type-submenu {
     transition: none;
