@@ -61,6 +61,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - The position of the delete-menu-item and duplicate-menu-item buttons in the settings dialog. They are now shown next to selected menu items in the preview area.
 - The position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
 - What happens when you select a submenu in the menu preview in the settings: before, the submenu would open immediately. Now, it will be selected just as other menu items. To edit its content, you have to either double-click it or use the tiny edit button which appears when you select the submenu.
+- Workflows are now executed on key-up instead of key-down. This improves the visual feedback of the menu as it's not instantly closed when you select a menu item. It also resolves some issues where actions were not reliably executed when a key was still held down.
 - The default fade-in and fade-out times of the menu. They are now 75ms and 100ms respectively. This makes the menu feel snappier and more responsive.
 - If the system supports it, Kando menus will now be shown on all workspaces.
 - Systems using the `zh-TW` locale will now fall back to `zh-Hant` before using English strings. Thanks to [@ClixTW](https://github.com/ClixTW) for this contribution!
