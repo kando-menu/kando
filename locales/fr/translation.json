@@ -286,7 +286,8 @@
             "input-options": "Options de saisie",
             "learn-interaction-mode": "Pour en savoir plus sur les modes d'interaction de Kando, cliquez [ici]({{link}}) !",
             "backup-menus-note": "Tous les menus seront restaurés ou sauvegardés en une fois. Cela inclut tous vos raccourcis configurés, la disposition de vos menus et vos collections de menus.",
-            "backup-settings-note": "Tous les paramètres de Kando seront sauvegardés ou restaurés, ce qui inclut tous vos paramètres globaux ainsi que la configuration des thèmes de menu."
+            "backup-settings-note": "Tous les paramètres de Kando seront sauvegardés ou restaurés, ce qui inclut tous vos paramètres globaux ainsi que la configuration des thèmes de menu.",
+            "re-open-menu": "Ré-ouvrir le menu"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
@@ -577,7 +578,7 @@
         },
         "execute-command": {
             "name": "Exécuter une Commande",
-            "description": "Lancer une application ou un scripte.",
+            "description": "Lancer une application ou un scripte. ",
             "choose-app": "Choisir une application…",
             "placeholder": "Insérer une commande…",
             "isolated": "Exécution isolée",

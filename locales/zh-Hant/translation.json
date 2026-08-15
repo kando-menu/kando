@@ -156,7 +156,8 @@
             "enable-turbo-mode-warning": "由於已啟用「保持作用中應用程式的焦點」選項，此功能已被停用。",
             "trigger-center-click-on-key-release": "放開按鍵後觸發中心點擊工作流程",
             "trigger-center-click-on-key-release-warning": "此選項會在放開快捷鍵後立即關閉選單。請確切了解其影響後再啟用！",
-            "trigger-center-click-on-key-release-info": "當滑鼠指標懸停在選單中心時放開按鍵，將會觸發中心點擊工作流程。"
+            "trigger-center-click-on-key-release-info": "當滑鼠指標懸停在選單中心時放開按鍵，將會觸發中心點擊工作流程。",
+            "re-open-menu": "重新開啟選單"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 為您提供了一種獨特且高效的方式與電腦互動。",
@@ -377,7 +378,24 @@
         },
         "fix-menu-item-angle": "固定此選單項目的角度。啟用後，拖曳項目即可更新角度。",
         "edit-submenu": "編輯子選單",
-        "drop-here-to-delete": "拖曳至此處以刪除"
+        "drop-here-to-delete": "拖曳至此處以刪除",
+        "fixed-position-mode": "固定位置模式",
+        "fixed-position-mode-info": "在螢幕上的固定位置開啟選單，而非在指標位置。",
+        "fixed-position-picker": {
+            "centered-preset-tooltip": "將位置設為置中",
+            "top-right-preset-tooltip": "將位置設為右上角",
+            "top-left-preset-tooltip": "將位置設為左上角",
+            "bottom-left-preset-tooltip": "將位置設為左下角",
+            "bottom-right-preset-tooltip": "將位置設為右下角",
+            "picker-tooltip": "將此處拖曳至螢幕上的位置以設定座標",
+            "confirm": "使用此位置"
+        },
+        "fixed-position-x-placeholder": "X",
+        "fixed-position-y-placeholder": "Y",
+        "fixed-position-tooltip": "選擇固定位置",
+        "screen-position-picker": {
+            "value": "X: {{x}} | Y: {{y}}"
+        }
     },
     "menu-items": {
         "text": {
