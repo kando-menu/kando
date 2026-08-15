@@ -555,6 +555,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
               MenuInteractionType.eActivateMenu,
               this.hoveredItem.renderData.path
             );
+          } else if (this.hoveredItem === this.centerItem.renderData.parent) {
+            this.selectParent();
           } else if (this.hoveredItem.type === 'submenu') {
             this.emitItemInteractionEvent(
               MenuInteractionType.eOpenSubmenu,
