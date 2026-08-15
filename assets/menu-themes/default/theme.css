@@ -102,7 +102,7 @@
   &.parent.hovered.clicked>.icon-layer,
   &.child.hovered.clicked>.icon-layer,
   &.active.hovered.clicked>.icon-layer {
-    transform: scale(0.95);
+    transform: scale(0.9);
   }
 
   /* Show the icons of the center, parent and child items. */
