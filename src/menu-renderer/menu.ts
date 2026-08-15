@@ -727,7 +727,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         return (child as RenderedChildMenuItem).renderData.wedge.start;
       });
 
-      if (item.type !== 'root') {
+      if (item.type !== 'root' && item.renderData.parentWedge) {
         separators.push(item.renderData.parentWedge.start);
       }
 
