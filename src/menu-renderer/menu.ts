@@ -453,18 +453,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       }
     };
 
-    this.pointerInput.onCloseMenu(onCloseMenu);
-    this.gamepadInput.onCloseMenu(onCloseMenu);
-
-    this.pointerInput.onUpdateState(onUpdateState);
-    this.gamepadInput.onUpdateState(onUpdateState);
-
-    this.pointerInput.onSelection(onSelection);
-    this.gamepadInput.onSelection(onSelection);
-
-    // Handle keyboard events for quick selection and going back to the parent item.
-    document.addEventListener('keydown', (event) => {
+    const onKeyEvent = (event: KeyboardEvent) => {
       if (this.container.classList.contains('hidden')) {
+        return;
+      }
+
+      if (event.key === 'Escape') {
         return;
       }
 
@@ -474,7 +468,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       if (!anyModifierPressed) {
         const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
 
-        // Then we check whether the center-click-workflow of the center item got triggered.
+        // Then we check whether the center-click-workflow of the center item got
+        // triggered. On key-down, we hover the center item and on key-up, we select it.
         if (
           (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') &&
           this.centerItem.activateWorkflow?.quickSelectKey
@@ -483,10 +478,14 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             this.centerItem.activateWorkflow.quickSelectKey.toLocaleLowerCase() ===
             eventKey
           ) {
-            this.emitItemInteractionEvent(
-              MenuInteractionType.eActivateMenu,
-              this.centerItem.renderData.path
-            );
+            if (event.type === 'keydown') {
+              this.hoverItem(this.centerItem);
+            } else {
+              this.emitItemInteractionEvent(
+                MenuInteractionType.eActivateMenu,
+                this.centerItem.renderData.path
+              );
+            }
             return;
           }
         }
@@ -508,15 +507,22 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             }
 
             if (selectionKeys.includes(eventKey)) {
-              if (child.type === 'submenu') {
-                this.emitItemInteractionEvent(
-                  MenuInteractionType.eOpenSubmenu,
-                  child.renderData.path
-                );
-                this.openSubmenu(child, this.getCenterItemPosition());
-              } else {
-                this.emitSelectionEvent(child, SelectionSource.eKeyboard);
+              if (event.type === 'keydown') {
+                this.latestInput.button = ButtonState.eClicked;
                 this.hoverAngle(child.renderData.computedAngle);
+              } else {
+                if (child.type === 'submenu') {
+                  this.emitItemInteractionEvent(
+                    MenuInteractionType.eOpenSubmenu,
+                    child.renderData.path
+                  );
+                  this.openSubmenu(child, this.getCenterItemPosition());
+                } else {
+                  this.emitSelectionEvent(child, SelectionSource.eKeyboard);
+                }
+
+                this.latestInput.button = ButtonState.eReleased;
+                this.redraw();
               }
               return;
             }
@@ -536,61 +542,68 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             }
           }
         }
-      }
 
-      if (
-        event.key === 'ArrowLeft' ||
-        event.key === 'ArrowUp' ||
-        event.key === 'ArrowRight' ||
-        event.key === 'ArrowDown'
-      ) {
-        this.changeHoveredItem(event.key);
-        return;
-      }
-
-      if (event.key === 'Enter') {
-        if (this.hoveredItem) {
-          if (this.hoveredItem === this.centerItem) {
-            this.emitItemInteractionEvent(
-              MenuInteractionType.eActivateMenu,
-              this.hoveredItem.renderData.path
-            );
-          } else if (this.hoveredItem === this.centerItem.renderData.parent) {
-            this.selectParent();
-          } else if (this.hoveredItem.type === 'submenu') {
-            this.emitItemInteractionEvent(
-              MenuInteractionType.eOpenSubmenu,
-              this.hoveredItem.renderData.path
-            );
-            this.openSubmenu(this.hoveredItem);
-          } else {
-            this.emitSelectionEvent(this.hoveredItem, SelectionSource.eKeyboard);
+        if (event.type === 'keydown') {
+          if (
+            event.key === 'ArrowLeft' ||
+            event.key === 'ArrowUp' ||
+            event.key === 'ArrowRight' ||
+            event.key === 'ArrowDown'
+          ) {
+            this.changeHoveredItem(event.key);
+            return;
           }
+        }
 
-          return;
+        if (event.key === 'Enter') {
+          if (event.type === 'keydown') {
+            this.latestInput.button = ButtonState.eClicked;
+            this.redraw();
+          } else {
+            if (this.hoveredItem) {
+              if (this.hoveredItem === this.centerItem) {
+                this.emitItemInteractionEvent(
+                  MenuInteractionType.eActivateMenu,
+                  this.hoveredItem.renderData.path
+                );
+              } else if (this.hoveredItem === this.centerItem.renderData.parent) {
+                this.selectParent();
+              } else if (this.hoveredItem.type === 'submenu') {
+                this.emitItemInteractionEvent(
+                  MenuInteractionType.eOpenSubmenu,
+                  this.hoveredItem.renderData.path
+                );
+                this.openSubmenu(this.hoveredItem);
+              } else {
+                this.emitSelectionEvent(this.hoveredItem, SelectionSource.eKeyboard);
+              }
+
+              this.latestInput.button = ButtonState.eReleased;
+              this.redraw();
+            }
+            return;
+          }
         }
       }
 
-      if (event.key !== 'Escape') {
+      if (event.type === 'keydown') {
         this.pointerInput.onKeyDownEvent();
+      } else {
+        this.pointerInput.onKeyUpEvent(event);
       }
-    });
+    };
 
-    // If the last modifier is released while a menu item is dragged around, we select it.
-    // This enables selections in "Turbo-Mode", where items can be selected with mouse
-    // movements without pressing the left mouse button but by holding a keyboard key
-    // instead.
-    document.addEventListener('keyup', (event) => {
-      if (this.container.classList.contains('hidden')) {
-        return;
-      }
+    this.pointerInput.onCloseMenu(onCloseMenu);
+    this.gamepadInput.onCloseMenu(onCloseMenu);
 
-      if (event.key === 'Escape') {
-        return;
-      }
+    this.pointerInput.onUpdateState(onUpdateState);
+    this.gamepadInput.onUpdateState(onUpdateState);
 
-      this.pointerInput.onKeyUpEvent(event);
-    });
+    this.pointerInput.onSelection(onSelection);
+    this.gamepadInput.onSelection(onSelection);
+
+    document.addEventListener('keydown', onKeyEvent);
+    document.addEventListener('keyup', onKeyEvent);
 
     this.container.addEventListener('pointerdown', (e) => {
       this.pointerInput.onPointerDownEvent(e);
