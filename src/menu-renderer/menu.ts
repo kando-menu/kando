@@ -1399,7 +1399,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         parent,
         position: { x: 0, y: 0 },
         computedAngle: angle,
-        nodeDiv: this.theme.createItem(item),
+        nodeDiv: this.theme.createItem(item, this.settings.enableUnderlineQuickSelectKey),
         connectorDiv: null,
         lastConnectorAngle: 0,
         lastPointerAngle: 0,

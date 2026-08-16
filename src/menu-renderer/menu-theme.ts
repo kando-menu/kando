@@ -12,7 +12,6 @@ import { MenuItem, MenuThemeDescription } from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { getClosestEquivalentAngle } from '../common/math';
 import { RenderedMenuItem } from './rendered-menu-item';
-import { getGeneralSettings } from '../main/settings';
 
 /**
  * Menu themes in Kando are responsible for rendering the menu items. A theme consists of
@@ -172,9 +171,11 @@ export class MenuTheme {
    * it.
    *
    * @param item The menu item to create the html elements for.
+   * @param underlineQuickSelectKey A boolean determining if the quick select key should
+   *   be underlined within the menu item name.
    * @returns The created html element.
    */
-  public createItem(item: MenuItem) {
+  public createItem(item: MenuItem, underlineQuickSelectKey: boolean) {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
 
@@ -192,7 +193,7 @@ export class MenuTheme {
         // If the item has a quick select key, we underline the first occurrence of the
         // key in the name.
         const quickSelectKey = MenuTheme.getOpenSelectWorkflowKey(item);
-        if (quickSelectKey && getGeneralSettings()?.get().enableUnderlineQuickSelectKey) {
+        if (quickSelectKey && underlineQuickSelectKey) {
           layerDiv.innerHTML = MenuTheme.underlineQuickSelectKey(
             item.name,
             quickSelectKey
