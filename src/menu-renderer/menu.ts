@@ -1426,6 +1426,14 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
           '--sibling-count',
           parent.children.length.toString()
         );
+        item.renderData.nodeDiv.style.setProperty(
+          '--start-angle',
+          wedge.start.toString() + 'deg'
+        );
+        item.renderData.nodeDiv.style.setProperty(
+          '--end-angle',
+          wedge.end.toString() + 'deg'
+        );
 
         if (level > 1) {
           item.renderData.nodeDiv.style.setProperty(
