@@ -572,9 +572,10 @@ export class KandoApp {
     ipcMain.handle('settings-window.get-sidebar-widths', () => {
       return this.settingsWindow?.getSidebarWidths() ?? {};
     });
+
     ipcMain.on(
       'settings-window.set-sidebar-width',
-      (_event, position: unknown, width: unknown) => {
+      (e, position: unknown, width: unknown) => {
         if ((position === 'left' || position === 'right') && typeof width === 'number') {
           this.settingsWindow?.setSidebarWidth(position, width);
         }

@@ -174,6 +174,7 @@ export class SettingsWindow extends BrowserWindow {
         [position]: roundedWidth,
       },
     };
+
     this.saveState();
   }
 }

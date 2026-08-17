@@ -26,8 +26,6 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
-- Kando now remembers the size, position, maximized state, and sidebar widths of the
-  settings window.
 - **Workflows!** Instead of fixed item types, we have now various _actions_ which can be combined in flexible ways. We only have two menu item types now: submenus and leaf items, called buttons. Buttons offer two workflows which can be filled with any number of actions:
   - The hover-workflow gets executed when you mouse-over the item. The default menu items do not use this, but you could put actions into this if you want.
   - The select-workflow gets triggered when you click the item. This usually contains two actions: first something like open-url, execute-command, or simulate-shortcut. And then: close-menu. You can reorder the actions to first close the menu and then execute the other action! Or decide not to close the menu at all...
@@ -43,6 +41,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
 - The **possibility to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
+- Kando now remembers the size, position, maximized state, and sidebar widths of the settings window. Thanks to [@Morax](https://github.com/fzlzjerry) for contributing this feature!
 - A new option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
 - A new option to **move the mouse pointer back to where it opened the menu** after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
 - The option to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
