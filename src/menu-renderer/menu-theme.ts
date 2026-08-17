@@ -301,7 +301,7 @@ export class MenuTheme {
 
   /**
    * Sets the custom CSS properties for the given parent menu item. Currently, this is
-   * only the `--parent-wedge-start` and `--parent-wedge-end` properties which are set to
+   * only the `--parent-start-angle` and `--parent-end-angle` properties which are set to
    * the angular wedge towards the parent item.
    *
    * @param item The menu item to set the properties for.
@@ -315,11 +315,11 @@ export class MenuTheme {
     }
   ) {
     item.renderData.nodeDiv.style.setProperty(
-      '--parent-wedge-start',
+      '--parent-start-angle',
       parentWedge.start + 'deg'
     );
     item.renderData.nodeDiv.style.setProperty(
-      '--parent-wedge-end',
+      '--parent-end-angle',
       parentWedge.end + 'deg'
     );
   }
