@@ -439,7 +439,15 @@ export function computeItemWedges(
 } {
   // This should never happen, but who knows...
   if (itemAngles.length === 0 && parentAngle === undefined) {
-    return { itemWedges: [] };
+    return { itemWedges: [], parentWedge: { start: 0, end: 0 } };
+  }
+
+  // It's an empty submenu.
+  if (itemAngles.length === 0 && parentAngle !== undefined) {
+    return {
+      itemWedges: [],
+      parentWedge: { start: parentAngle - 180, end: parentAngle + 180 },
+    };
   }
 
   // If the item has a single child but no parent (e.g. it's the root item), we can
