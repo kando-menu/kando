@@ -247,6 +247,16 @@ describe('computeItemWedges', () => {
     expect(wedges).to.deep.equal({ itemWedges: [] });
   });
 
+  it('should return an empty array for an empty list of item angles but a parent wedge', () => {
+    const itemAngles: number[] = [];
+    const parentAngle = 90;
+    const wedges = computeItemWedges(itemAngles, parentAngle);
+    expect(wedges).to.deep.equal({
+      itemWedges: [],
+      parentWedge: { start: -90, end: 270 },
+    });
+  });
+
   it('should handle a single item with a parent correctly', () => {
     let itemAngles = [0];
     let parentAngle = 180;

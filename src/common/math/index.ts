@@ -439,7 +439,7 @@ export function computeItemWedges(
 } {
   // This should never happen, but who knows...
   if (itemAngles.length === 0 && parentAngle === undefined) {
-    return { itemWedges: [], parentWedge: { start: 0, end: 0 } };
+    return { itemWedges: [] };
   }
 
   // It's an empty submenu.
