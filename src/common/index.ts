@@ -134,6 +134,12 @@ export type SystemInfo = {
   readonly ipcApiVersion: number;
 };
 
+/** The persisted widths of the resizable sidebars in the settings window. */
+export type SettingsWindowSidebarWidths = {
+  readonly left?: number;
+  readonly right?: number;
+};
+
 /** This type describes a icon theme consisting of a collection of icon files. */
 export type FileIconThemeDescription = {
   /**

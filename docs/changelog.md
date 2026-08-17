@@ -26,6 +26,8 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
+- Kando now remembers the size, position, maximized state, and sidebar widths of the
+  settings window.
 - **Workflows!** Instead of fixed item types, we have now various _actions_ which can be combined in flexible ways. We only have two menu item types now: submenus and leaf items, called buttons. Buttons offer two workflows which can be filled with any number of actions:
   - The hover-workflow gets executed when you mouse-over the item. The default menu items do not use this, but you could put actions into this if you want.
   - The select-workflow gets triggered when you click the item. This usually contains two actions: first something like open-url, execute-command, or simulate-shortcut. And then: close-menu. You can reorder the actions to first close the menu and then execute the other action! Or decide not to close the menu at all...

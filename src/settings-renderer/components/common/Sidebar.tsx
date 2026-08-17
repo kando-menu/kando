@@ -21,6 +21,12 @@ type Props = {
 
   /** Content to display in the main area of the sidebar. */
   readonly children: React.ReactNode;
+
+  /** The width restored from the machine-local settings window state. */
+  readonly initialWidth?: number;
+
+  /** Called after the user has finished resizing the sidebar. */
+  readonly onWidthChanged?: (width: number) => void;
 };
 
 /**
@@ -34,11 +40,12 @@ type Props = {
 export default function Sidebar(props: Props) {
   const resizer = React.useRef<HTMLDivElement>(null);
   const sidebar = React.useRef<HTMLDivElement>(null);
+  const { position, onWidthChanged } = props;
 
   React.useEffect(() => {
     // Function to handle the resizing of the sidebar.
     const resize = (e: MouseEvent) => {
-      if (props.position === 'left') {
+      if (position === 'left') {
         sidebar.current.style.width = e.clientX + 'px';
       } else {
         sidebar.current.style.width = window.innerWidth - e.clientX + 'px';
@@ -51,18 +58,28 @@ export default function Sidebar(props: Props) {
       document.removeEventListener('mousemove', resize);
       document.removeEventListener('mouseup', stopResize);
       document.body.style.cursor = '';
+
+      if (sidebar.current) {
+        onWidthChanged?.(sidebar.current.getBoundingClientRect().width);
+      }
     };
 
-    // Add event listeners for the resizer. This is done in a useEffect hook to ensure
-    // that the DOM elements are available when the script is executed.
-    if (resizer && sidebar) {
-      resizer.current.addEventListener('mousedown', function () {
-        document.addEventListener('mousemove', resize);
-        document.addEventListener('mouseup', stopResize);
-        document.body.style.cursor = 'col-resize';
-      });
-    }
-  }, [props.position]);
+    const startResize = () => {
+      document.addEventListener('mousemove', resize);
+      document.addEventListener('mouseup', stopResize);
+      document.body.style.cursor = 'col-resize';
+    };
+
+    const resizerElement = resizer.current;
+    resizerElement?.addEventListener('mousedown', startResize);
+
+    return () => {
+      resizerElement?.removeEventListener('mousedown', startResize);
+      document.removeEventListener('mousemove', resize);
+      document.removeEventListener('mouseup', stopResize);
+      document.body.style.cursor = '';
+    };
+  }, [position, onWidthChanged]);
 
   const positionClass = props.position === 'left' ? classes.left : classes.right;
   const directionClass = props.mainDirection === 'row' ? classes.row : classes.column;
@@ -72,7 +89,10 @@ export default function Sidebar(props: Props) {
     <>
       {/* Render the resizer on the left if the sidebar is on the right. */}
       {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
-      <div ref={sidebar} className={classes.sidebar + ' ' + directionClass}>
+      <div
+        ref={sidebar}
+        className={classes.sidebar + ' ' + directionClass}
+        style={{ width: props.initialWidth }}>
         {props.children}
       </div>
       {/* Render the resizer on the right if the sidebar is on the left. */}
