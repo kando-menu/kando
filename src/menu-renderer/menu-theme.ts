@@ -290,6 +290,11 @@ export class MenuTheme {
       }
     });
 
+    // Unset the parent-wedge angles for the center item. This ensures that the property
+    // is removed when navigating back.
+    item.renderData.nodeDiv.style.removeProperty('--parent-start-angle');
+    item.renderData.nodeDiv.style.removeProperty('--parent-end-angle');
+
     if (pointerAngle != null) {
       item.renderData.lastPointerAngle = pointerAngle;
     }
