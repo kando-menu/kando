@@ -41,7 +41,9 @@ export class MenuTheme {
 
   /**
    * Creates a new MenuTheme. This will register the custom CSS properties used by the
-   * theme.
+   * theme. These properties may change each frame, which is very expensive if the values
+   * are inherited. Therefore, we register them as custom properties which are not
+   * inherited.
    */
   constructor() {
     // Register the angular-difference CSS property. This is set each frame for each child
@@ -288,6 +290,11 @@ export class MenuTheme {
       }
     });
 
+    // Unset the parent-wedge angles for the center item. This ensures that the property
+    // is removed when navigating back.
+    item.renderData.nodeDiv.style.removeProperty('--parent-start-angle');
+    item.renderData.nodeDiv.style.removeProperty('--parent-end-angle');
+
     if (pointerAngle != null) {
       item.renderData.lastPointerAngle = pointerAngle;
     }
@@ -295,6 +302,31 @@ export class MenuTheme {
     if (hoverAngle != null) {
       item.renderData.lastHoveredChildAngle = hoverAngle;
     }
+  }
+
+  /**
+   * Sets the custom CSS properties for the given parent menu item. Currently, this is
+   * only the `--parent-start-angle` and `--parent-end-angle` properties which are set to
+   * the angular wedge towards the parent item.
+   *
+   * @param item The menu item to set the properties for.
+   * @param parentWedge The angular wedge towards the parent item.
+   */
+  public setParentProperties(
+    item: RenderedMenuItem,
+    parentWedge: {
+      start: number;
+      end: number;
+    }
+  ) {
+    item.renderData.nodeDiv.style.setProperty(
+      '--parent-start-angle',
+      parentWedge.start + 'deg'
+    );
+    item.renderData.nodeDiv.style.setProperty(
+      '--parent-end-angle',
+      parentWedge.end + 'deg'
+    );
   }
 
   /**

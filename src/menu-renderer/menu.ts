@@ -1198,10 +1198,15 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    */
   private updateTransform() {
     let item = this.centerItem;
+    let parentWedge = item.renderData.parentWedge;
 
     while (item) {
       item.renderData.nodeDiv.style.transform = `translate(${item.renderData.position.x}px, ${item.renderData.position.y}px)`;
 
+      // For the center item, we also set the custom CSS properties of the item, like the
+      // angular difference between the item and the mouse pointer direction. We also set
+      // the transform property of the currently dragged item to the latest pointer
+      // position.
       if (item === this.centerItem) {
         let hoveredAngle;
 
@@ -1240,7 +1245,13 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
           }
         }
       }
+      // For all other items along the selection chain, we set the required CSS properties
+      // like the wedge angles of the back-navigation wedge.
+      else {
+        this.theme.setParentProperties(item, parentWedge);
+      }
 
+      parentWedge = item.renderData.parentWedge;
       item = item.renderData.parent;
     }
   }
