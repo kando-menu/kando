@@ -76,6 +76,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - A bug which caused the center text to not be drawn properly if the quick-select key of the item was a character which has special meaning in regular expressions. Thanks to [@GZ0759](https://github.com/GZ0759) for this fix!
 - An issue which caused the menu window to be wrongly sized and positioned on KDE Wayland with some screen configurations.
 - A regression on KDE Wayland 6.7.4 which would cause global shortcuts to not work after Kando was started.
+- Getting icons from the "hicolor" system icon theme on some Linux systems.
 
 ### :fire: Removed
 

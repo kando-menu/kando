@@ -129,12 +129,15 @@ export abstract class LinuxBackend extends Backend {
     const allThemeDirectories = await this.getThemeDirectoriesRecursively(
       this.currentTheme
     );
+    console.log('Searching for icons in the following directories:', allThemeDirectories);
     const icons = await this.getIcons(
       allThemeDirectories,
       ['apps', 'actions', 'devices', 'mimetypes', 'places'],
       ['scalable', '48x48', '48'],
       ['.svg', '.png']
     );
+
+    console.log('Found', icons.size, 'icons in the current theme:', this.currentTheme);
 
     return icons;
   }
@@ -375,11 +378,11 @@ export abstract class LinuxBackend extends Backend {
 
     // Check each path for the theme directory.
     for (const basePath of this.iconSearchPaths) {
-      const themePath = path.join(basePath, themeName, 'index.theme');
+      const themePath = path.join(basePath, themeName);
       try {
         // Check if the file exists.
         await fs.promises.access(themePath);
-        paths.push(path.dirname(themePath));
+        paths.push(themePath);
       } catch {
         continue;
       }
