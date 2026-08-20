@@ -35,6 +35,8 @@ export class NiriBackend extends WLRBackend {
     return {
       name: 'Niri',
       menuWindowType: 'splash',
+      supportsListingWindows: true,
+      supportsFocusingWindows: true,
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.niri.shortcut-info'),
       shouldUseTransparentSettingsWindow: true,

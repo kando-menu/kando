@@ -8,11 +8,12 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+@use 'sass:color';
+
 @use '../../variables.scss' as *;
 
 .note {
   color: $text-normal;
-  line-height: 1.5em;
 
   &.center {
     text-align: center;
@@ -30,5 +31,12 @@
   &.small {
     font-size: 0.8em;
     color: $text-muted;
+  }
+
+  &.warning {
+    font-size: 0.8em;
+    border-top: 1px solid $text-warning;
+    padding: 0.5em 0;
+    background-color: rgba($text-warning, $alpha: 0.2);
   }
 }

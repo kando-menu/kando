@@ -32,7 +32,7 @@ export class GnomeBackend extends LinuxBackend {
   private shortcutMap: { [gdkShortcut: string]: string } = {};
 
   /** This is the DBus interface of the Kando GNOME Shell integration extension. */
-  private interface: DBus.ClientInterface;
+  private interface?: DBus.ClientInterface;
 
   /**
    * Dock On GNOME Shell, we use a dock window. This creates a floating window which is
@@ -43,6 +43,8 @@ export class GnomeBackend extends LinuxBackend {
     return {
       name: 'GNOME Wayland',
       menuWindowType: 'dock',
+      supportsListingWindows: true,
+      supportsFocusingWindows: true,
       supportsShortcuts: true,
       shouldUseTransparentSettingsWindow: false,
     };
@@ -97,7 +99,7 @@ export class GnomeBackend extends LinuxBackend {
    *   pointer position.
    */
   public async getWMInfo() {
-    const info = await this.interface.GetWMInfo();
+    const info = await this.interface!.GetWMInfo();
 
     let workArea: Electron.Rectangle;
 
@@ -136,7 +138,7 @@ export class GnomeBackend extends LinuxBackend {
    *   their names and the apps they belong to.
    */
   public async getOpenWindows(): Promise<WindowDescription[]> {
-    const pairs = await this.interface.GetOpenWindows();
+    const pairs = await this.interface!.GetOpenWindows();
     return pairs.map(([windowName, appName]: [string, string]) => ({
       appName,
       windowName,
@@ -150,7 +152,7 @@ export class GnomeBackend extends LinuxBackend {
    * @returns A promise which resolves when the window has been focused.
    */
   public async focusWindow(window: WindowDescription): Promise<void> {
-    await this.interface.FocusWindow(window.windowName, window.appName);
+    await this.interface!.FocusWindow(window.windowName, window.appName);
   }
 
   /**
@@ -160,7 +162,7 @@ export class GnomeBackend extends LinuxBackend {
    * @param dy The amount of vertical movement.
    */
   public async movePointer(dx: number, dy: number) {
-    await this.interface.MovePointer(dx, dy);
+    await this.interface!.MovePointer(dx, dy);
   }
 
   /**
@@ -181,7 +183,7 @@ export class GnomeBackend extends LinuxBackend {
       translatedKeys.push([keyCodes[i], keys[i].down, keys[i].delay]);
     }
 
-    await this.interface.SimulateKeys(translatedKeys);
+    await this.interface!.SimulateKeys(translatedKeys);
   }
 
   /**
@@ -207,7 +209,7 @@ export class GnomeBackend extends LinuxBackend {
   ): Promise<void> {
     // Use a shortcut if we unbind all shortcuts :)
     if (currentEffectiveShortcuts.length === 0) {
-      await this.interface.UnbindAllShortcuts();
+      await this.interface!.UnbindAllShortcuts();
       return;
     }
 
@@ -220,13 +222,13 @@ export class GnomeBackend extends LinuxBackend {
 
     // Unbind the obsolete shortcuts.
     for (const shortcut of shortcutsToUnbind) {
-      await this.interface.UnbindShortcut(this.toGdkShortcut(shortcut));
+      await this.interface!.UnbindShortcut(this.toGdkShortcut(shortcut));
     }
 
     // Bind the new shortcuts.
     let success = true;
     for (const shortcut of shortcutsToBind) {
-      if (!(await this.interface.BindShortcut(this.toGdkShortcut(shortcut)))) {
+      if (!(await this.interface!.BindShortcut(this.toGdkShortcut(shortcut)))) {
         success = false;
       }
     }

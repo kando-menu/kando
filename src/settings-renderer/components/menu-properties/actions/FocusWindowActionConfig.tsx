@@ -39,7 +39,7 @@ export function FocusWindowActionConfig(props: Props) {
         <TextInput
           isGrouped
           placeholder={i18next.t('settings.app-condition-placeholder')}
-          initialValue={props.action.appName}
+          initialValue={props.action.appName ?? ''}
           onChange={(value) => {
             props.onUpdateAction({
               ...props.action,
@@ -62,7 +62,7 @@ export function FocusWindowActionConfig(props: Props) {
         <TextInput
           isGrouped
           placeholder={i18next.t('settings.window-condition-placeholder')}
-          initialValue={props.action.windowName}
+          initialValue={props.action.windowName ?? ''}
           onChange={(value) => {
             props.onUpdateAction({
               ...props.action,

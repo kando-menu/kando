@@ -46,6 +46,12 @@ function testStringCondition(condition: string, value: string) {
  * @returns A promise which resolves when the focus has been successfully applied.
  */
 export async function execute(action: DeepReadonly<FocusWindowAction>, app: KandoApp) {
+  const info = app.getBackend().getBackendInfo();
+  if (!info.supportsFocusingWindows || !info.supportsListingWindows) {
+    console.warn(`Focusing windows is not supported on this platform.`);
+    return;
+  }
+
   const openWindows = await app.getBackend().getOpenWindows();
 
   for (const window of openWindows) {

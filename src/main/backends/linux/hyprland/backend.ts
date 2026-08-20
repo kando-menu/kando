@@ -33,6 +33,8 @@ export class HyprBackend extends WLRBackend {
     return {
       name: 'Hyprland',
       menuWindowType: 'splash',
+      supportsListingWindows: true,
+      supportsFocusingWindows: true,
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.hyprland.shortcut-info'),
       shouldUseTransparentSettingsWindow: true,

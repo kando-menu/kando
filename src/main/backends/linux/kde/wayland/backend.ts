@@ -12,10 +12,11 @@ import i18next from 'i18next';
 import DBus from 'dbus-final';
 import lodash from 'lodash';
 
+import { KDEWaylandFallback } from './fallback';
 import { LinuxBackend } from '../../backend';
 import { RemoteDesktop } from '../../portals/remote-desktop';
 import { GlobalShortcuts } from '../../portals/global-shortcuts';
-import { KeySequence, WindowDescription } from '../../../../../common';
+import { BackendInfo, KeySequence, WindowDescription } from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
 
 /**
@@ -40,16 +41,37 @@ export class KDEWaylandBackend extends LinuxBackend {
   private globalShortcutsAvailable = false;
 
   /** This is the DBus interface of the Kando KWin integration extension. */
-  private interface: DBus.ClientInterface;
+  private interface?: DBus.ClientInterface;
+
+  /** This is used as a fallback if the KWin integration is not available. */
+  private fallback?: KDEWaylandFallback;
 
   /**
    * On KDE, the 'toolbar' window type is used. The 'dock' window type makes the window
    * not receive any keyboard events.
    */
-  public getBackendInfo() {
+  public getBackendInfo(): BackendInfo {
+    if (this.fallback) {
+      return {
+        name: 'KDE Wayland (Fallback)',
+        menuWindowType: 'toolbar',
+        supportsListingWindows: false,
+        supportsFocusingWindows: false,
+        supportsShortcuts: false,
+        shortcutHint: i18next.t('backends.kde-wayland.shortcut-info'),
+        shouldUseTransparentSettingsWindow: false,
+        settingsWindowBanner: i18next.t('backends.kde.error', {
+          link: 'https://github.com/kando-menu/kwin-integration',
+          interpolation: { escapeValue: false },
+        }),
+      };
+    }
+
     return {
       name: 'KDE Wayland',
       menuWindowType: 'toolbar',
+      supportsListingWindows: true,
+      supportsFocusingWindows: true,
       supportsShortcuts: false,
       shortcutHint: i18next.t('backends.kde-wayland.shortcut-info'),
       shouldUseTransparentSettingsWindow: false,
@@ -57,12 +79,10 @@ export class KDEWaylandBackend extends LinuxBackend {
   }
 
   /**
-   * This initializes the backend. It will create and store the one or two KWin scripts in
-   * a temporary directory and load the trigger-script into KWin in order to register the
-   * global shortcuts if the global shortcuts portal is not available.
-   *
-   * In addition, it will set up the D-Bus interface which is used by the KWin scripts to
-   * communicate with Kando.
+   * This initializes the backend. It will try to connect to the Kando KWin Integration
+   * effect plugin. If this is not available, it will fall back to a KWin script which
+   * uses the KWin scripting interface to get information about the currently focused
+   * window and the pointer position.
    */
   public async init() {
     if (this.interface) {
@@ -79,12 +99,12 @@ export class KDEWaylandBackend extends LinuxBackend {
 
       this.interface = obj.getInterface('menu.kando.KWinIntegration1');
     } catch (e) {
-      throw new Error(
-        i18next.t('backends.kde.error', {
-          link: 'https://github.com/kando-menu/kwin-integration',
-          interpolation: { escapeValue: false },
-        })
+      console.warn(
+        "Failed to connect to Kando's KWin integration plugin! Some features will not work. See here for details: https://github.com/kando-menu/kwin-integration."
       );
+
+      this.fallback = new KDEWaylandFallback();
+      await this.fallback.init();
     }
 
     this.globalShortcutsAvailable = await this.globalShortcuts.isAvailable();
@@ -95,9 +115,9 @@ export class KDEWaylandBackend extends LinuxBackend {
       );
     }
 
-    // As this backend does not support inhibiting shortcuts by unbinding them,
-    // we only prevent the action from being executed if the shortcut is in the
-    // inhibitedShortcuts array.
+    // As this backend does not support inhibiting shortcuts by unbinding them, we only
+    // prevent the action from being executed if the shortcut is in the inhibitedShortcuts
+    // array.
     this.globalShortcuts.on('ShortcutActivated', (shortcutID: string) => {
       if (!this.isShortcutInhibited(shortcutID)) {
         this.onShortcutPressed(shortcutID);
@@ -122,7 +142,11 @@ export class KDEWaylandBackend extends LinuxBackend {
     pointerY: number;
     workArea: Electron.Rectangle;
   }> {
-    const info = await this.interface.GetWMInfo();
+    if (this.fallback) {
+      return this.fallback.getWMInfo();
+    }
+
+    const info = await this.interface!.GetWMInfo();
 
     return {
       windowName: info.windowName.value,
@@ -145,7 +169,14 @@ export class KDEWaylandBackend extends LinuxBackend {
    *   their names and the apps they belong to.
    */
   public async getOpenWindows(): Promise<WindowDescription[]> {
-    const windows = (await this.interface.GetOpenWindows()) as unknown[];
+    if (this.fallback) {
+      console.warn(
+        'Listing open windows is not supported on KDE Wayland without the KWin integration plugin.'
+      );
+      return [];
+    }
+
+    const windows = (await this.interface!.GetOpenWindows()) as unknown[];
 
     return windows
       .map((entry) => {
@@ -173,8 +204,15 @@ export class KDEWaylandBackend extends LinuxBackend {
    * @returns A promise which resolves when the window has been focused.
    */
   public async focusWindow(window: WindowDescription): Promise<void> {
+    if (this.fallback) {
+      console.warn(
+        'Focusing windows is not supported on KDE Wayland without the KWin integration plugin.'
+      );
+      return;
+    }
+
     const result = this.unwrapDBusValue(
-      await this.interface.FocusWindow(window.windowName, window.appName)
+      await this.interface!.FocusWindow(window.windowName, window.appName)
     );
 
     if (result === false) {

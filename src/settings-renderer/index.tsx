@@ -27,6 +27,7 @@ import {
 } from './state';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { IPCMenuManager } from './utils/ipc-menu-manager';
+import { ActionTypeRegistry } from '../common/action-type-registry';
 
 /**
  * This file is the main entry point for Kando's settings renderer process. It is
@@ -142,6 +143,10 @@ Promise.all([
     } catch (e) {
       console.error('Failed to initialize IPCMenuManager:', e);
     }
+
+    // Initialize the item type registry -------------------------------------------------
+
+    ActionTypeRegistry.init(backendInfo);
 
     // Initialize the global state objects -----------------------------------------------
 

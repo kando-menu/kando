@@ -12,7 +12,7 @@ import React from 'react';
 import i18next from 'i18next';
 import { TbBackspaceFilled } from 'react-icons/tb';
 
-import { Button, Modal, Scrollbox, ThemedIcon } from '../common';
+import { Button, InfoItem, Modal, Scrollbox, ThemedIcon } from '../common';
 import * as classes from './ActionPicker.module.scss';
 import { WorkflowAction, WorkflowActionType } from '../../../common';
 import { ActionTypeRegistry } from '../../../common/action-type-registry';
@@ -89,6 +89,7 @@ export default function ActionPicker(props: Props) {
             {actionTypes.map(([actionType, metadata]) => (
               <button
                 key={actionType}
+                disabled={metadata.supportedByBackend === false}
                 className={classes.actionTypeItem}
                 type="button"
                 onClick={() => {
@@ -100,7 +101,16 @@ export default function ActionPicker(props: Props) {
                 </div>
 
                 <div>
-                  <div className={classes.actionTypeName}>{metadata.name}</div>
+                  <div className={classes.actionTypeName}>
+                    {metadata.name}{' '}
+                    {metadata.supportedByBackend ? null : (
+                      <InfoItem
+                        key="warning"
+                        isWarning
+                        info={i18next.t('settings.workflow-editor.action-not-supported')}
+                      />
+                    )}
+                  </div>
                   <div className={classes.actionTypeDetails}>{metadata.description}</div>
                 </div>
               </button>
