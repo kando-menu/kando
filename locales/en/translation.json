@@ -274,18 +274,16 @@
             "search-placeholder": "Search for an app…",
             "use-selected": "Use selected"
         },
-        "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
-        "centered-mode": "Centered Mode",
         "fixed-position-mode": "Fixed Position Mode",
         "fixed-position-mode-info": "Open the menu at a fixed position on the screen, instead of at the cursor.",
         "fixed-position-picker": {
-          "centered-preset-tooltip": "Set position to center",
-          "top-right-preset-tooltip": "Set position to top right",
-          "top-left-preset-tooltip": "Set position to top left",
-          "bottom-left-preset-tooltip": "Set position to bottom left",
-          "bottom-right-preset-tooltip": "Set position to bottom right",
-          "picker-tooltip": "Drag this to a position on your screen to set the position",
-          "confirm": "Use this position"
+            "centered-preset-tooltip": "Set position to center",
+            "top-right-preset-tooltip": "Set position to top right",
+            "top-left-preset-tooltip": "Set position to top left",
+            "bottom-left-preset-tooltip": "Set position to bottom left",
+            "bottom-right-preset-tooltip": "Set position to bottom right",
+            "picker-tooltip": "Drag this to a position on your screen to set the position",
+            "confirm": "Use this position"
         },
         "fixed-position-x-placeholder": "X",
         "fixed-position-y-placeholder": "Y",
@@ -329,7 +327,7 @@
             "confirm": "Use this area"
         },
         "screen-position-picker": {
-          "value": "X: {{x}} | Y: {{y}}"
+            "value": "X: {{x}} | Y: {{y}}"
         },
         "window-picker-dialog": {
             "result": "You selected \"{{name}}\".",
@@ -378,7 +376,8 @@
             "select-workflow-name": "Select Workflow",
             "hover-workflow-name": "Hover Workflow",
             "activate-workflow-name": "Center-Click Workflow",
-            "open-workflow-name": "Open Workflow"
+            "open-workflow-name": "Open Workflow",
+            "action-not-supported": "This action is not supported by the current backend."
         },
         "menu-conditions": "Menu Conditions",
         "menu-conditions-info": "You can bind multiple menus to the same shortcut and then choose under which conditions each menu should be shown.",
@@ -570,7 +569,7 @@
             "shortcut-info": "Niri does not yet support global shortcuts. But you can open this menu using 'kando --menu \"Menu Name\"' from the command line or from your niri config."
         },
         "kde": {
-            "error": "Could not connect to KWin Kando plugin. You can get it from here: {{link}}"
+            "error": "Could not connect to KWin Kando plugin. Some functionality will not be available. You can get it from [here]({{link}})."
         }
     },
     "menu-actions": {

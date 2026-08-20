@@ -11,7 +11,7 @@
 import { app } from 'electron';
 import { program } from 'commander';
 
-import { CommandlineOptions } from '../common';
+import { ActionTypeRegistry, CommandlineOptions } from '../common';
 
 /**
  * This file is the main entry point for Kando's host process. It is responsible for
@@ -236,6 +236,7 @@ try {
       });
     })
     .then(() => backend.init(generalSettings))
+    .then(() => ActionTypeRegistry.init(backend.getBackendInfo()))
     .then(() => kando.init())
     .then(() => {
       // Show a nifty message when the app is about to quit.

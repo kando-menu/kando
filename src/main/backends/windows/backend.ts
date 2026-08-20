@@ -57,6 +57,8 @@ export class WindowsBackend extends Backend {
     return {
       name: 'Windows',
       menuWindowType: 'toolbar',
+      supportsListingWindows: true,
+      supportsFocusingWindows: true,
       supportsShortcuts: true,
       shouldUseTransparentSettingsWindow: transparencySupported,
     };

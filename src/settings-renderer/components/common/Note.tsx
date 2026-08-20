@@ -20,7 +20,7 @@ type Props = {
   readonly children: React.ReactNode | string;
 
   /** How the note should be styled. Default is 'small'. */
-  readonly noteStyle?: 'hero' | 'big' | 'normal' | 'small';
+  readonly noteStyle?: 'hero' | 'big' | 'normal' | 'small' | 'warning';
 
   /** Whether the text should be centered. Defaults to false. */
   readonly isCentered?: boolean;
@@ -54,8 +54,8 @@ type Props = {
  * @returns A note element.
  */
 export default function Note(props: Props) {
-  const handleLinkClick = (href: string) => {
-    if (props.onLinkClick) {
+  const handleLinkClick = (href?: string) => {
+    if (props.onLinkClick && href) {
       props.onLinkClick(href); // Execute the callback with the link's href
     } else {
       window.open(href, '_blank'); // Default behavior: open in a new tab
@@ -69,6 +69,7 @@ export default function Note(props: Props) {
         hero: props.noteStyle === 'hero',
         big: props.noteStyle === 'big',
         normal: props.noteStyle === 'normal',
+        warning: props.noteStyle === 'warning',
         small: !props.noteStyle || props.noteStyle === 'small',
         center: props.isCentered,
       })}

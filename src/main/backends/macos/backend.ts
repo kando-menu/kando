@@ -44,6 +44,8 @@ export class MacosBackend extends Backend {
     return {
       name: 'macOS',
       menuWindowType: 'normal',
+      supportsListingWindows: true,
+      supportsFocusingWindows: true,
       supportsShortcuts: true,
       shouldUseTransparentSettingsWindow: true,
     };
@@ -53,7 +55,7 @@ export class MacosBackend extends Backend {
   public async init() {
     // Is there a way to hide the dock icon on macOS initially? If we hide it here, it
     // will be shown for a short moment when the app is started.
-    app.dock.hide();
+    app.dock?.hide();
 
     // We can get a list of all installed applications on macOS.
     native
@@ -219,7 +221,9 @@ export class MacosBackend extends Backend {
     try {
       native.movePointer(dx, dy);
     } catch (e) {
-      console.error('Failed to move mouse pointer: ' + e.message);
+      console.error(
+        'Failed to move mouse pointer: ' + (e instanceof Error ? e.message : String(e))
+      );
     }
   }
 

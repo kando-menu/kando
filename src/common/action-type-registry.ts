@@ -11,6 +11,7 @@
 import i18next from 'i18next';
 
 import type { WindowWithAPIs } from './common-window-api';
+import { BackendInfo } from '../common';
 
 import {
   ChildMenuItem,
@@ -49,6 +50,9 @@ export type WorkflowActionTypeMeta = {
   /** The translated description of the workflow action type. */
   description: string;
 
+  /** Whether this action type is supported by the current backend. */
+  supportedByBackend: boolean;
+
   /**
    * Whether a workflow using this action should usually wait for Kando to fade out before
    * executing.
@@ -75,22 +79,29 @@ export type WorkflowActionTypeMeta = {
  */
 export class ActionTypeRegistry {
   /** The singleton instance of this class. */
-  private static instance: ActionTypeRegistry = null;
+  private static instance?: ActionTypeRegistry;
 
   /** The metadata for each workflow action type. */
-  private metadata: Record<WorkflowActionType, WorkflowActionTypeMeta>;
+  private metadata?: Record<WorkflowActionType, WorkflowActionTypeMeta>;
+
+  /**
+   * The constructor is private to enforce the singleton pattern. Use `getInstance` to get
+   * the instance of this class.
+   */
+  private constructor() {}
 
   /**
    * This is a singleton class. The constructor is private. Use `getInstance` to get the
    * instance of this class.
    */
-  private constructor() {
-    this.metadata = {
+  public static init(backend: BackendInfo) {
+    this.getInstance().metadata = {
       ['close-menu']: {
         name: i18next.t('menu-actions.close-menu.name'),
         icon: 'close-menu-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.close-menu.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'close-menu' }),
@@ -100,6 +111,7 @@ export class ActionTypeRegistry {
         icon: 'close-submenu-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.close-submenu.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'close-submenu' }),
@@ -109,6 +121,7 @@ export class ActionTypeRegistry {
         icon: 'delay-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.delay.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'delay', duration: 1 }),
@@ -118,6 +131,7 @@ export class ActionTypeRegistry {
         icon: 'command-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.execute-command.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({
@@ -132,6 +146,7 @@ export class ActionTypeRegistry {
         icon: 'macro-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.execute-macro.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: true,
         prefersInhibitedShortcuts: true,
         createAction: () => ({ type: 'execute-macro', macro: [] }),
@@ -141,6 +156,8 @@ export class ActionTypeRegistry {
         icon: 'focus-window-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.focus-window.description'),
+        supportedByBackend:
+          backend.supportsListingWindows && backend.supportsFocusingWindows,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'focus-window', windowName: '', appName: '' }),
@@ -150,6 +167,7 @@ export class ActionTypeRegistry {
         icon: 'inhibit-shortcuts-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.inhibit-shortcuts.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'inhibit-shortcuts' }),
@@ -159,6 +177,7 @@ export class ActionTypeRegistry {
         icon: 'file-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.open-file.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'open-file', path: '' }),
@@ -168,6 +187,7 @@ export class ActionTypeRegistry {
         icon: 'redirect-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.open-menu.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'open-menu', menu: '' }),
@@ -177,6 +197,7 @@ export class ActionTypeRegistry {
         icon: 'settings-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.open-settings.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'open-settings' }),
@@ -186,6 +207,7 @@ export class ActionTypeRegistry {
         icon: 'uri-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.open-uri.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'open-uri', uri: '' }),
@@ -195,6 +217,7 @@ export class ActionTypeRegistry {
         icon: 'clipboard-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.set-clipboard.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: false,
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'set-clipboard', text: '' }),
@@ -204,6 +227,7 @@ export class ActionTypeRegistry {
         icon: 'hotkey-item.svg',
         iconTheme: 'kando',
         description: i18next.t('menu-actions.simulate-hotkey.description'),
+        supportedByBackend: true,
         prefersDelayedExecution: true,
         prefersInhibitedShortcuts: true,
         createAction: () => ({ type: 'simulate-hotkey', hotkey: '' }),
@@ -217,7 +241,7 @@ export class ActionTypeRegistry {
    * @returns The singleton instance of this class.
    */
   public static getInstance(): ActionTypeRegistry {
-    if (ActionTypeRegistry.instance === null) {
+    if (!ActionTypeRegistry.instance) {
       ActionTypeRegistry.instance = new ActionTypeRegistry();
     }
     return ActionTypeRegistry.instance;
@@ -230,7 +254,7 @@ export class ActionTypeRegistry {
    * @returns A map of all workflow action types to their meta information.
    */
   public getAllMetadata(): Record<WorkflowActionType, WorkflowActionTypeMeta> {
-    return this.metadata;
+    return this.metadata!;
   }
 
   /**
@@ -242,7 +266,7 @@ export class ActionTypeRegistry {
    * @returns The meta information for the given workflow action type.
    */
   public getMetadata(type: WorkflowActionType): WorkflowActionTypeMeta {
-    return this.metadata[type];
+    return this.metadata![type];
   }
 
   /**

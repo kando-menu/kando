@@ -17,7 +17,7 @@ import MouseTrap from 'mousetrap';
 import classNames from 'classnames/bind';
 
 import type { SettingsWindowSidebarWidths } from '../../common';
-import { useGeneralSetting, useMenuSettings } from '../state';
+import { useAppState, useGeneralSetting, useMenuSettings } from '../state';
 import {
   AboutDialog,
   AchievementsDialog,
@@ -28,7 +28,7 @@ import {
 import { MenuList, CollectionList } from './menu-list';
 import { MenuPreview, PreviewHeader, PreviewFooter } from './menu-preview';
 import { Properties } from './menu-properties';
-import { Sidebar } from './common';
+import { Note, Sidebar } from './common';
 
 import * as classes from './App.module.scss';
 const cx = classNames.bind(classes);
@@ -43,6 +43,8 @@ export default function App() {
   const [settingsWindowColorScheme] = useGeneralSetting('settingsWindowColorScheme');
   const [settingsWindowFlavor] = useGeneralSetting('settingsWindowFlavor');
   const [sidebarWidths, setSidebarWidths] = React.useState<SettingsWindowSidebarWidths>();
+  const backend = useAppState((state) => state.backendInfo);
+  const settingsWindowBanner = backend?.settingsWindowBanner;
 
   // Bind global undo/redo shortcuts.
   React.useEffect(() => {
@@ -114,7 +116,7 @@ export default function App() {
     <>
       <div
         className={cx({
-          container: true,
+          outerContainer: true,
           transparentLightFlavor: settingsWindowFlavor === 'transparent-light',
           transparentDarkFlavor: settingsWindowFlavor === 'transparent-dark',
           transparentSystemFlavor: settingsWindowFlavor === 'transparent-system',
@@ -122,29 +124,44 @@ export default function App() {
           sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
           sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
         })}>
-        <Sidebar
-          initialWidth={sidebarWidths.left}
-          mainDirection="row"
-          position="left"
-          onWidthChanged={onLeftSidebarWidthChanged}>
-          <CollectionList />
-          <MenuList />
-        </Sidebar>
         <div
           className={cx({
-            centerArea: true,
+            innerContainer: true,
           })}>
-          <PreviewHeader />
-          <MenuPreview />
-          <PreviewFooter />
+          <Sidebar
+            initialWidth={sidebarWidths.left}
+            mainDirection="row"
+            position="left"
+            onWidthChanged={onLeftSidebarWidthChanged}>
+            <CollectionList />
+            <MenuList />
+          </Sidebar>
+          <div
+            className={cx({
+              centerArea: true,
+            })}>
+            <PreviewHeader />
+            <MenuPreview />
+            <PreviewFooter />
+          </div>
+          <Sidebar
+            initialWidth={sidebarWidths.right}
+            mainDirection="column"
+            position="right"
+            onWidthChanged={onRightSidebarWidthChanged}>
+            <Properties />
+          </Sidebar>
         </div>
-        <Sidebar
-          initialWidth={sidebarWidths.right}
-          mainDirection="column"
-          position="right"
-          onWidthChanged={onRightSidebarWidthChanged}>
-          <Properties />
-        </Sidebar>
+        {Boolean(settingsWindowBanner) && (
+          <div
+            className={cx({
+              bannerBackground: true,
+            })}>
+            <Note isCentered useMarkdown noteStyle="warning">
+              {settingsWindowBanner}
+            </Note>
+          </div>
+        )}
         <GeneralSettingsDialog />
         <AchievementsDialog />
         <AboutDialog />
