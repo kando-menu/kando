@@ -374,7 +374,8 @@
             "select-workflow-name": "選取工作流程",
             "hover-workflow-name": "懸停工作流程",
             "activate-workflow-name": "中心點擊工作流程",
-            "open-workflow-name": "開啟工作流程"
+            "open-workflow-name": "開啟工作流程",
+            "action-not-supported": "目前的後端不支援此動作。"
         },
         "fix-menu-item-angle": "固定此選單項目的角度。啟用後，拖曳項目即可更新角度。",
         "edit-submenu": "編輯子選單",
@@ -513,7 +514,7 @@
             "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列或您的 Niri 設定檔，執行 'kando --menu \"選單名稱\"' 來開啟此選單。"
         },
         "kde": {
-            "error": "無法連線至 Kando 的 KWin 外掛程式。可從此處取得：{{link}}"
+            "error": "無法連線至 Kando 的 KWin 外掛程式，部分功能將無法使用。可從[此處]({{link}})取得。"
         }
     },
     "achievements": {
