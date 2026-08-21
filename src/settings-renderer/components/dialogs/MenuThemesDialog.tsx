@@ -399,6 +399,15 @@ export default function MenuThemesDialog() {
             label={i18next.t('settings.menu-themes-dialog.underline-quick-key')}
             settingsKey="enableUnderlineQuickSelectKey"
           />
+          <SettingsCheckbox
+            info={i18next.t(
+              'settings.menu-themes-dialog.enable-select-workflow-quick-key-info'
+            )}
+            label={i18next.t(
+              'settings.menu-themes-dialog.enable-select-workflow-quick-key'
+            )}
+            settingsKey="enableOpenWorkflowQuickKeyVisual"
+          />
 
           {accentColorsNode}
 

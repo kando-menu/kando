@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuItem, MenuThemeDescription } from '../common';
+import { GeneralSettings, MenuItem, MenuThemeDescription } from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { getClosestEquivalentAngle } from '../common/math';
 import { RenderedMenuItem } from './rendered-menu-item';
@@ -173,11 +173,14 @@ export class MenuTheme {
    * it.
    *
    * @param item The menu item to create the html elements for.
-   * @param underlineQuickSelectKey A boolean determining if the quick select key should
-   *   be underlined within the menu item name.
+   * @param settings A reference to the users general settings.
    * @returns The created html element.
    */
-  public createItem(item: MenuItem, underlineQuickSelectKey: boolean) {
+  public createItem(
+    item: MenuItem,
+    settings: GeneralSettings,
+    openWorkflowQuickKey: string
+  ) {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
 
@@ -194,11 +197,10 @@ export class MenuTheme {
       if (layer.content === 'name') {
         // If the item has a quick select key, we underline the first occurrence of the
         // key in the name.
-        const quickSelectKey = MenuTheme.getOpenSelectWorkflowKey(item);
-        if (quickSelectKey && underlineQuickSelectKey) {
+        if (openWorkflowQuickKey && settings.enableUnderlineQuickSelectKey) {
           layerDiv.innerHTML = MenuTheme.underlineQuickSelectKey(
             item.name,
-            quickSelectKey
+            openWorkflowQuickKey
           );
         } else {
           layerDiv.innerText = item.name;
@@ -210,10 +212,13 @@ export class MenuTheme {
         );
         layerDiv.appendChild(icon);
       } else if (layer.content === 'quick-select-key') {
-        // Only create the quickSelectKey div, if the item has a quickSelectKey assigned.
-        const quickSelectKey = MenuTheme.getOpenSelectWorkflowKey(item);
-        if (quickSelectKey) {
-          layerDiv.innerText = quickSelectKey;
+        // Only create the quickSelectKey div, if the setting is enabled, and
+        // the item is a button or submenu as those are the ones that have open-select workflows.
+        if (
+          settings.enableOpenWorkflowQuickKeyVisual &&
+          (item.type == 'button' || item.type == 'submenu')
+        ) {
+          layerDiv.innerText = openWorkflowQuickKey;
         } else {
           continue;
         }

@@ -36,6 +36,8 @@
       "selection-wedges": "Draw item wedges",
       "underline-quick-key-info": "If enabled, the first letter of the menu items name that matches the menu items quick key with be underlined.",
       "underline-quick-key": "Underline quick key",
+      "enable-select-workflow-quick-key-info": "If enabled and the theme supports it, nodes will show which key is needed to activate that node with the keyboard.",
+      "enable-select-workflow-quick-key": "Draw open workflow quick-key",
       "light-dark-mode-info": "If enabled, you can choose a different theme and color set if your system is in light or dark color mode.",
       "light-dark-mode": "Enable light/dark mode",
       "get-themes-online": "Get themes online",

@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { Vec2 } from '../common';
+import { GeneralSettings, Vec2 } from '../common';
 import { MenuTheme } from './menu-theme';
 
 /**
@@ -103,7 +103,12 @@ export class CenterText {
    * @param accessKey An optional access key for the text element. The first occurrence of
    *   the given character will be underlined.
    */
-  public async show(text: string, position: Vec2, accessKey?: string) {
+  public async show(
+    text: string,
+    position: Vec2,
+    settings: GeneralSettings,
+    accessKey?: string
+  ) {
     if (!this.enabled) {
       return;
     }
@@ -145,7 +150,7 @@ export class CenterText {
     // If an access key is given, we want to underline the first occurrence of the access
     // key in the text. For this, we wrap it in a <u> element. We also need to use
     // innerHTML instead of textContent in this case.
-    if (accessKey) {
+    if (accessKey && settings.enableUnderlineQuickSelectKey) {
       p.innerHTML = MenuTheme.underlineQuickSelectKey(formattedText, accessKey);
     } else {
       p.innerText = formattedText;
