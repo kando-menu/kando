@@ -107,7 +107,7 @@ export class CenterText {
     text: string,
     position: Vec2,
     settings: GeneralSettings,
-    accessKey?: string
+    accessKey: string
   ) {
     if (!this.enabled) {
       return;
@@ -150,7 +150,7 @@ export class CenterText {
     // If an access key is given, we want to underline the first occurrence of the access
     // key in the text. For this, we wrap it in a <u> element. We also need to use
     // innerHTML instead of textContent in this case.
-    if (accessKey && settings.enableUnderlineQuickSelectKey) {
+    if (settings.enableUnderlineQuickSelectKey) {
       p.innerHTML = MenuTheme.underlineQuickSelectKey(formattedText, accessKey);
     } else {
       p.innerText = formattedText;

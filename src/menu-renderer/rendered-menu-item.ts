@@ -98,7 +98,7 @@ type RenderData = {
    * whatever key that is. Otherwise it will contain the index of this menu item, as that
    * also corresponds to the quick select key, if quick select key is not bound.
    */
-  openWorkflowQuickKey: string | null;
+  openWorkflowQuickKey: string;
 };
 
 /**
