@@ -25,11 +25,18 @@ import { MenuItem, AppDescription, ActionTypeRegistry } from '../../../common';
  */
 export abstract class LinuxBackend extends Backend {
   /**
-   * This is the list of paths where the icons are searched for. It includes common
+   * This is the list of paths where the icon themes are searched for. It includes common
    * directories like `~/.icons`, `~/.local/share/icons`, and system-wide directories like
    * `/usr/share/icons`.
    */
-  private iconSearchPaths: string[] = [];
+  private iconThemePaths: string[] = [];
+
+  /**
+   * Then, there are some special directories that are searched for icons. These are
+   * usually used for application-specific icons, like `~/.local/share/pixmaps` or
+   * `/usr/share/pixmaps`.
+   */
+  private specialIconDirectories: string[] = [];
 
   /** This stores the last known system icon theme. */
   private currentTheme: string;
@@ -54,27 +61,32 @@ export abstract class LinuxBackend extends Backend {
     // Assemble a list of paths to search for icons. The order is important, if a theme is
     // found in multiple locations, the first one has priority.
     const home = os.homedir();
-    this.iconSearchPaths = [
+    this.iconThemePaths = [
       path.join(home, '.icons/'),
       path.join(home, '.local/share/icons/'),
-      path.join(home, '.local/share/pixmaps/'),
-      path.join(home, '.pixmaps/'),
     ];
     process.env.XDG_DATA_DIRS?.split(':').forEach((dir) => {
       if (dir.startsWith('/home/') || dir.startsWith(flatpakPrefix)) {
-        this.iconSearchPaths.push(path.join(dir, 'icons/'));
+        this.iconThemePaths.push(path.join(dir, 'icons/'));
       } else {
-        this.iconSearchPaths.push(path.join(flatpakPrefix, dir, 'icons/'));
+        this.iconThemePaths.push(path.join(flatpakPrefix, dir, 'icons/'));
       }
     });
-    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/share/icons/'));
-    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/local/share/icons/'));
-    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/share/pixmaps/'));
-    this.iconSearchPaths.push(path.join(flatpakPrefix, '/usr/local/share/pixmaps/'));
+    this.iconThemePaths.push(path.join(flatpakPrefix, '/usr/share/icons/'));
+    this.iconThemePaths.push(path.join(flatpakPrefix, '/usr/local/share/icons/'));
+
+    // Add some special directories that are not part of the icon theme specification, but
+    // are commonly used for application-specific icons.
+    this.specialIconDirectories = [
+      path.join(home, '.local/share/pixmaps/'),
+      path.join(home, '.pixmaps/'),
+      path.join(flatpakPrefix, '/usr/share/pixmaps/'),
+      path.join(flatpakPrefix, '/usr/local/share/pixmaps/'),
+    ];
 
     // Make search paths unique.
-    this.iconSearchPaths = this.iconSearchPaths.filter(
-      (item, index) => this.iconSearchPaths.indexOf(item) === index
+    this.iconThemePaths = this.iconThemePaths.filter(
+      (item, index) => this.iconThemePaths.indexOf(item) === index
     );
 
     // Collect all installed applications on the system.
@@ -129,15 +141,23 @@ export abstract class LinuxBackend extends Backend {
     const allThemeDirectories = await this.getThemeDirectoriesRecursively(
       this.currentTheme
     );
-    console.log('Searching for icons in the following directories:', allThemeDirectories);
     const icons = await this.getIcons(
       allThemeDirectories,
       ['apps', 'actions', 'devices', 'mimetypes', 'places'],
-      ['scalable', '48x48', '48'],
+      [
+        'scalable',
+        '256x256',
+        '256',
+        '128x128',
+        '128',
+        '64x64',
+        '64',
+        '48x48',
+        '48',
+        'symbolic',
+      ],
       ['.svg', '.png']
     );
-
-    console.log('Found', icons.size, 'icons in the current theme:', this.currentTheme);
 
     return icons;
   }
@@ -377,7 +397,7 @@ export abstract class LinuxBackend extends Backend {
     const paths: string[] = [];
 
     // Check each path for the theme directory.
-    for (const basePath of this.iconSearchPaths) {
+    for (const basePath of this.iconThemePaths) {
       const themePath = path.join(basePath, themeName);
       try {
         // Check if the file exists.
@@ -490,6 +510,24 @@ export abstract class LinuxBackend extends Backend {
   ): Promise<Map<string, string>> {
     // Maps icon names to their absolute file paths.
     const icons = new Map<string, string>();
+
+    // First look for icons in the special directories. These are usually used for
+    // application-specific icons. Iterate backwards to ensure that icons from the first
+    // directory overwrite icons from later directories.
+    for (const dir of this.specialIconDirectories.reverse()) {
+      if (!fs.existsSync(dir)) {
+        continue; // Skip if the directory does not exist.
+      }
+
+      const files = await fs.promises.readdir(dir);
+      for (const file of files) {
+        const ext = path.extname(file).toLowerCase();
+        if (fileTypes.includes(ext)) {
+          const iconName = path.basename(file, ext);
+          icons.set(iconName, 'file://' + path.join(dir, file));
+        }
+      }
+    }
 
     // Iterate over all base paths backwards to ensure that icons from the first path
     // overwrite icons from later paths.
