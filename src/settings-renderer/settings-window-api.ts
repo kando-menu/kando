@@ -20,6 +20,7 @@ import {
   SystemInfo,
   AppDescription,
   LevelProgress,
+  SettingsWindowSidebarWidths,
 } from '../common';
 import { IPCMenuManager } from './utils/ipc-menu-manager';
 
@@ -55,6 +56,16 @@ export const SETTINGS_WINDOW_API = {
   /** Returns some information about the current system. */
   getSystemInfo: (): Promise<SystemInfo> => {
     return ipcRenderer.invoke('settings-window.get-system-info');
+  },
+
+  /** Returns the persisted widths of the resizable settings window sidebars. */
+  getSidebarWidths: (): Promise<SettingsWindowSidebarWidths> => {
+    return ipcRenderer.invoke('settings-window.get-sidebar-widths');
+  },
+
+  /** Persists the width of one resizable settings window sidebar. */
+  setSidebarWidth: (position: 'left' | 'right', width: number) => {
+    ipcRenderer.send('settings-window.set-sidebar-width', position, width);
   },
 
   /** Returns the index of the last opened menu. */

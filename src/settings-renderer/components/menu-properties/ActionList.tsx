@@ -16,7 +16,7 @@ import i18next from 'i18next';
 import * as classes from './ActionList.module.scss';
 const cx = classNames.bind(classes);
 
-import { ShortcutPicker, Button, Note, ThemedIcon } from '../common';
+import { ShortcutPicker, Button, Note, ThemedIcon, InfoItem } from '../common';
 import { TbPlus, TbTrash } from 'react-icons/tb';
 import { Workflow, WorkflowAction, ActionTypeRegistry } from '../../../common';
 import ActionPicker from './ActionPicker';
@@ -195,7 +195,16 @@ export default function ActionList(props: Props) {
         onDragStart={(event) => handleDragStart(event, index)}>
         <div className={classes.actionItemHeader}>
           <ThemedIcon name={typeMeta.icon} size={16} theme={typeMeta.iconTheme} />
-          <div style={{ flexGrow: 1 }}>{typeMeta.name}</div>
+          <div style={{ flexGrow: 1 }}>
+            {typeMeta.name}{' '}
+            {typeMeta.supportedByBackend ? null : (
+              <InfoItem
+                key="warning"
+                isWarning
+                info={i18next.t('settings.workflow-editor.action-not-supported')}
+              />
+            )}
+          </div>
           <Button
             icon={<TbTrash />}
             size="small"

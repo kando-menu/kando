@@ -11,6 +11,7 @@
 export * from './general-settings';
 export * from './menu-settings';
 export * from './settings';
+export * from './settings-window-state';
 
 import { app } from 'electron';
 import fs from 'fs-extra';

@@ -54,12 +54,16 @@
     background-color: $widget-normal-active;
   }
 
-  &:not(.selected):hover {
+  &:not(.selected):not(:disabled):hover {
     background-color: $widget-normal-hover;
   }
 
-  &:not(.selected):active {
+  &:not(.selected):not(:disabled):active {
     transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
   }
 }
 
@@ -68,7 +72,7 @@
 
   background-color: light-dark($key-light, $key-dark);
 
-  &:not(.selected):hover {
+  &:not(.selected):not(:disabled):hover {
     background-color: light-dark(
       color.adjust($key-light, $lightness: -10%),
       color.adjust($key-dark, $lightness: 10%)
@@ -81,7 +85,7 @@
 
   background-color: transparent;
 
-  &:not(.selected):hover {
+  &:not(.selected):not(:disabled):hover {
     background-color: $widget-normal;
   }
 }
@@ -92,7 +96,7 @@
   background-color: transparent;
   opacity: 0.7;
 
-  &:not(.selected):hover {
+  &:not(.selected):not(:disabled):hover {
     background-color: transparent;
     opacity: 1;
   }
@@ -110,7 +114,7 @@
       color.adjust($base-dark, $lightness: -10%)
     );
 
-  &:not(.selected):hover {
+  &:not(.selected):not(:disabled):hover {
     background-color: light-dark(
       color.adjust($base-light, $lightness: -3%),
       color.adjust($base-dark, $lightness: 10%)

@@ -31,6 +31,8 @@ export class X11Backend extends LinuxBackend {
     return {
       name: 'X11',
       menuWindowType: 'dock',
+      supportsListingWindows: true,
+      supportsFocusingWindows: true,
       supportsShortcuts: true,
       shouldUseTransparentSettingsWindow: false,
     };

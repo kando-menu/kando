@@ -104,7 +104,7 @@ export default interface Resources {
               "shortcut-info": "Kando cannot directly bind global shortcuts on Hyprland. Instead, specify a shortcut ID here and bind a shortcut in your hyprland.conf with something like \"bind = CTRL, Space, global, kando:example-menu\". Replace example-menu with the ID chosen here."
           },
           "kde": {
-              "error": "Could not connect to KWin Kando plugin. You can get it from here: {{link}}"
+              "error": "Could not connect to KWin Kando plugin. Some functionality will not be available. You can get it from [here]({{link}})."
           },
           "kde-wayland": {
               "shortcut-info": "Kando cannot directly bind global shortcuts on KDE/Wayland. Instead, specify a shortcut ID here and then search for it in the KWin section of the global shortcuts in your KDE's system settings. There you can assign the shortcut which will open this menu."
@@ -303,8 +303,6 @@ export default interface Resources {
           "area-condition-tooltip": "Select a screen area",
           "area-condition-top-placeholder": "Top",
           "cancel": "Cancel",
-          "centered-mode": "Centered Mode",
-          "centered-mode-info": "Open the menu in the screen's center instead of at the cursor.",
           "create-menu-button": "Add Menu",
           "delete-menu": "Delete menu",
           "delete-menu-item": "Delete menu item",
@@ -608,6 +606,7 @@ export default interface Resources {
               "start-countdown": "Start countdown"
           },
           "workflow-editor": {
+              "action-not-supported": "This action is not supported by the current backend.",
               "action-picker": {
                   "search-placeholder": "Search for an action…"
               },

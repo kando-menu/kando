@@ -77,6 +77,12 @@ export type BackendInfo = {
    */
   readonly menuWindowType: string;
 
+  /** Some backends do not support listing the open windows. */
+  readonly supportsListingWindows: boolean;
+
+  /** Some backends do not support focusing windows. */
+  readonly supportsFocusingWindows: boolean;
+
   /**
    * There are some backends which do not support custom shortcuts. In this case, the user
    * will not be able to change the shortcuts in the settings. Instead, the user will set
@@ -91,6 +97,14 @@ export type BackendInfo = {
    * required.
    */
   readonly shortcutHint?: string;
+
+  /**
+   * This text will be shown in the settings window as a banner at the bottom of the
+   * window. It can be used to show some warning to the user, for instance if the backend
+   * is not fully supported or if some features are not available. If this is not set, no
+   * banner will be shown.
+   */
+  readonly settingsWindowBanner?: string;
 
   /** This determines whether the settings window should use transparency per default. */
   readonly shouldUseTransparentSettingsWindow: boolean;
@@ -132,6 +146,12 @@ export type SystemInfo = {
 
   /** The API version supported by Kando's own IPC show-custom-menu interface. */
   readonly ipcApiVersion: number;
+};
+
+/** The persisted widths of the resizable sidebars in the settings window. */
+export type SettingsWindowSidebarWidths = {
+  readonly left?: number;
+  readonly right?: number;
 };
 
 /** This type describes a icon theme consisting of a collection of icon files. */

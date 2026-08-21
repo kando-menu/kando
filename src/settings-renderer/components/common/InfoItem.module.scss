@@ -25,10 +25,10 @@
   }
 
   &.warning {
-    color: rgb(233, 144, 49);
+    color: $text-warning;
 
     &:hover {
-      color: rgb(236, 163, 85);
+      color: $text-warning-hover;
     }
   }
 }

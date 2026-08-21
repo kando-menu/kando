@@ -16,7 +16,8 @@ import { Tooltip } from 'react-tooltip';
 import MouseTrap from 'mousetrap';
 import classNames from 'classnames/bind';
 
-import { useGeneralSetting, useMenuSettings } from '../state';
+import type { SettingsWindowSidebarWidths } from '../../common';
+import { useAppState, useGeneralSetting, useMenuSettings } from '../state';
 import {
   AboutDialog,
   AchievementsDialog,
@@ -27,7 +28,7 @@ import {
 import { MenuList, CollectionList } from './menu-list';
 import { MenuPreview, PreviewHeader, PreviewFooter } from './menu-preview';
 import { Properties } from './menu-properties';
-import { Sidebar } from './common';
+import { Note, Sidebar } from './common';
 
 import * as classes from './App.module.scss';
 const cx = classNames.bind(classes);
@@ -41,6 +42,9 @@ const cx = classNames.bind(classes);
 export default function App() {
   const [settingsWindowColorScheme] = useGeneralSetting('settingsWindowColorScheme');
   const [settingsWindowFlavor] = useGeneralSetting('settingsWindowFlavor');
+  const [sidebarWidths, setSidebarWidths] = React.useState<SettingsWindowSidebarWidths>();
+  const backend = useAppState((state) => state.backendInfo);
+  const settingsWindowBanner = backend?.settingsWindowBanner;
 
   // Bind global undo/redo shortcuts.
   React.useEffect(() => {
@@ -73,16 +77,46 @@ export default function App() {
     };
   }, [settingsWindowColorScheme]);
 
-  // Notify the main process that our app is ready to be displayed.
+  // Restore the sidebar widths before notifying the main process that the window can be
+  // displayed. This prevents the default widths from flashing briefly during startup.
   React.useEffect(() => {
-    window.settingsAPI.settingsWindowReady();
+    let active = true;
+
+    void window.settingsAPI
+      .getSidebarWidths()
+      .catch((error) => {
+        console.error('Failed to load settings window sidebar widths:', error);
+        return {};
+      })
+      .then((widths) => {
+        if (active) {
+          setSidebarWidths(widths);
+          window.settingsAPI.settingsWindowReady();
+        }
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
+
+  const onLeftSidebarWidthChanged = React.useCallback((width: number) => {
+    window.settingsAPI.setSidebarWidth('left', width);
+  }, []);
+
+  const onRightSidebarWidthChanged = React.useCallback((width: number) => {
+    window.settingsAPI.setSidebarWidth('right', width);
+  }, []);
+
+  if (sidebarWidths === undefined) {
+    return null;
+  }
 
   return (
     <>
       <div
         className={cx({
-          container: true,
+          outerContainer: true,
           transparentLightFlavor: settingsWindowFlavor === 'transparent-light',
           transparentDarkFlavor: settingsWindowFlavor === 'transparent-dark',
           transparentSystemFlavor: settingsWindowFlavor === 'transparent-system',
@@ -90,21 +124,44 @@ export default function App() {
           sakuraDarkFlavor: settingsWindowFlavor === 'sakura-dark',
           sakuraSystemFlavor: settingsWindowFlavor === 'sakura-system',
         })}>
-        <Sidebar mainDirection="row" position="left">
-          <CollectionList />
-          <MenuList />
-        </Sidebar>
         <div
           className={cx({
-            centerArea: true,
+            innerContainer: true,
           })}>
-          <PreviewHeader />
-          <MenuPreview />
-          <PreviewFooter />
+          <Sidebar
+            initialWidth={sidebarWidths.left}
+            mainDirection="row"
+            position="left"
+            onWidthChanged={onLeftSidebarWidthChanged}>
+            <CollectionList />
+            <MenuList />
+          </Sidebar>
+          <div
+            className={cx({
+              centerArea: true,
+            })}>
+            <PreviewHeader />
+            <MenuPreview />
+            <PreviewFooter />
+          </div>
+          <Sidebar
+            initialWidth={sidebarWidths.right}
+            mainDirection="column"
+            position="right"
+            onWidthChanged={onRightSidebarWidthChanged}>
+            <Properties />
+          </Sidebar>
         </div>
-        <Sidebar mainDirection="column" position="right">
-          <Properties />
-        </Sidebar>
+        {Boolean(settingsWindowBanner) && (
+          <div
+            className={cx({
+              bannerBackground: true,
+            })}>
+            <Note isCentered useMarkdown noteStyle="warning">
+              {settingsWindowBanner}
+            </Note>
+          </div>
+        )}
         <GeneralSettingsDialog />
         <AchievementsDialog />
         <AboutDialog />
