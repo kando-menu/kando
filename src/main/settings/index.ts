@@ -23,6 +23,11 @@ import path from 'path';
  */
 let configDirectory: string | null = null;
 
+/** Name of the json file that enables portable mode. */
+export const portableJsonFileName: string = 'portableMode.json';
+/** The default folder where portable configuration files will be stored */
+export const defaultPortableConfigFolder: string = 'portableConfig';
+
 /**
  * Gets the directory where the settings files are stored. Usually, this is electron's
  * app.getPath('userData') directory. However, Kando allows for a portable mode where this
@@ -34,9 +39,9 @@ let configDirectory: string | null = null;
 export function getConfigDirectory(): string {
   if (configDirectory === null) {
     const execDir = path.dirname(process.execPath);
-    console.log('Looking for portableMode.json in', execDir);
+    console.log('Looking for ', portableJsonFileName, ' in', execDir);
 
-    const portableConfigPath = path.join(execDir, 'portableMode.json');
+    const portableConfigPath = path.join(execDir, portableJsonFileName);
 
     if (fs.existsSync(portableConfigPath)) {
       try {
