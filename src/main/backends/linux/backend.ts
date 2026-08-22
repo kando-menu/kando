@@ -150,10 +150,14 @@ export abstract class LinuxBackend extends Backend {
         '256',
         '128x128',
         '128',
+        '512x512', // We put the 512px size here on purpose, because they are pretty huge
+        '512', // and we would prefer the 128px or 256px versions if they are available.
         '64x64',
         '64',
         '48x48',
         '48',
+        '32x32',
+        '32',
         'symbolic',
       ],
       ['.svg', '.png']
