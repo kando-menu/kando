@@ -371,11 +371,6 @@ export default function MenuThemesDialog() {
             width={spinbuttonWidth}
           />
           <SettingsCheckbox
-            info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
-            label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
-            settingsKey="enableDarkModeForMenuThemes"
-          />
-          <SettingsCheckbox
             info={i18next.t('settings.menu-themes-dialog.enable-menu-animations-info')}
             label={i18next.t('settings.menu-themes-dialog.enable-menu-animations')}
             settingsKey="enableMenuAnimations"
@@ -395,18 +390,21 @@ export default function MenuThemesDialog() {
             settingsKey="enableSelectionWedges"
           />
           <SettingsCheckbox
-            info={i18next.t('settings.menu-themes-dialog.underline-quick-key-info')}
-            label={i18next.t('settings.menu-themes-dialog.underline-quick-key')}
-            settingsKey="enableUnderlineQuickSelectKey"
+            info={i18next.t(
+              'settings.menu-themes-dialog.underline-quick-select-key-info'
+            )}
+            label={i18next.t('settings.menu-themes-dialog.underline-quick-select-key')}
+            settingsKey="underlineQuickSelectKey"
           />
           <SettingsCheckbox
-            info={i18next.t(
-              'settings.menu-themes-dialog.enable-select-workflow-quick-key-info'
-            )}
-            label={i18next.t(
-              'settings.menu-themes-dialog.enable-select-workflow-quick-key'
-            )}
-            settingsKey="enableOpenWorkflowQuickKeyVisual"
+            info={i18next.t('settings.menu-themes-dialog.draw-quick-select-key-info')}
+            label={i18next.t('settings.menu-themes-dialog.draw-quick-select-key')}
+            settingsKey="drawQuickSelectKey"
+          />
+          <SettingsCheckbox
+            info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
+            label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
+            settingsKey="enableDarkModeForMenuThemes"
           />
 
           {accentColorsNode}

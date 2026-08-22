@@ -173,14 +173,15 @@ export class MenuTheme {
    * it.
    *
    * @param item The menu item to create the html elements for.
-   * @param settings A reference to the users general settings.
+   * @param settings The current general settings.
+   * @param quickSelectKey The quick select key for this item.
    * @returns The created html element.
    */
   public createItem(
     item: MenuItem,
     settings: GeneralSettings,
-    openWorkflowQuickKey: string
-  ) {
+    quickSelectKey: string
+  ): HTMLElement {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
 
@@ -197,10 +198,10 @@ export class MenuTheme {
       if (layer.content === 'name') {
         // If the item has a quick select key, we underline the first occurrence of the
         // key in the name.
-        if (openWorkflowQuickKey && settings.enableUnderlineQuickSelectKey) {
+        if (settings.underlineQuickSelectKey) {
           layerDiv.innerHTML = MenuTheme.underlineQuickSelectKey(
             item.name,
-            openWorkflowQuickKey
+            quickSelectKey
           );
         } else {
           layerDiv.innerText = item.name;
@@ -215,10 +216,10 @@ export class MenuTheme {
         // Only create the quickSelectKey div, if the setting is enabled, and
         // the item is a button or submenu as those are the ones that have open-select workflows.
         if (
-          settings.enableOpenWorkflowQuickKeyVisual &&
+          settings.drawQuickSelectKey &&
           (item.type == 'button' || item.type == 'submenu')
         ) {
-          layerDiv.innerText = openWorkflowQuickKey;
+          layerDiv.innerText = quickSelectKey;
         } else {
           continue;
         }

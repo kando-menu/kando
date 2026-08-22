@@ -1068,8 +1068,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       this.centerText.show(
         newHoveredItem.name,
         position,
-        this.settings,
-        newHoveredItem.renderData.openWorkflowQuickKey
+        this.settings.underlineQuickSelectKey
+          ? newHoveredItem.renderData.quickSelectKey
+          : null
       );
     }
 
@@ -1399,34 +1400,27 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       index: 0,
       angle: 0,
       wedge: { start: 0, end: 0 },
-      openWorkflowQuickKey: MenuTheme.getOpenSelectWorkflowKey(rootItem) || '0',
     });
 
     while (queue.length > 0) {
-      const {
-        item,
-        parent,
-        container,
-        level,
-        index,
-        angle,
-        wedge,
-        openWorkflowQuickKey,
-      } = queue.shift();
+      const { item, parent, container, level, index, angle, wedge } = queue.shift();
+
+      const quickSelectKey =
+        MenuTheme.getOpenSelectWorkflowKey(item) || (index + 1).toString();
 
       item.renderData = {
         path: parent ? [...parent.renderData.path, index] : [],
         parent,
         position: { x: 0, y: 0 },
         computedAngle: angle,
-        nodeDiv: this.theme.createItem(item, this.settings, openWorkflowQuickKey),
+        nodeDiv: this.theme.createItem(item, this.settings, quickSelectKey),
         connectorDiv: null,
         lastConnectorAngle: 0,
         lastPointerAngle: 0,
         lastHoveredChildAngle: 0,
         wedge,
         parentWedge: { start: 0, end: 0 },
-        openWorkflowQuickKey,
+        quickSelectKey,
       };
 
       if (this.theme.drawChildrenBelow && level > 0) {
@@ -1505,8 +1499,6 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
             index: i,
             angle: angles[i],
             wedge: wedges.itemWedges[i],
-            openWorkflowQuickKey:
-              MenuTheme.getOpenSelectWorkflowKey(item.children[i]) || (i + 1).toString(),
           });
         }
       }

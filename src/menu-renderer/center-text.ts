@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { GeneralSettings, Vec2 } from '../common';
+import { Vec2 } from '../common';
 import { MenuTheme } from './menu-theme';
 
 /**
@@ -100,21 +100,16 @@ export class CenterText {
    * @param text The text to display.
    * @param position The position of the text element relative to the container. Aka the
    *   current position of the pie menu on the screen.
-   * @param accessKey An optional access key for the text element. The first occurrence of
-   *   the given character will be underlined.
+   * @param quickSelectKey An optional access key for the text element. The first
+   *   occurrence of the given character will be underlined.
    */
-  public async show(
-    text: string,
-    position: Vec2,
-    settings: GeneralSettings,
-    accessKey: string
-  ) {
+  public async show(text: string, position: Vec2, quickSelectKey: string) {
     if (!this.enabled) {
       return;
     }
 
     const currentCallCount = ++this.callCount;
-    const key = text + (accessKey ?? '');
+    const key = text + (quickSelectKey ?? '');
 
     // If the text is already cached, we can use it directly.
     if (this.cache[key]) {
@@ -150,8 +145,8 @@ export class CenterText {
     // If an access key is given, we want to underline the first occurrence of the access
     // key in the text. For this, we wrap it in a <u> element. We also need to use
     // innerHTML instead of textContent in this case.
-    if (settings.enableUnderlineQuickSelectKey) {
-      p.innerHTML = MenuTheme.underlineQuickSelectKey(formattedText, accessKey);
+    if (quickSelectKey) {
+      p.innerHTML = MenuTheme.underlineQuickSelectKey(formattedText, quickSelectKey);
     } else {
       p.innerText = formattedText;
     }
