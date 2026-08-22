@@ -371,7 +371,7 @@ export type MenuThemeDescription = {
    */
   readonly layers: {
     readonly class: string;
-    readonly content: 'none' | 'name' | 'icon';
+    readonly content: 'none' | 'name' | 'icon' | 'quick-select-key';
   }[];
 };
 

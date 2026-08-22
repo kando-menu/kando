@@ -526,6 +526,8 @@ export default interface Resources {
               "enable-menu-animations-info": "If disabled, all transitions and most animations of the menu theme are prevented.",
               "enable-pointer-reactive-effects": "Pointer-Reactive Effects",
               "enable-pointer-reactive-effects-info": "If disabled, some zooming or scaling effects of the menu theme which are based on the current pointer position are prevented.",
+              "enable-select-workflow-quick-key": "Draw open workflow quick-key",
+              "enable-select-workflow-quick-key-info": "If enabled and the theme supports it, nodes will show which key is needed to activate that node with the keyboard.",
               "fade-in-time": "Fade-in time",
               "fade-in-time-info": "The time it takes for the menu to fade in. Default is 75ms.",
               "fade-out-time": "Fade-out time",
@@ -549,7 +551,9 @@ export default interface Resources {
               "save-preset-error-title": "Failed to save preset",
               "selection-wedges": "Draw item wedges",
               "selection-wedges-info": "If enabled and supported by the selected theme, the selectable area of menu items will be highlighted.",
-              "title": "Menu Themes"
+              "title": "Menu Themes",
+              "underline-quick-key": "Underline quick key",
+              "underline-quick-key-info": "If enabled, the first letter of the menu items name that matches the menu items quick key with be underlined."
           },
           "no-matching-menus": "No menus found.",
           "no-matching-menus-note": "Maybe try a different search term?",

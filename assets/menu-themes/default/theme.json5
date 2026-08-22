@@ -40,8 +40,9 @@
     'hover-color': 'rgb(255, 200, 200)',
     'wedge-highlight-color': 'rgba(0, 0, 0, 0.1)',
     'wedge-color': 'rgba(0, 0, 0, 0.2)',
+    'quick-key-background-color': 'rgb(65, 255, 255)'
   },
 
   // This theme is very simple and only uses one layer for the menu items.
-  layers: [{ class: 'icon-layer', content: 'icon' }],
+  layers: [{ class: 'quick-key', content: 'quick-select-key'}, { class: 'icon-layer', content: 'icon' }],
 }
