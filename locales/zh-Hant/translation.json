@@ -227,7 +227,11 @@
             "enable-menu-animations-info": "停用後，將停用選單主題的所有轉場效果和大部分動畫。",
             "enable-menu-animations": "選單動畫",
             "enable-pointer-reactive-effects-info": "停用後，將停用選單主題中根據當前指標位置產生的縮放或比例調整效果。",
-            "enable-pointer-reactive-effects": "指標互動效果"
+            "enable-pointer-reactive-effects": "指標互動效果",
+            "underline-quick-select-key-info": "啟用後，選單項目名稱中與快速選取鍵相符的首個字母將會加上底線。",
+            "underline-quick-select-key": "快速選取鍵底線標示",
+            "draw-quick-select-key-info": "啟用後，當主題支援時，選單項目將會顯示透過鍵盤選取該項目的按鍵。",
+            "draw-quick-select-key": "顯示快速選取鍵"
         },
         "all-menus": "所有選單",
         "search-menus-placeholder": "搜尋選單…",
@@ -374,7 +378,8 @@
             "select-workflow-name": "選取工作流程",
             "hover-workflow-name": "懸停工作流程",
             "activate-workflow-name": "中心點擊工作流程",
-            "open-workflow-name": "開啟工作流程"
+            "open-workflow-name": "開啟工作流程",
+            "action-not-supported": "目前的後端不支援此動作。"
         },
         "fix-menu-item-angle": "固定此選單項目的角度。啟用後，拖曳項目即可更新角度。",
         "edit-submenu": "編輯子選單",
@@ -513,7 +518,7 @@
             "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列或您的 Niri 設定檔，執行 'kando --menu \"選單名稱\"' 來開啟此選單。"
         },
         "kde": {
-            "error": "無法連線至 Kando 的 KWin 外掛程式。可從此處取得：{{link}}"
+            "error": "無法連線至 Kando 的 KWin 外掛程式，部分功能將無法使用。可從[此處]({{link}})取得。"
         }
     },
     "achievements": {
