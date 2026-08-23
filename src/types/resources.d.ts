@@ -522,6 +522,8 @@ export default interface Resources {
               "create-your-own-themes": "Create your own themes",
               "dark": "Dark Mode",
               "default-colors": "Default colors",
+              "draw-quick-select-key": "Draw quick-select key",
+              "draw-quick-select-key-info": "If enabled and the theme supports it, menu items will show which key is needed to select it with the keyboard.",
               "enable-menu-animations": "Menu Animations",
               "enable-menu-animations-info": "If disabled, all transitions and most animations of the menu theme are prevented.",
               "enable-pointer-reactive-effects": "Pointer-Reactive Effects",
@@ -549,7 +551,9 @@ export default interface Resources {
               "save-preset-error-title": "Failed to save preset",
               "selection-wedges": "Draw item wedges",
               "selection-wedges-info": "If enabled and supported by the selected theme, the selectable area of menu items will be highlighted.",
-              "title": "Menu Themes"
+              "title": "Menu Themes",
+              "underline-quick-select-key": "Underline quick-select key",
+              "underline-quick-select-key-info": "If enabled, the first letter of the menu item's name that matches the menu item's quick-select key will be underlined."
           },
           "no-matching-menus": "No menus found.",
           "no-matching-menus-note": "Maybe try a different search term?",

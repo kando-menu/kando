@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { MenuItem, MenuThemeDescription } from '../common';
+import { GeneralSettings, MenuItem, MenuThemeDescription } from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { getClosestEquivalentAngle } from '../common/math';
 import { RenderedMenuItem } from './rendered-menu-item';
@@ -173,9 +173,15 @@ export class MenuTheme {
    * it.
    *
    * @param item The menu item to create the html elements for.
+   * @param settings The current general settings.
+   * @param quickSelectKey The quick select key for this item.
    * @returns The created html element.
    */
-  public createItem(item: MenuItem) {
+  public createItem(
+    item: MenuItem,
+    settings: GeneralSettings,
+    quickSelectKey: string
+  ): HTMLElement {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
 
@@ -192,14 +198,11 @@ export class MenuTheme {
       if (layer.content === 'name') {
         // If the item has a quick select key, we underline the first occurrence of the
         // key in the name.
-        const quickSelectKey = MenuTheme.getQuickSelectKey(item);
-        if (quickSelectKey) {
-          const escapedQuickSelectKey = quickSelectKey.replace(
-            /[.*+?^${}()|[\]\\]/g,
-            '\\$&'
+        if (settings.underlineQuickSelectKey) {
+          layerDiv.innerHTML = MenuTheme.underlineQuickSelectKey(
+            item.name,
+            quickSelectKey
           );
-          const regex = new RegExp(`(${escapedQuickSelectKey})`, 'i');
-          layerDiv.innerHTML = item.name.replace(regex, '<u>$1</u>');
         } else {
           layerDiv.innerText = item.name;
         }
@@ -209,6 +212,17 @@ export class MenuTheme {
           item.icon
         );
         layerDiv.appendChild(icon);
+      } else if (layer.content === 'quick-select-key') {
+        // Only create the quickSelectKey div, if the setting is enabled, and
+        // the item is a button or submenu as those are the ones that have open-select workflows.
+        if (
+          settings.drawQuickSelectKey &&
+          (item.type == 'button' || item.type == 'submenu')
+        ) {
+          layerDiv.innerText = quickSelectKey;
+        } else {
+          continue;
+        }
       }
 
       nodeDiv.appendChild(layerDiv);
@@ -330,27 +344,36 @@ export class MenuTheme {
   }
 
   /**
-   * Returns the primary quick-select key for a given item. It prioritizes the
-   * select-workflow over the hover-workflow over the center-click-workflow.
+   * Returns the primary open-workflow or select workflow quick-select key for a given
+   * item. Dependent on what type of MenuItem is given.
    *
    * @param item The menu item to get the quick-select key for.
    * @returns The primary quick-select key for the given item, or null if there is no
    *   quick-select key.
    */
-  public static getQuickSelectKey(item: MenuItem): string | null {
+  public static getOpenSelectWorkflowKey(item: MenuItem): string | null {
     if (item.type === 'button') {
-      return (
-        item.selectWorkflow?.quickSelectKey || item.hoverWorkflow?.quickSelectKey || null
-      );
+      return item.selectWorkflow?.quickSelectKey || null;
     } else if (item.type === 'submenu') {
-      return (
-        item.openWorkflow?.quickSelectKey ||
-        item.hoverWorkflow?.quickSelectKey ||
-        item.activateWorkflow?.quickSelectKey ||
-        null
-      );
+      return item.openWorkflow?.quickSelectKey || null;
     }
 
     return null;
+  }
+
+  /**
+   * Takes a string and underlines the first instance of the quickSelectKey in the name
+   * string
+   *
+   * @param name The name of the menu item.
+   * @param quickSelectKey The key to underline.
+   * @returns The name string with the first instance of quickSelectKey underlined, or the
+   *   original name if there are no instances of the quickSelectKey within the name
+   *   string.
+   */
+  public static underlineQuickSelectKey(name: string, quickSelectKey: string): string {
+    const escapedSelectKey = quickSelectKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedSelectKey})`, 'i');
+    return name.replace(regex, '<u>$1</u>');
   }
 }

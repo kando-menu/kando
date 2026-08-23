@@ -58,6 +58,12 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
   /** If disabled, no selection wedges will be drawn. */
   enableSelectionWedges: z.boolean().default(false),
 
+  /** If disabled, no selection wedges will be drawn. */
+  underlineQuickSelectKey: z.boolean().default(true),
+
+  /** If disabled no select workflow quick key layer will be added. */
+  drawQuickSelectKey: z.boolean().default(false),
+
   /** The time in milliseconds it takes to fade in the menu. */
   fadeInDuration: z.number().min(0).default(75),
 

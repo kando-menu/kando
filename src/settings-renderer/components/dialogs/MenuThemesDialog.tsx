@@ -343,87 +343,107 @@ export default function MenuThemesDialog() {
       onClose={() => setThemesDialogVisible(false)}>
       <div className={classes.container}>
         <div className={classes.sidebar}>
-          <SettingsSpinbutton
-            info={i18next.t('settings.menu-themes-dialog.menu-scale-info')}
-            label={i18next.t('settings.menu-themes-dialog.menu-scale')}
-            max={5}
-            min={0.5}
-            settingsKey="zoomFactor"
-            step={0.1}
-            width={spinbuttonWidth}
-          />
-          <SettingsSpinbutton
-            info={i18next.t('settings.menu-themes-dialog.fade-in-time-info')}
-            label={i18next.t('settings.menu-themes-dialog.fade-in-time')}
-            max={500}
-            min={0}
-            settingsKey="fadeInDuration"
-            step={10}
-            width={spinbuttonWidth}
-          />
-          <SettingsSpinbutton
-            info={i18next.t('settings.menu-themes-dialog.fade-out-time-info')}
-            label={i18next.t('settings.menu-themes-dialog.fade-out-time')}
-            max={500}
-            min={0}
-            settingsKey="fadeOutDuration"
-            step={10}
-            width={spinbuttonWidth}
-          />
-          <SettingsCheckbox
-            info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
-            label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
-            settingsKey="enableDarkModeForMenuThemes"
-          />
-          <SettingsCheckbox
-            info={i18next.t('settings.menu-themes-dialog.enable-menu-animations-info')}
-            label={i18next.t('settings.menu-themes-dialog.enable-menu-animations')}
-            settingsKey="enableMenuAnimations"
-          />
-          <SettingsCheckbox
-            info={i18next.t(
-              'settings.menu-themes-dialog.enable-pointer-reactive-effects-info'
-            )}
-            label={i18next.t(
-              'settings.menu-themes-dialog.enable-pointer-reactive-effects'
-            )}
-            settingsKey="enablePointerReactiveEffects"
-          />
-          <SettingsCheckbox
-            info={i18next.t('settings.menu-themes-dialog.selection-wedges-info')}
-            label={i18next.t('settings.menu-themes-dialog.selection-wedges')}
-            settingsKey="enableSelectionWedges"
-          />
+          <Scrollbox paddingLeft={0}>
+            <div className={classes.options}>
+              <SettingsSpinbutton
+                info={i18next.t('settings.menu-themes-dialog.menu-scale-info')}
+                label={i18next.t('settings.menu-themes-dialog.menu-scale')}
+                max={5}
+                min={0.5}
+                settingsKey="zoomFactor"
+                step={0.1}
+                width={spinbuttonWidth}
+              />
+              <SettingsSpinbutton
+                info={i18next.t('settings.menu-themes-dialog.fade-in-time-info')}
+                label={i18next.t('settings.menu-themes-dialog.fade-in-time')}
+                max={500}
+                min={0}
+                settingsKey="fadeInDuration"
+                step={10}
+                width={spinbuttonWidth}
+              />
+              <SettingsSpinbutton
+                info={i18next.t('settings.menu-themes-dialog.fade-out-time-info')}
+                label={i18next.t('settings.menu-themes-dialog.fade-out-time')}
+                max={500}
+                min={0}
+                settingsKey="fadeOutDuration"
+                step={10}
+                width={spinbuttonWidth}
+              />
+              <SettingsCheckbox
+                info={i18next.t(
+                  'settings.menu-themes-dialog.enable-menu-animations-info'
+                )}
+                label={i18next.t('settings.menu-themes-dialog.enable-menu-animations')}
+                settingsKey="enableMenuAnimations"
+              />
+              <SettingsCheckbox
+                info={i18next.t(
+                  'settings.menu-themes-dialog.enable-pointer-reactive-effects-info'
+                )}
+                label={i18next.t(
+                  'settings.menu-themes-dialog.enable-pointer-reactive-effects'
+                )}
+                settingsKey="enablePointerReactiveEffects"
+              />
+              <SettingsCheckbox
+                info={i18next.t('settings.menu-themes-dialog.selection-wedges-info')}
+                label={i18next.t('settings.menu-themes-dialog.selection-wedges')}
+                settingsKey="enableSelectionWedges"
+              />
+              <SettingsCheckbox
+                info={i18next.t(
+                  'settings.menu-themes-dialog.underline-quick-select-key-info'
+                )}
+                label={i18next.t(
+                  'settings.menu-themes-dialog.underline-quick-select-key'
+                )}
+                settingsKey="underlineQuickSelectKey"
+              />
+              <SettingsCheckbox
+                info={i18next.t('settings.menu-themes-dialog.draw-quick-select-key-info')}
+                label={i18next.t('settings.menu-themes-dialog.draw-quick-select-key')}
+                settingsKey="drawQuickSelectKey"
+              />
+              <SettingsCheckbox
+                info={i18next.t('settings.menu-themes-dialog.light-dark-mode-info')}
+                label={i18next.t('settings.menu-themes-dialog.light-dark-mode')}
+                settingsKey="enableDarkModeForMenuThemes"
+              />
 
-          {accentColorsNode}
-
-          <div style={{ flexGrow: 1 }} />
+              {accentColorsNode}
+            </div>
+          </Scrollbox>
 
           <Swirl marginBottom={20} marginTop={10} variant="1" width={250} />
-          <Button
-            isBlock
-            icon={<TbExternalLink />}
-            label={i18next.t('settings.menu-themes-dialog.get-themes-online')}
-            tooltip="https://github.com/kando-menu/menu-themes"
-            onClick={() =>
-              window.open('https://github.com/kando-menu/menu-themes', '_blank')
-            }
-          />
-          <Button
-            isBlock
-            icon={<TbExternalLink />}
-            label={i18next.t('settings.menu-themes-dialog.create-your-own-themes')}
-            tooltip="https://kando.menu/create-menu-themes/"
-            onClick={() =>
-              window.open('https://kando.menu/create-menu-themes/', '_blank')
-            }
-          />
-          <Button
-            isBlock
-            icon={<TbFolderOpen />}
-            label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
-            onClick={openThemeDirectory}
-          />
+          <div className={classes.options} style={{ paddingRight: 4 }}>
+            <Button
+              isBlock
+              icon={<TbExternalLink />}
+              label={i18next.t('settings.menu-themes-dialog.get-themes-online')}
+              tooltip="https://github.com/kando-menu/menu-themes"
+              onClick={() =>
+                window.open('https://github.com/kando-menu/menu-themes', '_blank')
+              }
+            />
+            <Button
+              isBlock
+              icon={<TbExternalLink />}
+              label={i18next.t('settings.menu-themes-dialog.create-your-own-themes')}
+              tooltip="https://kando.menu/create-menu-themes/"
+              onClick={() =>
+                window.open('https://kando.menu/create-menu-themes/', '_blank')
+              }
+            />
+            <Button
+              isBlock
+              icon={<TbFolderOpen />}
+              label={i18next.t('settings.menu-themes-dialog.open-theme-directory')}
+              onClick={openThemeDirectory}
+            />
+          </div>
         </div>
         <Scrollbox maxHeight="min(85vh, 700px)" width="100%">
           <div className={classes.themesGrid}>
