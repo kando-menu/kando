@@ -118,5 +118,15 @@
     "zod": "^4.4.3",
     "zundo": "^2.1.0",
     "zustand": "^5.0.15"
+  },
+  "//": "This is a workaround for https://github.com/electron/forge/issues/4277",
+  "overrides": {
+    "yauzl": "^3.3.1"
+  },
+  "allowScripts": {
+    "@swc/core@1.15.41": true,
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.28.1": true,
+    "@parcel/watcher@2.5.6": true
   }
 }
