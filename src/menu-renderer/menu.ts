@@ -1069,7 +1069,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         newHoveredItem.name,
         position,
         this.settings.underlineQuickSelectKey
-          ? newHoveredItem.renderData.quickSelectKey
+          ? newHoveredItem.renderData.quickSelectKeySymbol
           : null
       );
     }
@@ -1405,22 +1405,21 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     while (queue.length > 0) {
       const { item, parent, container, level, index, angle, wedge } = queue.shift();
 
-      const quickSelectKey =
-        MenuTheme.getOpenSelectWorkflowKey(item) || (index + 1).toString();
+      const quickSelectKeySymbol = MenuTheme.getQuickSelectKeySymbol(item, index);
 
       item.renderData = {
         path: parent ? [...parent.renderData.path, index] : [],
         parent,
         position: { x: 0, y: 0 },
         computedAngle: angle,
-        nodeDiv: this.theme.createItem(item, this.settings, quickSelectKey),
+        nodeDiv: this.theme.createItem(item, this.settings, quickSelectKeySymbol),
         connectorDiv: null,
         lastConnectorAngle: 0,
         lastPointerAngle: 0,
         lastHoveredChildAngle: 0,
         wedge,
         parentWedge: { start: 0, end: 0 },
-        quickSelectKey,
+        quickSelectKeySymbol,
       };
 
       if (this.theme.drawChildrenBelow && level > 0) {

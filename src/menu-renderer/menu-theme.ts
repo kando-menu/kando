@@ -174,13 +174,13 @@ export class MenuTheme {
    *
    * @param item The menu item to create the html elements for.
    * @param settings The current general settings.
-   * @param quickSelectKey The quick select key for this item.
+   * @param quickSelectKeySymbol The quick select key for this item.
    * @returns The created html element.
    */
   public createItem(
     item: MenuItem,
     settings: GeneralSettings,
-    quickSelectKey: string
+    quickSelectKeySymbol: string
   ): HTMLElement {
     const nodeDiv = document.createElement('div');
     nodeDiv.classList.add('menu-node');
@@ -201,7 +201,7 @@ export class MenuTheme {
         if (settings.underlineQuickSelectKey) {
           layerDiv.innerHTML = MenuTheme.underlineQuickSelectKey(
             item.name,
-            quickSelectKey
+            quickSelectKeySymbol
           );
         } else {
           layerDiv.innerText = item.name;
@@ -219,7 +219,7 @@ export class MenuTheme {
           settings.drawQuickSelectKey &&
           (item.type == 'button' || item.type == 'submenu')
         ) {
-          layerDiv.innerText = quickSelectKey;
+          layerDiv.innerText = quickSelectKeySymbol;
         } else {
           continue;
         }
@@ -343,22 +343,79 @@ export class MenuTheme {
     );
   }
 
+  /* eslint-disable @typescript-eslint/naming-convention */
+  /** Maps key names to the symbols shown for the quick-select keys. Built once and reused. */
+  private static readonly quickSelectKeySymbolMap: Record<string, string> = {
+    Plus: '+',
+    Space: '␣',
+    Tab: '⇥',
+    Capslock: '⇪',
+    Backspace: '⌫',
+    Delete: '⌦',
+    Insert: '⎀',
+    Return: '↵',
+    Up: '↑',
+    Down: '↓',
+    Left: '←',
+    Right: '→',
+    Home: '⇱',
+    End: '⇲',
+    PageUp: '⇞',
+    PageDown: '⇟',
+    Escape: '⎋',
+    VolumeUp: '🔊',
+    VolumeDown: '🔉',
+    VolumeMute: '🔇',
+    MediaNextTrack: '⏭',
+    MediaPreviousTrack: '⏮',
+    MediaStop: '⏹',
+    MediaPlayPause: '⏯',
+    PrintScreen: '⎙',
+    num0: 'N0',
+    num1: 'N1',
+    num2: 'N2',
+    num3: 'N3',
+    num4: 'N4',
+    num5: 'N5',
+    num6: 'N6',
+    num7: 'N7',
+    num8: 'N8',
+    num9: 'N9',
+    numdec: 'N.',
+    numadd: 'N+',
+    numsub: 'N-',
+    nummult: 'N×',
+    numdiv: 'N÷',
+  };
+  /* eslint-enable @typescript-eslint/naming-convention */
+
   /**
-   * Returns the primary open-workflow or select workflow quick-select key for a given
-   * item. Dependent on what type of MenuItem is given.
+   * Returns a symbol for the primary open-workflow or select workflow quick-select key
+   * for a given item. Dependent on what type of MenuItem is given.
    *
    * @param item The menu item to get the quick-select key for.
    * @returns The primary quick-select key for the given item, or null if there is no
    *   quick-select key.
    */
-  public static getOpenSelectWorkflowKey(item: MenuItem): string | null {
+  public static getQuickSelectKeySymbol(item: MenuItem, index: number): string {
+    let symbol = '';
+
     if (item.type === 'button') {
-      return item.selectWorkflow?.quickSelectKey || null;
+      symbol = item.selectWorkflow?.quickSelectKey;
     } else if (item.type === 'submenu') {
-      return item.openWorkflow?.quickSelectKey || null;
+      symbol = item.openWorkflow?.quickSelectKey;
     }
 
-    return null;
+    if (symbol == null) {
+      symbol = (index + 1).toString();
+    }
+
+    const mappedSymbol = MenuTheme.quickSelectKeySymbolMap[symbol];
+    if (mappedSymbol) {
+      symbol = mappedSymbol;
+    }
+
+    return symbol;
   }
 
   /**
