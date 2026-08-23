@@ -39,7 +39,7 @@ export const defaultPortableConfigFolder: string = 'portableConfig';
 export function getConfigDirectory(): string {
   if (configDirectory === null) {
     const execDir = path.dirname(process.execPath);
-    console.log('Looking for ', portableJsonFileName, ' in', execDir);
+    console.log('Looking for', portableJsonFileName, 'in', execDir);
 
     const portableConfigPath = path.join(execDir, portableJsonFileName);
 
