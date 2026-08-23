@@ -94,11 +94,13 @@ type RenderData = {
   };
 
   /**
-   * If the menu item has an open workflow quick select key, then this will contain
-   * whatever key that is. Otherwise it will contain the index of this menu item, as that
-   * also corresponds to the quick select key, if quick select key is not bound.
+   * If the menu item has a quick select key assigned to its open or select workflow, then
+   * this will contain whatever key that is. Otherwise it will contain the index of this
+   * menu item, as that also corresponds to the quick select key, if quick select key is
+   * not bound. Yet it will not be the real key name, but for instance ␣ for space. It's
+   * the symbol that is displayed in the menu item.
    */
-  quickSelectKey: string;
+  quickSelectKeySymbol: string;
 };
 
 /**
