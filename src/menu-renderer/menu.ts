@@ -1450,6 +1450,10 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
           '--end-angle',
           wedge.end.toString() + 'deg'
         );
+        item.renderData.nodeDiv.style.setProperty(
+          '--quick-select-key',
+          quickSelectKeySymbol
+        );
 
         if (level > 1) {
           item.renderData.nodeDiv.style.setProperty(
