@@ -883,8 +883,9 @@ export class KandoApp {
       });
 
       if (!result.canceled) {
+        let settings: GeneralSettings;
         try {
-          tryLoadGeneralSettingsFile(result.filePaths[0]);
+          settings = tryLoadGeneralSettingsFile(result.filePaths[0]);
         } catch (error) {
           dialog.showMessageBox(this.settingsWindow, {
             type: 'error',
@@ -895,7 +896,9 @@ export class KandoApp {
           return;
         }
 
-        fs.copyFileSync(result.filePaths[0], this.generalSettings.filePath);
+        // Apply the restored settings via the Settings instance instead of copying the
+        // backup file over the settings file on disk.
+        this.generalSettings.set(settings);
         this.achievementTracker.incrementStat('settingsRestored');
 
         dialog.showMessageBox(this.settingsWindow, {
@@ -926,8 +929,9 @@ export class KandoApp {
       });
 
       if (!result.canceled) {
+        let settings: MenuSettings;
         try {
-          tryLoadMenuSettingsFile(result.filePaths[0]);
+          settings = tryLoadMenuSettingsFile(result.filePaths[0]);
         } catch (error) {
           dialog.showMessageBox(this.settingsWindow, {
             type: 'error',
@@ -938,7 +942,9 @@ export class KandoApp {
           return;
         }
 
-        fs.copyFileSync(result.filePaths[0], this.menuSettings.filePath);
+        // Apply the restored settings via the Settings instance instead of copying the
+        // backup file over the settings file on disk.
+        this.menuSettings.set(settings);
         this.achievementTracker.incrementStat('settingsRestored');
 
         dialog.showMessageBox(this.settingsWindow, {
@@ -966,7 +972,14 @@ export class KandoApp {
     // Allow the renderer to alter the settings.
     ipcMain.on('common.general-settings-set', (event, settings) => {
       ignoreNextGeneralSettingsChange = true;
-      this.generalSettings.set(settings);
+      try {
+        this.generalSettings.set(settings);
+      } finally {
+        // set() emits onAnyChange synchronously, but only if something actually
+        // changed. Reset the flag here as well so it doesn't get stuck at true (and
+        // swallow a later, unrelated change) if this call was a no-op.
+        ignoreNextGeneralSettingsChange = false;
+      }
     });
 
     // Tell the renderers when the general settings change.
@@ -978,7 +991,6 @@ export class KandoApp {
       );
 
       if (ignoreNextGeneralSettingsChange) {
-        ignoreNextGeneralSettingsChange = false;
         return;
       }
 
@@ -1001,7 +1013,14 @@ export class KandoApp {
     // Allow the renderer to alter the menu settings.
     ipcMain.on('common.menu-settings-set', (event, settings) => {
       ignoreNextMenuSettingsChange = true;
-      this.menuSettings.set(settings);
+      try {
+        this.menuSettings.set(settings);
+      } finally {
+        // set() emits onAnyChange synchronously, but only if something actually
+        // changed. Reset the flag here as well so it doesn't get stuck at true (and
+        // swallow a later, unrelated change) if this call was a no-op.
+        ignoreNextMenuSettingsChange = false;
+      }
     });
 
     // Tell the renderers when the menu settings change.
@@ -1017,7 +1036,6 @@ export class KandoApp {
       );
 
       if (ignoreNextMenuSettingsChange) {
-        ignoreNextMenuSettingsChange = false;
         return;
       }
 

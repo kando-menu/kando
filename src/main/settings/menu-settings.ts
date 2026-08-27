@@ -66,11 +66,13 @@ export function getMenuSettings(
 
 /**
  * Checks whether the given path points to a valid menu settings file. If not, an
- * exception is thrown.
+ * exception is thrown. Returns the parsed (and possibly migrated) settings so that the
+ * caller can apply them via the existing Settings instance.
  *
  * @param path The path to check.
+ * @returns The parsed and migrated menu settings.
  */
-export function tryLoadMenuSettingsFile(path: string) {
+export function tryLoadMenuSettingsFile(path: string): MenuSettings {
   // First we try to read the file content. This will throw an exception if the file
   // cannot be read.
   const content = fs.readJSONSync(path, 'utf-8');
@@ -84,6 +86,8 @@ export function tryLoadMenuSettingsFile(path: string) {
   if (result.settings.menus.length === 0) {
     throw new Error('The provided file does not seem to contain any menus.');
   }
+
+  return result.settings;
 }
 
 /**
