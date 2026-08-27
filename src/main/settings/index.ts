@@ -50,7 +50,11 @@ export function getConfigDirectory(): string {
           configDirectory = portableMode.configDirectory;
 
           // Make sure the directory exists and that it is an absolute path.
-          configDirectory = path.resolve(execDir, configDirectory);
+          if (path.isAbsolute(configDirectory)) {
+            configDirectory = path.normalize(configDirectory);
+          } else {
+            configDirectory = path.resolve(execDir, configDirectory);
+          }
           fs.mkdirSync(configDirectory, { recursive: true });
           console.log(`Using portable mode. Settings directory: ${configDirectory}`);
         } else {
@@ -71,4 +75,23 @@ export function getConfigDirectory(): string {
   }
 
   return configDirectory;
+}
+
+/** Creates the portable mode config file next to the application executable. */
+export function createCustomConfigDirectory(portableConfigFolder: string | boolean) {
+  console.log('Enabling custom config directory');
+  const portableModeFile = path.join(
+    path.dirname(process.execPath),
+    portableJsonFileName
+  );
+
+  fs.writeFileSync(
+    portableModeFile,
+    `{"configDirectory": "${portableConfigFolder === true ? defaultPortableConfigFolder : portableConfigFolder}"}`
+  );
+}
+
+/** Resets the config directory for testing purposes. Should only be used for unit tests. */
+export function resetConfigDirectoryForTesting() {
+  configDirectory = null;
 }

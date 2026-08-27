@@ -46,8 +46,8 @@ export type CommandlineOptions = {
   // close the currently open menu.
   readonly closeMenu?: boolean;
 
-  /** Enables portable mode */
-  readonly portableMode?: boolean;
+  /** Specifies the config directory to use. */
+  readonly configDir?: string | boolean;
 };
 
 /**

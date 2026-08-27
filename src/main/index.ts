@@ -41,7 +41,7 @@ const options = program
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .option('--reload-icon-themes', 'reload the any icon themes from disk')
   .option('--close-menu', 'close the currently open menu')
-  .option('--portable-mode', 'enables portable mode')
+  .option('--config-dir [directory]', 'specify the config directory')
   .allowUnknownOption(true)
   .allowExcessArguments(true)
   .parse()
@@ -85,8 +85,7 @@ import {
   getGeneralSettings,
   getMenuSettings,
   getConfigDirectory,
-  portableJsonFileName,
-  defaultPortableConfigFolder,
+  createCustomConfigDirectory,
 } from './settings';
 
 // Initialize the notification system. This will queue notifications until the app is
@@ -106,25 +105,6 @@ function quitWithError(message: string) {
   process.exitCode = 1;
 }
 
-/** Creates the portable mode config file next to the application executable. */
-function enablePortableMode() {
-  console.log('Enabling portable mode');
-  const portableConfigPath = path.join(
-    path.dirname(process.execPath),
-    portableJsonFileName
-  );
-
-  if (!fs.existsSync(portableConfigPath)) {
-    console.log('Creating', portableJsonFileName);
-    fs.writeFileSync(
-      portableConfigPath,
-      `{"configDirectory": "${defaultPortableConfigFolder}"}`
-    );
-  } else {
-    console.log('Portable mode file already exists!');
-  }
-}
-
 try {
   // It is not very nice that electron stores all its cache data in the user's config
   // directory. Until https://github.com/electron/electron/pull/34337 is merged, we
@@ -133,8 +113,8 @@ try {
   app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
   app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 
-  if (options.portableMode) {
-    enablePortableMode();
+  if (options.configDir) {
+    createCustomConfigDirectory(options.configDir);
   }
 
   // Set deep link support for the app. This is used to send commands to the app when the
