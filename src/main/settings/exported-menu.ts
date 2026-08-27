@@ -38,6 +38,8 @@ export function loadExportedMenu(content: object): MenuV2 {
     return MENU_SCHEMA_V2.parse({ root }, { reportInput: true });
   }
 
+  // The v2 exported-menu schema already validates `menu` against MENU_SCHEMA_V2, so it is
+  // fully parsed and defaulted at this point.
   const exported = EXPORTED_MENU_SCHEMA_V2.parse(content, { reportInput: true });
-  return MENU_SCHEMA_V2.parse({ root: exported.menu }, { reportInput: true });
+  return exported.menu;
 }

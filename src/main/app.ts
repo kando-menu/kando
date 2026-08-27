@@ -1038,13 +1038,10 @@ export class KandoApp {
         return false;
       }
 
-      // We only export the root menu item (so exported files stay compact and don't
-      // include local UI flags like centered/anchored/hoverMode). This also makes future
-      // extensions easier.
       const menu = settings.menus[menuIndex];
       const menuData: ExportedMenuV2 = {
         version: settings.version,
-        menu: menu.root as RootMenuItem,
+        menu: menu as MenuType,
       };
 
       try {

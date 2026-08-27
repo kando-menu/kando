@@ -11,7 +11,7 @@
 import * as z from 'zod';
 import { version } from './../../../package.json';
 
-import { ROOT_MENU_ITEM_SCHEMA_V2 } from './menu-settings-v2';
+import { MENU_SCHEMA_V2 } from './menu-settings-v2';
 
 /**
  * This type describes the schema of an exported menu. This is used when exporting and
@@ -24,8 +24,8 @@ export const EXPORTED_MENU_SCHEMA_V2 = z.object({
    */
   version: z.string().default(version),
 
-  /** The actual menu. */
-  menu: ROOT_MENU_ITEM_SCHEMA_V2,
+  /** The actual menu, including its shortcut, conditions, and other properties. */
+  menu: MENU_SCHEMA_V2,
 });
 
 export type ExportedMenuV2 = z.infer<typeof EXPORTED_MENU_SCHEMA_V2>;
