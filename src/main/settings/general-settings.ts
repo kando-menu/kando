@@ -49,11 +49,13 @@ export function getGeneralSettings(): Settings<GeneralSettings> | null {
 
 /**
  * Checks whether the given path points to a valid general settings file. If not, an
- * exception is thrown.
+ * exception is thrown. Returns the parsed (and possibly migrated) settings so that the
+ * caller can apply them via the existing Settings instance.
  *
  * @param path The path to check.
+ * @returns The parsed and migrated general settings.
  */
-export function tryLoadGeneralSettingsFile(path: string) {
+export function tryLoadGeneralSettingsFile(path: string): GeneralSettings {
   // First we try to read the file content. This will throw an exception if the file
   // cannot be read.
   const content = fs.readJSONSync(path, 'utf-8');
@@ -68,7 +70,7 @@ export function tryLoadGeneralSettingsFile(path: string) {
 
   // Now we try to parse the content according to the latest schema. This will throw an
   // exception if the content does not conform to the schema.
-  loadGeneralSettings(content);
+  return loadGeneralSettings(content).settings;
 }
 
 /**

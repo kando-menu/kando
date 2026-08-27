@@ -46,10 +46,9 @@ import {
   getConfigDirectory,
   tryLoadGeneralSettingsFile,
   tryLoadMenuSettingsFile,
+  loadExportedMenu,
 } from './settings';
 import { IPCServer, IPCCallback } from '../common/ipc';
-import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
-import { EXPORTED_MENU_SCHEMA_V1 } from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
@@ -884,8 +883,9 @@ export class KandoApp {
       });
 
       if (!result.canceled) {
+        let settings: GeneralSettings;
         try {
-          tryLoadGeneralSettingsFile(result.filePaths[0]);
+          settings = tryLoadGeneralSettingsFile(result.filePaths[0]);
         } catch (error) {
           dialog.showMessageBox(this.settingsWindow, {
             type: 'error',
@@ -896,7 +896,9 @@ export class KandoApp {
           return;
         }
 
-        fs.copyFileSync(result.filePaths[0], this.generalSettings.filePath);
+        // Apply the restored settings via the Settings instance instead of copying the
+        // backup file over the settings file on disk.
+        this.generalSettings.set(settings);
         this.achievementTracker.incrementStat('settingsRestored');
 
         dialog.showMessageBox(this.settingsWindow, {
@@ -927,8 +929,9 @@ export class KandoApp {
       });
 
       if (!result.canceled) {
+        let settings: MenuSettings;
         try {
-          tryLoadMenuSettingsFile(result.filePaths[0]);
+          settings = tryLoadMenuSettingsFile(result.filePaths[0]);
         } catch (error) {
           dialog.showMessageBox(this.settingsWindow, {
             type: 'error',
@@ -939,7 +942,9 @@ export class KandoApp {
           return;
         }
 
-        fs.copyFileSync(result.filePaths[0], this.menuSettings.filePath);
+        // Apply the restored settings via the Settings instance instead of copying the
+        // backup file over the settings file on disk.
+        this.menuSettings.set(settings);
         this.achievementTracker.incrementStat('settingsRestored');
 
         dialog.showMessageBox(this.settingsWindow, {
@@ -967,7 +972,14 @@ export class KandoApp {
     // Allow the renderer to alter the settings.
     ipcMain.on('common.general-settings-set', (event, settings) => {
       ignoreNextGeneralSettingsChange = true;
-      this.generalSettings.set(settings);
+      try {
+        this.generalSettings.set(settings);
+      } finally {
+        // set() emits onAnyChange synchronously, but only if something actually
+        // changed. Reset the flag here as well so it doesn't get stuck at true (and
+        // swallow a later, unrelated change) if this call was a no-op.
+        ignoreNextGeneralSettingsChange = false;
+      }
     });
 
     // Tell the renderers when the general settings change.
@@ -979,7 +991,6 @@ export class KandoApp {
       );
 
       if (ignoreNextGeneralSettingsChange) {
-        ignoreNextGeneralSettingsChange = false;
         return;
       }
 
@@ -1002,7 +1013,14 @@ export class KandoApp {
     // Allow the renderer to alter the menu settings.
     ipcMain.on('common.menu-settings-set', (event, settings) => {
       ignoreNextMenuSettingsChange = true;
-      this.menuSettings.set(settings);
+      try {
+        this.menuSettings.set(settings);
+      } finally {
+        // set() emits onAnyChange synchronously, but only if something actually
+        // changed. Reset the flag here as well so it doesn't get stuck at true (and
+        // swallow a later, unrelated change) if this call was a no-op.
+        ignoreNextMenuSettingsChange = false;
+      }
     });
 
     // Tell the renderers when the menu settings change.
@@ -1018,7 +1036,6 @@ export class KandoApp {
       );
 
       if (ignoreNextMenuSettingsChange) {
-        ignoreNextMenuSettingsChange = false;
         return;
       }
 
@@ -1039,13 +1056,10 @@ export class KandoApp {
         return false;
       }
 
-      // We only export the root menu item (so exported files stay compact and don't
-      // include local UI flags like centered/anchored/hoverMode). This also makes future
-      // extensions easier.
       const menu = settings.menus[menuIndex];
       const menuData: ExportedMenuV2 = {
         version: settings.version,
-        menu: menu.root as RootMenuItem,
+        menu: menu as MenuType,
       };
 
       try {
@@ -1085,15 +1099,9 @@ export class KandoApp {
       try {
         const content = fsExtra.readJsonSync(result.filePaths[0], 'utf-8');
 
-        // Validate the exported file format first (version + root menu item)
-        const exported = EXPORTED_MENU_SCHEMA_V1.parse(content, { reportInput: true });
-
-        // Convert the exported root into a full MENU object so defaults (like
-        // centered/anchored/hoverMode and shortcut fields) are applied.
-        const validatedMenu = MENU_SCHEMA_V1.parse(
-          { root: exported.menu },
-          { reportInput: true }
-        );
+        // Validates the exported file (migrating pre-3.0 formats if necessary) and
+        // applies defaults (like centered/anchored/hoverMode and shortcut fields).
+        const validatedMenu = loadExportedMenu(content);
 
         // Add the menu to the settings
         const settings = this.menuSettings.get();

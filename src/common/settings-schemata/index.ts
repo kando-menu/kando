@@ -43,11 +43,12 @@ export type {
 export {
   MENU_SETTINGS_SCHEMA_V2 as MENU_SETTINGS_SCHEMA,
   MENU_ITEM_SCHEMA_V2 as MENU_ITEM_SCHEMA,
+  MENU_SCHEMA_V2 as MENU_SCHEMA,
   ROOT_MENU_ITEM_SCHEMA_V2 as ROOT_MENU_ITEM_SCHEMA,
 } from './menu-settings-v2';
 
-export type { ExportedMenuV1 as ExportedMenu } from './exported-menu-v1';
-export { EXPORTED_MENU_SCHEMA_V1 as EXPORTED_MENU_SCHEMA } from './exported-menu-v1';
+export type { ExportedMenuV2 as ExportedMenu } from './exported-menu-v2';
+export { EXPORTED_MENU_SCHEMA_V2 as EXPORTED_MENU_SCHEMA } from './exported-menu-v2';
 
 import type { AchievementStatsV1 as AchievementStats } from './achievement-stats-v1';
 export type { AchievementStatsV1 as AchievementStats } from './achievement-stats-v1';
