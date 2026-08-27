@@ -312,7 +312,7 @@ export function migrateToMenuItemV2(oldItem: MenuItemV1): ChildMenuItemV2 {
         },
         {
           type: 'simulate-hotkey',
-          hotkey: 'ControlLeft+V',
+          hotkey: 'ControlLeft+KeyV',
         },
       ],
     };
