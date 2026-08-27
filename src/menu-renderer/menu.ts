@@ -317,6 +317,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       '--fade-out-duration',
       `${this.settings.fadeOutDuration}ms`
     );
+
+    this.container.style.setProperty(
+      '--draw-quick-select-key',
+      this.settings.drawQuickSelectKey.toString()
+    );
+
     this.pointerInput.enableMarkingMode = this.settings.enableMarkingMode;
     this.pointerInput.enableTurboMode = this.settings.enableTurboMode;
     this.pointerInput.dragThreshold = this.settings.dragThreshold;
@@ -1449,6 +1455,10 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         item.renderData.nodeDiv.style.setProperty(
           '--end-angle',
           wedge.end.toString() + 'deg'
+        );
+        item.renderData.nodeDiv.style.setProperty(
+          '--quick-select-key',
+          `'${quickSelectKeySymbol}'`
         );
 
         if (level > 1) {
