@@ -255,8 +255,8 @@
             "localization-info": "需要重新启动 Kando 使语言设置生效。",
             "cycle-from-first": "显示下一个菜单（从第一个开始）",
             "cycle-from-recent": "显示下一个菜单（从上一菜单接续）",
-            "keep-input-focus": "停留在活动应用窗口",
-            "keep-input-focus-info": "如果启用，菜单在打开时将不会接收键盘输入焦点。这会禁用极速模式，但如果您希望其他应用程序在菜单打开时保持聚焦，这可能会很有用。",
+            "keep-input-focus": "保持活动应用程序聚焦",
+            "keep-input-focus-info": "如果启用，菜单在打开时将不会接收键盘输入焦点。这可以防止菜单导致其它应用失焦，但会禁用一些功能，例如极速模式和通过键盘选取菜单项。",
             "hardware-acceleration": "启用硬件加速",
             "hardware-acceleration-info": "此选项可提升应用程序的性能，但同时也可能导致渲染异常。您需要重新启动Kando以应用此设置。",
             "backup-and-restore": "备份与恢复",
@@ -278,7 +278,7 @@
             "wlroots-pointer-get-timeout-default-behavior": "指针备选位置",
             "center": "中心",
             "previously-reported": "上次传回值",
-            "windows-ink-workaround-info": "此选项会启用一项兼容性修正，可以解决在 Windows Ink 启用时无法取得触控笔位置的问题。此项会在开启菜单前增加 100 毫秒的延迟，因此如果您不使用触控笔，可关闭此选项提升菜单开启速度。",
+            "windows-ink-workaround-info": "此选项会启用一项兼容性修正，可以解决在 Windows Ink 启用时无法取得触控笔位置的问题。此项会在开启菜单前增加 100 毫秒的延迟，因此如果您不使用触控笔，可关闭此选项以提升菜单开启速度。",
             "windows-ink-workaround": "Windows Ink 兼容支持",
             "max-selection-radius-info": "若设置为大于 0 的值，点击此半径外的区域将关闭菜单。默认值为 0，表示不限制最大选取半径。",
             "max-selection-radius": "最大选取半径",
@@ -290,7 +290,13 @@
             "backup-menus-note": "这将备份或还原您所有的菜单。包括所有由您配置的快捷键、菜单布局和菜单合集。",
             "backup-settings-note": "这将备份或还原 Kando 的设置项，包括所有由您配置的通用设置和菜单主题配置。",
             "settings-dialog-and-tray-icon": "设置对话框和托盘图标",
-            "achievements": "成就"
+            "achievements": "成就",
+            "keep-input-focus-warning": "将禁用诸如极速模式以及通过键盘输入选择菜单项的能力。请确保您了解此操作的影响后再启用！",
+            "enable-turbo-mode-warning": "此选项已被 “保持活动应用程序聚焦” 选项停用。",
+            "re-open-menu": "重新打开菜单",
+            "trigger-center-click-on-key-release-info": "当按键释放且光标位于菜单中心区域内时，将启动菜单中心的工作流。",
+            "trigger-center-click-on-key-release": "按键释放时触发菜单中心的工作流",
+            "trigger-center-click-on-key-release-warning": "此选项将导致您松开按键时立刻关闭菜单。请确保您了解此操作的影响后再启用！"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -314,7 +320,7 @@
             "slide11-text": "**不用担心意外选择！** 在画笔模式或极速模式下按住键盘的键时，只有在释放鼠标按钮后动作才会被执行。请利用这一点来探索菜单吧！",
             "show-again": "再次显示此对话框",
             "slide2-title": "打开菜单！",
-            "slide1-title": "Kando 提供了一种独特且高效的与您的设备互动的方式.",
+            "slide1-title": "Kando 提供了一种独特且高效的与您的设备互动的方式。",
             "slide1-text": "左右滑动这些幻灯片以了解 Kando 能为您做些什么！您可以使用左侧的章节标记快速跳转到介绍的特定部分。",
             "slide2-text-standard": "如果您是第一次启动 Kando 的话，您可以用 Ctrl+空格 快捷键打开示例菜单。而在屏幕任意位置点击鼠标右键或按下 Esc 键则可以关闭它。",
             "slide2-text-no-shortcuts": "如果您是第一次启动 Kando 的话，则您还[可能需要在 Linux 上执行一些额外步骤以使全局热键工作]({{link}})。处理好这项工作后，您就可以通过 Esc 键或右键单击关闭菜单了。",
@@ -348,9 +354,9 @@
             "light": "亮色模式",
             "accent-colors-info": "每个主题都可以有一组不同的强调色。",
             "theme-colors": "主题色",
-            "fade-in-time-info": "菜单淡入所需的时间。默认值为 150 毫秒。",
+            "fade-in-time-info": "菜单淡入所需的时间。默认值为 75 毫秒。",
             "fade-out-time": "渐出时间",
-            "fade-out-time-info": "菜单淡出所需的时间。默认值为 200 毫秒。",
+            "fade-out-time-info": "菜单淡出所需的时间。默认值为 100 毫秒。",
             "light-dark-mode": "启用 亮/暗模式",
             "fade-in-time": "渐入时间",
             "menu-scale": "菜单尺寸",
@@ -373,8 +379,12 @@
             "preset-name-placeholder": "例：My Custom Colors",
             "enable-menu-animations-info": "如果禁用，来自菜单主题的所有变换和大部分动画效果将被阻止。",
             "enable-menu-animations": "菜单动画",
-            "enable-pointer-reactive-effects-info": "如果禁用，来自菜单主题提供的基于鼠标指针位置的部分缩放效果将被阻止。",
-            "enable-pointer-reactive-effects": "指针互动效果"
+            "enable-pointer-reactive-effects-info": "如果禁用，由菜单主题提供的基于鼠标指针位置的局部缩放动效将被阻止。",
+            "enable-pointer-reactive-effects": "指针互动效果",
+            "underline-quick-select-key-info": "启用后，菜单项名称的首字母与菜单项的快速选择键相符的字母将被下划线标识。",
+            "underline-quick-select-key": "快速选择键的下划线标识",
+            "draw-quick-select-key-info": "如果启用且所选主题支持，则菜单项将显示通过键盘操作时触发其自身所需的键。",
+            "draw-quick-select-key": "绘制快速选择键标识"
         },
         "not-bound": "未绑定快捷键",
         "shortcut-id-label": "快捷键 ID",
@@ -433,10 +443,10 @@
         "tags-info": "标签可以用于在菜单合集中对菜单进行分组。",
         "no-menus": "暂无可以展示的菜单.",
         "no-menus-note": "如果你不小心删除了仅剩的菜单，你可以通过撤销操作来恢复被删除的菜单.",
-        "no-matching-menus": "暂无菜单.",
-        "empty-collection": "这是个空的菜单合集.",
+        "no-matching-menus": "暂无菜单。",
+        "empty-collection": "这是个空的菜单合集。",
         "no-matching-menus-note": "试试搜点别的？",
-        "empty-collection-note": "编辑上面的标签或使用下面的按钮向此集合添加一个全新的菜单.",
+        "empty-collection-note": "编辑上面的标签或使用下面的按钮向此集合添加一个全新的菜单。",
         "add-menu-item-hint": "将此项目拖拽到上方的菜单即可新增！",
         "app-picker": {
             "hint": "您也可以从您的开始菜单直接拖放应用到 Kando 的菜单编辑器！",
@@ -480,7 +490,21 @@
             "button-select-workflow": {
                 "description": "选择此菜单项后，将触发下列动作。"
             }
-        }
+        },
+        "fixed-position-mode": "固定位置模式",
+        "fixed-position-mode-info": "让菜单在一个固定的点位打开，而非基于鼠标光标。",
+        "fixed-position-picker": {
+            "centered-preset-tooltip": "定位到中心",
+            "top-right-preset-tooltip": "定位到右上角",
+            "top-left-preset-tooltip": "定位到左上角",
+            "bottom-left-preset-tooltip": "定位到左下角",
+            "bottom-right-preset-tooltip": "定位到右下角",
+            "picker-tooltip": "拖拽此元素到您屏幕的某一处以确定位置",
+            "confirm": "使用此位置"
+        },
+        "fixed-position-x-placeholder": "X",
+        "fixed-position-y-placeholder": "Y",
+        "fixed-position-tooltip": "选择固定点"
     },
     "achievements": {
         "attributes": {
@@ -585,7 +609,7 @@
         },
         "execute-command": {
             "name": "运行命令",
-            "description": "运行应用或脚本。",
+            "description": "运行应用或脚本 ",
             "choose-app": "选取应用…",
             "placeholder": "插入任何命令…",
             "isolated": "隔离运行",
@@ -608,14 +632,14 @@
         },
         "simulate-hotkey": {
             "name": "模拟按键",
-            "description": "按下一套组合键。",
+            "description": "按下一套组合键。若希望该快捷键作用于活动应用程序而非菜单，请务必在此之前添加关闭菜单操作！",
             "recording-placeholder": "请按下按键…",
             "hotkey": "按键",
             "hotkey-info": "选择该菜单项时，将触发此快捷键。在录制快捷键时，您不必一次按下所有按键，也可以一个接一个地按。这在热键已绑定到某个全局操作时非常有用！"
         },
         "execute-macro": {
             "name": "模拟宏",
-            "description": "执行一系列按键。",
+            "description": "按顺序触发多个按键。若希望该快捷键作用于活动应用程序而非菜单，请务必在此之前添加关闭菜单操作！",
             "placeholder": "点击录制按钮开始录制！",
             "recording-placeholder": "请按下按键…"
         }
