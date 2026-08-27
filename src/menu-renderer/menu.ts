@@ -317,6 +317,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       '--fade-out-duration',
       `${this.settings.fadeOutDuration}ms`
     );
+
+    this.container.style.setProperty(
+      '--draw-quick-select-key',
+      this.settings.drawQuickSelectKey.toString()
+    );
+
     this.pointerInput.enableMarkingMode = this.settings.enableMarkingMode;
     this.pointerInput.enableTurboMode = this.settings.enableTurboMode;
     this.pointerInput.dragThreshold = this.settings.dragThreshold;
