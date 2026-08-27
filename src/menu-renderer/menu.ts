@@ -1458,7 +1458,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         );
         item.renderData.nodeDiv.style.setProperty(
           '--quick-select-key',
-          quickSelectKeySymbol
+          `'${quickSelectKeySymbol}'`
         );
 
         if (level > 1) {
