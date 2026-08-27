@@ -46,10 +46,9 @@ import {
   getConfigDirectory,
   tryLoadGeneralSettingsFile,
   tryLoadMenuSettingsFile,
+  loadExportedMenu,
 } from './settings';
 import { IPCServer, IPCCallback } from '../common/ipc';
-import { MENU_SCHEMA_V1 } from '../common/settings-schemata/menu-settings-v1';
-import { EXPORTED_MENU_SCHEMA_V1 } from '../common/settings-schemata/exported-menu-v1';
 import { Notification } from './utils/notification';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
@@ -1085,15 +1084,9 @@ export class KandoApp {
       try {
         const content = fsExtra.readJsonSync(result.filePaths[0], 'utf-8');
 
-        // Validate the exported file format first (version + root menu item)
-        const exported = EXPORTED_MENU_SCHEMA_V1.parse(content, { reportInput: true });
-
-        // Convert the exported root into a full MENU object so defaults (like
-        // centered/anchored/hoverMode and shortcut fields) are applied.
-        const validatedMenu = MENU_SCHEMA_V1.parse(
-          { root: exported.menu },
-          { reportInput: true }
-        );
+        // Validates the exported file (migrating pre-3.0 formats if necessary) and
+        // applies defaults (like centered/anchored/hoverMode and shortcut fields).
+        const validatedMenu = loadExportedMenu(content);
 
         // Add the menu to the settings
         const settings = this.menuSettings.get();
