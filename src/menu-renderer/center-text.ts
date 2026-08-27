@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Vec2 } from '../common';
+import { MenuTheme } from './menu-theme';
 
 /**
  * This class is used to display the text in the center of the pie menu.
@@ -99,16 +100,16 @@ export class CenterText {
    * @param text The text to display.
    * @param position The position of the text element relative to the container. Aka the
    *   current position of the pie menu on the screen.
-   * @param accessKey An optional access key for the text element. The first occurrence of
-   *   the given character will be underlined.
+   * @param quickSelectKey An optional access key for the text element. The first
+   *   occurrence of the given character will be underlined.
    */
-  public async show(text: string, position: Vec2, accessKey?: string) {
+  public async show(text: string, position: Vec2, quickSelectKey: string) {
     if (!this.enabled) {
       return;
     }
 
     const currentCallCount = ++this.callCount;
-    const key = text + (accessKey ?? '');
+    const key = text + (quickSelectKey ?? '');
 
     // If the text is already cached, we can use it directly.
     if (this.cache[key]) {
@@ -139,16 +140,13 @@ export class CenterText {
     // We want to allow breaking the text at some special characters like / and \ to
     // avoid long words, especially in the case of URLs. For this, we add invisible
     // spaces after these characters.
-    let formattedText = text.replace(/([/\\.])/g, '$1\u200B');
+    const formattedText = text.replace(/([/\\.])/g, '$1\u200B');
 
     // If an access key is given, we want to underline the first occurrence of the access
     // key in the text. For this, we wrap it in a <u> element. We also need to use
     // innerHTML instead of textContent in this case.
-    if (accessKey) {
-      const escapedAccessKey = accessKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const regex = new RegExp(`(${escapedAccessKey})`, 'i');
-      formattedText = formattedText.replace(regex, '<u>$1</u>');
-      p.innerHTML = formattedText;
+    if (quickSelectKey) {
+      p.innerHTML = MenuTheme.underlineQuickSelectKey(formattedText, quickSelectKey);
     } else {
       p.innerText = formattedText;
     }

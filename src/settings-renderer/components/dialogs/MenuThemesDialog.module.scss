@@ -12,14 +12,25 @@
 
 .container {
   display: flex;
+
+  // Without this, the container (and therefore the whole modal) would grow to fit the
+  // sidebar's content instead of being capped by the themes grid on the right. This gives
+  // the flex layout a definite height to stretch the sidebar into, so its own scrollbox
+  // can shrink and scroll instead of always showing all of its content.
+  max-height: min(85vh, 700px);
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 10px 15px;
-  flex: 0 0 300px;
+  flex: 0 0 350px;
+  padding: 0 8px 16px 16px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .themesGrid {
