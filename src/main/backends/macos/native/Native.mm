@@ -29,16 +29,14 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
     return Napi::Object();
   }
 
-  // Filter out bundles that are background-only or UI elements (agents/helpers).
+  // Filter out bundles that are pure background processes with no UI at all. Note that
+  // we deliberately do *not* filter out LSUIElement apps: that flag only means "no Dock
+  // icon", not "not user-launchable" — lots of everyday menu-bar-only apps (and Kando
+  // itself) set it, so excluding them hid apps that were actually installed.
   NSDictionary* infoDict = [bundle infoDictionary];
   if (infoDict) {
     NSNumber* lsbg = infoDict[@"LSBackgroundOnly"];
     if (lsbg && [lsbg boolValue]) {
-      return Napi::Object();
-    }
-
-    NSNumber* lsui = infoDict[@"LSUIElement"];
-    if (lsui && [lsui boolValue]) {
       return Napi::Object();
     }
   }
@@ -57,8 +55,12 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
 
   NSString* name = [[bundle objectForInfoDictionaryKey:@"CFBundleName"] description];
 
+  // The bundle's file name (e.g. "Safari" for "Safari.app") is what "open -a" expects
+  // and what a file dropped from the Finder is named, so we use it as our id below.
+  NSString* bundleFileName = [[appPath lastPathComponent] stringByDeletingPathExtension];
+
   if (!name) {
-    name = [[appPath lastPathComponent] stringByDeletingPathExtension];
+    name = bundleFileName;
   }
 
   // Create a 64x64 bitmap and draw the icon into it
@@ -89,7 +91,7 @@ Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
 
       Napi::Object appInfo = Napi::Object::New(env);
       appInfo.Set("name", Napi::String::New(env, name.UTF8String));
-      appInfo.Set("id", Napi::String::New(env, execName.UTF8String));
+      appInfo.Set("id", Napi::String::New(env, bundleFileName.UTF8String));
       appInfo.Set("base64Icon", Napi::String::New(env, base64Icon.UTF8String));
       return appInfo;
     }
@@ -377,12 +379,19 @@ Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
   Napi::Array result = Napi::Array::New(env);
 
   @autoreleasepool {
+    // Note: "/System/Library/CoreServices/Applications" is deliberately not listed
+    // separately here — it is a subdirectory of "/System/Library/CoreServices" below,
+    // so the recursive enumerator already visits it. Listing both produced a duplicate
+    // entry (same id, same name) for every app in that folder.
     NSArray<NSString*>* appDirs = @[
       @"/Applications", @"/System/Applications", @"/System/Library/CoreServices",
-       @"/System/Library/CoreServices/Applications",
       [NSHomeDirectory() stringByAppendingPathComponent:@"Applications"],
       [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Applications"]
     ];
+
+    // Guards against the same app bundle being added twice, in case any of the
+    // directories above end up overlapping (e.g. one being a subdirectory of another).
+    NSMutableSet<NSString*>* seenPaths = [NSMutableSet set];
 
     NSFileManager* fm = [NSFileManager defaultManager];
     for (NSString* dir in appDirs) {
@@ -390,10 +399,13 @@ Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
       NSString*              file;
       while ((file = [enumerator nextObject])) {
         if ([[file pathExtension] isEqualToString:@"app"]) {
-          NSString*    fullPath = [dir stringByAppendingPathComponent:file];
-          Napi::Object appInfo  = processAppAtPath(env, fullPath);
-          if (!appInfo.IsEmpty()) {
-            result.Set(result.Length(), appInfo);
+          NSString* fullPath = [dir stringByAppendingPathComponent:file];
+          if (![seenPaths containsObject:fullPath]) {
+            [seenPaths addObject:fullPath];
+            Napi::Object appInfo = processAppAtPath(env, fullPath);
+            if (!appInfo.IsEmpty()) {
+              result.Set(result.Length(), appInfo);
+            }
           }
           [enumerator skipDescendants];
         }
