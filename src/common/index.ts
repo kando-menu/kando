@@ -45,6 +45,9 @@ export type CommandlineOptions = {
   // This optional parameter is specified using the --close-menu option. It is used to
   // close the currently open menu.
   readonly closeMenu?: boolean;
+
+  /** Specifies the config directory to use. */
+  readonly configDir?: string;
 };
 
 /**

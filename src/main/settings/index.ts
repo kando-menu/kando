@@ -24,6 +24,9 @@ import path from 'path';
  */
 let configDirectory: string | null = null;
 
+/** Name of the json file that enables portable mode. */
+export const portableJsonFileName: string = 'portableMode.json';
+
 /**
  * Gets the directory where the settings files are stored. Usually, this is electron's
  * app.getPath('userData') directory. However, Kando allows for a portable mode where this
@@ -35,9 +38,9 @@ let configDirectory: string | null = null;
 export function getConfigDirectory(): string {
   if (configDirectory === null) {
     const execDir = path.dirname(process.execPath);
-    console.log('Looking for portableMode.json in', execDir);
+    console.log('Looking for', portableJsonFileName, 'in', execDir);
 
-    const portableConfigPath = path.join(execDir, 'portableMode.json');
+    const portableConfigPath = path.join(execDir, portableJsonFileName);
 
     if (fs.existsSync(portableConfigPath)) {
       try {
@@ -67,4 +70,33 @@ export function getConfigDirectory(): string {
   }
 
   return configDirectory;
+}
+
+/**
+ * Creates the custom config directory, if needed. Then assigns the given config directory
+ * to the configDirectory variable.
+ */
+export function assignCustomConfigDirectory(portableConfigFolder: string) {
+  console.log('Enabling custom config directory');
+
+  try {
+    portableConfigFolder = path.resolve(
+      path.dirname(process.execPath),
+      portableConfigFolder
+    );
+
+    if (!fs.existsSync(portableConfigFolder)) {
+      fs.mkdirSync(portableConfigFolder, { recursive: true });
+    }
+
+    configDirectory = portableConfigFolder;
+    console.log(`Custom config directory: ${configDirectory}`);
+  } catch (error) {
+    console.error('Error creating custom config directory:', error);
+  }
+}
+
+/** Resets the config directory for testing purposes. Should only be used for unit tests. */
+export function resetConfigDirectoryForTesting() {
+  configDirectory = null;
 }

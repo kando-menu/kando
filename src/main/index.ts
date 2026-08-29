@@ -41,6 +41,7 @@ const options = program
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .option('--reload-icon-themes', 'reload the any icon themes from disk')
   .option('--close-menu', 'close the currently open menu')
+  .option('--config-dir <directory>', 'specify the config directory')
   .allowUnknownOption(true)
   .allowExcessArguments(true)
   .parse()
@@ -80,7 +81,12 @@ import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import { Notification } from './utils/notification';
 import { getBackend } from './backends';
 import { KandoApp } from './app';
-import { getGeneralSettings, getMenuSettings, getConfigDirectory } from './settings';
+import {
+  getGeneralSettings,
+  getMenuSettings,
+  getConfigDirectory,
+  assignCustomConfigDirectory,
+} from './settings';
 
 // Initialize the notification system. This will queue notifications until the app is
 // ready so that we can even show notifications before the app is fully initialized. This
@@ -106,6 +112,10 @@ try {
   app.setPath('sessionData', path.join(app.getPath('sessionData'), 'session'));
   app.setPath('crashDumps', path.join(app.getPath('sessionData'), 'crashDumps'));
   app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
+
+  if (options.configDir) {
+    assignCustomConfigDirectory(options.configDir);
+  }
 
   // Set deep link support for the app. This is used to send commands to the app when the
   // app is already running. For instance like this: kando://menu?name=<menuName>.
