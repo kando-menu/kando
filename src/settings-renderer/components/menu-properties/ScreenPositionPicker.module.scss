@@ -16,37 +16,44 @@
   flex-direction: column;
 }
 
+.content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 10px auto;
+}
+
 .value {
   color: $text-normal;
-  width: 200px;
-  margin: 20px 0;
-  text-align: center;
-  align-self: center;
 }
 
 .area {
   color: $text-normal;
-  display: flex;
-  align-items: center;
-  text-align: center;
   padding: 10px;
-  justify-content: center;
   position: relative;
   width: 250px;
   aspect-ratio: 16/9;
   border-radius: 5px;
-  margin: 10px auto;
+  margin: 10px auto 20px auto;
   border: 2px solid $text-link;
   background-color: light-dark(rgba($key-dark, 0.1), rgba($key-light, 0.1));
 }
 
-.positionPicker {
+.selectedValue {
   position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: $text-normal;
+  white-space: nowrap;
+}
+
+.positionPicker {
+  flex-shrink: 0;
   background-color: $widget-normal;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  bottom: 5px;
 
   &:hover {
     background-color: $widget-normal-hover;
@@ -79,6 +86,12 @@
 .bottomRightPresetButton {
   bottom: 0px;
   right: 0px;
+}
+
+.centerPresetButton {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .crosshair {

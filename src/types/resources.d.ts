@@ -326,7 +326,6 @@ export default interface Resources {
               "bottom-right-preset-tooltip": "Set position to bottom right",
               "centered-preset-tooltip": "Set position to center",
               "confirm": "Use this position",
-              "picker-tooltip": "Drag this to a position on your screen to set the position",
               "top-left-preset-tooltip": "Set position to top left",
               "top-right-preset-tooltip": "Set position to top right"
           },
@@ -584,6 +583,7 @@ export default interface Resources {
               "valid": "Great! You have selected a valid area."
           },
           "screen-position-picker": {
+              "instructions": "Drag the crosshair to a position on your screen to select a fixed menu location. Or click on one of the preset location buttons below.",
               "value": "X: {{x}} | Y: {{y}}"
           },
           "search-menus-placeholder": "Search menus…",

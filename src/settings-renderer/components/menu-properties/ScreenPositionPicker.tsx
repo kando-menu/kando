@@ -21,7 +21,6 @@ import { Button, Modal } from '../common';
 
 import * as classes from './ScreenPositionPicker.module.scss';
 import { Vec2 } from '../../../common';
-import { useAppState, useMenuSettings } from '../../state';
 import { IoAdd } from 'react-icons/io5';
 
 type Props = {
@@ -40,27 +39,24 @@ type Props = {
  * screen.
  */
 export default function ScreenPositionPicker(props: Props) {
-  const menus = useMenuSettings((state) => state.menus);
-  const selectedMenu = useAppState((state) => state.selectedMenu);
-
   const [newPosition, setNewPosition] = React.useState(null);
 
-  // Clear the area when the modal is shown.
+  // Reset the selection whenever the modal is shown, so that the confirm button
+  // starts out disabled until a new position has been picked.
   React.useEffect(() => {
     if (props.isVisible) {
-      setNewPosition(menus[selectedMenu].fixedMenuPosition);
+      setNewPosition(null);
     }
-  }, [selectedMenu, menus, props.isVisible]);
+  }, [props.isVisible]);
 
-  const getNewPositionValue = () => {
-    if (newPosition) {
-      return i18next.t('settings.screen-position-picker.value', {
-        x: newPosition.x.toFixed(4),
-        y: newPosition.y.toFixed(4),
-      });
-    } else {
-      return 'NULL';
+  const getSelectedPositionValue = () => {
+    if (!newPosition) {
+      return null;
     }
+    return i18next.t('settings.screen-position-picker.value', {
+      x: newPosition.x.toFixed(2),
+      y: newPosition.y.toFixed(2),
+    });
   };
 
   const isValid = () => {
@@ -73,7 +69,26 @@ export default function ScreenPositionPicker(props: Props) {
   return (
     <Modal isVisible={props.isVisible} maxWidth={500} onClose={props.onClose}>
       <div className={classes.container}>
-        <div className={classes.value}>{getNewPositionValue()}</div>
+        <div className={classes.content}>
+          <div className={classes.positionPicker}>
+            <div
+              draggable
+              className={classes.crosshair}
+              data-tooltip-id="main-tooltip"
+              onDragEnd={() => {
+                window.settingsAPI.getWMInfo().then((info) => {
+                  const x = (info.pointerX - info.workArea.x) / info.workArea.width;
+                  const y = (info.pointerY - info.workArea.y) / info.workArea.height;
+                  setNewPosition({ x, y });
+                });
+              }}>
+              <BiTargetLock />
+            </div>
+          </div>
+          <div className={classes.value}>
+            {i18next.t('settings.screen-position-picker.instructions')}
+          </div>
+        </div>
         <div className={classes.area}>
           {[
             {
@@ -87,14 +102,14 @@ export default function ScreenPositionPicker(props: Props) {
               classname: classes.topLeftPresetButton,
               positionToSet: { x: 0, y: 0 },
               tooltip: i18next.t(
-                'settings.fixed-position-picker.top-right-preset-tooltip'
+                'settings.fixed-position-picker.top-left-preset-tooltip'
               ),
             },
             {
               classname: classes.topRightPresetButton,
               positionToSet: { x: 1, y: 0 },
               tooltip: i18next.t(
-                'settings.fixed-position-picker.top-left-preset-tooltip'
+                'settings.fixed-position-picker.top-right-preset-tooltip'
               ),
             },
             {
@@ -123,24 +138,9 @@ export default function ScreenPositionPicker(props: Props) {
               />
             </div>
           ))}
-          <div className={classes.positionPicker}>
-            <div
-              draggable
-              className={classes.crosshair}
-              data-tooltip-content={i18next.t(
-                'settings.fixed-position-picker.picker-tooltip'
-              )}
-              data-tooltip-id="main-tooltip"
-              onDragEnd={() => {
-                window.settingsAPI.getWMInfo().then((info) => {
-                  const x = (info.pointerX - info.workArea.x) / info.workArea.width;
-                  const y = (info.pointerY - info.workArea.y) / info.workArea.height;
-                  setNewPosition({ x, y });
-                });
-              }}>
-              <BiTargetLock />
-            </div>
-          </div>
+          {newPosition ? (
+            <div className={classes.selectedValue}>{getSelectedPositionValue()}</div>
+          ) : null}
         </div>
         <div className={classes.buttons}>
           <Button
