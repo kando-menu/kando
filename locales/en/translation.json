@@ -584,7 +584,7 @@
         },
         "execute-command": {
             "name": "Execute Command",
-            "description": "Launches apps or runs scripts. ",
+            "description": "Launches apps or runs scripts.",
             "choose-app": "Choose an app…",
             "placeholder": "Insert any command…",
             "isolated": "Run isolated",
