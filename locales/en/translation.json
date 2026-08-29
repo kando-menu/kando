@@ -330,7 +330,7 @@
             "confirm": "Use this area"
         },
         "screen-position-picker": {
-            "instructions": "Drag the crosshair to a position on your screen to select a fixed menu location. Or click on one of the preset location buttons below.",
+            "instructions": "Drag the crosshair to a position on your screen to select a fixed menu location. Or choose one of the preset locations below.",
             "value": "X: {{x}} | Y: {{y}}"
         },
         "window-picker-dialog": {
