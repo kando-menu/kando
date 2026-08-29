@@ -48,8 +48,9 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - You can now **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
 - Added support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 
 - Added a global option to **return the pointer to the menu opening position** after selecting a button.
-- There are new CSS properties `--start-angle` and `--end-angle` for menu items. These represent the start and end angles of the item's wedge. Themes can use these for additional visual effects.
 - Menu **themes can now display a menu item's quick-select key**. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
+- There are new CSS properties `--start-angle` and `--end-angle` for menu items. These represent the start and end angles of the item's wedge. Themes can use these for additional visual effects.
+- There is now a new `--config-dir` command line option which allows you to specify a custom configuration directory. This is useful during development if you do not want to mess with your normal configuration files. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - It's now possible to **open user-configured menus via the IPC interface**. This allows you to open one of your configured menus by its name. This is similar to the `--menu <menu name>` command-line option, but is faster as it does not require starting a new Kando instance. This is especially useful if you want to open menus from other applications or scripts.
 - Added an option to re-open a menu if the same shortcut is pressed while the menu is already open. This is useful if the menu sometimes gets lost on multi-monitor setups.
 - Added some warning signs in the settings dialog which indicate that a potentially dangerous setting is enabled. For instance, if you enable the keep-focus option, a warning sign will show that this disables all keyboard input.
