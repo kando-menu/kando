@@ -47,7 +47,7 @@ export type CommandlineOptions = {
   readonly closeMenu?: boolean;
 
   /** Specifies the config directory to use. */
-  readonly configDir?: string | boolean;
+  readonly configDir?: string;
 };
 
 /**

@@ -12,8 +12,7 @@ import mock from 'mock-fs';
 import path from 'node:path';
 import { expect } from 'chai';
 import {
-  createCustomConfigDirectory,
-  defaultPortableConfigFolder,
+  assignCustomConfigDirectory,
   resetConfigDirectoryForTesting,
 } from '../src/main/settings';
 import { getConfigDirectory } from '../src/main/settings';
@@ -21,7 +20,7 @@ import fs from 'node:fs';
 import { after, beforeEach } from 'mocha';
 
 describe('config directory creation', () => {
-  beforeEach(() => {
+  before(() => {
     mock({
       configDirectoryTests: {},
     });
@@ -31,7 +30,9 @@ describe('config directory creation', () => {
     if (!fs.existsSync(portableModeFilePath)) {
       fs.mkdirSync(portableModeFilePath, { recursive: true });
     }
+  });
 
+  beforeEach(() => {
     resetConfigDirectoryForTesting();
   });
 
@@ -42,7 +43,7 @@ describe('config directory creation', () => {
   // This tests relative paths starting from executable directory.
   // Such as "--config-dir=configDirectoryTests/relative"
   it('relative path from executable directory should create custom config directory', () => {
-    createCustomConfigDirectory('configDirectoryTests/relative');
+    assignCustomConfigDirectory('configDirectoryTests/relative');
 
     expect(getConfigDirectory()).to.equal(
       path.join(path.dirname(process.execPath), 'configDirectoryTests/relative')
@@ -52,22 +53,12 @@ describe('config directory creation', () => {
   // This tests absolute paths starting from root.
   // Such as "--config-dir=/home/user/.config/configDirectoryTests/absolute"
   it('absolute path from root should create custom config directory', () => {
-    createCustomConfigDirectory(
+    assignCustomConfigDirectory(
       path.join(path.dirname(process.execPath), 'configDirectoryTests/absolute')
     );
 
     expect(getConfigDirectory()).to.equal(
       path.join(path.dirname(process.execPath), 'configDirectoryTests/absolute')
-    );
-  });
-
-  // This tests the default behaviour of --config-dir.
-  // Such as "--config-dir"
-  it('default config directory should be created', () => {
-    createCustomConfigDirectory(true);
-
-    expect(getConfigDirectory()).to.equal(
-      path.join(path.dirname(process.execPath), defaultPortableConfigFolder)
     );
   });
 });

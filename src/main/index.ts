@@ -41,7 +41,7 @@ const options = program
   .option('--reload-sound-theme', 'reload the current sound theme from disk')
   .option('--reload-icon-themes', 'reload the any icon themes from disk')
   .option('--close-menu', 'close the currently open menu')
-  .option('--config-dir [directory]', 'specify the config directory')
+  .option('--config-dir <directory>', 'specify the config directory')
   .allowUnknownOption(true)
   .allowExcessArguments(true)
   .parse()
@@ -85,7 +85,7 @@ import {
   getGeneralSettings,
   getMenuSettings,
   getConfigDirectory,
-  createCustomConfigDirectory,
+  assignCustomConfigDirectory,
 } from './settings';
 
 // Initialize the notification system. This will queue notifications until the app is
@@ -114,7 +114,7 @@ try {
   app.setAppLogsPath(path.join(app.getPath('sessionData'), 'logs'));
 
   if (options.configDir) {
-    createCustomConfigDirectory(options.configDir);
+    assignCustomConfigDirectory(options.configDir);
   }
 
   // Set deep link support for the app. This is used to send commands to the app when the

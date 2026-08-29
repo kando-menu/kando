@@ -25,8 +25,6 @@ let configDirectory: string | null = null;
 
 /** Name of the json file that enables portable mode. */
 export const portableJsonFileName: string = 'portableMode.json';
-/** The default folder where portable configuration files will be stored */
-export const defaultPortableConfigFolder: string = 'portableConfig';
 
 /**
  * Gets the directory where the settings files are stored. Usually, this is electron's
@@ -50,11 +48,7 @@ export function getConfigDirectory(): string {
           configDirectory = portableMode.configDirectory;
 
           // Make sure the directory exists and that it is an absolute path.
-          if (path.isAbsolute(configDirectory)) {
-            configDirectory = path.normalize(configDirectory);
-          } else {
-            configDirectory = path.resolve(execDir, configDirectory);
-          }
+          configDirectory = path.resolve(execDir, configDirectory);
           fs.mkdirSync(configDirectory, { recursive: true });
           console.log(`Using portable mode. Settings directory: ${configDirectory}`);
         } else {
@@ -77,18 +71,28 @@ export function getConfigDirectory(): string {
   return configDirectory;
 }
 
-/** Creates the portable mode config file next to the application executable. */
-export function createCustomConfigDirectory(portableConfigFolder: string | boolean) {
+/**
+ * Creates the custom config directory, if needed. Then assigns the given config directory
+ * to the configDirectory variable.
+ */
+export function assignCustomConfigDirectory(portableConfigFolder: string) {
   console.log('Enabling custom config directory');
-  const portableModeFile = path.join(
-    path.dirname(process.execPath),
-    portableJsonFileName
-  );
 
-  fs.writeFileSync(
-    portableModeFile,
-    `{"configDirectory": "${portableConfigFolder === true ? defaultPortableConfigFolder : portableConfigFolder}"}`
-  );
+  try {
+    portableConfigFolder = path.resolve(
+      path.dirname(process.execPath),
+      portableConfigFolder
+    );
+
+    if (!fs.existsSync(portableConfigFolder)) {
+      fs.mkdirSync(portableConfigFolder, { recursive: true });
+    }
+
+    configDirectory = portableConfigFolder;
+    console.log(`Custom config directory: ${configDirectory}`);
+  } catch (error) {
+    console.error('Error creating custom config directory:', error);
+  }
 }
 
 /** Resets the config directory for testing purposes. Should only be used for unit tests. */
