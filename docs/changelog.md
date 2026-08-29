@@ -26,7 +26,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
-- **Workflows!** Instead of fixed item types, we have now various _actions_ which can be combined in flexible ways. We only have two menu item types now: submenus and leaf items, called buttons. Buttons offer two workflows which can be filled with any number of actions:
+- **Kando now supports Workflows!** Instead of fixed item types, we have now various _actions_ which can be combined in flexible ways. We only have two menu item types now: submenus and leaf items, called buttons. Buttons offer two workflows which can be filled with any number of actions:
   - The hover-workflow gets executed when you mouse-over the item. The default menu items do not use this, but you could put actions into this if you want.
   - The select-workflow gets triggered when you click the item. This usually contains two actions: first something like open-url, execute-command, or simulate-shortcut. And then: close-menu. You can reorder the actions to first close the menu and then execute the other action! Or decide not to close the menu at all...
 
@@ -37,21 +37,22 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
   Also interesting is that each workflow has its own quick-select key. So usually, you would want to assign quick-select keys to the open-workflow of submenus and select-workflows of buttons. Yet you can also change the quick-select key of the workflow which gets triggered when you click the center of a submenu! Per default, this will be backspace (for closing the submenu).
 
-- Support for **switching window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
-- Support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
-- The **possibility to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
-- A **redesigned General-Settings dialog** with a completely new layout. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
+- It is now possible to **switch window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
+- Added support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
+- It's now **possible to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
+- The **General-Settings dialog has been redesigned**. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
 - Kando now remembers the size, position, maximized state, and sidebar widths of the settings window. Thanks to [@Morax](https://github.com/fzlzjerry) for contributing this feature!
-- A new option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
-- A new option to **move the mouse pointer back to where it opened the menu** after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
-- The option to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
-- New options in the menu-themes dialog to **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
-- Support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 
-- A global option to **return the pointer to the menu opening position** after selecting a button.
-- New CSS properties `--start-angle` and `--end-angle` for menu items. These represent the start and end angles of the item's wedge. Themes can use these for additional visual effects.
-- The possibility to **open user-configured menus via the IPC interface**. This allows you to open one of your configured menus by its name. This is similar to the `--menu <menu name>` command-line option, but is faster as it does not require starting a new Kando instance. This is especially useful if you want to open menus from other applications or scripts.
-- An option to re-open a menu if the same shortcut is pressed while the menu is already open. This is useful if the menu sometimes gets lost on multi-monitor setups.
-- Some warning signs in the settings dialog which indicate that a potentially dangerous setting is enabled. For instance, if you enable the keep-focus option, a warning sign will show that this disables all keyboard input.
+- Added an option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
+- Added an option to **move the mouse pointer back to where it opened the menu** after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
+- It is now possible to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
+- You can now **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
+- Added support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 
+- Added a global option to **return the pointer to the menu opening position** after selecting a button.
+- There are new CSS properties `--start-angle` and `--end-angle` for menu items. These represent the start and end angles of the item's wedge. Themes can use these for additional visual effects.
+- Menu **themes can now display a menu item's quick-select key**. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
+- It's now possible to **open user-configured menus via the IPC interface**. This allows you to open one of your configured menus by its name. This is similar to the `--menu <menu name>` command-line option, but is faster as it does not require starting a new Kando instance. This is especially useful if you want to open menus from other applications or scripts.
+- Added an option to re-open a menu if the same shortcut is pressed while the menu is already open. This is useful if the menu sometimes gets lost on multi-monitor setups.
+- Added some warning signs in the settings dialog which indicate that a potentially dangerous setting is enabled. For instance, if you enable the keep-focus option, a warning sign will show that this disables all keyboard input.
 - Many translation updates: **Thanks to all the contributors!**
 
 ### :wrench: Changed
@@ -60,12 +61,12 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - :collision: As part of the workflow changes, the IPC interface has changed significantly. If you are using the IPC interface, please check the [documentation](https://kando.menu/ipc-interface/) for the new specification.
 - :collision: Also as a consequence of the workflow changes, the sound-theme configuration has changed. Sound themes have to be updated to the new format. Check the [documentation](https://kando.menu/sound-themes/) for more information.
 - When exporting a single menu, the exported file now also contains the shortcut, tags, and conditions of the menu.
-- Many of the icons of the Kando icon theme. These are used for the actions and for the example menu items which can be created from the preview footer area.
-- The position of the delete-menu-item and duplicate-menu-item buttons in the settings dialog. They are now shown next to selected menu items in the preview area.
-- The position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
-- What happens when you select a submenu in the menu preview in the settings: before, the submenu would open immediately. Now, it will be selected just as other menu items. To edit its content, you have to either double-click it or use the tiny edit button which appears when you select the submenu.
+- Updated many of the icons of the Kando icon theme. These are used for the actions and for the example menu items which can be created from the preview footer area.
+- Changed the position of the delete-menu-item and duplicate-menu-item buttons in the settings dialog. They are now shown next to selected menu items in the preview area.
+- Changed the position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
+- Changed what happens when you select a submenu in the menu preview in the settings: before, the submenu would open immediately. Now, it will be selected just as other menu items. To edit its content, you have to either double-click it or use the tiny edit button which appears when you select the submenu.
 - Workflows are now executed on key-up instead of key-down. This improves the visual feedback of the menu as it's not instantly closed when you select a menu item. It also resolves some issues where actions were not reliably executed when a key was still held down.
-- The default fade-in and fade-out times of the menu. They are now 75ms and 100ms respectively. This makes the menu feel snappier and more responsive.
+- Changed the default fade-in and fade-out times of the menu. They are now 75ms and 100ms respectively. This makes the menu feel snappier and more responsive.
 - If the system supports it, Kando menus will now be shown on all workspaces.
 - Systems using the `zh-TW` locale will now fall back to `zh-Hant` before using English strings. Thanks to [@ClixTW](https://github.com/ClixTW) for this contribution!
 - Updated many dependencies to their latest versions. This includes an update to Electron 43 which amongst other things brings rounded window corners on Linux! Feel free to report any issues you encounter!
