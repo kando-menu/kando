@@ -388,7 +388,7 @@
             "keep-input-focus": "Aktive Anwendung fokussiert lassen",
             "cycle-from-recent": "Nächstes Menü anzeigen (weiter nach Vorherigem)",
             "cycle-from-first": "Nächstes Menü anzeigen (am Anfang starten)",
-            "keep-input-focus-info": "Wenn aktiviert, erhält das Menü beim Öffnen keinen Tastatureingabefokus. Das deaktiviert den Turbo-Modus, kann aber nützlich sein, wenn andere Anwendungen fokussiert bleiben sollen, während das Menü geöffnet ist.",
+            "keep-input-focus-info": "Wenn aktiviert, erhält das Menü beim Öffnen keine Tastatureingabefokus. Dadurch wird verhindert, dass das Menü den Fokus von der aktiven Anwendung stiehlt, aber es wird einige Funktionen deaktivieren, wie Turbo-Modus und Tastaturnavigation.",
             "hardware-acceleration": "Hardwarebeschleunigung aktivieren",
             "hardware-acceleration-info": "Diese Option kann die Leistung der App erhöhen, kann aber auch zu Darstellungsfehlern führen. Sie müssen Kando neu starten, um diese Einstellung anzuwenden.",
             "enable-achievements-info": "Wenn aktiviert, wird Kando den Fortschritt Ihrer Errungenschaften aufzeichnen.",
@@ -420,7 +420,12 @@
             "input-options": "Eingabeoptionen",
             "learn-interaction-mode": "Erfahren Sie mehr über Kandos Interaktionsmodi [hier]({{link}})!",
             "backup-menus-note": "Dies wird alle Ihre Menüs auf einmal sichern oder wiederherstellen. Dazu gehören alle konfigurierten Hotkeys, Menülayouts und Ihre Menüsammlungen.",
-            "backup-settings-note": "Dies wird die Einstellungen von Kando sichern oder wiederherstellen. Dazu gehören die allgemeinen Einstellungen und Ihre Menü-Thema-Konfiguration."
+            "backup-settings-note": "Dies wird die Einstellungen von Kando sichern oder wiederherstellen. Dazu gehören die allgemeinen Einstellungen und Ihre Menü-Thema-Konfiguration.",
+            "keep-input-focus-warning": "Dies deaktiviert einige Funktionen wie Turbo Mode und die Fähigkeit, die Tastatur zu verwenden, um Elemente auszuwählen. Aktiviere das nur, wenn du weißt, was du tust!",
+            "enable-turbo-mode-warning": "Deaktiviert durch die Option 'Aktive Anwendung fokussiert lassen'.",
+            "re-open-menu": "Menü erneut öffnen",
+            "settings-dialog-and-tray-icon": "Einstellungsdialog & Taskleistensymbol",
+            "achievements": "Errungenschaften"
         },
         "hover-mode-info": "Nur für Power User! Wählen Sie Elemente, indem Sie sie mit der Maus berühren.",
         "hover-mode": "Hover-Modus",
@@ -475,9 +480,9 @@
             "reset-color-picker": "Auf Standardeinstellungen zurücksetzen",
             "title": "Menü-Designs",
             "fade-in-time": "Einblendzeit",
-            "fade-in-time-info": "Die Zeit, die das Menü zum Einblenden benötigt. Standard ist 150ms.",
+            "fade-in-time-info": "Die Zeit, die das Menü zum Einblenden benötigt. Standard ist 75ms.",
             "fade-out-time": "Ausblendzeit",
-            "fade-out-time-info": "Die Zeit, die das Menü zum Ausblenden benötigt. Standard ist 200ms.",
+            "fade-out-time-info": "Die Zeit, die das Menü zum Ausblenden benötigt. Standard ist 100ms.",
             "menu-scale": "Menügröße",
             "menu-scale-info": "Verwenden Sie dies, um Ihre Menüs zu vergrößern oder zu verkleinern. Standard ist 1.0.",
             "light-dark-mode": "Hell-/Dunkelmodus aktivieren",
@@ -506,7 +511,11 @@
             "enable-menu-animations-info": "Wenn deaktiviert, werden alle Transitionen und die meisten Animationen des Menüthemas unterdrückt.",
             "enable-menu-animations": "Menü-Animationen",
             "enable-pointer-reactive-effects-info": "Wenn deaktiviert, werden einige Zoom- oder Skalierungseffekte des Menüthemas, die auf der aktuellen Zeigerposition basieren, unterdrückt.",
-            "enable-pointer-reactive-effects": "Zeigerbasierte Effekte"
+            "enable-pointer-reactive-effects": "Zeigerbasierte Effekte",
+            "underline-quick-select-key-info": "Wenn aktiviert, wird der erste Buchstabe des Namens des Menüpunkts, der der Schnellwahltaste des Menüpunkts entspricht, unterstrichen.",
+            "underline-quick-select-key": "Schnellwahltaste unterstreichen",
+            "draw-quick-select-key-info": "Wenn aktiviert und vom Design unterstützt, werden Schnellwahltasten der Menü-Elemente direkt im Menü angezeigt.",
+            "draw-quick-select-key": "Schnellwahltaste anzeigen"
         },
         "not-bound": "Nicht gebunden",
         "redo": "Wiederholen",
@@ -605,14 +614,14 @@
         },
         "simulate-hotkey": {
             "name": "Hotkey Simulieren",
-            "description": "Drückt eine Tastenkombination.",
+            "description": "Drückt eine Tastenkombination. Denken Sie daran, eine Menü-Schließen-Aktion vor dieser einzufügen, wenn eine andere Anwendung Ziel der Tastenkombination sein soll!",
             "recording-placeholder": "Drücken Sie einen Hotkey…",
             "hotkey": "Hotkey",
             "hotkey-info": "Dieser Hotkey wird ausgelöst, wenn das Element ausgewählt wird. Beim Aufzeichnen müssen Sie nicht alle Tasten gleichzeitig drücken, sondern können sie nacheinander drücken. Dies ist nützlich, wenn ein Hotkey bereits einer globalen Aktion zugewiesen ist!"
         },
         "execute-macro": {
             "name": "Makro Ausführen",
-            "description": "Führt ein Tastaturmakro aus.",
+            "description": "Führt ein Tastaturmakro aus. Denken Sie daran, eine Menü-Schließen-Aktion vor dieser einzufügen, wenn eine andere Anwendung Ziel der Tastenkombination sein soll!",
             "placeholder": "Drücken Sie die Aufnahmetaste, um die Aufnahme zu starten!",
             "recording-placeholder": "Drücken Sie die Tasten…"
         }
