@@ -69,9 +69,7 @@ function AccordionPanel(props: AccordionPanelProps) {
           })}
         />
       </div>
-      <div ref={contentRef} className={classes.content}>
-        {props.isExpanded ? props.children : null}
-      </div>
+      <div ref={contentRef}>{props.isExpanded ? props.children : null}</div>
     </div>
   );
 }
