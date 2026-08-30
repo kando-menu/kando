@@ -82,13 +82,13 @@
   ) !important;
 }
 
-/* Submenus use default wedge color while normal items use a shifted hue */
+/* Sector colors */
 .menu-node.child.type-submenu {
-  --current-wedge-color: var(--wedge-color, rgba(255, 255, 255, 0.65));
+  --current-sector-color: var(--sector-color-submenu, rgba(255, 255, 255, 0.65));
 }
 
 .menu-node.child:not(.type-submenu) {
-  --current-wedge-color: hsl(from var(--wedge-color, #ff8800) calc(h + 15) s l);
+  --current-sector-color: var(--sector-color-action, rgba(255, 255, 255, 0.65));
 }
 
 /* ==========================================================================
@@ -159,7 +159,7 @@
 .menu-node.child::before {
   content: '';
   position: absolute;
-  --wedge-gap: 0.5deg;
+  --sector-gap: 0.5deg;
 
   top: calc(-1 * var(--ring-outer-radius));
   left: calc(-1 * var(--ring-outer-radius));
@@ -180,35 +180,35 @@
     transparent 0px 61.5px,
     rgba(215, 248, 255, 0.95) 62px 70px,
     transparent 70.1px 77.9px,
-    var(--current-wedge-color) 78px,
-    color-mix(in srgb, var(--current-wedge-color) 85%, transparent) 88px,
-    color-mix(in srgb, var(--current-wedge-color) 64%, transparent) 98px,
-    color-mix(in srgb, var(--current-wedge-color) 36%, transparent) 122px,
-    color-mix(in srgb, var(--current-wedge-color) 16%, transparent) 138px,
+    var(--current-sector-color) 78px,
+    color-mix(in srgb, var(--current-sector-color) 85%, transparent) 88px,
+    color-mix(in srgb, var(--current-sector-color) 64%, transparent) 98px,
+    color-mix(in srgb, var(--current-sector-color) 36%, transparent) 122px,
+    color-mix(in srgb, var(--current-sector-color) 16%, transparent) 138px,
     transparent 142px
   );
 
   mask-image: 
     radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
-    conic-gradient(from calc(var(--start-angle) + var(--wedge-gap)), transparent 0deg, black 0.3deg, black calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2) - 0.3deg), transparent calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2)));
+    conic-gradient(from calc(var(--start-angle) + var(--sector-gap)), transparent 0deg, black 0.3deg, black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg), transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2)));
   mask-composite: intersect;
 
   -webkit-mask-image: 
     radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
-    conic-gradient(from calc(var(--start-angle) + var(--wedge-gap)), transparent 0deg, black 0.3deg, black calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2) - 0.3deg), transparent calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2)));
+    conic-gradient(from calc(var(--start-angle) + var(--sector-gap)), transparent 0deg, black 0.3deg, black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg), transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2)));
   -webkit-mask-composite: source-in;
 }
 
 .menu-node.child.hovered::before {
   opacity: 1;
-  filter: brightness(1) drop-shadow(0 0 4px var(--current-wedge-color));
+  filter: brightness(1) drop-shadow(0 0 4px var(--current-sector-color));
   transition: opacity 80ms ease-out;
 }
 
 .menu-node.child.clicked::before,
 .menu-node.child.hovered.clicked::before {
   opacity: 1 !important;
-  filter: brightness(1.45) drop-shadow(0 0 12px var(--current-wedge-color)) !important;
+  filter: brightness(1.45) drop-shadow(0 0 12px var(--current-sector-color)) !important;
   transition: none !important;
 }
 
@@ -217,7 +217,7 @@
   content: '';
   position: absolute;
   --outer-box-radius: 185px;
-  --wedge-gap: 0.5deg;
+  --sector-gap: 0.5deg;
 
   top: calc(-1 * var(--outer-box-radius));
   left: calc(-1 * var(--outer-box-radius));
@@ -245,18 +245,18 @@
   );
 
   mask: conic-gradient(
-    from calc(var(--start-angle) + var(--wedge-gap)),
+    from calc(var(--start-angle) + var(--sector-gap)),
     transparent 0deg,
     black 0.3deg,
-    black calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2) - 0.3deg),
-    transparent calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2))
+    black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+    transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2))
   );
   -webkit-mask: conic-gradient(
-    from calc(var(--start-angle) + var(--wedge-gap)),
+    from calc(var(--start-angle) + var(--sector-gap)),
     transparent 0deg,
     black 0.3deg,
-    black calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2) - 0.3deg),
-    transparent calc(var(--end-angle) - var(--start-angle) - (var(--wedge-gap) * 2))
+    black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+    transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2))
   );
 }
 
@@ -271,31 +271,26 @@
   transition: none !important;
 }
 
-/* Center Click Circle */
+/* Center Click Inner Circle Highlight */
 .menu-node.active > .icon-layer::before {
   content: '';
   position: absolute;
-  --outer-box-radius: 185px;
-
-  top: calc(-1 * var(--outer-box-radius));
-  left: calc(-1 * var(--outer-box-radius));
-  width: calc(var(--outer-box-radius) * 2);
-  height: calc(var(--outer-box-radius) * 2);
+  inset: -70px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 5;
   opacity: 0;
 
   background: radial-gradient(circle at center,
-    transparent 0px 145px,
-    rgba(215, 248, 255, 0.95) 146px 150px,
-    transparent 151px
+    transparent 0px 61.5px,
+    rgba(215, 248, 255, 0.95) 62px 70px,
+    transparent 70.5px
   );
 }
 
 .menu-node.active.clicked > .icon-layer::before {
   opacity: 1 !important;
-  filter: drop-shadow(0 0 10px rgba(215, 248, 255, 0.95));
+  filter: brightness(1.45) drop-shadow(0 0 12px rgba(215, 248, 255, 0.95));
 }
 
 /* ==========================================================================
@@ -336,7 +331,7 @@
 .menu-node.active:not(.level-0) > .icon-layer > .icon-container::before {
   content: '';
   position: absolute;
-  --wedge-gap: 0.5deg;
+  --sector-gap: 0.5deg;
 
   inset: calc(-1 * var(--ring-outer-radius));
   transform-origin: center center;
@@ -360,22 +355,22 @@
   mask-image: 
     radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
     conic-gradient(
-      from calc(var(--parent-start-angle) + var(--wedge-gap)),
+      from calc(var(--parent-start-angle) + var(--sector-gap)),
       transparent 0deg,
       black 0.3deg,
-      black calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--wedge-gap) * 2) - 0.3deg),
-      transparent calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--wedge-gap) * 2))
+      black calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+      transparent calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2))
     );
   mask-composite: intersect;
 
   -webkit-mask-image: 
     radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
     conic-gradient(
-      from calc(var(--parent-start-angle) + var(--wedge-gap)),
+      from calc(var(--parent-start-angle) + var(--sector-gap)),
       transparent 0deg,
       black 0.3deg,
-      black calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--wedge-gap) * 2) - 0.3deg),
-      transparent calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--wedge-gap) * 2))
+      black calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+      transparent calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2))
     );
   -webkit-mask-composite: source-in;
 }
