@@ -202,7 +202,7 @@
     transition: var(--opacity-transition), var(--menu-transition);
   }
 
-  &.child:not(.dragged) > .quick-key:not(:empty) {
+  &.child:not(.dragged) > .quick-key {
     opacity: 1;
   }
 
