@@ -1,0 +1,62 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//   _  _ ____ _  _ ___  ____                                                           //
+//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
+//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
+//                                                                                      //
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: Luctarie
+// SPDX-License-Identifier: CC0-1.0
+
+{
+  name: 'Purity',
+  author: 'Luctarie',
+  license: 'CC0-1.0',
+  themeVersion: '1.1',
+  description: 'Radial menu with a sleek look, with hotkey display compatibility and colored wedges.',
+
+  engineVersion: 1,
+
+  maxMenuRadius: 180,
+  centerTextWrapWidth: 140,  // Precisely matches inner circle diameter (70px radius × 2)
+  drawChildrenBelow: true,
+  childTransitionTime: 200,
+
+  // Required by Kando to activate wedge and separator rendering
+  drawWedgeSeparators: true,
+  drawSelectionWedges: true,
+  
+  
+  colors: {
+    // === Text Color Configuration ===
+    'text-color': 'rgb(255 255 255 / 0.9)',             // Center text primary color
+
+    // === Icon & Indicator Color Configuration ===
+    'icon-color': 'rgb(255 255 255 / 0.9)',             // Icon and Parent arrow color
+    'icon-hover-color': 'rgb(255 255 255 / 1.0)',       // Icon color on hover
+
+    // === Ring Color Configuration ===
+    'ring-color': 'rgb(13 13 13 / 0.86)',               // Ring main body color - dark gray
+    'inner-circle': 'rgba(255, 255, 255, 0.4)',         // Thinner inner circle ring color
+
+    // === Wedge ===
+    'wedge-color': 'rgb(132 0 255 / 0.82)',             // Wedge background highlight on hover
+
+    // === Background Configuration ===
+    'background-main': 'rgb(0 0 0 / 0)',                // Main full-screen background
+    'background-secondary': 'rgb(0 0 0 / 0.85)'         // Vignette color on corners and edges
+  },
+  
+  
+  layers: [
+    {
+      class: 'quick-key',
+      content: 'quick-select-key'
+    },
+    {
+      class: 'icon-layer',
+      content: 'icon'
+    }
+  ]
+}

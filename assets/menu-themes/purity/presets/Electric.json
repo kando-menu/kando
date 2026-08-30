@@ -1,0 +1,12 @@
+{
+  "colors": {
+    "text-color": "rgb(255 255 255 / 0.9)",
+    "icon-color": "rgb(0 15 34 / 0.8)",
+    "icon-hover-color": "rgb(211 236 255)",
+    "ring-color": "rgb(232 232 232 / 0.51)",
+    "inner-circle": "rgb(98 168 255 / 0.74)",
+    "wedge-color": "rgb(135 200 255 / 0.77)",
+    "background-main": "rgb(0 0 0 / 0.41)",
+    "background-secondary": "rgb(0 0 0 / 0.82)"
+  }
+}

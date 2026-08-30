@@ -49,5 +49,6 @@
     { class: 'ring-fast-layer', content: 'none' },
     { class: 'ring-slow-layer', content: 'none' },
     { class: 'arrow-layer', content: 'none' },
+	{ class: 'quick-key', content: 'quick-select-key'},
   ],
 }

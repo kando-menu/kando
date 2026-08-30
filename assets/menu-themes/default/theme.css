@@ -63,7 +63,7 @@
   /* This theme comes with only one layer. This contains the icon of the menu item. */
 
   /* We hide all icons by default. They will be shown further down in this file for the
-       center item and the child items. */
+		center item and the child items. */
   .icon-container {
     opacity: 0;
     color: var(--text-color);
@@ -123,7 +123,7 @@
   }
 
   /* Child items are displayed around the active node. The parent node of the active
-       node is displayed in a similar style. */
+		node is displayed in a similar style. */
   &.parent > .icon-layer,
   &.child > .icon-layer {
     top: calc(-1 * var(--child-size) / 2);
@@ -175,25 +175,39 @@
     background-color: var(--hover-color);
   }
 
+  /* Quick-Key Indicator -------------------------------------------------------------- */
+
   /* Use position absolute and z-index to order the quick key above the icon. */
   .quick-key {
     position: absolute;
-    opacity: 0;
-    background-color: var(--background-color);
-    font-size: 14px;
-    padding-left: 10px;
-    padding-right: 10px;
+    top: calc(-1 * var(--dir-y, 0) * 26px);
+    left: calc(-1 * var(--dir-x, 0) * 26px);
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--hover-color);
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.4);
+    color: var(--text-color);
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 17px;
     text-align: center;
-    z-index: 1;
-    top: 10px;
-    border: 2px, solid, var(--border-color);
-    border-radius: 20%;
-    transition: var(--opacity-transition);
+    white-space: nowrap;
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+    transition: var(--opacity-transition), var(--menu-transition);
   }
 
-  /* Only show keys of children */
-  &.child > .quick-key {
+  &.child:not(.dragged) > .quick-key:not(:empty) {
     opacity: 1;
+  }
+
+  &.child.hovered > .quick-key {
+    background: var(--background-color);
   }
 }
 

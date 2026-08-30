@@ -42,5 +42,6 @@
   layers: [
     { class: 'arrow-layer', content: 'none' },
     { class: 'icon-layer', content: 'icon' },
+	{ class: 'quick-key', content: 'quick-select-key'},
   ],
 }
