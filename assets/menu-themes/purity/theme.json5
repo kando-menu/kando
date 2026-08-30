@@ -41,8 +41,8 @@
 
     // === Wedge and Sector Configuration ===
     'wedge-color': 'rgb(132 0 255 / 0.50)',             // Wedge background highlight on hover
-    'sector-color-submenu': 'rgb(94 47 250 / 0.82)',             // Sector submenu highlight on hover
-    'sector-color-action': 'rgb(132 0 255 / 0.82)',             // Sector action highlight on hover
+    'sector-color-submenu': 'rgb(103 0 237 / 0.82)',             // Sector submenu highlight on hover
+    'sector-color-action': 'rgb(198 118 255 / 0.82)',             // Sector action highlight on hover
 
     // === Background Configuration ===
     'background-main': 'rgb(0 0 0 / 0)',                // Main full-screen background
