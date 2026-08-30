@@ -176,7 +176,8 @@
 
   /* If the parent or a child node is clicked, we scale it down to normal size. */
   &.parent.hovered.clicked>.icon-layer,
-  &.child.hovered.clicked>.icon-layer {
+  &.child.hovered.clicked>.icon-layer,
+  &.active.hovered.clicked>.icon-layer {
     transform: scale(0.8);
   }
 
