@@ -298,7 +298,8 @@
     animation: none !important;
     transition: var(--menu-transition) !important;
   }
-
+}
+  
 /* Center Text ------------------------------------------------------------------------ */
 
 .center-text {
