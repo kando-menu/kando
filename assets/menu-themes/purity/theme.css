@@ -271,6 +271,33 @@
   transition: none !important;
 }
 
+/* Center Click Circle */
+.menu-node.active > .icon-layer::before {
+  content: '';
+  position: absolute;
+  --outer-box-radius: 185px;
+
+  top: calc(-1 * var(--outer-box-radius));
+  left: calc(-1 * var(--outer-box-radius));
+  width: calc(var(--outer-box-radius) * 2);
+  height: calc(var(--outer-box-radius) * 2);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+
+  background: radial-gradient(circle at center,
+    transparent 0px 145px,
+    rgba(215, 248, 255, 0.95) 146px 150px,
+    transparent 151px
+  );
+}
+
+.menu-node.active.clicked > .icon-layer::before {
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 10px rgba(215, 248, 255, 0.95));
+}
+
 /* ==========================================================================
    Back Navigation & Triangle
    ========================================================================== */
