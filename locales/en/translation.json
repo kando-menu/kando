@@ -222,8 +222,8 @@
             "settings-dialog-and-tray-icon": "Settings Dialog & Tray Icon",
             "achievements": "Achievements",
             "trigger-center-click-on-key-release-info": "This will trigger the center-click workflow when a key is released while hovering over the center of a menu.",
-            "trigger-center-click-on-key-release": "Trigger center-click workflow on key release",
-            "trigger-center-click-on-key-release-warning": "This option will instantly close the menu when you release the shortcut. Activate this only if you know what you are doing!"
+            "trigger-center-click-on-key-release": "Close menu on shortcut release over center",
+            "trigger-center-click-on-key-release-warning": "Depending on your center-click workflow, this may instantly close the menu when you release the shortcut. Activate this only if you know what you are doing!"
         },
         "introduction-dialog": {
             "slide1-title": "Kando offers a unique and efficient way for interacting with your computer.",
