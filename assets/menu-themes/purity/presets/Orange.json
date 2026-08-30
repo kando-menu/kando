@@ -5,8 +5,10 @@
     "icon-hover-color": "rgb(255 255 255 / 1.0)",
     "ring-color": "rgb(0 0 0 / 0.34)",
     "inner-circle": "rgba(255, 255, 255, 0.4)",
-    "wedge-color": "rgb(255 85 0 / 0.65)",
-    "background-main": "rgb(0 0 0 / 0.68)",
-    "background-secondary": "rgba(0, 0, 0, 0.95)"
+    "wedge-color": "rgb(221 93 29 / 0.65)",
+    "sector-color-submenu": "rgb(189 58 4 / 0.88)",
+    "sector-color-action": "rgb(214 137 14 / 0.82)",
+    "background-main": "rgb(0 0 0 / 0.31)",
+    "background-secondary": "rgb(0 0 0 / 0.59)"
   }
 }
