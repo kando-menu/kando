@@ -196,6 +196,22 @@
     transform: scale(0.8);
   }
 
+    /* Center click effect */
+  &.active.clicked > .ring-slow-layer::before {
+    transform: scale(1.5) !important;
+    background-image: radial-gradient(circle,
+        transparent 20%,
+        color-mix(in srgb, var(--glow-color) 10%, transparent) 27%,
+        color-mix(in srgb, var(--glow-color) 20%, transparent) 30%,
+        color-mix(in srgb, var(--glow-color) 60%, transparent) 33%,
+        white 34%,
+        white 36%,
+        color-mix(in srgb, var(--glow-color) 60%, transparent) 37%,
+        color-mix(in srgb, var(--glow-color) 20%, transparent) 40%,
+        color-mix(in srgb, var(--glow-color) 10%, transparent) 47%,
+        transparent 60%) !important;
+  }
+
   /* Show the icons of the center, parent and child items. */
   &.parent>.icon-layer>.icon-container,
   &.child>.icon-layer>.icon-container {
