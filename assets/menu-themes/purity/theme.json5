@@ -39,8 +39,10 @@
     'ring-color': 'rgb(13 13 13 / 0.86)',               // Ring main body color - dark gray
     'inner-circle': 'rgba(255, 255, 255, 0.4)',         // Thinner inner circle ring color
 
-    // === Wedge ===
-    'wedge-color': 'rgb(132 0 255 / 0.82)',             // Wedge background highlight on hover
+    // === Wedge and Sector Configuration ===
+    'wedge-color': 'rgb(132 0 255 / 0.50)',             // Wedge background highlight on hover
+    'sector-color-submenu': 'rgb(94 47 250 / 0.82)',             // Sector submenu highlight on hover
+    'sector-color-action': 'rgb(132 0 255 / 0.82)',             // Sector action highlight on hover
 
     // === Background Configuration ===
     'background-main': 'rgb(0 0 0 / 0)',                // Main full-screen background
