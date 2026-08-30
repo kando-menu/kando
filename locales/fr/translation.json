@@ -287,7 +287,11 @@
             "learn-interaction-mode": "Pour en savoir plus sur les modes d'interaction de Kando, cliquez [ici]({{link}}) !",
             "backup-menus-note": "Tous les menus seront restaurés ou sauvegardés en une fois. Cela inclut tous vos raccourcis configurés, la disposition de vos menus et vos collections de menus.",
             "backup-settings-note": "Tous les paramètres de Kando seront sauvegardés ou restaurés, ce qui inclut tous vos paramètres globaux ainsi que la configuration des thèmes de menu.",
-            "re-open-menu": "Ré-ouvrir le menu"
+            "re-open-menu": "Ré-ouvrir le menu",
+            "keep-input-focus-warning": "Cela désactive certaines fonctionnalités, telles que le mode Turbo et la possibilité d'utiliser le clavier pour sélectionner des éléments. N'activez cette option que si vous savez exactement ce que vous faites !",
+            "enable-turbo-mode-warning": "Désactivé car l'option « Maintenir le focus sur l'application active » est activée.",
+            "return-pointer-after-selection-info": "Après avoir fait une sélection, le pointeur de la souris reviendra à l'endroit où il se trouvait lors de l'ouverture du menu.",
+            "achievements": "Réussite"
         },
         "hover-mode": "Mode Survol",
         "hover-mode-info": "Pour utilisateurs expérimentés seulement ! Sélectionne les éléments en les survolant.",
@@ -351,10 +355,10 @@
             "fade-in-time": "Temps de fondu entrant",
             "no-accent-colors": "Ce thème ne prend pas en charge les couleurs d'accentuation.",
             "menu-scale": "Mise à l'échelle",
-            "fade-out-time-info": "Temps nécessaire pour que le menu s'affiche en fondu. La valeur par défaut est de 200 ms.",
+            "fade-out-time-info": "Le temps que met le menu à disparaître en fondu. La valeur par défaut est 100 ms.",
             "menu-scale-info": "Utilisez ceci pour augmenter ou diminuer la taille de tes menus. La valeur par défaut est 1.0.",
             "get-themes-online": "Obtenir des thèmes en ligne",
-            "fade-in-time-info": "Temps nécessaire pour que le menu s'affiche en fondu. La valeur par défaut est de 150 ms.",
+            "fade-in-time-info": "Le temps que met le menu à apparaître en fondu. La valeur par défaut est 75 ms.",
             "selection-wedges-info": "Si cette option est activée et prise en charge par le thème sélectionné, la zone de sélection des éléments du menu sera mise en valeur.",
             "selection-wedges": "Afficher l'arrière plan des éléments",
             "save-preset-error-title": "Sauvegarde du préréglage échouée",
@@ -408,16 +412,16 @@
         "invalid-dropdown-selection": "sélectionnez une option…",
         "add-tags-placeholder": "Ajouter des étiquettes…",
         "anchored-mode-info": "Ouvrir les sous-menus à la même position que le menu parent. Le fait de cocher cette case désactive le Mode Marquage et Turbo.",
-        "app-condition-info": "Afficher le menu uniquement si une application spécifique est sélectionnée. Cela permet d'utiliser des expressions régulières telles que /firefox|chrome/i.",
+        "app-condition-info": "Affiche le menu uniquement si une application spécifique est active. Prend en charge les expressions régulières RegEx comme /firefox|chrome/i.",
         "app-condition-placeholder": "Nom de l'application",
         "app-condition-tooltip": "Sélectionner un application",
-        "window-condition-info": "Afficher le menu uniquement si le titre de la fenêtre active contient un texte donné. Cela permet d'utiliser des expressions régulières telles que /youtube|vimeo/i.",
+        "window-condition-info": "Affiche le menu uniquement si le titre de la fenêtre active contient un texte donné. Prend en charge les expressions régulières RegEx comme /youtube|vimeo/i.",
         "area-condition-info": "Afficher le menu uniquement si le curseur se trouve dans une zone donnée de l'écran. Cette zone est exprimée en pixels par rapport au coin supérieur gauche de l'écran principal. Si vous laissez un champ vide, la zone n'est pas délimitée dans cette direction.",
         "area-condition-tooltip": "Sélectionner une zone d'écran",
         "all-menus": "Tous les menus",
         "search-menus-placeholder": "Chercher un menu…",
         "add-collection-tooltip": "Créez une nouvelle collection de menus. Utilisez les collections pour grouper vos menus par étiquettes !",
-        "create-menu-button": "Nouveau menu",
+        "create-menu-button": "Ajouter un menu",
         "add-menu-items": "Ajouter des éléments au menu",
         "undo": "Annuler l'action",
         "menu-behavior-info": "Avant d'activer ces options, nous vous recommandons d'apprendre pourquoi nous aimons le comportement par défaut de Kando [ici]({{link}}) !",
@@ -473,7 +477,40 @@
         "import-menu": "Importer le menu",
         "quick-select-key-info": "Cette touche permet de rapidement sélectionner l'élément.",
         "quick-select-key-label": "Touche de sélection rapide",
-        "quick-select-key-recording": "Sélectionnez une touche…"
+        "quick-select-key-recording": "Sélectionnez une touche…",
+        "fixed-position-mode": "Mode Position fixe",
+        "fixed-position-mode-info": "Ouvre le menu à une position fixe de l'écran, au lieu de la position du curseur.",
+        "fixed-position-picker": {
+            "confirm": "Utiliser cette position"
+        },
+        "fixed-position-x-placeholder": "X",
+        "fixed-position-y-placeholder": "Y",
+        "fixed-position-tooltip": "Sélectionner une position fixe",
+        "screen-position-picker": {
+            "instructions": "Faites glisser le réticule vers une position de votre écran pour sélectionner un emplacement fixe pour le menu. Ou choisissez l'un des emplacements prédéfinis ci-dessous.",
+            "value": "X : {{x}} | Y : {{y}}"
+        },
+        "workflow-editor": {
+            "add-action": "Ajouter une action",
+            "button-select-workflow": {
+                "empty-hint": "Actuellement, aucune action ne sera exécutée lors de la sélection de cet élément. Utilisez le bouton ci-dessus pour ajouter des actions à ce flux de travail !",
+                "quick-select-key-hint": "Appuyer cette touche pendant que le menu parent est ouvert, déclenchera également le flux de sélection."
+            },
+            "button-hover-workflow": {
+                "description": "Les actions ci-dessous seront exécutées lorsque vous déplacerez votre pointeur sur l'élément.",
+                "empty-hint": "Actuellement, aucune action ne sera exécutée lors du survol de cet élément. Utilisez le bouton ci-dessus pour ajouter des actions à ce flux de travail !",
+                "quick-select-key-hint": "Appuyer cette touche pendant que le menu parent est ouvert, déclenchera également le flux de survol."
+            },
+            "submenu-open-workflow": {
+                "description": "Les actions ci-dessous seront exécutées lorsque le sous-menu sera ouvert.",
+                "empty-hint": "Actuellement, aucune action supplémentaire ne sera exécutée lors de l'ouverture de ce sous-menu. Utilisez le bouton ci-dessus pour ajouter des actions à ce flux de travail !",
+                "quick-select-key-hint": "Appuyer sur cette touche ouvrira le sous-menu."
+            },
+            "submenu-hover-workflow": {
+                "description": "Les actions ci-dessous seront exécutées lorsque vous déplacerez votre pointeur sur l'élément du sous-menu.",
+                "empty-hint": "Actuellement, aucune action ne sera exécutée lors du survol de ce sous-menu. Utilisez le bouton ci-dessus pour ajouter des actions à ce flux de travail !"
+            }
+        }
     },
     "achievements": {
         "attributes": {
@@ -578,7 +615,7 @@
         },
         "execute-command": {
             "name": "Exécuter une Commande",
-            "description": "Lancer une application ou un scripte. ",
+            "description": "Lancer une application ou un scripte.",
             "choose-app": "Choisir une application…",
             "placeholder": "Insérer une commande…",
             "isolated": "Exécution isolée",
@@ -601,16 +638,19 @@
         },
         "simulate-hotkey": {
             "name": "Simuler une touche de raccourci",
-            "description": "Exécute un raccourci clavier.",
+            "description": "Appuie sur une combinaison de touches pour vous. Veillez à ajouter une action de fermeture du menu avant celle-ci si vous voulez que le raccourci s'applique à l'application active et non au menu !",
             "recording-placeholder": "Écrire le raccourci clavier…",
             "hotkey": "Raccourci clavier",
             "hotkey-info": "Ce raccourci clavier est déclenché lorsque l'élément est sélectionné. Lors de l'enregistrement, il n'est pas nécessaire d'appuyer sur toutes les touches en même temps, vous pouvez également les appuyer l'une après l'autre. C'est utile si une touche de raccourci est déjà liée à une action globale !"
         },
         "execute-macro": {
             "name": "Simuler une Macro",
-            "description": "Exécute une macro clavier.",
+            "description": "Saisit plusieurs frappes de touches en séquence. Veillez à ajouter une action de fermeture du menu avant celle-ci si vous voulez que le raccourci s'applique à l'application active et non au menu !",
             "placeholder": "Cliquez sur le rond pour commencer à enregistrer !",
             "recording-placeholder": "Appuyez sur un touche…"
+        },
+        "close-menu": {
+            "description": "Ferme le menu actuel. L'emplacement de cette action dans votre flux de travail est important ! Les actions suivantes attendront que le menu ait complètement disparu en fondu avant d'être exécutées."
         }
     }
 }
