@@ -24,18 +24,6 @@
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="white" fill-opacity="0.40"/></svg>') 12 12, auto !important;
 }
 
-#kando-menu,
-.menu-node.active,
-.menu-node:not(.child) {
-}
-
-#kando-menu canvas {
-  background: linear-gradient(135deg, 
-    #8B5CF6 0%, #A855F7 20%, #EC4899 40%, 
-    #F97316 60%, #EAB308 80%, #F59E0B 100%
-  ) !important;
-}
-
 /* Base Fullscreen Background */
 #kando-menu::before {
   content: '';
