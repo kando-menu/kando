@@ -11,7 +11,7 @@
 {
   name: 'Purity',
   author: 'Luctarie',
-  license: 'CC0-1.0',
+  license: 'CC-BY-4.0',
   themeVersion: '1.1',
   description: 'Radial menu with a sleek look, with hotkey display compatibility and colored wedges.',
 
