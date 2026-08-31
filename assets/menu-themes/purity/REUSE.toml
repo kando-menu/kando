@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: Luctarie <Luctarie@GitHub>
+# SPDX-License-Identifier: CC-BY-4.0
+
+version = 1
+
+[[annotations]]
+path = ["theme.json5", "presets/*.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Luctarie <Luctarie@GitHub>"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = "preview.jpg"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Luctarie <Luctarie@GitHub>"
+SPDX-License-Identifier = "CC-BY-4.0"

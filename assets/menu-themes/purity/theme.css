@@ -1,0 +1,543 @@
+/*//////////////////////////////////////////////////////////////////////////////////////*/
+/*   _  _ ____ _  _ ___  ____                                                           */
+/*   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         */
+/*   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     */
+/*                                                                                      */
+/*//////////////////////////////////////////////////////////////////////////////////////*/
+
+/* SPDX-FileCopyrightText: Luctarie <Luctarie@GitHub> */
+/* SPDX-FileCopyrightText: 2025 Rena and LCG" */
+/* SPDX-License-Identifier: CC-BY-4.0 */
+
+/* ==========================================================================
+   Cursor & Canvas Setup
+   ========================================================================== */
+   
+#kando-menu {
+  /* Semi-transparent cursor */
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="white" fill-opacity="0.85"/></svg>') 12 12, auto !important;
+}
+
+#kando-menu:has(.menu-node.child.hovered),
+#kando-menu:has(.menu-node.parent.hovered) {
+  /* Semi-transparent cursor dimmer on hover */
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="white" fill-opacity="0.40"/></svg>') 12 12, auto !important;
+}
+
+/* Base Fullscreen Background */
+#kando-menu::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--background-main);
+  pointer-events: none;
+  z-index: -10;
+}
+
+/* Vignette Animation */
+@keyframes vignette {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#kando-menu:has(.menu-node)::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -9;
+  background: radial-gradient(ellipse at center, 
+    transparent 40%, 
+    color-mix(in srgb, var(--background-secondary) 35%, transparent) 70%, 
+    color-mix(in srgb, var(--background-secondary) 75%, transparent) 88%, 
+    var(--background-secondary) 100%
+  );
+  animation: vignette 3.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ==========================================================================
+   Menu Layout & Angles
+   ========================================================================== */
+
+.menu-node {
+  --child-distance: 110px;
+  --child-size: 40px;
+  --ring-inner-radius: 70px;
+  --ring-outer-radius: 150px;
+  --ring-width: 80px;
+}
+
+.menu-node.child {
+  --mid-angle: calc((var(--start-angle) + var(--end-angle)) / 2);
+  --dir-x-calc: sin(var(--mid-angle));
+  --dir-y-calc: calc(-1 * cos(var(--mid-angle)));
+
+  transform: translate(
+    calc(var(--child-distance) * var(--dir-x-calc)),
+    calc(var(--child-distance) * var(--dir-y-calc))
+  ) !important;
+}
+
+/* Sector colors */
+.menu-node.child.type-submenu {
+  --current-sector-color: var(--sector-color-submenu, rgba(255, 255, 255, 0.65));
+}
+
+.menu-node.child:not(.type-submenu) {
+  --current-sector-color: var(--sector-color-action, rgba(255, 255, 255, 0.65));
+}
+
+/* ==========================================================================
+   Ring Backgrounds
+   ========================================================================== */
+
+/* Main Ring */
+.menu-node.active::after {
+  content: '';
+  position: absolute;
+  --ring-custom-inner: 78px;
+  --ring-custom-outer: 142px;
+  
+  inset: calc(-1 * var(--ring-custom-outer));
+  border-radius: 50%;
+  background: var(--ring-color);
+  z-index: -2;
+  pointer-events: none;
+  
+  mask: radial-gradient(circle at center, transparent var(--ring-custom-inner), black calc(var(--ring-custom-inner) + 1px));
+  -webkit-mask: radial-gradient(circle at center, transparent var(--ring-custom-inner), black calc(var(--ring-custom-inner) + 1px));
+}
+
+/* Last Level Ring */
+.menu-node.active:not(:has(.menu-node.child .menu-node)):after {
+  content: '';
+  position: absolute;
+  --ring-custom-inner: 78px; 
+  --ring-custom-outer: 142px; 
+  
+  inset: calc(-1 * var(--ring-custom-outer));
+  border-radius: 50% !important;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--ring-color) 35%, rgba(100, 100, 100, 0.45)) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.15), 0 0 6px rgba(255, 255, 255, 0.35) !important;
+  z-index: -2;
+  pointer-events: none;
+  
+  mask: radial-gradient(circle at center, transparent var(--ring-custom-inner), black calc(var(--ring-custom-inner) + 1px));
+  -webkit-mask: radial-gradient(circle at center, transparent var(--ring-custom-inner), black calc(var(--ring-custom-inner) + 1px));
+}
+
+/* Thinner Inner Circle */
+.menu-node.active::before {
+  content: '';
+  position: absolute;
+  inset: -70px;
+  border-radius: 50%;
+  box-sizing: border-box; 
+  border: 8px solid var(--inner-circle);
+  z-index: -3;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+
+/* Dim the inner circle when hovering an item */
+#kando-menu:has(.menu-node.child.hovered) .menu-node.active::before,
+#kando-menu:has(.menu-node.parent.hovered) .menu-node.active::before {
+  opacity: 0.4;
+}
+
+/* ==========================================================================
+   Item Slice Highlights
+   ========================================================================== */
+
+/* Main Slice Highlight */
+.menu-node.child::before {
+  content: '';
+  position: absolute;
+  --sector-gap: 0.5deg;
+
+  top: calc(-1 * var(--ring-outer-radius));
+  left: calc(-1 * var(--ring-outer-radius));
+  width: calc(var(--ring-outer-radius) * 2);
+  height: calc(var(--ring-outer-radius) * 2);
+
+  transform: translate(
+    calc(-1 * var(--child-distance) * var(--dir-x-calc)),
+    calc(-1 * var(--child-distance) * var(--dir-y-calc))
+  );
+  transform-origin: center center;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.25, 0.5, 0.35, 1);
+
+  background: radial-gradient(circle at center,
+    transparent 0px 61.5px,
+    rgba(215, 248, 255, 0.95) 62px 70px,
+    transparent 70.1px 77.9px,
+    var(--current-sector-color) 78px,
+    color-mix(in srgb, var(--current-sector-color) 85%, transparent) 88px,
+    color-mix(in srgb, var(--current-sector-color) 64%, transparent) 98px,
+    color-mix(in srgb, var(--current-sector-color) 36%, transparent) 122px,
+    color-mix(in srgb, var(--current-sector-color) 16%, transparent) 138px,
+    transparent 142px
+  );
+
+  mask-image: 
+    radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
+    conic-gradient(from calc(var(--start-angle) + var(--sector-gap)), transparent 0deg, black 0.3deg, black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg), transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2)));
+  mask-composite: intersect;
+
+  -webkit-mask-image: 
+    radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
+    conic-gradient(from calc(var(--start-angle) + var(--sector-gap)), transparent 0deg, black 0.3deg, black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg), transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2)));
+  -webkit-mask-composite: source-in;
+}
+
+.menu-node.child.hovered::before {
+  opacity: 1;
+  filter: brightness(1) drop-shadow(0 0 4px var(--current-sector-color));
+  transition: opacity 80ms ease-out;
+}
+
+.menu-node.child.clicked::before,
+.menu-node.child.hovered.clicked::before {
+  opacity: 1 !important;
+  filter: brightness(1.45) drop-shadow(0 0 12px var(--current-sector-color)) !important;
+  transition: none !important;
+}
+
+/* Outer Click Ripple */
+.menu-node.child::after {
+  content: '';
+  position: absolute;
+  --outer-box-radius: 185px;
+  --sector-gap: 0.5deg;
+
+  top: calc(-1 * var(--outer-box-radius));
+  left: calc(-1 * var(--outer-box-radius));
+  width: calc(var(--outer-box-radius) * 2);
+  height: calc(var(--outer-box-radius) * 2);
+  transform-origin: center center;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+
+  transform: translate(
+    calc(-1 * var(--child-distance) * var(--dir-x-calc)),
+    calc(-1 * var(--child-distance) * var(--dir-y-calc))
+  ) scale(1.03);
+  filter: drop-shadow(0 0 0px transparent);
+
+  transition: 
+    opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 650ms ease-out;
+
+  background: radial-gradient(circle at center,
+    transparent 0px 145px,
+    rgba(215, 248, 255, 0.95) 146px 150px,
+    transparent 151px
+  );
+
+  mask: conic-gradient(
+    from calc(var(--start-angle) + var(--sector-gap)),
+    transparent 0deg,
+    black 0.3deg,
+    black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+    transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2))
+  );
+  -webkit-mask: conic-gradient(
+    from calc(var(--start-angle) + var(--sector-gap)),
+    transparent 0deg,
+    black 0.3deg,
+    black calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+    transparent calc(var(--end-angle) - var(--start-angle) - (var(--sector-gap) * 2))
+  );
+}
+
+.menu-node.child.clicked::after,
+.menu-node.child.hovered.clicked::after {
+  opacity: 1 !important;
+  transform: translate(
+    calc(-1 * var(--child-distance) * var(--dir-x-calc)),
+    calc(-1 * var(--child-distance) * var(--dir-y-calc))
+  ) scale(0.98) !important;
+  filter: drop-shadow(0 0 10px rgba(215, 248, 255, 0.95)) !important;
+  transition: none !important;
+}
+
+/* Center Click Inner Circle Highlight */
+.menu-node.active > .icon-layer::before {
+  content: '';
+  position: absolute;
+  inset: -70px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+
+  background: radial-gradient(circle at center,
+    transparent 0px 61.5px,
+    rgba(215, 248, 255, 0.95) 62px 70px,
+    transparent 70.5px
+  );
+}
+
+.menu-node.active.clicked > .icon-layer::before {
+  opacity: 1 !important;
+  filter: brightness(1.45) drop-shadow(0 0 12px rgba(215, 248, 255, 0.95));
+}
+
+/* ==========================================================================
+   Back Navigation & Triangle
+   ========================================================================== */
+
+/* Triangle Indicator */
+.menu-node.active:not(.level-0):not(.child) > .icon-layer::after {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--child-distance) - 8px);
+  left: -8px;
+  width: 0; 
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid var(--icon-color);
+  z-index: 25;
+  pointer-events: none;
+  transform-origin: 8px calc(var(--child-distance) + 8px);
+  transform: rotate(calc((var(--parent-start-angle) + var(--parent-end-angle)) / 2));
+  transition: border-bottom-color 150ms ease, filter 150ms ease;
+}
+
+/* Triangle Indicator turns Black against the White Highlight */
+#kando-menu:has(.menu-node.parent.hovered) .menu-node.active:not(.level-0) > .icon-layer::after {
+  border-bottom-color: #000000 !important;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8)) !important;
+}
+
+#kando-menu:has(.menu-node.parent.clicked) .menu-node.active:not(.level-0) > .icon-layer::after,
+#kando-menu:has(.menu-node.parent.hovered.clicked) .menu-node.active:not(.level-0) > .icon-layer::after {
+  border-bottom-color: #000000 !important;
+  filter: drop-shadow(0 0 6px #ffffff) !important;
+}
+
+/* Back Slot Negative Highlight */
+.menu-node.active:not(.level-0) > .icon-layer > .icon-container::before {
+  content: '';
+  position: absolute;
+  --sector-gap: 0.5deg;
+
+  inset: calc(-1 * var(--ring-outer-radius));
+  transform-origin: center center;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.25, 0.5, 0.35, 1), filter 150ms ease;
+
+  background: radial-gradient(circle at center,
+    transparent 0px 61.5px,
+    rgba(215, 248, 255, 0.95) 62px 70px,
+    transparent 70.1px 77.9px,
+    #ffffff 78px,
+    rgba(255, 255, 255, 0.88) 88px,
+    rgba(255, 255, 255, 0.65) 98px,
+    rgba(255, 255, 255, 0.35) 122px,
+    rgba(255, 255, 255, 0.15) 138px,
+    transparent 142px
+  );
+
+  mask-image: 
+    radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
+    conic-gradient(
+      from calc(var(--parent-start-angle) + var(--sector-gap)),
+      transparent 0deg,
+      black 0.3deg,
+      black calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+      transparent calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2))
+    );
+  mask-composite: intersect;
+
+  -webkit-mask-image: 
+    radial-gradient(circle at center, transparent 0px 61px, black 62px 69.5px, transparent 70.5px 77.5px, black 78.5px 141.5px, transparent 142.5px),
+    conic-gradient(
+      from calc(var(--parent-start-angle) + var(--sector-gap)),
+      transparent 0deg,
+      black 0.3deg,
+      black calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2) - 0.3deg),
+      transparent calc(var(--parent-end-angle) - var(--parent-start-angle) - (var(--sector-gap) * 2))
+    );
+  -webkit-mask-composite: source-in;
+}
+
+#kando-menu:has(.menu-node.parent.hovered) .menu-node.active:not(.level-0) > .icon-layer > .icon-container::before {
+  opacity: 1;
+  filter: brightness(1) drop-shadow(0 0 4px #ffffff);
+  transition: opacity 80ms ease-out, filter 100ms ease-out;
+}
+
+#kando-menu:has(.menu-node.parent.clicked) .menu-node.active:not(.level-0) > .icon-layer > .icon-container::before,
+#kando-menu:has(.menu-node.parent.hovered.clicked) .menu-node.active:not(.level-0) > .icon-layer > .icon-container::before {
+  opacity: 1 !important;
+  filter: brightness(1.45) drop-shadow(0 0 12px #ffffff) !important;
+  transition: none !important;
+}
+
+/* ==========================================================================
+   Icons & Interaction Feedback
+   ========================================================================== */
+
+.menu-node .icon-layer {
+  position: absolute;
+  border-radius: 50%;
+  background: transparent;
+  transition: transform 80ms ease;
+}
+
+.menu-node.active > .icon-layer {
+  inset: 0;
+  width: 0; 
+  height: 0;
+}
+
+.menu-node.child > .icon-layer {
+  inset: calc(-1 * var(--child-size) / 2);
+  width: var(--child-size);
+  height: var(--child-size);
+  z-index: 10;
+  transform-origin: center center;
+}
+
+.menu-node .icon-container {
+  position: relative;
+  width: 100%; 
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--icon-color);
+  font-size: 32px;
+  transition: transform 100ms ease, color 100ms ease;
+  z-index: 15;
+  transform-origin: center center;
+}
+
+.menu-node.child.hovered .icon-container {
+  transform: scale(1.1) !important;
+  color: var(--icon-hover-color) !important;
+  transition: transform 100ms ease-out 30ms, color 100ms ease;
+}
+
+.menu-node.parent.hovered.clicked > .icon-layer,
+.menu-node.child.hovered.clicked > .icon-layer,
+.menu-node.active.hovered.clicked > .icon-layer {
+  transform: scale(0.95) !important;
+  transition: none !important;
+}
+
+.menu-node.child.hovered.clicked .icon-container {
+  transform: scale(0.92) !important;
+  transition: none !important;
+}
+
+/* ==========================================================================
+   Quick Keys / Shortcut Letters
+   ========================================================================== */
+
+@keyframes quick-key-enter {
+  from { opacity: 0; }
+  to   { opacity: var(--quick-key-opacity, 1); }
+}
+
+.quick-key {
+  --quick-key-opacity: 1; /* Set your opacity here (0.0 to 1.0) */
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: 20;
+  pointer-events: none;
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  text-transform: uppercase;
+  transform: translate(-50%, -50%);
+}
+
+.menu-node.child > .quick-key {
+  top: calc(65px * var(--dir-y-calc, var(--dir-y)));
+  left: calc(65px * var(--dir-x-calc, var(--dir-x)));
+  animation: quick-key-enter 0.3s ease-out 0.8s 1 forwards;
+}
+
+#kando-menu:has(.menu-node.child.hovered) .quick-key {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+/* ==========================================================================
+   Center Text & Wedges
+   ========================================================================== */
+
+.center-text {
+  position: relative;
+  color: var(--text-color);
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.center-text::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110px;
+  height: 110px;
+  transform: translate(-50%, -50%) translateZ(0); /* 1. Force hardware subpixel smoothing */
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ring-color) 50%, rgba(0, 0, 0, 0.25));
+  backdrop-filter: blur(6px);
+  
+  z-index: -1;
+  pointer-events: none;
+}
+
+#kando-menu:has(.hovered) .center-text {
+  opacity: 1;
+  transition-delay: 80ms;
+}
+
+/* Outer Wedges */
+
+.selection-wedges {
+  mask: radial-gradient(circle at var(--center-x) var(--center-y), black 40px, transparent 380px);
+  background: hsl(from var(--wedge-color) h s calc(l * 0.4) / 0.3);
+
+  &.hovered {
+    mask: radial-gradient(circle at var(--center-x) var(--center-y), transparent 0px 70px, black 1px 80px, transparent 380px);
+
+    --width: calc(var(--end-angle) - var(--start-angle));
+    background: conic-gradient(
+      from calc(var(--start-angle)) at var(--center-x) var(--center-y),
+      hsl(from var(--wedge-color) h s l / 0.45) var(--width),
+      hsl(from var(--wedge-color) h s calc(l * 0.4) / 0.3) var(--width)
+    );
+  }
+}
+
+.connector,
+.wedge-separators,
+.menu-node.grandchild {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: none !important;
+}

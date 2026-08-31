@@ -1,0 +1,14 @@
+{
+  "colors": {
+    "text-color": "rgb(255 255 255 / 0.9)",
+    "icon-color": "rgb(224 224 224 / 0.8)",
+    "icon-hover-color": "rgb(255 255 255 / 1.0)",
+    "ring-color": "rgb(0 0 0 / 0.34)",
+    "inner-circle": "rgba(255, 255, 255, 0.4)",
+    "wedge-color": "rgb(221 93 29 / 0.65)",
+    "sector-color-submenu": "rgb(189 58 4 / 0.88)",
+    "sector-color-action": "rgb(214 137 14 / 0.82)",
+    "background-main": "rgb(0 0 0 / 0.31)",
+    "background-secondary": "rgb(0 0 0 / 0.59)"
+  }
+}

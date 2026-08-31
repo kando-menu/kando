@@ -60,7 +60,7 @@
   .icon-layer {
     position: absolute;
     transition: var(--menu-transition);
-  }
+}
 
   .label-layer {
     opacity: 0;
@@ -68,12 +68,14 @@
     color: var(--label-color);
     border: 2px solid hsl(var(--angle), 50%, 60%);
     white-space: nowrap;
+    box-sizing: border-box;
     height: var(--icon-size);
+    line-height: calc(var(--icon-size) - 4px - 0.05em);
     border-radius: var(--icon-size);
     top: calc(-1 * var(--icon-size) / 2);
-    padding: calc(var(--icon-size) / 4) calc(var(--icon-size) / 3);
+    padding: 0 calc(var(--icon-size) / 3);
     font-size: calc(var(--icon-size) / 2.7);
-  }
+}
 
   &.hovered>.label-layer {
     border-color: hsl(var(--parent-angle, 0deg), 50%, 85%);
@@ -99,6 +101,34 @@
   &.bottom>.label-layer {
     top: calc(0.4 * var(--icon-size));
     transform: translateX(-50%);
+  }
+
+/* Quick keys */
+
+  @container style(--draw-quick-select-key: true) {
+    .label-layer::after,
+    &.left > .label-layer::before {
+      content: var(--quick-select-key);
+      display: inline-block;
+      vertical-align: top;
+      line-height: inherit;
+      font-size: 1.2em;
+      font-weight: 700;
+      color: hsl(var(--angle), 50%, 60%);
+      transform: translateY(-0.06em);
+    }
+
+    .label-layer::after {
+      margin-left: 8px;
+    }
+
+    &.left > .label-layer::before {
+      margin-right: 8px;
+    }
+
+    &.left > .label-layer::after {
+      content: none;
+    }
   }
 
   .icon-layer {

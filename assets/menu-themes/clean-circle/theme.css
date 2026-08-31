@@ -8,6 +8,20 @@
 /* SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de> */
 /* SPDX-License-Identifier: CC0-1.0 */
 
+/* Animations ------------------------------------------------------------------------- */
+
+@keyframes quick-key-fade {
+  0%, 18% { opacity: 0; }
+  25%, 57% { opacity: 1; }
+  65%, 100% { opacity: 0; }
+}
+
+@keyframes icon-fade {
+  0%, 18% { opacity: 1; }
+  25%, 57% { opacity: 0; }
+  65%, 100% { opacity: 1; }
+}
+
 .menu-node {
   --child-distance: 100px;
   --grandchild-distance: 25px;
@@ -124,6 +138,11 @@
     opacity: 1;
   }
 
+  /* Cross-fade icons with quick keys on unhovered child items. */
+  &.child:not(.hovered)>.icon-layer>.icon-container {
+    animation: icon-swap 5s ease-in-out infinite;
+  }
+
   &.type-root>.icon-layer,
   &.type-submenu>.icon-layer {
     background-color: var(--background-color);
@@ -157,7 +176,8 @@
 
   /* If the parent or a child node is clicked, we scale it down to normal size. */
   &.parent.hovered.clicked>.icon-layer,
-  &.child.hovered.clicked>.icon-layer {
+  &.child.hovered.clicked>.icon-layer,
+  &.active.hovered.clicked>.icon-layer {
     transform: scale(0.8);
   }
 
@@ -220,8 +240,67 @@
   &:has(>.dragged.type-submenu)>.connector {
     opacity: 1;
   }
-}
 
+  /* Quick Keys ----------------------------------------------------------- */
+
+  /* Animation length */
+  --quick-key-interval: 4s;
+
+  .quick-key {
+    position: absolute;
+    top: calc(-1 * var(--child-size) / 2);
+    left: calc(-1 * var(--child-size) / 2);
+    width: var(--child-size);
+    height: var(--child-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+  }
+
+  &.child:not(.type-submenu) > .quick-key {
+    color: var(--action-icon-color);
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.5));
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  &.child.type-submenu > .quick-key {
+    color: var(--submenu-icon-color);
+    top: calc(-1 * var(--submenu-size) / 2);
+    left: calc(-1 * var(--submenu-size) / 2);
+    width: var(--submenu-size);
+    height: var(--submenu-size);
+    font-size: 22px;
+  }
+
+  &.child:has(> .quick-key) > .quick-key {
+    animation: quick-key-fade var(--quick-key-interval) linear infinite !important;
+  }
+
+  &.child:has(> .quick-key) > .icon-layer > .icon-container {
+    transition: none !important;
+    animation: icon-fade var(--quick-key-interval) linear infinite !important;
+  }
+
+  &.active:has(.child.hovered) > .child > .quick-key {
+    opacity: 0 !important;
+    animation: none !important;
+  }
+
+  &.active:has(.child.hovered) > .child > .icon-layer > .icon-container {
+    opacity: 1 !important;
+    animation: none !important;
+    transition: var(--menu-transition) !important;
+  }
+}
+  
 /* Center Text ------------------------------------------------------------------------ */
 
 .center-text {
