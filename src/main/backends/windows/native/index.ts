@@ -45,6 +45,9 @@ export type Native = {
    */
   simulateKey(keycode: number, down: boolean): void;
 
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  isModifierPressed(modifier: string): boolean;
+
   /**
    * This fixes the acrylic effect on Windows after the window has been resized. See here:
    * https://github.com/electron/electron/issues/42393

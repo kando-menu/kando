@@ -21,6 +21,104 @@ const MAC_MODIFIER_SYMBOLS = new Map([
   ['Shift', '⇧'],
 ]);
 
+export type ModifierSide = 'left' | 'right' | 'any';
+
+const SIDE_AWARE_MODIFIERS = new Set([
+  'Command',
+  'Cmd',
+  'Control',
+  'Ctrl',
+  'CommandOrControl',
+  'CmdOrCtrl',
+  'Alt',
+  'Option',
+  'AltGr',
+  'Shift',
+  'Super',
+  'Meta',
+]);
+
+/** Returns whether a shortcut part is a modifier with an optional side suffix. */
+export function isShortcutModifier(modifier: string): boolean {
+  return SIDE_AWARE_MODIFIERS.has(splitModifierSide(modifier).base);
+}
+
+/** Returns whether a shortcut consists of exactly one modifier key. */
+export function isModifierOnlyShortcut(shortcut: string): boolean {
+  return shortcut.length > 0 && !shortcut.includes('+') && isShortcutModifier(shortcut);
+}
+
+/**
+ * Splits the optional side suffix from a modifier name.
+ *
+ * @param modifier A modifier such as `Shift`, `ShiftLeft`, or `ShiftRight`.
+ * @returns The modifier's base name and selected side.
+ */
+export function splitModifierSide(modifier: string): {
+  base: string;
+  side: ModifierSide;
+} {
+  if (modifier.endsWith('Left')) {
+    return { base: modifier.slice(0, -4), side: 'left' };
+  }
+
+  if (modifier.endsWith('Right')) {
+    return { base: modifier.slice(0, -5), side: 'right' };
+  }
+
+  return { base: modifier, side: 'any' };
+}
+
+/**
+ * Cycles a modifier from either side to left, right, and back to either side.
+ *
+ * @param modifier The modifier to update.
+ * @returns The modifier with the next side selection.
+ */
+export function cycleModifierSide(modifier: string): string {
+  const { base, side } = splitModifierSide(modifier);
+
+  if (side === 'any') {
+    return `${base}Left`;
+  }
+
+  if (side === 'left') {
+    return `${base}Right`;
+  }
+
+  return base;
+}
+
+/**
+ * Gets all modifiers in a shortcut which require a specific physical side.
+ *
+ * @param shortcut The shortcut to inspect.
+ * @returns All side-specific modifier names in the shortcut.
+ */
+export function getSideSpecificModifiers(shortcut: string): string[] {
+  return shortcut.split('+').filter((part) => {
+    const { side } = splitModifierSide(part);
+    return side !== 'any' && isShortcutModifier(part);
+  });
+}
+
+/**
+ * Converts a side-specific shortcut to an Electron-compatible accelerator. Side selection
+ * is checked separately when the accelerator callback runs.
+ *
+ * @param shortcut The shortcut to convert.
+ * @returns The same shortcut without modifier side suffixes.
+ */
+export function stripShortcutModifierSides(shortcut: string): string {
+  return shortcut
+    .split('+')
+    .map((part) => {
+      const { base, side } = splitModifierSide(part);
+      return side !== 'any' && SIDE_AWARE_MODIFIERS.has(base) ? base : part;
+    })
+    .join('+');
+}
+
 /**
  * Formats a shortcut for display without changing the accelerator used for binding it.
  *
@@ -38,6 +136,16 @@ export function formatShortcutForDisplay(
 
   return shortcut
     .split('+')
-    .map((part) => MAC_MODIFIER_SYMBOLS.get(part) || part)
+    .map((part) => {
+      const { base, side } = splitModifierSide(part);
+      const symbol = MAC_MODIFIER_SYMBOLS.get(base);
+
+      if (!symbol) {
+        return part;
+      }
+
+      const sidePrefix = side === 'left' ? 'L' : side === 'right' ? 'R' : '';
+      return `${sidePrefix}${symbol}`;
+    })
     .join('');
 }

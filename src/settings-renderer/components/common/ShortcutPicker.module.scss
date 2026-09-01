@@ -18,37 +18,114 @@
   gap: 2px;
   align-items: stretch;
 
-  input {
-    @include text-input;
-
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-
+  // The Popover component wraps its target in a div.
+  > div:first-child {
+    display: flex;
     flex-grow: 1;
     min-width: 0;
+  }
+}
 
-    transition: box-shadow 150ms ease;
+.shortcutDisplay {
+  @include normal-button;
 
-    &.invalid {
-      box-shadow: 0 0 15px rgba(255, 64, 64, 1) inset;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    // This class is used to add a pulsing glow to the textarea when recording user input.
-    &.recording {
-      box-shadow: 0 0 15px light-dark(rgba($key-dark, 0.3), rgba($key-light, 0.3)) inset;
-      animation: glowing 1s infinite;
-    }
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 
-    @keyframes glowing {
-      0% {
-        opacity: 0.7;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0.7;
-      }
-    }
+  flex-grow: 1;
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px 10px;
+
+  cursor: pointer;
+  outline: none;
+
+  &:focus-visible {
+    border: $border-focused;
+    padding: 3.5px 8.5px;
+  }
+
+  // This class adds a pulsing glow while recording user input.
+  &.recording {
+    cursor: default;
+    box-shadow: 0 0 15px light-dark(rgba($key-dark, 0.3), rgba($key-light, 0.3)) inset;
+    animation: glowing 1s infinite;
+  }
+}
+
+.shortcutSummary {
+  display: inline-block;
+  color: $text-normal;
+  background: none;
+  font-family: inherit;
+  font-size: 1em;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.placeholder {
+    color: $text-muted;
+    font-weight: normal;
+  }
+}
+
+.popoverContent {
+  width: min(340px, calc(100vw - 40px));
+  color: $text-normal;
+
+  p {
+    margin: 2px 2px 12px;
+    color: $text-muted;
+    font-size: 0.9em;
+    line-height: 1.35;
+  }
+}
+
+.shortcutKeys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.shortcutKey {
+  @include raised-button;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 42px;
+  min-height: 38px;
+  padding: 7px 10px;
+
+  color: $text-normal;
+  font-size: 1em;
+
+  kbd {
+    background: none;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 600;
+  }
+
+  &:is(button) {
+    cursor: pointer;
+  }
+}
+
+@keyframes glowing {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
   }
 }

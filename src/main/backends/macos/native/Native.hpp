@@ -11,7 +11,10 @@
 #ifndef NATIVE_HPP
 #define NATIVE_HPP
 
+#include <ApplicationServices/ApplicationServices.h>
 #include <napi.h>
+
+#include <atomic>
 
 /**
  * This class allows moving the mouse pointer and simulating key presses on macOS. It uses
@@ -46,6 +49,13 @@ class Native : public Napi::Addon<Native> {
    *             number and a boolean.
    */
   void simulateKey(const Napi::CallbackInfo& info);
+
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  Napi::Value isModifierPressed(const Napi::CallbackInfo& info);
+
+  /** Tracks physical modifier key transitions reported by the macOS event tap. */
+  static CGEventRef modifierEventTapCallback(CGEventTapProxy proxy,
+      CGEventType type, CGEventRef event, void* userInfo);
 
   /**
    * This function is called when the getActiveWindow function is called from JavaScript.
@@ -87,6 +97,13 @@ class Native : public Napi::Addon<Native> {
   // presses.
   uint32_t mLeftModifierMask  = 0;
   uint32_t mRightModifierMask = 0;
+
+  /** A listen-only event tap used to distinguish left and right modifier keys. */
+  CFMachPortRef     mModifierEventTap       = nullptr;
+  CFRunLoopSourceRef mModifierEventTapSource = nullptr;
+
+  /** Bit mask containing the currently pressed physical modifier keys. */
+  std::atomic<uint32_t> mPressedModifierKeys{0};
 };
 
 #endif // NATIVE_HPP

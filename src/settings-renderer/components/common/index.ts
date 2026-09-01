@@ -35,6 +35,7 @@ export { default as SettingsDropdown } from './SettingsDropdown';
 export { default as SettingsRow } from './SettingsRow';
 export { default as SettingsSpinbutton } from './SettingsSpinbutton';
 export { default as ShortcutPicker } from './ShortcutPicker';
+export { default as ShortcutLabel } from './ShortcutLabel';
 export { default as Sidebar } from './Sidebar';
 export { default as Spinbutton } from './Spinbutton';
 export { default as Swirl } from './Swirl';
