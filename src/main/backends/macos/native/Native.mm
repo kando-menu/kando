@@ -15,7 +15,9 @@
 #include <Carbon/Carbon.h>
 
 #include <iostream>
+#include <string>
 #include <sys/mman.h>
+#include <unordered_map>
 #include <unistd.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -203,6 +205,29 @@ bool raiseWindow(NSRunningApplication* app, NSString* targetWindowName) {
   return focused;
 }
 
+uint32_t modifierBitForKeyCode(CGKeyCode keyCode) {
+  switch (keyCode) {
+    case kVK_Shift:
+      return 1U << 0;
+    case kVK_RightShift:
+      return 1U << 1;
+    case kVK_Control:
+      return 1U << 2;
+    case kVK_RightControl:
+      return 1U << 3;
+    case kVK_Option:
+      return 1U << 4;
+    case kVK_RightOption:
+      return 1U << 5;
+    case kVK_Command:
+      return 1U << 6;
+    case kVK_RightCommand:
+      return 1U << 7;
+    default:
+      return 0;
+  }
+}
+
 } // namespace
 
 Native::Native(Napi::Env env, Napi::Object exports) {
@@ -210,16 +235,81 @@ Native::Native(Napi::Env env, Napi::Object exports) {
       {
           InstanceMethod("movePointer", &Native::movePointer),
           InstanceMethod("simulateKey", &Native::simulateKey),
+          InstanceMethod("isModifierPressed", &Native::isModifierPressed),
           InstanceMethod("getActiveWindow", &Native::getActiveWindow),
           InstanceMethod("getOpenWindows", &Native::getOpenWindows),
           InstanceMethod("focusWindow", &Native::focusWindow),
           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
       });
+
+  const CGEventMask modifierEventMask = CGEventMaskBit(kCGEventFlagsChanged) |
+                                        CGEventMaskBit(kCGEventKeyDown) |
+                                        CGEventMaskBit(kCGEventKeyUp);
+  mModifierEventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap,
+      kCGEventTapOptionListenOnly, modifierEventMask,
+      &Native::modifierEventTapCallback, this);
+
+  if (mModifierEventTap) {
+    mModifierEventTapSource =
+        CFMachPortCreateRunLoopSource(kCFAllocatorDefault, mModifierEventTap, 0);
+    CFRunLoopAddSource(
+        CFRunLoopGetMain(), mModifierEventTapSource, kCFRunLoopCommonModes);
+    CGEventTapEnable(mModifierEventTap, true);
+  } else {
+    std::cerr << "Failed to create modifier key event tap." << std::endl;
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 Native::~Native() {
+  if (mModifierEventTapSource) {
+    CFRunLoopRemoveSource(
+        CFRunLoopGetMain(), mModifierEventTapSource, kCFRunLoopCommonModes);
+    CFRelease(mModifierEventTapSource);
+  }
+
+  if (mModifierEventTap) {
+    CFMachPortInvalidate(mModifierEventTap);
+    CFRelease(mModifierEventTap);
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+CGEventRef Native::modifierEventTapCallback(CGEventTapProxy proxy,
+    CGEventType type, CGEventRef event, void* userInfo) {
+  auto* native = static_cast<Native*>(userInfo);
+
+  if (!native) {
+    return event;
+  }
+
+  if (type == kCGEventTapDisabledByTimeout || type == kCGEventTapDisabledByUserInput) {
+    native->mPressedModifierKeys.store(0);
+    if (native->mModifierEventTap) {
+      CGEventTapEnable(native->mModifierEventTap, true);
+    }
+    return event;
+  }
+
+  const auto keyCode = static_cast<CGKeyCode>(
+      CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode));
+  const uint32_t modifierBit = modifierBitForKeyCode(keyCode);
+
+  if (modifierBit == 0) {
+    return event;
+  }
+
+  if (type == kCGEventKeyDown) {
+    native->mPressedModifierKeys.fetch_or(modifierBit);
+  } else if (type == kCGEventKeyUp) {
+    native->mPressedModifierKeys.fetch_and(~modifierBit);
+  } else if (type == kCGEventFlagsChanged) {
+    native->mPressedModifierKeys.fetch_xor(modifierBit);
+  }
+
+  return event;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -309,6 +399,52 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   CGEventPost(kCGSessionEventTap, event);
 
   CFRelease(event);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::isModifierPressed(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 1 || !info[0].IsString()) {
+    Napi::TypeError::New(env, "Modifier name expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  static const std::unordered_map<std::string, CGKeyCode> keyCodes = {
+      {"ShiftLeft", kVK_Shift},
+      {"ShiftRight", kVK_RightShift},
+      {"ControlLeft", kVK_Control},
+      {"CtrlLeft", kVK_Control},
+      {"ControlRight", kVK_RightControl},
+      {"CtrlRight", kVK_RightControl},
+      {"AltLeft", kVK_Option},
+      {"OptionLeft", kVK_Option},
+      {"AltRight", kVK_RightOption},
+      {"OptionRight", kVK_RightOption},
+      {"AltGrLeft", kVK_Option},
+      {"AltGrRight", kVK_RightOption},
+      {"CommandLeft", kVK_Command},
+      {"CmdLeft", kVK_Command},
+      {"MetaLeft", kVK_Command},
+      {"SuperLeft", kVK_Command},
+      {"CommandOrControlLeft", kVK_Command},
+      {"CmdOrCtrlLeft", kVK_Command},
+      {"CommandRight", kVK_RightCommand},
+      {"CmdRight", kVK_RightCommand},
+      {"MetaRight", kVK_RightCommand},
+      {"SuperRight", kVK_RightCommand},
+      {"CommandOrControlRight", kVK_RightCommand},
+      {"CmdOrCtrlRight", kVK_RightCommand},
+  };
+
+  const auto modifier = info[0].As<Napi::String>().Utf8Value();
+  const auto keyCode  = keyCodes.find(modifier);
+  const bool pressed = keyCode != keyCodes.end() &&
+                       (mPressedModifierKeys.load() &
+                           modifierBitForKeyCode(keyCode->second)) != 0;
+
+  return Napi::Boolean::New(env, pressed);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

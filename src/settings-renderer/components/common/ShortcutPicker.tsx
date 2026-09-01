@@ -15,8 +15,8 @@ import classNames from 'classnames/bind';
 
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
 import KeyMapper from '../../../common/key-mapper';
-import { formatShortcutForDisplay } from '../../../common/shortcut';
-import { Button, SettingsRow } from '.';
+import { cycleModifierSide, formatShortcutForDisplay } from '../../../common/shortcut';
+import { Button, Popover, SettingsRow, ShortcutLabel } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';
 const cx = classNames.bind(classes);
@@ -68,13 +68,19 @@ type Props = {
    * item hotkeys for navigating the menu.
    */
   readonly useModifiers: boolean;
+
+  /** Whether key-name modifiers can be limited to the left or right physical key. */
+  readonly isModifierSideSelectionAllowed?: boolean;
+
+  /** Whether a shortcut may consist of one modifier without a regular key. */
+  readonly isStandaloneModifierAllowed?: boolean;
 };
 
 /**
- * This component is an input field that allows the user to enter a shortcut. The user can
- * either type the shortcut directly into the input field or click the record button to
- * record a shortcut. The component will automatically validate the shortcut and call the
- * onChange function when the shortcut changes.
+ * This component displays a shortcut and allows the user to record a new one. Clicking
+ * the shortcut opens a popover which displays each key separately. For key-name
+ * shortcuts, modifier keys can be clicked to select the left key, the right key, or
+ * either key.
  *
  * There are two modes for the shortcut picker: key-names and key-codes. Shortcuts using
  * _key names_ are affected by the keyboard layout. Electron's global shortcut module
@@ -102,7 +108,8 @@ export default function ShortcutPicker(props: Props) {
     impl.normalizeInput(props.initialValue)
   );
   const [recording, setRecording] = React.useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const shortcutRef = React.useRef<HTMLDivElement>(null);
 
   // Update the value when the initialValue prop changes. This is necessary because the
   // initialValue prop might change after the component has been initialized.
@@ -112,8 +119,8 @@ export default function ShortcutPicker(props: Props) {
   );
 
   // This method checks if the given hotkey is valid. A hotkey is valid if it contains
-  // exactly one key and any number of modifier keys. The key and modifier keys must be
-  // valid key codes as defined by the impl.isValidKey and isValidModifier methods.
+  // exactly one key and any number of modifier keys. If explicitly allowed, one modifier
+  // without a regular key is valid as well.
   const isValid = (shortcut: string) => {
     // If the shortcut is empty, it is valid.
     if (shortcut === '') {
@@ -142,94 +149,157 @@ export default function ShortcutPicker(props: Props) {
       }
     }
 
-    return hasKey;
+    return (
+      hasKey ||
+      (props.isStandaloneModifierAllowed &&
+        parts.length === 1 &&
+        impl.isValidModifier(parts[0]))
+    );
   };
+
+  const commitShortcut = (newShortcut: string) => {
+    setShortcut(newShortcut);
+    props.onChange?.(newShortcut);
+  };
+
+  const cycleModifierAt = (index: number) => {
+    const parts = shortcut.split('+');
+    parts[index] = cycleModifierSide(parts[index]);
+    const newShortcut = impl.normalizeInput(parts.join('+'));
+
+    if (isValid(newShortcut)) {
+      commitShortcut(newShortcut);
+    }
+  };
+
+  const canSelectModifierSides =
+    props.mode === 'key-names' &&
+    props.useModifiers &&
+    props.isModifierSideSelectionAllowed;
+
+  const renderShortcut = (value: string) => (
+    <ShortcutLabel
+      formatPart={(part) => impl.formatInput(part)}
+      isCompact={props.mode === 'key-names' && cIsMac}
+      isModifier={(part) => impl.isValidModifier(part)}
+      shortcut={value}
+    />
+  );
+
+  const recordInput = (event: React.KeyboardEvent<HTMLElement>) => {
+    const result = impl.recordInput(event, shortcut);
+    setShortcut(result.shortcut);
+
+    if (result.isComplete && isValid(result.shortcut)) {
+      setRecording(false);
+      commitShortcut(result.shortcut);
+    }
+
+    event.preventDefault();
+  };
+
+  const popoverContent = (
+    <div
+      aria-label={i18next.t('settings.shortcut-keys')}
+      className={classes.popoverContent}
+      role="dialog">
+      {canSelectModifierSides ? <p>{i18next.t('settings.shortcut-side-hint')}</p> : null}
+      <div className={classes.shortcutKeys} role="group">
+        {shortcut.split('+').map((part, index) => {
+          const canSelectSide = canSelectModifierSides && impl.isValidModifier(part);
+          const key = <kbd>{renderShortcut(part)}</kbd>;
+
+          if (canSelectSide) {
+            return (
+              <button
+                key={part}
+                aria-label={i18next.t('settings.shortcut-change-modifier-side', {
+                  modifier: impl.formatInput(part),
+                })}
+                className={classes.shortcutKey}
+                type="button"
+                onClick={() => cycleModifierAt(index)}>
+                {key}
+              </button>
+            );
+          }
+
+          return (
+            <span key={part} className={classes.shortcutKey}>
+              {key}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
 
   return (
     <SettingsRow info={props.info} isGrowing={props.isGrowing} label={props.label}>
       <div className={classes.shortcutPicker}>
-        <input
-          ref={inputRef}
-          className={cx({ recording, invalid: !isValid(shortcut) })}
-          placeholder={
-            recording
-              ? props.recordingPlaceholder
-              : props.placeholder || i18next.t('settings.not-bound')
-          }
-          spellCheck="false"
-          style={!props.isGrowing ? { maxWidth: '100px' } : undefined}
-          type="text"
-          value={impl.formatInput(shortcut)}
-          onBlur={(event) => {
-            // If the user clicked the record button, the next focused element is the
-            // button. In this case, we ignore this event and handle stopping the
-            // recording in the button's onClick handler.
-            if (event.relatedTarget) {
-              return;
+        <Popover
+          content={popoverContent}
+          isVisible={isPopoverOpen ? shortcut.length > 0 : false}
+          position="bottom"
+          onClose={() => setIsPopoverOpen(false)}>
+          <div
+            ref={shortcutRef}
+            aria-label={
+              recording
+                ? props.recordingPlaceholder
+                : shortcut || props.placeholder || i18next.t('settings.not-bound')
             }
-
-            const newShortcut = impl.normalizeInput(event.currentTarget.value);
-
-            // If we were not recording, it is allowed that the shortcut is empty. In this
-            // case the shortcut was unbound.
-            if ((newShortcut || !recording) && isValid(newShortcut)) {
-              props.onChange?.(newShortcut);
-            } else {
-              setShortcut(impl.normalizeInput(props.initialValue));
-              props.onChange?.(props.initialValue);
-            }
-
-            if (recording) {
-              setRecording(false);
-            }
-          }}
-          onChange={(event) => {
-            if (!recording) {
-              const start = event.target.selectionStart;
-              const end = event.target.selectionEnd;
-
-              const normalizedValue = impl.normalizeInput(event.target.value);
-              setShortcut(
-                isValid(normalizedValue) ? normalizedValue : event.target.value
-              );
-
-              // We restore the cursor position.
-              setTimeout(() => {
-                event.target.setSelectionRange(start, end);
-              }, 0);
-            }
-          }}
-          onKeyDown={(event) => {
-            if (recording) {
-              const isComplete = impl.recordInput(event);
-              if (isComplete) {
-                setRecording(false);
-                setShortcut(impl.normalizeInput(event.currentTarget.value));
-                event.currentTarget.blur();
+            aria-expanded={isPopoverOpen}
+            aria-haspopup="dialog"
+            className={cx({ shortcutDisplay: true, recording })}
+            role="button"
+            style={!props.isGrowing ? { maxWidth: '100px' } : undefined}
+            tabIndex={0}
+            onClick={() => {
+              if (!recording && shortcut) {
+                setIsPopoverOpen(!isPopoverOpen);
               }
-              event.preventDefault();
-            } else if (event.key === 'Enter') {
-              event.currentTarget.blur();
-            }
-          }}
-        />
+            }}
+            onKeyDown={(event) => {
+              if (recording) {
+                recordInput(event);
+              } else if ((event.key === 'Enter' || event.key === ' ') && shortcut) {
+                setIsPopoverOpen(!isPopoverOpen);
+                event.preventDefault();
+              }
+            }}
+            onKeyUp={(event) => {
+              if (recording) {
+                recordInput(event);
+              }
+            }}>
+            <kbd className={cx({ shortcutSummary: true, placeholder: !shortcut })}>
+              {recording
+                ? props.recordingPlaceholder
+                : shortcut
+                  ? renderShortcut(shortcut)
+                  : props.placeholder || i18next.t('settings.not-bound')}
+            </kbd>
+          </div>
+        </Popover>
         <Button
           isGrouped
           icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
           variant="secondary"
           onClick={() => {
             if (!recording) {
+              setIsPopoverOpen(false);
               setShortcut('');
-              inputRef.current?.focus();
+              setRecording(true);
+              requestAnimationFrame(() => shortcutRef.current?.focus());
             } else {
               if (shortcut && isValid(shortcut)) {
-                props.onChange?.(shortcut);
+                commitShortcut(shortcut);
               } else {
-                setShortcut(impl.normalizeInput(props.initialValue));
-                props.onChange?.(props.initialValue);
+                commitShortcut(impl.normalizeInput(props.initialValue));
               }
+              setRecording(false);
             }
-            setRecording(!recording);
           }}
         />
       </div>
@@ -262,10 +332,17 @@ class KeyNameImpl {
    * @param event The KeyboardEvent to process.
    * @returns True if the shortcut is complete, false otherwise.
    */
-  public recordInput(event: React.KeyboardEvent<HTMLInputElement>) {
-    const parts = this.normalizeInput(event.currentTarget.value)
+  public recordInput(event: React.KeyboardEvent<HTMLElement>, shortcut: string) {
+    const parts = this.normalizeInput(shortcut)
       .split('+')
       .filter((part) => part !== '');
+
+    if (event.type === 'keyup') {
+      return {
+        shortcut: parts.join('+'),
+        isComplete: parts.length === 1 && this.isValidModifier(parts[0]),
+      };
+    }
 
     const push = (part: string) => {
       if (!parts.includes(part)) {
@@ -302,9 +379,10 @@ class KeyNameImpl {
       parts.push(key);
     }
 
-    event.currentTarget.value = this.formatInput(parts.join('+'));
-
-    return isComplete;
+    return {
+      shortcut: this.normalizeInput(parts.join('+')),
+      isComplete,
+    };
   }
 
   /**
@@ -385,25 +463,40 @@ class KeyNameImpl {
 
     parts = parts.map((part) => multipleCapitals.get(part) || part);
 
-    // There are also some shorthands we want to resolve.
-    const shorthands = new Map([
-      ['Ctrl', 'Control'],
-      ['Cmd', 'Command'],
-      ['Esc', 'Escape'],
-    ]);
+    // Resolve shorthand modifier names and normalize optional side suffixes. Use native
+    // macOS modifier names in the settings UI as they are less confusing on that system.
+    parts = parts.map((part) => {
+      const lowerPart = part.toLowerCase();
+      const side = lowerPart.endsWith('left')
+        ? 'Left'
+        : lowerPart.endsWith('right')
+          ? 'Right'
+          : '';
+      const base = side ? part.slice(0, -side.length) : part;
 
-    parts = parts.map((part) => shorthands.get(part) || part);
-
-    // Use the native macOS modifier names in the settings UI. Electron accepts both
-    // variants, but Option and Command are less confusing to macOS users.
-    if (cIsMac) {
-      const macModifiers = new Map([
-        ['Alt', 'Option'],
-        ['Meta', 'Command'],
+      const modifierNames = new Map([
+        ['Ctrl', 'Control'],
+        ['Cmd', 'Command'],
+        ['Commandorcontrol', 'CommandOrControl'],
+        ['Cmdorctrl', 'CmdOrCtrl'],
+        ['Altgr', 'AltGr'],
       ]);
+      let normalizedBase = modifierNames.get(base) || base;
 
-      parts = parts.map((part) => macModifiers.get(part) || part);
-    }
+      if (cIsMac) {
+        const macModifiers = new Map([
+          ['Alt', 'Option'],
+          ['Meta', 'Command'],
+        ]);
+        normalizedBase = macModifiers.get(normalizedBase) || normalizedBase;
+      }
+
+      if (normalizedBase === 'Esc') {
+        normalizedBase = 'Escape';
+      }
+
+      return `${normalizedBase}${side}`;
+    });
 
     return parts.join('+');
   }
@@ -417,7 +510,7 @@ class KeyNameImpl {
    */
   public isValidModifier(modifier: string): boolean {
     const isModifier =
-      /^(Command|Cmd|Control|Ctrl|CommandOrControl|CmdOrCtrl|Alt|Option|AltGr|Shift|Super|Meta)$/;
+      /^(Command|Cmd|Control|Ctrl|CommandOrControl|CmdOrCtrl|Alt|Option|AltGr|Shift|Super|Meta)(Left|Right)?$/;
     return isModifier.test(modifier);
   }
 
@@ -455,17 +548,20 @@ class KeyCodeImpl {
    * @param event The KeyboardEvent to get the shortcut for.
    * @returns True if the shortcut is complete, false otherwise.
    */
-  public recordInput(event: React.KeyboardEvent<HTMLInputElement>) {
-    // Ignore key up events.
+  public recordInput(event: React.KeyboardEvent<HTMLElement>, shortcut: string) {
     if (event.type === 'keyup') {
-      return false;
+      const parts = shortcut.split('+').filter((part) => part !== '');
+      return {
+        shortcut,
+        isComplete: parts.length === 1 && this.isValidModifier(parts[0]),
+      };
     }
 
-    const parts = event.currentTarget.value.split('+').filter((part) => part !== '');
+    const parts = shortcut.split('+').filter((part) => part !== '');
 
     // Only add the key code if it is not in the list already.
     if (parts.includes(event.code)) {
-      return false;
+      return { shortcut, isComplete: false };
     }
 
     if (
@@ -475,9 +571,10 @@ class KeyCodeImpl {
       parts.push(event.code);
     }
 
-    event.currentTarget.value = parts.join('+');
-
-    return this.isValidKey(event.code);
+    return {
+      shortcut: parts.join('+'),
+      isComplete: this.isValidKey(event.code),
+    };
   }
 
   /**

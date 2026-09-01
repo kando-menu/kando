@@ -587,10 +587,13 @@ export default interface Resources {
               "value": "X: {{x}} | Y: {{y}}"
           },
           "search-menus-placeholder": "Search menus…",
+          "shortcut-change-modifier-side": "Change side for {{modifier}}",
           "shortcut-id-label": "Shortcut ID",
           "shortcut-info": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
+          "shortcut-keys": "Shortcut keys",
           "shortcut-label": "Shortcut",
           "shortcut-recording": "Press a shortcut…",
+          "shortcut-side-hint": "Click a modifier key to cycle between either side, left, and right. Recorded shortcuts match either side by default.",
           "tags": "Tags",
           "tags-info": "Tags can be used to group menus in menu collections.",
           "undo": "Undo",

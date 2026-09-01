@@ -60,6 +60,8 @@ export class WindowsBackend extends Backend {
       supportsListingWindows: true,
       supportsFocusingWindows: true,
       supportsShortcuts: true,
+      supportsLeftRightModifiers: true,
+      supportsStandaloneModifierShortcuts: true,
       shouldUseTransparentSettingsWindow: transparencySupported,
     };
   }
@@ -85,6 +87,11 @@ export class WindowsBackend extends Backend {
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public override async deinit(): Promise<void> {
     await this.bindShortcuts([]);
+  }
+
+  /** Uses Win32 to inspect the currently pressed physical modifier keys. */
+  protected override isModifierPressed(modifier: string): boolean {
+    return native.isModifierPressed(modifier);
   }
 
   /**

@@ -25,6 +25,9 @@ export type Native = {
    */
   simulateKey(keycode: number, down: boolean): void;
 
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  isModifierPressed(modifier: string): boolean;
+
   /**
    * This retrieves the app and class of the currently focused window.
    *

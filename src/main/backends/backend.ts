@@ -21,6 +21,10 @@ import {
   AppDescription,
   WindowDescription,
   GeneralSettings,
+  getSideSpecificModifiers,
+  isModifierOnlyShortcut,
+  splitModifierSide,
+  stripShortcutModifierSides,
 } from '../../common';
 import { Settings } from '../settings';
 
@@ -48,6 +52,12 @@ export abstract class Backend extends EventEmitter {
 
   /** The next inhibition ID to be used. */
   private nextInhibitionID: number = 1;
+
+  /** Polls physical modifier state for shortcuts Electron cannot register on its own. */
+  private modifierShortcutMonitor?: ReturnType<typeof setInterval>;
+
+  /** The modifier state observed during the previous polling interval. */
+  private modifierShortcutStates: Map<string, boolean> = new Map();
 
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
@@ -349,30 +359,137 @@ export abstract class Backend extends EventEmitter {
     currentEffectiveShortcuts: string[],
     previousEffectiveShortcuts: string[]
   ): Promise<void> {
-    // Use a shortcut if we unbind all shortcuts :)
-    if (currentEffectiveShortcuts.length === 0) {
-      globalShortcut.unregisterAll();
+    if (lodash.isEqual(currentEffectiveShortcuts, previousEffectiveShortcuts)) {
       return;
     }
 
-    const shortcutsToUnbind = previousEffectiveShortcuts.filter(
-      (s) => !currentEffectiveShortcuts.includes(s)
-    );
-    const shortcutsToBind = currentEffectiveShortcuts.filter(
-      (s) => !previousEffectiveShortcuts.includes(s)
+    globalShortcut.unregisterAll();
+    this.stopModifierShortcutMonitor();
+
+    const modifierOnlyShortcuts =
+      currentEffectiveShortcuts.filter(isModifierOnlyShortcut);
+    const acceleratorShortcuts = currentEffectiveShortcuts.filter(
+      (shortcut) => !isModifierOnlyShortcut(shortcut)
     );
 
-    // Unbind the obsolete shortcuts.
-    for (const shortcut of shortcutsToUnbind) {
-      globalShortcut.unregister(shortcut);
+    // Electron accelerators cannot express left and right modifier keys. We therefore
+    // register a side-agnostic accelerator and inspect the physical modifier state when
+    // it fires. Multiple side variants of the same accelerator share one registration.
+    const shortcutsByAccelerator = new Map<string, string[]>();
+    for (const shortcut of acceleratorShortcuts) {
+      const accelerator = stripShortcutModifierSides(shortcut);
+      const shortcuts = shortcutsByAccelerator.get(accelerator) || [];
+      shortcuts.push(shortcut);
+      shortcutsByAccelerator.set(accelerator, shortcuts);
     }
 
-    // Bind the new shortcuts.
-    for (const shortcut of shortcutsToBind) {
-      globalShortcut.register(shortcut, () => {
-        this.onShortcutPressed(shortcut);
+    for (const [accelerator, shortcuts] of shortcutsByAccelerator) {
+      const registered = globalShortcut.register(accelerator, () => {
+        const matchingShortcuts = shortcuts.filter((shortcut) =>
+          this.matchesPressedModifierSides(shortcut)
+        );
+
+        // Prefer an explicitly sided shortcut over an any-side shortcut if both use the
+        // same accelerator.
+        const shortcut =
+          matchingShortcuts.find(
+            (candidate) => getSideSpecificModifiers(candidate).length > 0
+          ) || matchingShortcuts[0];
+
+        if (shortcut) {
+          this.onShortcutPressed(shortcut);
+        }
       });
+
+      if (!registered) {
+        console.warn(`Failed to register global shortcut "${accelerator}".`);
+      }
     }
+
+    this.startModifierShortcutMonitor(modifierOnlyShortcuts);
+  }
+
+  /** Starts edge-triggered polling for shortcuts made up of one modifier key. */
+  private startModifierShortcutMonitor(shortcuts: string[]): void {
+    if (shortcuts.length === 0) {
+      return;
+    }
+
+    for (const shortcut of shortcuts) {
+      this.modifierShortcutStates.set(shortcut, this.isModifierShortcutPressed(shortcut));
+    }
+
+    this.modifierShortcutMonitor = setInterval(() => {
+      const newlyPressed: string[] = [];
+
+      for (const shortcut of shortcuts) {
+        const wasPressed = this.modifierShortcutStates.get(shortcut) || false;
+        const isPressed = this.isModifierShortcutPressed(shortcut);
+        this.modifierShortcutStates.set(shortcut, isPressed);
+
+        if (isPressed && !wasPressed) {
+          newlyPressed.push(shortcut);
+        }
+      }
+
+      for (const shortcut of newlyPressed) {
+        const { base, side } = splitModifierSide(shortcut);
+
+        // Prefer a side-specific shortcut if the same key is also bound without a side.
+        if (
+          side === 'any' &&
+          newlyPressed.some((candidate) => {
+            const candidateModifier = splitModifierSide(candidate);
+            return candidateModifier.base === base && candidateModifier.side !== 'any';
+          })
+        ) {
+          continue;
+        }
+
+        this.onShortcutPressed(shortcut);
+      }
+    }, 16);
+
+    this.modifierShortcutMonitor.unref();
+  }
+
+  /** Stops polling standalone modifier shortcuts and clears the previous key states. */
+  private stopModifierShortcutMonitor(): void {
+    if (this.modifierShortcutMonitor) {
+      clearInterval(this.modifierShortcutMonitor);
+      this.modifierShortcutMonitor = undefined;
+    }
+
+    this.modifierShortcutStates.clear();
+  }
+
+  /** Returns whether the physical key represented by a modifier shortcut is held down. */
+  private isModifierShortcutPressed(shortcut: string): boolean {
+    const { base, side } = splitModifierSide(shortcut);
+
+    if (side !== 'any') {
+      return this.isModifierPressed(shortcut);
+    }
+
+    return (
+      this.isModifierPressed(`${base}Left`) || this.isModifierPressed(`${base}Right`)
+    );
+  }
+
+  /**
+   * Returns whether the physical modifiers currently match a shortcut's side selectors.
+   * Backends which advertise supportsLeftRightModifiers must override
+   * isModifierPressed().
+   */
+  private matchesPressedModifierSides(shortcut: string): boolean {
+    return getSideSpecificModifiers(shortcut).every((modifier) =>
+      this.isModifierPressed(modifier)
+    );
+  }
+
+  /** Returns whether the given side-specific modifier is currently pressed. */
+  protected isModifierPressed(modifier: string): boolean {
+    return !modifier.endsWith('Left') && !modifier.endsWith('Right');
   }
 
   /**

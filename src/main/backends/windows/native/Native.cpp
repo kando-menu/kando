@@ -20,6 +20,8 @@
 #include <windows.h>
 
 #include <sstream>
+#include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -219,6 +221,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
       {
           InstanceMethod("movePointer", &Native::movePointer),
           InstanceMethod("simulateKey", &Native::simulateKey),
+          InstanceMethod("isModifierPressed", &Native::isModifierPressed),
           InstanceMethod("getWMInfo", &Native::getWMInfo),
           InstanceMethod("getOpenWindows", &Native::getOpenWindows),
           InstanceMethod("focusWindow", &Native::focusWindow),
@@ -267,6 +270,51 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   if (uSent != 1) {
     Napi::TypeError::New(env, "Failed to simulate keys!").ThrowAsJavaScriptException();
   }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::isModifierPressed(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 1 || !info[0].IsString()) {
+    Napi::TypeError::New(env, "Modifier name expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  static const std::unordered_map<std::string, int> virtualKeys = {
+      {"ShiftLeft", VK_LSHIFT},
+      {"ShiftRight", VK_RSHIFT},
+      {"ControlLeft", VK_LCONTROL},
+      {"CtrlLeft", VK_LCONTROL},
+      {"CommandOrControlLeft", VK_LCONTROL},
+      {"CmdOrCtrlLeft", VK_LCONTROL},
+      {"ControlRight", VK_RCONTROL},
+      {"CtrlRight", VK_RCONTROL},
+      {"CommandOrControlRight", VK_RCONTROL},
+      {"CmdOrCtrlRight", VK_RCONTROL},
+      {"AltLeft", VK_LMENU},
+      {"OptionLeft", VK_LMENU},
+      {"AltGrLeft", VK_LMENU},
+      {"AltRight", VK_RMENU},
+      {"OptionRight", VK_RMENU},
+      {"AltGrRight", VK_RMENU},
+      {"CommandLeft", VK_LWIN},
+      {"CmdLeft", VK_LWIN},
+      {"MetaLeft", VK_LWIN},
+      {"SuperLeft", VK_LWIN},
+      {"CommandRight", VK_RWIN},
+      {"CmdRight", VK_RWIN},
+      {"MetaRight", VK_RWIN},
+      {"SuperRight", VK_RWIN},
+  };
+
+  const auto modifier   = info[0].As<Napi::String>().Utf8Value();
+  const auto virtualKey = virtualKeys.find(modifier);
+  const bool pressed = virtualKey != virtualKeys.end() &&
+                       (GetAsyncKeyState(virtualKey->second) & 0x8000) != 0;
+
+  return Napi::Boolean::New(env, pressed);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

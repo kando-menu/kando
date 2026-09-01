@@ -47,6 +47,8 @@ export class MacosBackend extends Backend {
       supportsListingWindows: true,
       supportsFocusingWindows: true,
       supportsShortcuts: true,
+      supportsLeftRightModifiers: true,
+      supportsStandaloneModifierShortcuts: true,
       shouldUseTransparentSettingsWindow: true,
     };
   }
@@ -77,6 +79,11 @@ export class MacosBackend extends Backend {
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public async deinit(): Promise<void> {
     await this.bindShortcuts([]);
+  }
+
+  /** Uses Core Graphics to inspect the currently pressed physical modifier keys. */
+  protected override isModifierPressed(modifier: string): boolean {
+    return native.isModifierPressed(modifier);
   }
 
   /**

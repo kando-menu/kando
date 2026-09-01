@@ -73,6 +73,8 @@ export default function Properties() {
         <ShortcutPicker
           isGrowing
           useModifiers
+          isModifierSideSelectionAllowed={backend.supportsLeftRightModifiers}
+          isStandaloneModifierAllowed={backend.supportsStandaloneModifierShortcuts}
           info={i18next.t('settings.shortcut-info')}
           initialValue={menus[selectedMenu].shortcut}
           label={i18next.t('settings.shortcut-label')}

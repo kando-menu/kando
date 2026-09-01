@@ -387,9 +387,12 @@
             "draw-quick-select-key": "绘制快速选择键标识"
         },
         "not-bound": "未绑定快捷键",
+        "shortcut-change-modifier-side": "更改 {{modifier}} 的左右侧",
         "shortcut-id-label": "快捷键 ID",
+        "shortcut-keys": "快捷键按键",
         "shortcut-label": "快捷键",
         "shortcut-recording": "请按下按键…",
+        "shortcut-side-hint": "点击修饰键可在“不区分左右”“左侧”和“右侧”之间循环切换。录制快捷键时默认不区分左右。",
         "window-condition": "限定窗口标题",
         "create-menu-button": "新建菜单",
         "window-picker-dialog": {
