@@ -43,6 +43,16 @@ export const SETTINGS_WINDOW_API = {
     return ipcRenderer.invoke('settings-window.get-backend-info');
   },
 
+  /** Temporarily disables global shortcuts while a shortcut is being recorded. */
+  beginShortcutRecording: (): Promise<number> => {
+    return ipcRenderer.invoke('settings-window.begin-shortcut-recording');
+  },
+
+  /** Restores global shortcuts after a shortcut recording has finished. */
+  endShortcutRecording: (inhibitionID: number): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.end-shortcut-recording', inhibitionID);
+  },
+
   /** Returns the current version string of Kando. */
   getVersionInfo: (): Promise<VersionInfo> => {
     return ipcRenderer.invoke('settings-window.get-version');
