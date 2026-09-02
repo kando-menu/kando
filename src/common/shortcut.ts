@@ -23,6 +23,9 @@ const MAC_MODIFIER_SYMBOLS = new Map([
 
 export type ModifierSide = 'left' | 'right' | 'any';
 
+/** Maximum delay between two modifier presses which should count as a double press. */
+export const DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS = 300;
+
 const SIDE_AWARE_MODIFIERS = new Set([
   'Command',
   'Cmd',
@@ -43,9 +46,28 @@ export function isShortcutModifier(modifier: string): boolean {
   return SIDE_AWARE_MODIFIERS.has(splitModifierSide(modifier).base);
 }
 
-/** Returns whether a shortcut consists of exactly one modifier key. */
+/**
+ * Returns the number of presses represented by a modifier-only shortcut. A modifier may
+ * occur once for a regular press or twice for a double press. All other shortcuts return
+ * zero.
+ */
+export function getModifierShortcutTapCount(shortcut: string): 0 | 1 | 2 {
+  const parts = shortcut.split('+');
+
+  if (
+    (parts.length === 1 || parts.length === 2) &&
+    parts[0].length > 0 &&
+    parts.every((part) => part === parts[0] && isShortcutModifier(part))
+  ) {
+    return parts.length;
+  }
+
+  return 0;
+}
+
+/** Returns whether a shortcut consists only of one repeated modifier key. */
 export function isModifierOnlyShortcut(shortcut: string): boolean {
-  return shortcut.length > 0 && !shortcut.includes('+') && isShortcutModifier(shortcut);
+  return getModifierShortcutTapCount(shortcut) > 0;
 }
 
 /**

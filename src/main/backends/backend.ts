@@ -21,7 +21,9 @@ import {
   AppDescription,
   WindowDescription,
   GeneralSettings,
+  DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS,
   getSideSpecificModifiers,
+  getModifierShortcutTapCount,
   isModifierOnlyShortcut,
   splitModifierSide,
   stripShortcutModifierSides,
@@ -58,6 +60,15 @@ export abstract class Backend extends EventEmitter {
 
   /** The modifier state observed during the previous polling interval. */
   private modifierShortcutStates: Map<string, boolean> = new Map();
+
+  /** Pending first presses of modifier shortcuts which may become double presses. */
+  private modifierShortcutTaps: Map<
+    string,
+    {
+      pressedAt: number;
+      timeout: ReturnType<typeof setTimeout>;
+    }
+  > = new Map();
 
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
@@ -409,44 +420,47 @@ export abstract class Backend extends EventEmitter {
     this.startModifierShortcutMonitor(modifierOnlyShortcuts);
   }
 
-  /** Starts edge-triggered polling for shortcuts made up of one modifier key. */
+  /** Starts edge-triggered polling for single- and double-press modifier shortcuts. */
   private startModifierShortcutMonitor(shortcuts: string[]): void {
     if (shortcuts.length === 0) {
       return;
     }
 
+    // Side-agnostic shortcuts must be monitored as two independent physical keys. This
+    // ensures that pressing the left and right key once each is not treated as a double
+    // press of the same modifier.
+    const physicalModifiers = new Set<string>();
     for (const shortcut of shortcuts) {
-      this.modifierShortcutStates.set(shortcut, this.isModifierShortcutPressed(shortcut));
+      const modifier = shortcut.split('+')[0];
+      const { base, side } = splitModifierSide(modifier);
+
+      if (side === 'any') {
+        physicalModifiers.add(`${base}Left`);
+        physicalModifiers.add(`${base}Right`);
+      } else {
+        physicalModifiers.add(modifier);
+      }
+    }
+
+    for (const modifier of physicalModifiers) {
+      this.modifierShortcutStates.set(modifier, this.isModifierPressed(modifier));
     }
 
     this.modifierShortcutMonitor = setInterval(() => {
       const newlyPressed: string[] = [];
 
-      for (const shortcut of shortcuts) {
-        const wasPressed = this.modifierShortcutStates.get(shortcut) || false;
-        const isPressed = this.isModifierShortcutPressed(shortcut);
-        this.modifierShortcutStates.set(shortcut, isPressed);
+      for (const modifier of physicalModifiers) {
+        const wasPressed = this.modifierShortcutStates.get(modifier) || false;
+        const isPressed = this.isModifierPressed(modifier);
+        this.modifierShortcutStates.set(modifier, isPressed);
 
         if (isPressed && !wasPressed) {
-          newlyPressed.push(shortcut);
+          newlyPressed.push(modifier);
         }
       }
 
-      for (const shortcut of newlyPressed) {
-        const { base, side } = splitModifierSide(shortcut);
-
-        // Prefer a side-specific shortcut if the same key is also bound without a side.
-        if (
-          side === 'any' &&
-          newlyPressed.some((candidate) => {
-            const candidateModifier = splitModifierSide(candidate);
-            return candidateModifier.base === base && candidateModifier.side !== 'any';
-          })
-        ) {
-          continue;
-        }
-
-        this.onShortcutPressed(shortcut);
+      for (const modifier of newlyPressed) {
+        this.onModifierPressed(modifier, shortcuts);
       }
     }, 16);
 
@@ -460,19 +474,92 @@ export abstract class Backend extends EventEmitter {
       this.modifierShortcutMonitor = undefined;
     }
 
-    this.modifierShortcutStates.clear();
-  }
-
-  /** Returns whether the physical key represented by a modifier shortcut is held down. */
-  private isModifierShortcutPressed(shortcut: string): boolean {
-    const { base, side } = splitModifierSide(shortcut);
-
-    if (side !== 'any') {
-      return this.isModifierPressed(shortcut);
+    for (const tap of this.modifierShortcutTaps.values()) {
+      clearTimeout(tap.timeout);
     }
 
+    this.modifierShortcutStates.clear();
+    this.modifierShortcutTaps.clear();
+  }
+
+  /** Handles a rising edge of one physical modifier key. */
+  private onModifierPressed(modifier: string, shortcuts: string[]): void {
+    const singlePressShortcut = this.findModifierShortcut(shortcuts, modifier, 1);
+    const doublePressShortcut = this.findModifierShortcut(shortcuts, modifier, 2);
+
+    if (!doublePressShortcut) {
+      if (singlePressShortcut) {
+        this.onShortcutPressed(singlePressShortcut);
+      }
+      return;
+    }
+
+    const now = Date.now();
+    const previousTap = this.modifierShortcutTaps.get(modifier);
+
+    if (
+      previousTap &&
+      now - previousTap.pressedAt <= DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS
+    ) {
+      clearTimeout(previousTap.timeout);
+      this.modifierShortcutTaps.delete(modifier);
+      this.onShortcutPressed(doublePressShortcut);
+      return;
+    }
+
+    if (previousTap) {
+      clearTimeout(previousTap.timeout);
+      this.modifierShortcutTaps.delete(modifier);
+
+      // The timeout may be delayed while the main thread is busy. Do not lose the first
+      // single press if another press arrives after the double-press interval.
+      if (singlePressShortcut) {
+        this.onShortcutPressed(singlePressShortcut);
+      }
+    }
+
+    const tap = {
+      pressedAt: now,
+      timeout: setTimeout(() => {
+        if (this.modifierShortcutTaps.get(modifier) !== tap) {
+          return;
+        }
+
+        this.modifierShortcutTaps.delete(modifier);
+        if (singlePressShortcut) {
+          this.onShortcutPressed(singlePressShortcut);
+        }
+      }, DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS),
+    };
+
+    tap.timeout.unref();
+    this.modifierShortcutTaps.set(modifier, tap);
+  }
+
+  /** Finds the best shortcut for a physical modifier and the requested press count. */
+  private findModifierShortcut(
+    shortcuts: string[],
+    physicalModifier: string,
+    tapCount: 1 | 2
+  ): string | undefined {
+    const physical = splitModifierSide(physicalModifier);
+    const matches = shortcuts.filter((shortcut) => {
+      if (getModifierShortcutTapCount(shortcut) !== tapCount) {
+        return false;
+      }
+
+      const candidate = splitModifierSide(shortcut.split('+')[0]);
+      return (
+        candidate.base === physical.base &&
+        (candidate.side === 'any' || candidate.side === physical.side)
+      );
+    });
+
+    // Prefer a side-specific shortcut if the same modifier is also bound without a side.
     return (
-      this.isModifierPressed(`${base}Left`) || this.isModifierPressed(`${base}Right`)
+      matches.find(
+        (shortcut) => splitModifierSide(shortcut.split('+')[0]).side !== 'any'
+      ) || matches[0]
     );
   }
 

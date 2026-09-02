@@ -38,17 +38,23 @@ export default function ShortcutLabel(props: Props) {
     props.formatPart || ((part: string) => formatShortcutForDisplay(part, cIsMac));
   const isModifier = props.isModifier || isShortcutModifier;
   const isCompact = props.isCompact ?? cIsMac;
+  const occurrences = new Map<string, number>();
+  const parts = props.shortcut.split('+').map((part) => {
+    const occurrence = occurrences.get(part) || 0;
+    occurrences.set(part, occurrence + 1);
+    return { part, key: `${part}-${occurrence}` };
+  });
 
   return (
     <span className={classes.shortcutLabel}>
-      {props.shortcut.split('+').map((part, index) => {
+      {parts.map(({ part, key }, index) => {
         const { base, side } = isModifier(part)
           ? splitModifierSide(part)
           : { base: part, side: 'any' as const };
         const sideLabel = side === 'left' ? 'L' : side === 'right' ? 'R' : null;
 
         return (
-          <React.Fragment key={part}>
+          <React.Fragment key={key}>
             {index > 0 && !isCompact ? '+' : null}
             <span className={classes.shortcutPart}>
               {sideLabel ? <span className={classes.sideMarker}>{sideLabel}</span> : null}

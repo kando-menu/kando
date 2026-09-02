@@ -13,6 +13,7 @@ import { expect } from 'chai';
 import {
   cycleModifierSide,
   formatShortcutForDisplay,
+  getModifierShortcutTapCount,
   getSideSpecificModifiers,
   isModifierOnlyShortcut,
   splitModifierSide,
@@ -73,8 +74,17 @@ describe('modifier sides', () => {
   it('should detect standalone modifier shortcuts', () => {
     expect(isModifierOnlyShortcut('Shift')).to.equal(true);
     expect(isModifierOnlyShortcut('CommandRight')).to.equal(true);
+    expect(isModifierOnlyShortcut('CommandRight+CommandRight')).to.equal(true);
+    expect(isModifierOnlyShortcut('CommandLeft+CommandRight')).to.equal(false);
     expect(isModifierOnlyShortcut('Shift+A')).to.equal(false);
     expect(isModifierOnlyShortcut('A')).to.equal(false);
     expect(isModifierOnlyShortcut('')).to.equal(false);
+  });
+
+  it('should count single and double modifier presses', () => {
+    expect(getModifierShortcutTapCount('CommandRight')).to.equal(1);
+    expect(getModifierShortcutTapCount('CommandRight+CommandRight')).to.equal(2);
+    expect(getModifierShortcutTapCount('CommandRight+CommandLeft')).to.equal(0);
+    expect(getModifierShortcutTapCount('CommandRight+A')).to.equal(0);
   });
 });

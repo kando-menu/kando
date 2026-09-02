@@ -13,13 +13,21 @@ import i18next from 'i18next';
 import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
+import type { WindowWithAPIs } from '../../settings-window-api';
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
 import KeyMapper from '../../../common/key-mapper';
-import { cycleModifierSide, formatShortcutForDisplay } from '../../../common/shortcut';
+import {
+  cycleModifierSide,
+  DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS,
+  formatShortcutForDisplay,
+  getModifierShortcutTapCount,
+} from '../../../common/shortcut';
 import { Button, Popover, SettingsRow, ShortcutLabel } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';
 const cx = classNames.bind(classes);
+
+declare const window: WindowWithAPIs;
 
 const MAC_MODIFIER_NAMES = new Map([
   ['⌘', 'Command'],
@@ -108,8 +116,36 @@ export default function ShortcutPicker(props: Props) {
     impl.normalizeInput(props.initialValue)
   );
   const [recording, setRecording] = React.useState(false);
+  const [isStartingRecording, setIsStartingRecording] = React.useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const shortcutRef = React.useRef<HTMLDivElement>(null);
+  const recordingInhibitionRef = React.useRef<number | null>(null);
+  const modifierRecordingPressedAtRef = React.useRef<number | null>(null);
+  const pendingModifierRecordingRef = React.useRef<{
+    shortcut: string;
+    pressedAt: number;
+    timeout: ReturnType<typeof setTimeout>;
+  } | null>(null);
+  const isMountedRef = React.useRef(true);
+
+  React.useEffect(() => {
+    isMountedRef.current = true;
+
+    return () => {
+      isMountedRef.current = false;
+      if (pendingModifierRecordingRef.current) {
+        clearTimeout(pendingModifierRecordingRef.current.timeout);
+        pendingModifierRecordingRef.current = null;
+      }
+      modifierRecordingPressedAtRef.current = null;
+      const inhibitionID = recordingInhibitionRef.current;
+      recordingInhibitionRef.current = null;
+
+      if (inhibitionID !== null) {
+        void window.settingsAPI.endShortcutRecording(inhibitionID);
+      }
+    };
+  }, []);
 
   // Update the value when the initialValue prop changes. This is necessary because the
   // initialValue prop might change after the component has been initialized.
@@ -151,9 +187,7 @@ export default function ShortcutPicker(props: Props) {
 
     return (
       hasKey ||
-      (props.isStandaloneModifierAllowed &&
-        parts.length === 1 &&
-        impl.isValidModifier(parts[0]))
+      (props.isStandaloneModifierAllowed && getModifierShortcutTapCount(shortcut) > 0)
     );
   };
 
@@ -162,9 +196,72 @@ export default function ShortcutPicker(props: Props) {
     props.onChange?.(newShortcut);
   };
 
+  const endRecordingInhibition = () => {
+    const inhibitionID = recordingInhibitionRef.current;
+    recordingInhibitionRef.current = null;
+
+    if (inhibitionID !== null) {
+      void window.settingsAPI.endShortcutRecording(inhibitionID);
+    }
+  };
+
+  const clearPendingModifierRecording = () => {
+    if (pendingModifierRecordingRef.current) {
+      clearTimeout(pendingModifierRecordingRef.current.timeout);
+      pendingModifierRecordingRef.current = null;
+    }
+    modifierRecordingPressedAtRef.current = null;
+  };
+
+  const finishRecording = (newShortcut: string) => {
+    clearPendingModifierRecording();
+    setRecording(false);
+    endRecordingInhibition();
+    commitShortcut(newShortcut);
+  };
+
+  const startRecording = async () => {
+    clearPendingModifierRecording();
+    setIsStartingRecording(true);
+
+    try {
+      const inhibitionID = await window.settingsAPI.beginShortcutRecording();
+
+      if (!isMountedRef.current) {
+        if (inhibitionID > 0) {
+          await window.settingsAPI.endShortcutRecording(inhibitionID);
+        }
+        return;
+      }
+
+      if (inhibitionID <= 0) {
+        return;
+      }
+
+      recordingInhibitionRef.current = inhibitionID;
+      setIsPopoverOpen(false);
+      setShortcut('');
+      setRecording(true);
+      requestAnimationFrame(() => shortcutRef.current?.focus());
+    } catch (error) {
+      console.error('Failed to inhibit shortcuts for recording:', error);
+    } finally {
+      if (isMountedRef.current) {
+        setIsStartingRecording(false);
+      }
+    }
+  };
+
   const cycleModifierAt = (index: number) => {
     const parts = shortcut.split('+');
-    parts[index] = cycleModifierSide(parts[index]);
+    const tapCount = getModifierShortcutTapCount(shortcut);
+
+    if (tapCount === 2) {
+      const modifier = cycleModifierSide(parts[index]);
+      parts.fill(modifier);
+    } else {
+      parts[index] = cycleModifierSide(parts[index]);
+    }
     const newShortcut = impl.normalizeInput(parts.join('+'));
 
     if (isValid(newShortcut)) {
@@ -187,12 +284,59 @@ export default function ShortcutPicker(props: Props) {
   );
 
   const recordInput = (event: React.KeyboardEvent<HTMLElement>) => {
+    const pendingModifier = pendingModifierRecordingRef.current;
+
+    // If the same modifier is pressed a second time before the single-press timeout,
+    // record it twice. We wait for the corresponding key-up event before committing it
+    // so that global shortcuts are not restored while the key is still held down.
+    if (event.type === 'keydown' && !event.repeat && pendingModifier) {
+      const secondPress = impl.recordInput(event, '').shortcut;
+
+      if (
+        secondPress === pendingModifier.shortcut &&
+        performance.now() - pendingModifier.pressedAt <=
+          DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS
+      ) {
+        clearPendingModifierRecording();
+        setShortcut(`${secondPress}+${secondPress}`);
+        event.preventDefault();
+        return;
+      }
+    }
+
     const result = impl.recordInput(event, shortcut);
     setShortcut(result.shortcut);
 
+    if (
+      event.type === 'keydown' &&
+      !event.repeat &&
+      getModifierShortcutTapCount(result.shortcut) === 1
+    ) {
+      modifierRecordingPressedAtRef.current = performance.now();
+    }
+
     if (result.isComplete && isValid(result.shortcut)) {
-      setRecording(false);
-      commitShortcut(result.shortcut);
+      const tapCount = getModifierShortcutTapCount(result.shortcut);
+
+      if (tapCount === 1 && props.isStandaloneModifierAllowed) {
+        const pressedAt = modifierRecordingPressedAtRef.current || performance.now();
+        const remainingTime = Math.max(
+          0,
+          DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS - (performance.now() - pressedAt)
+        );
+
+        if (pendingModifierRecordingRef.current) {
+          clearTimeout(pendingModifierRecordingRef.current.timeout);
+        }
+        const timeout = setTimeout(() => finishRecording(result.shortcut), remainingTime);
+        pendingModifierRecordingRef.current = {
+          shortcut: result.shortcut,
+          pressedAt,
+          timeout,
+        };
+      } else {
+        finishRecording(result.shortcut);
+      }
     }
 
     event.preventDefault();
@@ -205,28 +349,35 @@ export default function ShortcutPicker(props: Props) {
       role="dialog">
       {canSelectModifierSides ? <p>{i18next.t('settings.shortcut-side-hint')}</p> : null}
       <div className={classes.shortcutKeys} role="group">
-        {shortcut.split('+').map((part, index) => {
+        {(() => {
+          const occurrences = new Map<string, number>();
+          return shortcut.split('+').map((part) => {
+            const occurrence = occurrences.get(part) || 0;
+            occurrences.set(part, occurrence + 1);
+            return { part, key: `${part}-${occurrence}` };
+          });
+        })().map(({ part, key }, index) => {
           const canSelectSide = canSelectModifierSides && impl.isValidModifier(part);
-          const key = <kbd>{renderShortcut(part)}</kbd>;
+          const keyCap = <kbd>{renderShortcut(part)}</kbd>;
 
           if (canSelectSide) {
             return (
               <button
-                key={part}
+                key={key}
                 aria-label={i18next.t('settings.shortcut-change-modifier-side', {
                   modifier: impl.formatInput(part),
                 })}
                 className={classes.shortcutKey}
                 type="button"
                 onClick={() => cycleModifierAt(index)}>
-                {key}
+                {keyCap}
               </button>
             );
           }
 
           return (
-            <span key={part} className={classes.shortcutKey}>
-              {key}
+            <span key={key} className={classes.shortcutKey}>
+              {keyCap}
             </span>
           );
         })}
@@ -284,21 +435,18 @@ export default function ShortcutPicker(props: Props) {
         </Popover>
         <Button
           isGrouped
+          isDisabled={isStartingRecording}
           icon={recording ? <TbPlayerStopFilled /> : <TbPlayerRecordFilled />}
           variant="secondary"
           onClick={() => {
             if (!recording) {
-              setIsPopoverOpen(false);
-              setShortcut('');
-              setRecording(true);
-              requestAnimationFrame(() => shortcutRef.current?.focus());
+              void startRecording();
             } else {
               if (shortcut && isValid(shortcut)) {
-                commitShortcut(shortcut);
+                finishRecording(shortcut);
               } else {
-                commitShortcut(impl.normalizeInput(props.initialValue));
+                finishRecording(impl.normalizeInput(props.initialValue));
               }
-              setRecording(false);
             }
           }}
         />
@@ -340,7 +488,7 @@ class KeyNameImpl {
     if (event.type === 'keyup') {
       return {
         shortcut: parts.join('+'),
-        isComplete: parts.length === 1 && this.isValidModifier(parts[0]),
+        isComplete: parts.length > 0,
       };
     }
 
@@ -373,15 +521,15 @@ class KeyNameImpl {
     // Fix the case of the key.
     key = this.normalizeInput(key);
 
-    const isComplete = this.isValidKey(key);
+    const isKey = this.isValidKey(key);
 
-    if (isComplete) {
+    if (isKey) {
       parts.push(key);
     }
 
     return {
       shortcut: this.normalizeInput(parts.join('+')),
-      isComplete,
+      isComplete: false,
     };
   }
 
@@ -553,7 +701,7 @@ class KeyCodeImpl {
       const parts = shortcut.split('+').filter((part) => part !== '');
       return {
         shortcut,
-        isComplete: parts.length === 1 && this.isValidModifier(parts[0]),
+        isComplete: parts.length > 0,
       };
     }
 
@@ -573,7 +721,7 @@ class KeyCodeImpl {
 
     return {
       shortcut: parts.join('+'),
-      isComplete: this.isValidKey(event.code),
+      isComplete: false,
     };
   }
 
