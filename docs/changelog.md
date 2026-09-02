@@ -54,6 +54,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - It's now possible to **open user-configured menus via the IPC interface**. This allows you to open one of your configured menus by its name. This is similar to the `--menu <menu name>` command-line option, but is faster as it does not require starting a new Kando instance. This is especially useful if you want to open menus from other applications or scripts.
 - Added an option to re-open a menu if the same shortcut is pressed while the menu is already open. This is useful if the menu sometimes gets lost on multi-monitor setups.
 - Added some warning signs in the settings dialog which indicate that a potentially dangerous setting is enabled. For instance, if you enable the keep-focus option, a warning sign will show that this disables all keyboard input.
+- The dialog now also shows a warning if a sound theme failed to load. This can happen if the sound theme is not compatible with the current version of Kando.
 - Many translation updates: **Thanks to all the contributors!**
 
 ### :wrench: Changed
