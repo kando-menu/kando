@@ -22,8 +22,8 @@ import {
   WindowDescription,
   GeneralSettings,
   DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS,
+  findMatchingModifierShortcut,
   getSideSpecificModifiers,
-  getModifierShortcutTapCount,
   isModifierOnlyShortcut,
   splitModifierSide,
   stripShortcutModifierSides,
@@ -484,8 +484,8 @@ export abstract class Backend extends EventEmitter {
 
   /** Handles a rising edge of one physical modifier key. */
   private onModifierPressed(modifier: string, shortcuts: string[]): void {
-    const singlePressShortcut = this.findModifierShortcut(shortcuts, modifier, 1);
-    const doublePressShortcut = this.findModifierShortcut(shortcuts, modifier, 2);
+    const singlePressShortcut = findMatchingModifierShortcut(shortcuts, modifier, 1);
+    const doublePressShortcut = findMatchingModifierShortcut(shortcuts, modifier, 2);
 
     if (!doublePressShortcut) {
       if (singlePressShortcut) {
@@ -534,33 +534,6 @@ export abstract class Backend extends EventEmitter {
 
     tap.timeout.unref();
     this.modifierShortcutTaps.set(modifier, tap);
-  }
-
-  /** Finds the best shortcut for a physical modifier and the requested press count. */
-  private findModifierShortcut(
-    shortcuts: string[],
-    physicalModifier: string,
-    tapCount: 1 | 2
-  ): string | undefined {
-    const physical = splitModifierSide(physicalModifier);
-    const matches = shortcuts.filter((shortcut) => {
-      if (getModifierShortcutTapCount(shortcut) !== tapCount) {
-        return false;
-      }
-
-      const candidate = splitModifierSide(shortcut.split('+')[0]);
-      return (
-        candidate.base === physical.base &&
-        (candidate.side === 'any' || candidate.side === physical.side)
-      );
-    });
-
-    // Prefer a side-specific shortcut if the same modifier is also bound without a side.
-    return (
-      matches.find(
-        (shortcut) => splitModifierSide(shortcut.split('+')[0]).side !== 'any'
-      ) || matches[0]
-    );
   }
 
   /**

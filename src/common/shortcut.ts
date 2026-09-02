@@ -71,6 +71,58 @@ export function isModifierOnlyShortcut(shortcut: string): boolean {
 }
 
 /**
+ * Finds the best modifier-only shortcut for a physical modifier press. A shortcut with an
+ * explicit side takes precedence over an otherwise equivalent side-agnostic one.
+ */
+export function findMatchingModifierShortcut(
+  shortcuts: string[],
+  physicalModifier: string,
+  tapCount: 1 | 2
+): string | undefined {
+  const physical = splitModifierSide(physicalModifier);
+  const matches = shortcuts.filter((shortcut) => {
+    if (getModifierShortcutTapCount(shortcut) !== tapCount) {
+      return false;
+    }
+
+    const candidate = splitModifierSide(shortcut.split('+')[0]);
+    return (
+      candidate.base === physical.base &&
+      (candidate.side === 'any' || candidate.side === physical.side)
+    );
+  });
+
+  return (
+    matches.find(
+      (shortcut) => splitModifierSide(shortcut.split('+')[0]).side !== 'any'
+    ) || matches[0]
+  );
+}
+
+/** Converts a DOM modifier code to the corresponding side-aware shortcut name. */
+export function getModifierShortcutFromCode(
+  code: string,
+  useMacNames: boolean
+): string | undefined {
+  const side = code.endsWith('Left') ? 'Left' : code.endsWith('Right') ? 'Right' : '';
+
+  if (code.startsWith('Control')) {
+    return `Control${side}`;
+  }
+  if (code.startsWith('Shift')) {
+    return `Shift${side}`;
+  }
+  if (code.startsWith('Alt')) {
+    return `${useMacNames ? 'Option' : 'Alt'}${side}`;
+  }
+  if (code.startsWith('Meta')) {
+    return `${useMacNames ? 'Command' : 'Meta'}${side}`;
+  }
+
+  return undefined;
+}
+
+/**
  * Splits the optional side suffix from a modifier name.
  *
  * @param modifier A modifier such as `Shift`, `ShiftLeft`, or `ShiftRight`.
