@@ -80,7 +80,7 @@ type Props = {
   /** Whether key-name modifiers can be limited to the left or right physical key. */
   readonly isModifierSideSelectionAllowed?: boolean;
 
-  /** Whether a shortcut may consist of one modifier without a regular key. */
+  /** Whether a shortcut may consist of one or two presses of a modifier key. */
   readonly isStandaloneModifierAllowed?: boolean;
 };
 
@@ -107,10 +107,12 @@ type Props = {
 export default function ShortcutPicker(props: Props) {
   // Depending on the mode, we use different implementations for recording the input.
   const impl = React.useMemo(() => {
+    const shouldRecordModifiers =
+      props.useModifiers || Boolean(props.isStandaloneModifierAllowed);
     return props.mode === 'key-names'
-      ? new KeyNameImpl(props.useModifiers)
-      : new KeyCodeImpl(props.useModifiers);
-  }, [props.mode, props.useModifiers]);
+      ? new KeyNameImpl(shouldRecordModifiers)
+      : new KeyCodeImpl(shouldRecordModifiers);
+  }, [props.isStandaloneModifierAllowed, props.mode, props.useModifiers]);
 
   const [shortcut, setShortcut] = React.useState(() =>
     impl.normalizeInput(props.initialValue)
@@ -155,8 +157,8 @@ export default function ShortcutPicker(props: Props) {
   );
 
   // This method checks if the given hotkey is valid. A hotkey is valid if it contains
-  // exactly one key and any number of modifier keys. If explicitly allowed, one modifier
-  // without a regular key is valid as well.
+  // exactly one key and any number of modifier keys. If explicitly allowed, a standalone
+  // modifier may occur once or twice.
   const isValid = (shortcut: string) => {
     // If the shortcut is empty, it is valid.
     if (shortcut === '') {
@@ -172,21 +174,24 @@ export default function ShortcutPicker(props: Props) {
     const parts = shortcut.split('+');
 
     // A valid shortcut must contain exactly one key and can contain any number of
-    // modifiers.
+    // modifiers. A standalone modifier may occur once or twice when explicitly allowed.
     let hasKey = false;
+    let hasModifier = false;
     for (const part of parts) {
       if (impl.isValidKey(part)) {
         if (hasKey) {
           return false;
         }
         hasKey = true;
-      } else if (!impl.isValidModifier(part) || !props.useModifiers) {
+      } else if (!impl.isValidModifier(part)) {
         return false;
+      } else {
+        hasModifier = true;
       }
     }
 
     return (
-      hasKey ||
+      (hasKey && (props.useModifiers || !hasModifier)) ||
       (props.isStandaloneModifierAllowed && getModifierShortcutTapCount(shortcut) > 0)
     );
   };
@@ -270,9 +275,7 @@ export default function ShortcutPicker(props: Props) {
   };
 
   const canSelectModifierSides =
-    props.mode === 'key-names' &&
-    props.useModifiers &&
-    props.isModifierSideSelectionAllowed;
+    props.mode === 'key-names' && props.isModifierSideSelectionAllowed;
 
   const renderShortcut = (value: string) => (
     <ShortcutLabel

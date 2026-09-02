@@ -12,7 +12,9 @@ import { expect } from 'chai';
 
 import {
   cycleModifierSide,
+  findMatchingModifierShortcut,
   formatShortcutForDisplay,
+  getModifierShortcutFromCode,
   getModifierShortcutTapCount,
   getSideSpecificModifiers,
   isModifierOnlyShortcut,
@@ -86,5 +88,32 @@ describe('modifier sides', () => {
     expect(getModifierShortcutTapCount('CommandRight+CommandRight')).to.equal(2);
     expect(getModifierShortcutTapCount('CommandRight+CommandLeft')).to.equal(0);
     expect(getModifierShortcutTapCount('CommandRight+A')).to.equal(0);
+  });
+
+  it('should convert DOM modifier codes to side-aware shortcut names', () => {
+    expect(getModifierShortcutFromCode('MetaRight', true)).to.equal('CommandRight');
+    expect(getModifierShortcutFromCode('AltLeft', true)).to.equal('OptionLeft');
+    expect(getModifierShortcutFromCode('AltRight', false)).to.equal('AltRight');
+    expect(getModifierShortcutFromCode('KeyA', true)).to.equal(undefined);
+  });
+
+  it('should match modifier shortcuts by side and press count', () => {
+    const shortcuts = [
+      'Command',
+      'CommandRight',
+      'Command+Command',
+      'CommandRight+CommandRight',
+    ];
+
+    expect(findMatchingModifierShortcut(shortcuts, 'CommandRight', 1)).to.equal(
+      'CommandRight'
+    );
+    expect(findMatchingModifierShortcut(shortcuts, 'CommandLeft', 1)).to.equal('Command');
+    expect(findMatchingModifierShortcut(shortcuts, 'CommandRight', 2)).to.equal(
+      'CommandRight+CommandRight'
+    );
+    expect(findMatchingModifierShortcut(['CommandLeft'], 'CommandRight', 1)).to.equal(
+      undefined
+    );
   });
 });
