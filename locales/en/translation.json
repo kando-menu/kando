@@ -310,7 +310,7 @@
         "area-condition-bottom-placeholder": "Bottom",
         "area-condition-right-placeholder": "Right",
         "area-condition-tooltip": "Select a screen area",
-        "shortcut-info": "This shortcut opens the menu. It can contain one normal key and any number of modifiers, or one modifier pressed once or twice. When recording a key combination, you can press its keys either together or one after another.",
+        "shortcut-info": "This shortcut opens the menu. It can contain one normal key and any number of modifiers, or one modifier pressed once or twice.",
         "shortcut-change-modifier-side": "Change side for {{modifier}}",
         "shortcut-keys": "Shortcut keys",
         "shortcut-label": "Shortcut",

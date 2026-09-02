@@ -589,7 +589,7 @@ export default interface Resources {
           "search-menus-placeholder": "Search menus…",
           "shortcut-change-modifier-side": "Change side for {{modifier}}",
           "shortcut-id-label": "Shortcut ID",
-          "shortcut-info": "This shortcut opens the menu. It can contain one normal key and any number of modifiers, or one modifier pressed once or twice. When recording a key combination, you can press its keys either together or one after another.",
+          "shortcut-info": "This shortcut opens the menu. It can contain one normal key and any number of modifiers, or one modifier pressed once or twice.",
           "shortcut-keys": "Shortcut keys",
           "shortcut-label": "Shortcut",
           "shortcut-recording": "Press a shortcut…",
