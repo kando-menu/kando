@@ -743,7 +743,8 @@ export class KandoApp {
         themes.map((theme) => this.loadSoundThemeDescription(theme))
       );
 
-      // Filter out themes that failed to load a description.
+      // Filter out the placeholder for the 'none' theme, but keep themes which failed to
+      // load so that the renderer can show a warning about them.
       descriptions = descriptions.filter((desc) => desc.id !== 'none');
 
       // Sort by the name property of the description.
@@ -1726,6 +1727,7 @@ export class KandoApp {
     if (!metaFile) {
       if (theme !== 'none') {
         console.warn(`Sound theme "${theme}" not found.`);
+        return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
       }
 
       return emptyTheme;
@@ -1738,7 +1740,7 @@ export class KandoApp {
       console.warn(
         `Sound theme "${theme}" has unsupported engine version ${description.engineVersion}. Must be ${engineVersion}.`
       );
-      return emptyTheme;
+      return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
     }
 
     const directory = path.dirname(metaFile);

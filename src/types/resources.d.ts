@@ -196,7 +196,7 @@ export default interface Resources {
           },
           "execute-command": {
               "choose-app": "Choose an app…",
-              "description": "Launches apps or runs scripts. ",
+              "description": "Launches apps or runs scripts.",
               "detached": "Run detached",
               "detached-info": "This will disconnect the command from Kando, so it will continue to run even if Kando is closed. Disabling this may resolve issues with commands that do not start properly.",
               "isolated": "Run isolated",
@@ -439,6 +439,7 @@ export default interface Resources {
               "settings-window-flavor-info": "If you choose a transparent flavor, you will have to restart the settings window to apply the effect.",
               "sound-theme": "Sound theme",
               "sound-theme-info": "A sound theme is a collection of sounds that are played when you interact with the menu.",
+              "sound-theme-load-failed-warning": "Failed to load the following sound theme(s), most likely due to a version mismatch: {{themes}}",
               "system": "System",
               "title": "General Settings",
               "top-left": "Top Left",
@@ -448,9 +449,9 @@ export default interface Resources {
               "transparent-system": "Transparent System",
               "tray-icon-flavor": "Tray icon flavor",
               "tray-icon-flavor-info": "You can also choose to hide the tray icon completely.",
-              "trigger-center-click-on-key-release": "Trigger center-click workflow on key release",
+              "trigger-center-click-on-key-release": "Close menu on shortcut release over center",
               "trigger-center-click-on-key-release-info": "This will trigger the center-click workflow when a key is released while hovering over the center of a menu.",
-              "trigger-center-click-on-key-release-warning": "This option will instantly close the menu when you release the shortcut. Activate this only if you know what you are doing!",
+              "trigger-center-click-on-key-release-warning": "Depending on your center-click workflow, this may instantly close the menu when you release the shortcut. Activate this only if you know what you are doing!",
               "volume": "Volume",
               "volume-info": "The overall volume of the sound theme. Default is 0.5.",
               "white": "White",
@@ -583,7 +584,7 @@ export default interface Resources {
               "valid": "Great! You have selected a valid area."
           },
           "screen-position-picker": {
-              "instructions": "Drag the crosshair to a position on your screen to select a fixed menu location. Or click on one of the preset location buttons below.",
+              "instructions": "Drag the crosshair to a position on your screen to select a fixed menu location. Or choose one of the preset locations below.",
               "value": "X: {{x}} | Y: {{y}}"
           },
           "search-menus-placeholder": "Search menus…",
