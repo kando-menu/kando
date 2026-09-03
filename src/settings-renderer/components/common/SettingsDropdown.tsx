@@ -27,6 +27,9 @@ type Props<K extends keyof GeneralSettings> = {
   /** Optional additional information to display next to the label. */
   readonly info?: string;
 
+  /** Optional warning to display next to the dropdown. */
+  readonly warning?: string;
+
   /** Whether the dropdown is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
 
@@ -67,6 +70,7 @@ export default function SettingsDropdown<K extends EnumKeys<GeneralSettings>>(
       maxWidth={props.maxWidth}
       minWidth={props.minWidth}
       options={props.options}
+      warning={props.warning}
       onChange={setState}
     />
   );

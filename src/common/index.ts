@@ -435,6 +435,13 @@ export type SoundThemeDescription = {
    * played for the corresponding action.
    */
   readonly sounds: Record<MenuInteractionType, SoundEffect>;
+
+  /**
+   * True if the theme.json(5) file could not be loaded or parsed, or if its engine
+   * version is not supported by this version of Kando. This is most likely caused by a
+   * version mismatch between the theme and Kando.
+   */
+  readonly loadFailed?: boolean;
 };
 
 /**

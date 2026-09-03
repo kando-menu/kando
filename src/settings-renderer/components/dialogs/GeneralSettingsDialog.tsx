@@ -85,15 +85,26 @@ export default function GeneralSettingsDialog() {
   // Widget width
   const spinbuttonWidth = 60;
 
-  // Options for dropdowns
-  const soundThemeOptions = soundThemes.map((theme) => ({
-    value: theme.id,
-    label: theme.name,
-  }));
+  // Options for dropdowns. Themes which failed to load (most likely due to a version
+  // mismatch) are excluded here but are used below to show a warning.
+  const soundThemeOptions = soundThemes
+    .filter((theme) => !theme.loadFailed)
+    .map((theme) => ({
+      value: theme.id,
+      label: theme.name,
+    }));
   soundThemeOptions.unshift({
     value: 'none',
     label: i18next.t('settings.general-settings-dialog.none'),
   });
+
+  const failedSoundThemes = soundThemes.filter((theme) => theme.loadFailed);
+  const soundThemeWarning =
+    failedSoundThemes.length > 0
+      ? i18next.t('settings.general-settings-dialog.sound-theme-load-failed-warning', {
+          themes: failedSoundThemes.map((theme) => theme.name).join(', '),
+        })
+      : undefined;
 
   const localeOptions = cLocales.map((code) => {
     const display = new Intl.DisplayNames([code], { type: 'language' });
@@ -446,6 +457,7 @@ export default function GeneralSettingsDialog() {
             maxWidth={200}
             options={soundThemeOptions}
             settingsKey="soundTheme"
+            warning={soundThemeWarning}
           />
           <SettingsSpinbutton
             info={i18next.t('settings.general-settings-dialog.volume-info')}

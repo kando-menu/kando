@@ -441,6 +441,7 @@ export default interface Resources {
               "settings-window-flavor-info": "If you choose a transparent flavor, you will have to restart the settings window to apply the effect.",
               "sound-theme": "Sound theme",
               "sound-theme-info": "A sound theme is a collection of sounds that are played when you interact with the menu.",
+              "sound-theme-load-failed-warning": "Failed to load the following sound theme(s), most likely due to a version mismatch: {{themes}}",
               "system": "System",
               "title": "General Settings",
               "top-left": "Top Left",
