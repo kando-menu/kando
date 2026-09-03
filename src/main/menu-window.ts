@@ -145,6 +145,19 @@ export class MenuWindow extends BrowserWindow {
     this.kando.getGeneralSettings().onChange('keepInputFocus', (newValue) => {
       this.setFocusable(!newValue);
     });
+
+    // If the user clicks outside of the menu window, we close the menu. This is only done
+    // if the 'hideOnFocusOut' setting is enabled.
+    this.on('blur', () => {
+      if (this.isVisible() && this.kando.getGeneralSettings().get('hideOnFocusOut')) {
+        this.closeMenu().catch((error) => {
+          console.error(
+            'Failed to close menu window on blur:',
+            error instanceof Error ? error.message : error
+          );
+        });
+      }
+    });
   }
 
   /**

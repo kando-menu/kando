@@ -163,6 +163,9 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
    */
   keepInputFocus: z.boolean().default(false),
 
+  /** If enabled, the menu will be closed when the input focus is lost. */
+  hideOnFocusOut: z.boolean().default(true),
+
   /** If enabled, items can be selected by dragging the mouse over them. */
   enableMarkingMode: z.boolean().default(true),
 
