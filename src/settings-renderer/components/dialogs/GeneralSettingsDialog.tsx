@@ -355,6 +355,44 @@ export default function GeneralSettingsDialog() {
             ]}
             settingsKey="sameShortcutBehavior"
           />
+          <h1>{i18next.t('settings.general-settings-dialog.input-options')}</h1>
+          <SettingsCheckbox
+            warning={
+              keepInputFocus
+                ? i18next.t('settings.general-settings-dialog.keep-input-focus-warning')
+                : undefined
+            }
+            info={i18next.t('settings.general-settings-dialog.keep-input-focus-info')}
+            label={i18next.t('settings.general-settings-dialog.keep-input-focus')}
+            settingsKey="keepInputFocus"
+          />
+          <SettingsCheckbox
+            warning={
+              keepInputFocus
+                ? i18next.t('settings.general-settings-dialog.enable-turbo-mode-warning')
+                : undefined
+            }
+            info={i18next.t('settings.general-settings-dialog.hide-on-focus-out-info')}
+            isDisabled={keepInputFocus}
+            label={i18next.t('settings.general-settings-dialog.hide-on-focus-out')}
+            settingsKey="hideOnFocusOut"
+          />
+          <SettingsCheckbox
+            info={i18next.t(
+              'settings.general-settings-dialog.enable-gamepad-support-info'
+            )}
+            label={i18next.t('settings.general-settings-dialog.enable-gamepad-support')}
+            settingsKey="enableGamepad"
+          />
+          {backend.name === 'Windows' && (
+            <SettingsCheckbox
+              info={i18next.t(
+                'settings.general-settings-dialog.windows-ink-workaround-info'
+              )}
+              label={i18next.t('settings.general-settings-dialog.windows-ink-workaround')}
+              settingsKey="windowsInkWorkaround"
+            />
+          )}
           <h1>{i18next.t('settings.general-settings-dialog.interaction-modes')}</h1>
           <SettingsCheckbox
             info={i18next.t('settings.general-settings-dialog.enable-marking-mode-info')}
@@ -400,35 +438,8 @@ export default function GeneralSettingsDialog() {
             )}
             settingsKey="triggerCenterClickOnKeyRelease"
           />
-          <h1>{i18next.t('settings.general-settings-dialog.input-options')}</h1>
-          <SettingsCheckbox
-            warning={
-              keepInputFocus
-                ? i18next.t('settings.general-settings-dialog.keep-input-focus-warning')
-                : undefined
-            }
-            info={i18next.t('settings.general-settings-dialog.keep-input-focus-info')}
-            label={i18next.t('settings.general-settings-dialog.keep-input-focus')}
-            settingsKey="keepInputFocus"
-          />
-          <SettingsCheckbox
-            info={i18next.t(
-              'settings.general-settings-dialog.enable-gamepad-support-info'
-            )}
-            label={i18next.t('settings.general-settings-dialog.enable-gamepad-support')}
-            settingsKey="enableGamepad"
-          />
-          {backend.name === 'Windows' && (
-            <SettingsCheckbox
-              info={i18next.t(
-                'settings.general-settings-dialog.windows-ink-workaround-info'
-              )}
-              label={i18next.t('settings.general-settings-dialog.windows-ink-workaround')}
-              settingsKey="windowsInkWorkaround"
-            />
-          )}
-          <Swirl marginBottom={20} marginTop={40} variant="2" width={350} />
-          <Note isCentered useMarkdown>
+
+          <Note isCentered useMarkdown marginTop={20}>
             {i18next.t('settings.general-settings-dialog.learn-interaction-mode', {
               link: 'https://kando.menu/usage/',
             })}

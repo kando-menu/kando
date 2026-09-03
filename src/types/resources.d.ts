@@ -379,6 +379,8 @@ export default interface Resources {
               "hardware-acceleration": "Enable hardware acceleration",
               "hardware-acceleration-info": "This option can boost the performance of the app, but can also lead to some rendering artifacts. You have to restart Kando to apply this setting.",
               "hidden": "Hidden",
+              "hide-on-focus-out": "Hide menu when focus is lost",
+              "hide-on-focus-out-info": "The menu will be hidden when you switch focus to another application.",
               "input-options": "Input Options",
               "interaction-modes": "Interaction Modes",
               "invisible-settings-button": "Invisible settings button",
