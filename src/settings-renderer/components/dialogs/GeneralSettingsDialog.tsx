@@ -356,7 +356,13 @@ export default function GeneralSettingsDialog() {
             settingsKey="keepInputFocus"
           />
           <SettingsCheckbox
+            warning={
+              keepInputFocus
+                ? i18next.t('settings.general-settings-dialog.enable-turbo-mode-warning')
+                : undefined
+            }
             info={i18next.t('settings.general-settings-dialog.hide-on-focus-out-info')}
+            isDisabled={keepInputFocus}
             label={i18next.t('settings.general-settings-dialog.hide-on-focus-out')}
             settingsKey="hideOnFocusOut"
           />
