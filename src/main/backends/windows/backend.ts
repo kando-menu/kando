@@ -21,6 +21,7 @@ import {
   ActionTypeRegistry,
   WindowDescription,
   ShortcutRecordingEvent,
+  getSideSpecificModifiers,
 } from '../../../common';
 import { mapKeys, unmapKey } from '../../../common/key-codes';
 import {
@@ -110,6 +111,11 @@ export class WindowsBackend extends Backend {
   /** Stops the low-level Windows recording hook. */
   public override stopShortcutRecordingCapture(): void {
     native.stopKeyboardCapture();
+  }
+
+  /** Side-specific shortcuts must leave presses on the other side untouched. */
+  protected override shouldBindShortcutNatively(shortcut: string): boolean {
+    return getSideSpecificModifiers(shortcut).length > 0;
   }
 
   /** Uses the low-level hook for shortcuts reserved by Windows. */

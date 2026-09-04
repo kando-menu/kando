@@ -20,6 +20,7 @@ import {
   MenuItem,
   ActionTypeRegistry,
   ShortcutRecordingEvent,
+  getSideSpecificModifiers,
 } from '../../../common';
 import { mapKeys, unmapKey } from '../../../common/key-codes';
 import { createNativeShortcutBinding } from '../native-shortcut';
@@ -99,6 +100,11 @@ export class MacosBackend extends Backend {
   /** Stops the active Core Graphics recording event tap. */
   public override stopShortcutRecordingCapture(): void {
     native.stopKeyboardCapture();
+  }
+
+  /** Side-specific shortcuts must leave presses on the other side untouched. */
+  protected override shouldBindShortcutNatively(shortcut: string): boolean {
+    return getSideSpecificModifiers(shortcut).length > 0;
   }
 
   /** Uses the active event tap for shortcuts reserved by macOS. */
