@@ -36,6 +36,32 @@ const MAC_MODIFIER_NAMES = new Map([
   ['⇧', 'Shift'],
 ]);
 
+/** Returns a useful KeyboardEvent.key fallback for a captured DOM code. */
+function getKeyValueFromCode(code: string): string {
+  if (/^Key[A-Z]$/.test(code)) {
+    return code.slice(3).toLowerCase();
+  }
+  if (/^Digit[0-9]$/.test(code)) {
+    return code.slice(5);
+  }
+
+  const values = new Map([
+    ['MetaLeft', 'Meta'],
+    ['MetaRight', 'Meta'],
+    ['AltLeft', 'Alt'],
+    ['AltRight', 'Alt'],
+    ['ControlLeft', 'Control'],
+    ['ControlRight', 'Control'],
+    ['ShiftLeft', 'Shift'],
+    ['ShiftRight', 'Shift'],
+    ['Space', ' '],
+    ['Enter', 'Enter'],
+    ['NumpadEnter', 'Enter'],
+  ]);
+
+  return values.get(code) || code;
+}
+
 type Props = {
   /**
    * Function to call when the shortcut changes. This will be called when the user presses
@@ -121,6 +147,8 @@ export default function ShortcutPicker(props: Props) {
   const [isStartingRecording, setIsStartingRecording] = React.useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const shortcutRef = React.useRef<HTMLDivElement>(null);
+  const recordingRef = React.useRef(false);
+  const capturedPressedKeysRef = React.useRef<Set<string>>(new Set());
   const recordingInhibitionRef = React.useRef<number | null>(null);
   const modifierRecordingPressedAtRef = React.useRef<number | null>(null);
   const pendingModifierRecordingRef = React.useRef<{
@@ -135,6 +163,7 @@ export default function ShortcutPicker(props: Props) {
 
     return () => {
       isMountedRef.current = false;
+      recordingRef.current = false;
       if (pendingModifierRecordingRef.current) {
         clearTimeout(pendingModifierRecordingRef.current.timeout);
         pendingModifierRecordingRef.current = null;
@@ -147,6 +176,48 @@ export default function ShortcutPicker(props: Props) {
         void window.settingsAPI.endShortcutRecording(inhibitionID);
       }
     };
+  }, []);
+
+  React.useEffect(() => {
+    return window.settingsAPI.onShortcutRecordingEvent((input) => {
+      if (!recordingRef.current || !shortcutRef.current) {
+        return;
+      }
+
+      const pressedKeys = capturedPressedKeysRef.current;
+      const repeat = input.type === 'keydown' && pressedKeys.has(input.code);
+
+      if (input.type === 'keydown') {
+        pressedKeys.add(input.code);
+      } else {
+        pressedKeys.delete(input.code);
+      }
+
+      const hasPressed = (prefix: string) =>
+        Array.from(pressedKeys).some((code) => code.startsWith(prefix));
+      const location = input.code.startsWith('Numpad')
+        ? KeyboardEvent.DOM_KEY_LOCATION_NUMPAD
+        : input.code.endsWith('Left')
+          ? KeyboardEvent.DOM_KEY_LOCATION_LEFT
+          : input.code.endsWith('Right')
+            ? KeyboardEvent.DOM_KEY_LOCATION_RIGHT
+            : KeyboardEvent.DOM_KEY_LOCATION_STANDARD;
+
+      shortcutRef.current.dispatchEvent(
+        new KeyboardEvent(input.type, {
+          altKey: hasPressed('Alt'),
+          bubbles: true,
+          cancelable: true,
+          code: input.code,
+          ctrlKey: hasPressed('Control'),
+          key: getKeyValueFromCode(input.code),
+          location,
+          metaKey: hasPressed('Meta'),
+          repeat,
+          shiftKey: hasPressed('Shift'),
+        })
+      );
+    });
   }, []);
 
   // Update the value when the initialValue prop changes. This is necessary because the
@@ -220,6 +291,8 @@ export default function ShortcutPicker(props: Props) {
 
   const finishRecording = (newShortcut: string) => {
     clearPendingModifierRecording();
+    recordingRef.current = false;
+    capturedPressedKeysRef.current.clear();
     setRecording(false);
     endRecordingInhibition();
     commitShortcut(newShortcut);
@@ -246,6 +319,8 @@ export default function ShortcutPicker(props: Props) {
       recordingInhibitionRef.current = inhibitionID;
       setIsPopoverOpen(false);
       setShortcut('');
+      recordingRef.current = true;
+      capturedPressedKeysRef.current.clear();
       setRecording(true);
       requestAnimationFrame(() => shortcutRef.current?.focus());
     } catch (error) {

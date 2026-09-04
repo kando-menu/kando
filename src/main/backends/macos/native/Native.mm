@@ -19,10 +19,38 @@
 #include <sys/mman.h>
 #include <unordered_map>
 #include <unistd.h>
+#include <utility>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 namespace {
+
+struct CapturedKeyEvent {
+  CGKeyCode keyCode;
+  bool      down;
+};
+
+constexpr uint32_t kNativeModifierControl = 1U << 0;
+constexpr uint32_t kNativeModifierShift   = 1U << 1;
+constexpr uint32_t kNativeModifierAlt     = 1U << 2;
+constexpr uint32_t kNativeModifierMeta    = 1U << 3;
+
+uint32_t nativeModifierMask(CGEventFlags flags) {
+  uint32_t mask = 0;
+  if ((flags & kCGEventFlagMaskControl) != 0) {
+    mask |= kNativeModifierControl;
+  }
+  if ((flags & kCGEventFlagMaskShift) != 0) {
+    mask |= kNativeModifierShift;
+  }
+  if ((flags & kCGEventFlagMaskAlternate) != 0) {
+    mask |= kNativeModifierAlt;
+  }
+  if ((flags & kCGEventFlagMaskCommand) != 0) {
+    mask |= kNativeModifierMeta;
+  }
+  return mask;
+}
 
 Napi::Object processAppAtPath(const Napi::Env& env, NSString* appPath) {
 
@@ -236,6 +264,9 @@ Native::Native(Napi::Env env, Napi::Object exports) {
           InstanceMethod("movePointer", &Native::movePointer),
           InstanceMethod("simulateKey", &Native::simulateKey),
           InstanceMethod("isModifierPressed", &Native::isModifierPressed),
+          InstanceMethod("startKeyboardCapture", &Native::startKeyboardCapture),
+          InstanceMethod("stopKeyboardCapture", &Native::stopKeyboardCapture),
+          InstanceMethod("bindSystemShortcuts", &Native::bindSystemShortcuts),
           InstanceMethod("getActiveWindow", &Native::getActiveWindow),
           InstanceMethod("getOpenWindows", &Native::getOpenWindows),
           InstanceMethod("focusWindow", &Native::focusWindow),
@@ -246,8 +277,18 @@ Native::Native(Napi::Env env, Napi::Object exports) {
                                         CGEventMaskBit(kCGEventKeyDown) |
                                         CGEventMaskBit(kCGEventKeyUp);
   mModifierEventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap,
-      kCGEventTapOptionListenOnly, modifierEventMask,
+      kCGEventTapOptionDefault, modifierEventMask,
       &Native::modifierEventTapCallback, this);
+
+  mCanSuppressKeyboardEvents = mModifierEventTap != nullptr;
+
+  // An active event tap requires accessibility permission. Keep side-aware modifier
+  // detection working in listen-only mode if that permission has not been granted yet.
+  if (!mModifierEventTap) {
+    mModifierEventTap = CGEventTapCreate(kCGSessionEventTap, kCGHeadInsertEventTap,
+        kCGEventTapOptionListenOnly, modifierEventMask,
+        &Native::modifierEventTapCallback, this);
+  }
 
   if (mModifierEventTap) {
     mModifierEventTapSource =
@@ -263,6 +304,14 @@ Native::Native(Napi::Env env, Napi::Object exports) {
 //////////////////////////////////////////////////////////////////////////////////////////
 
 Native::~Native() {
+  if (mKeyboardCaptureEnabled.exchange(false)) {
+    mKeyboardCaptureCallback.Release();
+  }
+
+  if (mSystemShortcutCallbackEnabled.exchange(false)) {
+    mSystemShortcutCallback.Release();
+  }
+
   if (mModifierEventTapSource) {
     CFRunLoopRemoveSource(
         CFRunLoopGetMain(), mModifierEventTapSource, kCFRunLoopCommonModes);
@@ -297,19 +346,220 @@ CGEventRef Native::modifierEventTapCallback(CGEventTapProxy proxy,
       CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode));
   const uint32_t modifierBit = modifierBitForKeyCode(keyCode);
 
-  if (modifierBit == 0) {
+  bool down = false;
+  if (type == kCGEventKeyDown) {
+    native->mPressedModifierKeys.fetch_or(modifierBit);
+    down = true;
+  } else if (type == kCGEventKeyUp) {
+    native->mPressedModifierKeys.fetch_and(~modifierBit);
+    down = false;
+  } else if (type == kCGEventFlagsChanged) {
+    if (modifierBit != 0) {
+      const uint32_t previous = native->mPressedModifierKeys.fetch_xor(modifierBit);
+      down = (previous & modifierBit) == 0;
+    } else {
+      std::lock_guard<std::mutex> lock(native->mSuppressedKeysMutex);
+      down = native->mSuppressedKeys.count(keyCode) == 0;
+    }
+  } else {
     return event;
   }
 
-  if (type == kCGEventKeyDown) {
-    native->mPressedModifierKeys.fetch_or(modifierBit);
-  } else if (type == kCGEventKeyUp) {
-    native->mPressedModifierKeys.fetch_and(~modifierBit);
-  } else if (type == kCGEventFlagsChanged) {
-    native->mPressedModifierKeys.fetch_xor(modifierBit);
+  const bool captureEnabled = native->mKeyboardCaptureEnabled.load();
+  bool       suppressRelease = false;
+
+  {
+    std::lock_guard<std::mutex> lock(native->mSuppressedKeysMutex);
+    if (captureEnabled) {
+      if (down) {
+        native->mSuppressedKeys.insert(keyCode);
+      } else {
+        native->mSuppressedKeys.erase(keyCode);
+      }
+    } else if (!down) {
+      suppressRelease = native->mSuppressedKeys.erase(keyCode) > 0;
+    }
+  }
+
+  if (captureEnabled) {
+    auto* capturedEvent = new CapturedKeyEvent{keyCode, down};
+    const napi_status status = native->mKeyboardCaptureCallback.NonBlockingCall(
+        capturedEvent,
+        [](Napi::Env env, Napi::Function callback, CapturedKeyEvent* capturedEvent) {
+          callback.Call({Napi::Number::New(env, capturedEvent->keyCode),
+              Napi::Boolean::New(env, capturedEvent->down)});
+          delete capturedEvent;
+        });
+
+    if (status != napi_ok) {
+      delete capturedEvent;
+    }
+
+    return nullptr;
+  }
+
+  if (suppressRelease) {
+    return nullptr;
+  }
+
+  {
+    std::lock_guard<std::mutex> lock(native->mSystemShortcutsMutex);
+
+    if (type == kCGEventKeyUp &&
+        native->mSuppressedShortcutKeys.erase(keyCode) > 0) {
+      return nullptr;
+    }
+
+    if (type == kCGEventKeyDown &&
+        CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat) == 0) {
+      const uint32_t eventModifierMask = nativeModifierMask(CGEventGetFlags(event));
+      const uint32_t pressedModifiers  = native->mPressedModifierKeys.load();
+
+      for (const auto& shortcut : native->mSystemShortcuts) {
+        if (shortcut.keyCode != keyCode ||
+            shortcut.modifierMask != eventModifierMask) {
+          continue;
+        }
+
+        bool sidesMatch = true;
+        for (const CGKeyCode modifier : shortcut.sideModifiers) {
+          const uint32_t bit = modifierBitForKeyCode(modifier);
+          if (bit == 0 || (pressedModifiers & bit) == 0) {
+            sidesMatch = false;
+            break;
+          }
+        }
+
+        if (!sidesMatch) {
+          continue;
+        }
+
+        auto* shortcutName = new std::string(shortcut.shortcut);
+        const napi_status status = native->mSystemShortcutCallback.NonBlockingCall(
+            shortcutName,
+            [](Napi::Env env, Napi::Function callback, std::string* shortcutName) {
+              callback.Call({Napi::String::New(env, *shortcutName)});
+              delete shortcutName;
+            });
+        if (status != napi_ok) {
+          delete shortcutName;
+        }
+
+        native->mSuppressedShortcutKeys.insert(keyCode);
+        return nullptr;
+      }
+    }
   }
 
   return event;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::startKeyboardCapture(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 1 || !info[0].IsFunction()) {
+    Napi::TypeError::New(env, "Function expected").ThrowAsJavaScriptException();
+    return Napi::Boolean::New(env, false);
+  }
+
+  if (!mCanSuppressKeyboardEvents) {
+    return Napi::Boolean::New(env, false);
+  }
+
+  if (mKeyboardCaptureEnabled.exchange(false)) {
+    mKeyboardCaptureCallback.Release();
+  }
+
+  {
+    std::lock_guard<std::mutex> lock(mSuppressedKeysMutex);
+    mSuppressedKeys.clear();
+  }
+
+  mKeyboardCaptureCallback = Napi::ThreadSafeFunction::New(
+      env, info[0].As<Napi::Function>(), "Kando keyboard capture", 0, 1);
+  mKeyboardCaptureEnabled.store(true);
+  return Napi::Boolean::New(env, true);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::stopKeyboardCapture(const Napi::CallbackInfo& info) {
+  if (mKeyboardCaptureEnabled.exchange(false)) {
+    mKeyboardCaptureCallback.Release();
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::bindSystemShortcuts(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 2 || !info[0].IsArray() || !info[1].IsFunction()) {
+    Napi::TypeError::New(env, "Array and Function expected").ThrowAsJavaScriptException();
+    return Napi::Number::New(env, 0);
+  }
+
+  if (!mCanSuppressKeyboardEvents) {
+    if (mSystemShortcutCallbackEnabled.exchange(false)) {
+      mSystemShortcutCallback.Release();
+    }
+    std::lock_guard<std::mutex> lock(mSystemShortcutsMutex);
+    mSystemShortcuts.clear();
+    return Napi::Number::New(env, 0);
+  }
+
+  std::vector<SystemShortcutBinding> bindings;
+  const Napi::Array input = info[0].As<Napi::Array>();
+  bindings.reserve(input.Length());
+
+  for (uint32_t i = 0; i < input.Length(); ++i) {
+    const Napi::Value value = input.Get(i);
+    if (!value.IsObject()) {
+      continue;
+    }
+
+    const Napi::Object object = value.As<Napi::Object>();
+    if (!object.Get("shortcut").IsString() || !object.Get("keyCode").IsNumber() ||
+        !object.Get("modifierMask").IsNumber() ||
+        !object.Get("sideModifiers").IsArray()) {
+      continue;
+    }
+
+    SystemShortcutBinding binding;
+    binding.shortcut = object.Get("shortcut").As<Napi::String>().Utf8Value();
+    binding.keyCode =
+        static_cast<CGKeyCode>(object.Get("keyCode").As<Napi::Number>().Uint32Value());
+    binding.modifierMask = object.Get("modifierMask").As<Napi::Number>().Uint32Value();
+
+    const Napi::Array sideModifiers = object.Get("sideModifiers").As<Napi::Array>();
+    for (uint32_t j = 0; j < sideModifiers.Length(); ++j) {
+      if (sideModifiers.Get(j).IsNumber()) {
+        binding.sideModifiers.push_back(
+            static_cast<CGKeyCode>(sideModifiers.Get(j).As<Napi::Number>().Uint32Value()));
+      }
+    }
+
+    bindings.push_back(std::move(binding));
+  }
+
+  if (mSystemShortcutCallbackEnabled.exchange(false)) {
+    mSystemShortcutCallback.Release();
+  }
+
+  {
+    std::lock_guard<std::mutex> lock(mSystemShortcutsMutex);
+    mSystemShortcuts = std::move(bindings);
+  }
+
+  if (!mSystemShortcuts.empty()) {
+    mSystemShortcutCallback = Napi::ThreadSafeFunction::New(
+        env, info[1].As<Napi::Function>(), "Kando system shortcuts", 0, 1);
+    mSystemShortcutCallbackEnabled.store(true);
+  }
+
+  return Napi::Number::New(env, mSystemShortcuts.size());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

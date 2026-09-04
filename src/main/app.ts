@@ -14,7 +14,16 @@ import fsExtra from 'fs-extra';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { ipcMain, shell, Tray, Menu, app, nativeTheme, dialog } from 'electron';
+import {
+  ipcMain,
+  shell,
+  Tray,
+  Menu,
+  app,
+  nativeTheme,
+  dialog,
+  webContents,
+} from 'electron';
 import i18next from 'i18next';
 import type { ParseKeys } from 'i18next';
 
@@ -80,6 +89,9 @@ export class KandoApp {
 
   /** Shortcut-recording inhibitions and the settings renderer which owns each one. */
   private shortcutRecordingInhibitions: Map<number, number> = new Map();
+
+  /** Whether a platform-native exclusive keyboard capture is currently active. */
+  private shortcutRecordingCaptureActive = false;
 
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
@@ -570,6 +582,20 @@ export class KandoApp {
 
       const senderID = event.sender.id;
       this.shortcutRecordingInhibitions.set(inhibitionID, senderID);
+
+      if (this.shortcutRecordingInhibitions.size === 1) {
+        this.shortcutRecordingCaptureActive = this.backend.startShortcutRecordingCapture(
+          (input) => {
+            const owners = new Set(this.shortcutRecordingInhibitions.values());
+            for (const ownerID of owners) {
+              webContents
+                .fromId(ownerID)
+                ?.send('settings-window.shortcut-recording-event', input);
+            }
+          }
+        );
+      }
+
       event.sender.once('destroyed', () => {
         void this.releaseShortcutRecordingInhibitions(senderID);
       });
@@ -590,6 +616,15 @@ export class KandoApp {
         }
 
         this.shortcutRecordingInhibitions.delete(inhibitionID);
+
+        if (
+          this.shortcutRecordingCaptureActive &&
+          this.shortcutRecordingInhibitions.size === 0
+        ) {
+          this.backend.stopShortcutRecordingCapture();
+          this.shortcutRecordingCaptureActive = false;
+        }
+
         await this.backend.releaseInhibition(inhibitionID);
       }
     );
@@ -1484,6 +1519,17 @@ export class KandoApp {
 
     for (const inhibitionID of inhibitionIDs) {
       this.shortcutRecordingInhibitions.delete(inhibitionID);
+    }
+
+    if (
+      this.shortcutRecordingCaptureActive &&
+      this.shortcutRecordingInhibitions.size === 0
+    ) {
+      this.backend.stopShortcutRecordingCapture();
+      this.shortcutRecordingCaptureActive = false;
+    }
+
+    for (const inhibitionID of inhibitionIDs) {
       await this.backend.releaseInhibition(inhibitionID);
     }
   }

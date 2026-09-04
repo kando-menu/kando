@@ -23,6 +23,12 @@ const MAC_MODIFIER_SYMBOLS = new Map([
 
 export type ModifierSide = 'left' | 'right' | 'any';
 
+/** A keyboard event captured natively while a shortcut picker is recording. */
+export type ShortcutRecordingEvent = {
+  readonly type: 'keydown' | 'keyup';
+  readonly code: string;
+};
+
 /** Maximum delay between two modifier presses which should count as a double press. */
 export const DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS = 300;
 

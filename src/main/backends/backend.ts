@@ -21,6 +21,7 @@ import {
   AppDescription,
   WindowDescription,
   GeneralSettings,
+  ShortcutRecordingEvent,
   DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS,
   findMatchingModifierShortcut,
   getSideSpecificModifiers,
@@ -94,6 +95,20 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when the backend has been cleaned up.
    */
   public abstract deinit(): Promise<void>;
+
+  /**
+   * Starts an exclusive native keyboard capture for shortcut recording. Backends which do
+   * not support this return false and continue using regular DOM keyboard events.
+   */
+  public startShortcutRecordingCapture(
+    callback: (event: ShortcutRecordingEvent) => void
+  ): boolean {
+    void callback;
+    return false;
+  }
+
+  /** Stops a native keyboard capture started by startShortcutRecordingCapture(). */
+  public stopShortcutRecordingCapture(): void {}
 
   /**
    * Each backend must provide a way to get the name and app of the currently focused
@@ -394,6 +409,7 @@ export abstract class Backend extends EventEmitter {
       shortcutsByAccelerator.set(accelerator, shortcuts);
     }
 
+    const failedShortcuts: string[] = [];
     for (const [accelerator, shortcuts] of shortcutsByAccelerator) {
       const registered = globalShortcut.register(accelerator, () => {
         const matchingShortcuts = shortcuts.filter((shortcut) =>
@@ -413,11 +429,33 @@ export abstract class Backend extends EventEmitter {
       });
 
       if (!registered) {
-        console.warn(`Failed to register global shortcut "${accelerator}".`);
+        failedShortcuts.push(...shortcuts);
+      }
+    }
+
+    const nativeShortcuts = new Set(
+      this.bindSystemShortcuts(failedShortcuts, modifierOnlyShortcuts)
+    );
+    for (const shortcut of failedShortcuts) {
+      if (!nativeShortcuts.has(shortcut)) {
+        console.warn(`Failed to register global shortcut "${shortcut}".`);
       }
     }
 
     this.startModifierShortcutMonitor(modifierOnlyShortcuts);
+  }
+
+  /**
+   * Gives a platform backend a chance to bind shortcuts which Electron could not
+   * register. The return value lists the shortcuts which were bound successfully.
+   */
+  protected bindSystemShortcuts(
+    shortcuts: string[],
+    modifierOnlyShortcuts: string[]
+  ): string[] {
+    void shortcuts;
+    void modifierOnlyShortcuts;
+    return [];
   }
 
   /** Starts edge-triggered polling for single- and double-press modifier shortcuts. */
