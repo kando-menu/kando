@@ -13,6 +13,7 @@ import { expect } from 'chai';
 import {
   formatKeyCodeForDisplay,
   getKeyValueFromCode,
+  resolveModifierKeyCode,
   unmapKey,
 } from '../src/common/key-codes';
 import {
@@ -98,5 +99,14 @@ describe('formatKeyCodeForDisplay', () => {
     expect(formatKeyCodeForDisplay('KeyV')).to.equal('V');
     expect(formatKeyCodeForDisplay('Digit7')).to.equal('7');
     expect(formatKeyCodeForDisplay('ArrowLeft')).to.equal('ArrowLeft');
+  });
+});
+
+describe('resolveModifierKeyCode', () => {
+  it('should use the left key for side-agnostic physical modifiers', () => {
+    expect(resolveModifierKeyCode('Meta')).to.equal('MetaLeft');
+    expect(resolveModifierKeyCode('Control')).to.equal('ControlLeft');
+    expect(resolveModifierKeyCode('MetaRight')).to.equal('MetaRight');
+    expect(resolveModifierKeyCode('KeyV')).to.equal('KeyV');
   });
 });

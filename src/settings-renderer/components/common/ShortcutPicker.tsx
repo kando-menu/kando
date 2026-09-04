@@ -82,7 +82,7 @@ type Props = {
    */
   readonly useModifiers: boolean;
 
-  /** Whether key-name modifiers can be limited to the left or right physical key. */
+  /** Whether modifiers can be limited to the left or right physical key. */
   readonly isModifierSideSelectionAllowed?: boolean;
 
   /** Whether a shortcut may consist of one or two presses of a modifier key. */
@@ -328,8 +328,7 @@ export default function ShortcutPicker(props: Props) {
     }
   };
 
-  const canSelectModifierSides =
-    props.mode === 'key-names' && props.isModifierSideSelectionAllowed;
+  const canSelectModifierSides = props.isModifierSideSelectionAllowed;
 
   const renderShortcut = (value: string) => (
     <ShortcutLabel
@@ -800,8 +799,14 @@ class KeyCodeImpl {
     shortcut = shortcut.replace(/\s/g, '').toLowerCase();
 
     // We then split the shortcut into its parts and normalize each part.
+    const modifierNames = new Map([
+      ['alt', 'Alt'],
+      ['control', 'Control'],
+      ['meta', 'Meta'],
+      ['shift', 'Shift'],
+    ]);
     let parts = shortcut.split('+');
-    parts = parts.map(fixKeyCodeCase);
+    parts = parts.map((part) => modifierNames.get(part) || fixKeyCodeCase(part));
 
     return parts.join('+');
   }
@@ -814,8 +819,7 @@ class KeyCodeImpl {
    * @returns True if the modifier is valid, false otherwise.
    */
   public isValidModifier(modifier: string): boolean {
-    const isModifier =
-      /^(AltLeft|AltRight|ControlLeft|ControlRight|MetaLeft|MetaRight|ShiftLeft|ShiftRight)$/;
+    const isModifier = /^(Alt|Control|Meta|Shift)(Left|Right)?$/;
     return isModifier.test(modifier);
   }
 

@@ -28,6 +28,7 @@ export function SimulateHotkeyActionConfig(props: Props) {
     <ShortcutPicker
       isGrowing
       useModifiers
+      isModifierSideSelectionAllowed
       isStandaloneModifierAllowed
       info={i18next.t('menu-actions.simulate-hotkey.hotkey-info')}
       initialValue={props.action.hotkey}
