@@ -116,6 +116,11 @@ export function formatKeyCodeForDisplay(code: string): string {
   return code;
 }
 
+/** Resolves a side-agnostic physical modifier code to its conventional left key. */
+export function resolveModifierKeyCode(code: string): string {
+  return /^(Alt|Control|Meta|Shift)$/.test(code) ? `${code}Left` : code;
+}
+
 /**
  * This function fixes a key code case. If the key code is not known, it is returned as
  * is.

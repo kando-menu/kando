@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import { KeySequence, SimulateHotkeyAction } from '../../common';
+import { resolveModifierKeyCode } from '../../common/key-codes';
 import { KandoApp } from '../app';
 import { DeepReadonly } from '../settings';
 
@@ -21,7 +22,7 @@ import { DeepReadonly } from '../settings';
  * @returns A promise which resolves when the hotkey has been successfully simulated.
  */
 export async function execute(action: DeepReadonly<SimulateHotkeyAction>, app: KandoApp) {
-  const keyNames = action.hotkey.split('+');
+  const keyNames = action.hotkey.split('+').map(resolveModifierKeyCode);
 
   const keys: KeySequence = [];
 
