@@ -104,18 +104,6 @@ export function getKeyValueFromCode(code: string): string {
   return KEY_VALUES.get(code) || code;
 }
 
-/** Converts verbose physical letter and digit codes to compact display labels. */
-export function formatKeyCodeForDisplay(code: string): string {
-  if (/^Key[A-Z]$/.test(code)) {
-    return code.slice(3);
-  }
-  if (/^Digit[0-9]$/.test(code)) {
-    return code.slice(5);
-  }
-
-  return code;
-}
-
 /** Resolves a side-agnostic physical modifier code to its conventional left key. */
 export function resolveModifierKeyCode(code: string): string {
   return /^(Alt|Control|Meta|Shift)$/.test(code) ? `${code}Left` : code;

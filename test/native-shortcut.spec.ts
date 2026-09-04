@@ -11,7 +11,6 @@
 import { expect } from 'chai';
 
 import {
-  formatKeyCodeForDisplay,
   getKeyValueFromCode,
   resolveModifierKeyCode,
   unmapKey,
@@ -91,14 +90,6 @@ describe('getKeyValueFromCode', () => {
   it('should convert captured letter and digit codes to key values', () => {
     expect(getKeyValueFromCode('KeyA')).to.equal('a');
     expect(getKeyValueFromCode('Digit1')).to.equal('1');
-  });
-});
-
-describe('formatKeyCodeForDisplay', () => {
-  it('should use compact labels for physical letter and digit codes', () => {
-    expect(formatKeyCodeForDisplay('KeyV')).to.equal('V');
-    expect(formatKeyCodeForDisplay('Digit7')).to.equal('7');
-    expect(formatKeyCodeForDisplay('ArrowLeft')).to.equal('ArrowLeft');
   });
 });
 
