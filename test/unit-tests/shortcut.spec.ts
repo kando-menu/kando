@@ -40,6 +40,12 @@ describe('formatShortcutForDisplay', () => {
     );
   });
 
+  it('should format physical modifier key codes with macOS symbols', () => {
+    expect(
+      formatShortcutForDisplay('ControlLeft+AltRight+MetaLeft+ShiftRight+KeyV', true)
+    ).to.equal('L⌃R⌥L⌘R⇧KeyV');
+  });
+
   it('should leave shortcuts unchanged on other platforms', () => {
     expect(formatShortcutForDisplay('Control+Alt+A', false)).to.equal('Control+Alt+A');
   });

@@ -104,6 +104,18 @@ export function getKeyValueFromCode(code: string): string {
   return KEY_VALUES.get(code) || code;
 }
 
+/** Converts verbose physical letter and digit codes to compact display labels. */
+export function formatKeyCodeForDisplay(code: string): string {
+  if (/^Key[A-Z]$/.test(code)) {
+    return code.slice(3);
+  }
+  if (/^Digit[0-9]$/.test(code)) {
+    return code.slice(5);
+  }
+
+  return code;
+}
+
 /**
  * This function fixes a key code case. If the key code is not known, it is returned as
  * is.

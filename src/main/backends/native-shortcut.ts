@@ -55,6 +55,42 @@ const KEY_NAMES_TO_CODES = new Map([
   ['PrintScreen', 'PrintScreen'],
 ]);
 
+// Key-name shortcuts store printable characters, while the native APIs use physical key
+// codes. Shifted and unshifted characters therefore map to the same physical key.
+const CHARACTER_KEYS_TO_CODES = new Map([
+  ['`', 'Backquote'],
+  ['~', 'Backquote'],
+  ['-', 'Minus'],
+  ['_', 'Minus'],
+  ['=', 'Equal'],
+  ['[', 'BracketLeft'],
+  ['{', 'BracketLeft'],
+  [']', 'BracketRight'],
+  ['}', 'BracketRight'],
+  ['\\', 'Backslash'],
+  ['|', 'Backslash'],
+  [';', 'Semicolon'],
+  [':', 'Semicolon'],
+  ["'", 'Quote'],
+  ['"', 'Quote'],
+  [',', 'Comma'],
+  ['<', 'Comma'],
+  ['.', 'Period'],
+  ['>', 'Period'],
+  ['/', 'Slash'],
+  ['?', 'Slash'],
+  ['!', 'Digit1'],
+  ['@', 'Digit2'],
+  ['#', 'Digit3'],
+  ['$', 'Digit4'],
+  ['%', 'Digit5'],
+  ['^', 'Digit6'],
+  ['&', 'Digit7'],
+  ['*', 'Digit8'],
+  ['(', 'Digit9'],
+  [')', 'Digit0'],
+]);
+
 /** Converts an Electron accelerator key name to a DOM code used by mapKeys(). */
 function acceleratorKeyToCode(key: string): string | undefined {
   if (/^[A-Z]$/i.test(key)) {
@@ -78,7 +114,11 @@ function acceleratorKeyToCode(key: string): string | undefined {
     ['numdiv', 'NumpadDivide'],
   ]);
 
-  return KEY_NAMES_TO_CODES.get(key) || numpadCodes.get(key.toLowerCase());
+  return (
+    KEY_NAMES_TO_CODES.get(key) ||
+    CHARACTER_KEYS_TO_CODES.get(key) ||
+    numpadCodes.get(key.toLowerCase())
+  );
 }
 
 /** Creates a native binding for an accelerator which Electron could not register. */
