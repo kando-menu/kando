@@ -16,7 +16,6 @@ import classNames from 'classnames/bind';
 import type { WindowWithAPIs } from '../../settings-window-api';
 import {
   fixKeyCodeCase,
-  formatKeyCodeForDisplay,
   getKeyValueFromCode,
   isKnownKeyCode,
 } from '../../../common/key-codes';
@@ -783,7 +782,7 @@ class KeyCodeImpl {
 
   /** Formats physical modifier codes with native symbols on macOS. */
   public formatInput(shortcut: string): string {
-    return formatShortcutForDisplay(formatKeyCodeForDisplay(shortcut), cIsMac);
+    return formatShortcutForDisplay(shortcut, cIsMac);
   }
 
   /**
