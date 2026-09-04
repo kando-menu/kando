@@ -409,8 +409,16 @@ export abstract class Backend extends EventEmitter {
       shortcutsByAccelerator.set(accelerator, shortcuts);
     }
 
-    const failedShortcuts: string[] = [];
+    const nativeShortcutCandidates: string[] = [];
     for (const [accelerator, shortcuts] of shortcutsByAccelerator) {
+      // Electron consumes an accelerator before our callback can inspect which physical
+      // modifier side was used. A side-specific shortcut therefore has to be handled by
+      // a native hook so that a press on the other side can still reach the active app.
+      if (shortcuts.some((shortcut) => this.shouldBindShortcutNatively(shortcut))) {
+        nativeShortcutCandidates.push(...shortcuts);
+        continue;
+      }
+
       const registered = globalShortcut.register(accelerator, () => {
         const matchingShortcuts = shortcuts.filter((shortcut) =>
           this.matchesPressedModifierSides(shortcut)
@@ -429,20 +437,29 @@ export abstract class Backend extends EventEmitter {
       });
 
       if (!registered) {
-        failedShortcuts.push(...shortcuts);
+        nativeShortcutCandidates.push(...shortcuts);
       }
     }
 
     const nativeShortcuts = new Set(
-      this.bindSystemShortcuts(failedShortcuts, modifierOnlyShortcuts)
+      this.bindSystemShortcuts(nativeShortcutCandidates, modifierOnlyShortcuts)
     );
-    for (const shortcut of failedShortcuts) {
+    for (const shortcut of nativeShortcutCandidates) {
       if (!nativeShortcuts.has(shortcut)) {
         console.warn(`Failed to register global shortcut "${shortcut}".`);
       }
     }
 
     this.startModifierShortcutMonitor(modifierOnlyShortcuts);
+  }
+
+  /**
+   * Returns whether a shortcut should bypass Electron's globalShortcut API. Native
+   * backends override this for shortcuts whose unmatched events must reach other apps.
+   */
+  protected shouldBindShortcutNatively(shortcut: string): boolean {
+    void shortcut;
+    return false;
   }
 
   /**
