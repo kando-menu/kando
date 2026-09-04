@@ -31,6 +31,26 @@ export function mapKeys(keys: KeySequence, os: 'windows' | 'macos' | 'linux'): n
 }
 
 /**
+ * Converts a platform-specific scan code back to its DOM KeyboardEvent.code name.
+ *
+ * @param code The platform-specific scan code.
+ * @param os The platform from which the scan code originated.
+ * @returns The corresponding DOM code, or undefined if the code is unknown.
+ */
+export function unmapKey(
+  code: number,
+  os: 'windows' | 'macos' | 'linux'
+): string | undefined {
+  for (const [name, mapping] of KEY_CODES) {
+    if (mapping[os] === code) {
+      return PROPER_KEY_CASE.get(name);
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * This function fixes a key code case. If the key code is not known, it is returned as
  * is.
  *

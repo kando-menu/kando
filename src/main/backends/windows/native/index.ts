@@ -48,6 +48,24 @@ export type Native = {
   /** Returns whether a side-specific physical modifier key is currently pressed. */
   isModifierPressed(modifier: string): boolean;
 
+  /** Starts suppressing keyboard input and forwards native key transitions. */
+  startKeyboardCapture(callback: (scanCode: number, down: boolean) => void): boolean;
+
+  /** Stops forwarding and suppressing keyboard input. */
+  stopKeyboardCapture(): void;
+
+  /** Replaces system-reserved shortcuts handled by the low-level keyboard hook. */
+  bindSystemShortcuts(
+    shortcuts: Array<{
+      shortcut: string;
+      keyCode: number;
+      modifierMask: number;
+      sideModifiers: number[];
+    }>,
+    suppressedModifierKeys: number[],
+    callback: (shortcut: string) => void
+  ): number;
+
   /**
    * This fixes the acrylic effect on Windows after the window has been resized. See here:
    * https://github.com/electron/electron/issues/42393
