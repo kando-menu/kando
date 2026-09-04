@@ -51,6 +51,60 @@ export function unmapKey(
 }
 
 /**
+ * Returns a useful KeyboardEvent.key fallback for a DOM KeyboardEvent.code. Native
+ * shortcut capture only reports physical key codes, so this is used when reconstructing a
+ * keyboard event in the settings renderer.
+ */
+const KEY_VALUES = new Map([
+  ['MetaLeft', 'Meta'],
+  ['MetaRight', 'Meta'],
+  ['AltLeft', 'Alt'],
+  ['AltRight', 'Alt'],
+  ['ControlLeft', 'Control'],
+  ['ControlRight', 'Control'],
+  ['ShiftLeft', 'Shift'],
+  ['ShiftRight', 'Shift'],
+  ['Space', ' '],
+  ['Enter', 'Enter'],
+  ['NumpadEnter', 'Enter'],
+  ['Backquote', '`'],
+  ['Minus', '-'],
+  ['Equal', '='],
+  ['BracketLeft', '['],
+  ['BracketRight', ']'],
+  ['Backslash', '\\'],
+  ['Semicolon', ';'],
+  ['Quote', "'"],
+  ['Comma', ','],
+  ['Period', '.'],
+  ['Slash', '/'],
+  ['NumpadDecimal', ','],
+  ['NumpadAdd', '+'],
+  ['NumpadSubtract', '-'],
+  ['NumpadMultiply', '*'],
+  ['NumpadDivide', '/'],
+  ['AudioVolumeUp', 'VolumeUp'],
+  ['AudioVolumeDown', 'VolumeDown'],
+  ['AudioVolumeMute', 'VolumeMute'],
+  ['MediaTrackNext', 'MediaNextTrack'],
+  ['MediaTrackPrevious', 'MediaPreviousTrack'],
+]);
+
+export function getKeyValueFromCode(code: string): string {
+  if (/^Key[A-Z]$/.test(code)) {
+    return code.slice(3).toLowerCase();
+  }
+  if (/^Digit[0-9]$/.test(code)) {
+    return code.slice(5);
+  }
+  if (/^Numpad[0-9]$/.test(code)) {
+    return code.slice(6);
+  }
+
+  return KEY_VALUES.get(code) || code;
+}
+
+/**
  * This function fixes a key code case. If the key code is not known, it is returned as
  * is.
  *

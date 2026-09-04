@@ -10,7 +10,7 @@
 
 import { expect } from 'chai';
 
-import { unmapKey } from '../src/common/key-codes';
+import { getKeyValueFromCode, unmapKey } from '../src/common/key-codes';
 import {
   createNativeShortcutBinding,
   getWindowsMetaShortcutKeyCodes,
@@ -65,5 +65,17 @@ describe('unmapKey', () => {
     expect(unmapKey(0x30, 'macos')).to.equal('Tab');
     expect(unmapKey(0xe05b, 'windows')).to.equal('MetaLeft');
     expect(unmapKey(-1, 'macos')).to.equal(undefined);
+  });
+});
+
+describe('getKeyValueFromCode', () => {
+  it('should convert captured punctuation codes to key values', () => {
+    expect(getKeyValueFromCode('Slash')).to.equal('/');
+    expect(getKeyValueFromCode('BracketLeft')).to.equal('[');
+  });
+
+  it('should convert captured letter and digit codes to key values', () => {
+    expect(getKeyValueFromCode('KeyA')).to.equal('a');
+    expect(getKeyValueFromCode('Digit1')).to.equal('1');
   });
 });

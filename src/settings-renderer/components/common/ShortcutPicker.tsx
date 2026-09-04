@@ -14,7 +14,11 @@ import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
 import type { WindowWithAPIs } from '../../settings-window-api';
-import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+import {
+  fixKeyCodeCase,
+  getKeyValueFromCode,
+  isKnownKeyCode,
+} from '../../../common/key-codes';
 import KeyMapper from '../../../common/key-mapper';
 import {
   cycleModifierSide,
@@ -35,32 +39,6 @@ const MAC_MODIFIER_NAMES = new Map([
   ['⌃', 'Control'],
   ['⇧', 'Shift'],
 ]);
-
-/** Returns a useful KeyboardEvent.key fallback for a captured DOM code. */
-function getKeyValueFromCode(code: string): string {
-  if (/^Key[A-Z]$/.test(code)) {
-    return code.slice(3).toLowerCase();
-  }
-  if (/^Digit[0-9]$/.test(code)) {
-    return code.slice(5);
-  }
-
-  const values = new Map([
-    ['MetaLeft', 'Meta'],
-    ['MetaRight', 'Meta'],
-    ['AltLeft', 'Alt'],
-    ['AltRight', 'Alt'],
-    ['ControlLeft', 'Control'],
-    ['ControlRight', 'Control'],
-    ['ShiftLeft', 'Shift'],
-    ['ShiftRight', 'Shift'],
-    ['Space', ' '],
-    ['Enter', 'Enter'],
-    ['NumpadEnter', 'Enter'],
-  ]);
-
-  return values.get(code) || code;
-}
 
 type Props = {
   /**
