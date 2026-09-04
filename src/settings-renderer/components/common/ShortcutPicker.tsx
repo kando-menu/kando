@@ -16,6 +16,7 @@ import classNames from 'classnames/bind';
 import type { WindowWithAPIs } from '../../settings-window-api';
 import {
   fixKeyCodeCase,
+  formatKeyCodeForDisplay,
   getKeyValueFromCode,
   isKnownKeyCode,
 } from '../../../common/key-codes';
@@ -333,7 +334,7 @@ export default function ShortcutPicker(props: Props) {
   const renderShortcut = (value: string) => (
     <ShortcutLabel
       formatPart={(part) => impl.formatInput(part)}
-      isCompact={props.mode === 'key-names' && cIsMac}
+      isCompact={cIsMac}
       isModifier={(part) => impl.isValidModifier(part)}
       shortcut={value}
     />
@@ -781,15 +782,9 @@ class KeyCodeImpl {
     };
   }
 
-  /**
-   * Key codes describe physical keys, so they should be displayed without
-   * platform-specific substitutions.
-   *
-   * @param shortcut The shortcut to format.
-   * @returns The unchanged shortcut.
-   */
+  /** Formats physical modifier codes with native symbols on macOS. */
   public formatInput(shortcut: string): string {
-    return shortcut;
+    return formatShortcutForDisplay(formatKeyCodeForDisplay(shortcut), cIsMac);
   }
 
   /**

@@ -10,7 +10,11 @@
 
 import { expect } from 'chai';
 
-import { getKeyValueFromCode, unmapKey } from '../src/common/key-codes';
+import {
+  formatKeyCodeForDisplay,
+  getKeyValueFromCode,
+  unmapKey,
+} from '../src/common/key-codes';
 import {
   createNativeShortcutBinding,
   getWindowsMetaShortcutKeyCodes,
@@ -25,6 +29,15 @@ describe('createNativeShortcutBinding', () => {
       keyCode: 0x30,
       modifierMask: NATIVE_MODIFIER_META,
       sideModifiers: [0x36],
+    });
+  });
+
+  it('should convert a side-specific shortcut with punctuation', () => {
+    expect(createNativeShortcutBinding('CommandLeft+.', 'macos')).to.deep.equal({
+      shortcut: 'CommandLeft+.',
+      keyCode: 0x2f,
+      modifierMask: NATIVE_MODIFIER_META,
+      sideModifiers: [0x37],
     });
   });
 
@@ -77,5 +90,13 @@ describe('getKeyValueFromCode', () => {
   it('should convert captured letter and digit codes to key values', () => {
     expect(getKeyValueFromCode('KeyA')).to.equal('a');
     expect(getKeyValueFromCode('Digit1')).to.equal('1');
+  });
+});
+
+describe('formatKeyCodeForDisplay', () => {
+  it('should use compact labels for physical letter and digit codes', () => {
+    expect(formatKeyCodeForDisplay('KeyV')).to.equal('V');
+    expect(formatKeyCodeForDisplay('Digit7')).to.equal('7');
+    expect(formatKeyCodeForDisplay('ArrowLeft')).to.equal('ArrowLeft');
   });
 });
