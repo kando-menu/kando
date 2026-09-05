@@ -19,8 +19,11 @@ import {
   WindowDescription,
   MenuItem,
   ActionTypeRegistry,
+  ShortcutRecordingEvent,
+  getSideSpecificModifiers,
 } from '../../../common';
-import { mapKeys } from '../../../common/key-codes';
+import { mapKeys, unmapKey } from '../../../common/key-codes';
+import { createNativeShortcutBinding } from '../native-shortcut';
 
 export class MacosBackend extends Backend {
   /**
@@ -47,6 +50,8 @@ export class MacosBackend extends Backend {
       supportsListingWindows: true,
       supportsFocusingWindows: true,
       supportsShortcuts: true,
+      supportsLeftRightModifiers: true,
+      supportsStandaloneModifierShortcuts: true,
       shouldUseTransparentSettingsWindow: true,
     };
   }
@@ -76,7 +81,52 @@ export class MacosBackend extends Backend {
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public async deinit(): Promise<void> {
+    native.stopKeyboardCapture();
     await this.bindShortcuts([]);
+  }
+
+  /** Uses an active Core Graphics event tap to capture system-reserved shortcuts. */
+  public override startShortcutRecordingCapture(
+    callback: (event: ShortcutRecordingEvent) => void
+  ): boolean {
+    return native.startKeyboardCapture((keyCode, down) => {
+      const code = unmapKey(keyCode, 'macos');
+      if (code) {
+        callback({ type: down ? 'keydown' : 'keyup', code });
+      }
+    });
+  }
+
+  /** Stops the active Core Graphics recording event tap. */
+  public override stopShortcutRecordingCapture(): void {
+    native.stopKeyboardCapture();
+  }
+
+  /** Side-specific shortcuts must leave presses on the other side untouched. */
+  protected override shouldBindShortcutNatively(shortcut: string): boolean {
+    return getSideSpecificModifiers(shortcut).length > 0;
+  }
+
+  /** Uses the active event tap for shortcuts reserved by macOS. */
+  protected override bindSystemShortcuts(
+    shortcuts: string[],
+    modifierOnlyShortcuts: string[]
+  ): string[] {
+    void modifierOnlyShortcuts;
+    const bindings = shortcuts
+      .map((shortcut) => createNativeShortcutBinding(shortcut, 'macos'))
+      .filter((binding) => binding !== undefined)
+      .sort((a, b) => b.sideModifiers.length - a.sideModifiers.length);
+
+    const boundCount = native.bindSystemShortcuts(bindings, (shortcut) =>
+      this.onShortcutPressed(shortcut)
+    );
+    return bindings.slice(0, boundCount).map((binding) => binding.shortcut);
+  }
+
+  /** Uses Core Graphics to inspect the currently pressed physical modifier keys. */
+  protected override isModifierPressed(modifier: string): boolean {
+    return native.isModifierPressed(modifier);
   }
 
   /**

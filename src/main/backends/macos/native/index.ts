@@ -25,6 +25,26 @@ export type Native = {
    */
   simulateKey(keycode: number, down: boolean): void;
 
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  isModifierPressed(modifier: string): boolean;
+
+  /** Starts suppressing keyboard input and forwards native key transitions. */
+  startKeyboardCapture(callback: (keyCode: number, down: boolean) => void): boolean;
+
+  /** Stops forwarding and suppressing keyboard input. */
+  stopKeyboardCapture(): void;
+
+  /** Replaces system-reserved shortcuts handled by the native event tap. */
+  bindSystemShortcuts(
+    shortcuts: Array<{
+      shortcut: string;
+      keyCode: number;
+      modifierMask: number;
+      sideModifiers: number[];
+    }>,
+    callback: (shortcut: string) => void
+  ): number;
+
   /**
    * This retrieves the app and class of the currently focused window.
    *

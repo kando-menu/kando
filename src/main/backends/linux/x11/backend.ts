@@ -34,6 +34,8 @@ export class X11Backend extends LinuxBackend {
       supportsListingWindows: true,
       supportsFocusingWindows: true,
       supportsShortcuts: true,
+      supportsLeftRightModifiers: true,
+      supportsStandaloneModifierShortcuts: true,
       shouldUseTransparentSettingsWindow: false,
     };
   }
@@ -44,6 +46,11 @@ export class X11Backend extends LinuxBackend {
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public async deinit(): Promise<void> {
     await this.bindShortcuts([]);
+  }
+
+  /** Uses XQueryKeymap to inspect the currently pressed physical modifier keys. */
+  protected override isModifierPressed(modifier: string): boolean {
+    return native.isModifierPressed(modifier);
   }
 
   /** Uses _NET_CLIENT_LIST to enumerate all open windows. */

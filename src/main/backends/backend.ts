@@ -21,6 +21,13 @@ import {
   AppDescription,
   WindowDescription,
   GeneralSettings,
+  ShortcutRecordingEvent,
+  DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS,
+  findMatchingModifierShortcut,
+  getSideSpecificModifiers,
+  isModifierOnlyShortcut,
+  splitModifierSide,
+  stripShortcutModifierSides,
 } from '../../common';
 import { Settings } from '../settings';
 
@@ -49,6 +56,21 @@ export abstract class Backend extends EventEmitter {
   /** The next inhibition ID to be used. */
   private nextInhibitionID: number = 1;
 
+  /** Polls physical modifier state for shortcuts Electron cannot register on its own. */
+  private modifierShortcutMonitor?: ReturnType<typeof setInterval>;
+
+  /** The modifier state observed during the previous polling interval. */
+  private modifierShortcutStates: Map<string, boolean> = new Map();
+
+  /** Pending first presses of modifier shortcuts which may become double presses. */
+  private modifierShortcutTaps: Map<
+    string,
+    {
+      pressedAt: number;
+      timeout: ReturnType<typeof setTimeout>;
+    }
+  > = new Map();
+
   /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
    * for more information. This method may be called before the backend is initialized.
@@ -73,6 +95,20 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when the backend has been cleaned up.
    */
   public abstract deinit(): Promise<void>;
+
+  /**
+   * Starts an exclusive native keyboard capture for shortcut recording. Backends which do
+   * not support this return false and continue using regular DOM keyboard events.
+   */
+  public startShortcutRecordingCapture(
+    callback: (event: ShortcutRecordingEvent) => void
+  ): boolean {
+    void callback;
+    return false;
+  }
+
+  /** Stops a native keyboard capture started by startShortcutRecordingCapture(). */
+  public stopShortcutRecordingCapture(): void {}
 
   /**
    * Each backend must provide a way to get the name and app of the currently focused
@@ -349,30 +385,226 @@ export abstract class Backend extends EventEmitter {
     currentEffectiveShortcuts: string[],
     previousEffectiveShortcuts: string[]
   ): Promise<void> {
-    // Use a shortcut if we unbind all shortcuts :)
-    if (currentEffectiveShortcuts.length === 0) {
-      globalShortcut.unregisterAll();
+    if (lodash.isEqual(currentEffectiveShortcuts, previousEffectiveShortcuts)) {
       return;
     }
 
-    const shortcutsToUnbind = previousEffectiveShortcuts.filter(
-      (s) => !currentEffectiveShortcuts.includes(s)
-    );
-    const shortcutsToBind = currentEffectiveShortcuts.filter(
-      (s) => !previousEffectiveShortcuts.includes(s)
+    globalShortcut.unregisterAll();
+    this.stopModifierShortcutMonitor();
+
+    const modifierOnlyShortcuts =
+      currentEffectiveShortcuts.filter(isModifierOnlyShortcut);
+    const acceleratorShortcuts = currentEffectiveShortcuts.filter(
+      (shortcut) => !isModifierOnlyShortcut(shortcut)
     );
 
-    // Unbind the obsolete shortcuts.
-    for (const shortcut of shortcutsToUnbind) {
-      globalShortcut.unregister(shortcut);
+    // Electron accelerators cannot express left and right modifier keys. We therefore
+    // register a side-agnostic accelerator and inspect the physical modifier state when
+    // it fires. Multiple side variants of the same accelerator share one registration.
+    const shortcutsByAccelerator = new Map<string, string[]>();
+    for (const shortcut of acceleratorShortcuts) {
+      const accelerator = stripShortcutModifierSides(shortcut);
+      const shortcuts = shortcutsByAccelerator.get(accelerator) || [];
+      shortcuts.push(shortcut);
+      shortcutsByAccelerator.set(accelerator, shortcuts);
     }
 
-    // Bind the new shortcuts.
-    for (const shortcut of shortcutsToBind) {
-      globalShortcut.register(shortcut, () => {
-        this.onShortcutPressed(shortcut);
+    const nativeShortcutCandidates: string[] = [];
+    for (const [accelerator, shortcuts] of shortcutsByAccelerator) {
+      // Electron consumes an accelerator before our callback can inspect which physical
+      // modifier side was used. A side-specific shortcut therefore has to be handled by
+      // a native hook so that a press on the other side can still reach the active app.
+      if (shortcuts.some((shortcut) => this.shouldBindShortcutNatively(shortcut))) {
+        nativeShortcutCandidates.push(...shortcuts);
+        continue;
+      }
+
+      const registered = globalShortcut.register(accelerator, () => {
+        const matchingShortcuts = shortcuts.filter((shortcut) =>
+          this.matchesPressedModifierSides(shortcut)
+        );
+
+        // Prefer an explicitly sided shortcut over an any-side shortcut if both use the
+        // same accelerator.
+        const shortcut =
+          matchingShortcuts.find(
+            (candidate) => getSideSpecificModifiers(candidate).length > 0
+          ) || matchingShortcuts[0];
+
+        if (shortcut) {
+          this.onShortcutPressed(shortcut);
+        }
       });
+
+      if (!registered) {
+        nativeShortcutCandidates.push(...shortcuts);
+      }
     }
+
+    const nativeShortcuts = new Set(
+      this.bindSystemShortcuts(nativeShortcutCandidates, modifierOnlyShortcuts)
+    );
+    for (const shortcut of nativeShortcutCandidates) {
+      if (!nativeShortcuts.has(shortcut)) {
+        console.warn(`Failed to register global shortcut "${shortcut}".`);
+      }
+    }
+
+    this.startModifierShortcutMonitor(modifierOnlyShortcuts);
+  }
+
+  /**
+   * Returns whether a shortcut should bypass Electron's globalShortcut API. Native
+   * backends override this for shortcuts whose unmatched events must reach other apps.
+   */
+  protected shouldBindShortcutNatively(shortcut: string): boolean {
+    void shortcut;
+    return false;
+  }
+
+  /**
+   * Gives a platform backend a chance to bind shortcuts which Electron could not
+   * register. The return value lists the shortcuts which were bound successfully.
+   */
+  protected bindSystemShortcuts(
+    shortcuts: string[],
+    modifierOnlyShortcuts: string[]
+  ): string[] {
+    void shortcuts;
+    void modifierOnlyShortcuts;
+    return [];
+  }
+
+  /** Starts edge-triggered polling for single- and double-press modifier shortcuts. */
+  private startModifierShortcutMonitor(shortcuts: string[]): void {
+    if (shortcuts.length === 0) {
+      return;
+    }
+
+    // Side-agnostic shortcuts must be monitored as two independent physical keys. This
+    // ensures that pressing the left and right key once each is not treated as a double
+    // press of the same modifier.
+    const physicalModifiers = new Set<string>();
+    for (const shortcut of shortcuts) {
+      const modifier = shortcut.split('+')[0];
+      const { base, side } = splitModifierSide(modifier);
+
+      if (side === 'any') {
+        physicalModifiers.add(`${base}Left`);
+        physicalModifiers.add(`${base}Right`);
+      } else {
+        physicalModifiers.add(modifier);
+      }
+    }
+
+    for (const modifier of physicalModifiers) {
+      this.modifierShortcutStates.set(modifier, this.isModifierPressed(modifier));
+    }
+
+    this.modifierShortcutMonitor = setInterval(() => {
+      const newlyPressed: string[] = [];
+
+      for (const modifier of physicalModifiers) {
+        const wasPressed = this.modifierShortcutStates.get(modifier) || false;
+        const isPressed = this.isModifierPressed(modifier);
+        this.modifierShortcutStates.set(modifier, isPressed);
+
+        if (isPressed && !wasPressed) {
+          newlyPressed.push(modifier);
+        }
+      }
+
+      for (const modifier of newlyPressed) {
+        this.onModifierPressed(modifier, shortcuts);
+      }
+    }, 16);
+
+    this.modifierShortcutMonitor.unref();
+  }
+
+  /** Stops polling standalone modifier shortcuts and clears the previous key states. */
+  private stopModifierShortcutMonitor(): void {
+    if (this.modifierShortcutMonitor) {
+      clearInterval(this.modifierShortcutMonitor);
+      this.modifierShortcutMonitor = undefined;
+    }
+
+    for (const tap of this.modifierShortcutTaps.values()) {
+      clearTimeout(tap.timeout);
+    }
+
+    this.modifierShortcutStates.clear();
+    this.modifierShortcutTaps.clear();
+  }
+
+  /** Handles a rising edge of one physical modifier key. */
+  private onModifierPressed(modifier: string, shortcuts: string[]): void {
+    const singlePressShortcut = findMatchingModifierShortcut(shortcuts, modifier, 1);
+    const doublePressShortcut = findMatchingModifierShortcut(shortcuts, modifier, 2);
+
+    if (!doublePressShortcut) {
+      if (singlePressShortcut) {
+        this.onShortcutPressed(singlePressShortcut);
+      }
+      return;
+    }
+
+    const now = Date.now();
+    const previousTap = this.modifierShortcutTaps.get(modifier);
+
+    if (
+      previousTap &&
+      now - previousTap.pressedAt <= DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS
+    ) {
+      clearTimeout(previousTap.timeout);
+      this.modifierShortcutTaps.delete(modifier);
+      this.onShortcutPressed(doublePressShortcut);
+      return;
+    }
+
+    if (previousTap) {
+      clearTimeout(previousTap.timeout);
+      this.modifierShortcutTaps.delete(modifier);
+
+      // The timeout may be delayed while the main thread is busy. Do not lose the first
+      // single press if another press arrives after the double-press interval.
+      if (singlePressShortcut) {
+        this.onShortcutPressed(singlePressShortcut);
+      }
+    }
+
+    const tap = {
+      pressedAt: now,
+      timeout: setTimeout(() => {
+        if (this.modifierShortcutTaps.get(modifier) !== tap) {
+          return;
+        }
+
+        this.modifierShortcutTaps.delete(modifier);
+        if (singlePressShortcut) {
+          this.onShortcutPressed(singlePressShortcut);
+        }
+      }, DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS),
+    };
+
+    tap.timeout.unref();
+    this.modifierShortcutTaps.set(modifier, tap);
+  }
+
+  /**
+   * Returns whether the physical modifiers currently match a shortcut's side selectors.
+   * Backends which advertise supportsLeftRightModifiers must override
+   * isModifierPressed().
+   */
+  private matchesPressedModifierSides(shortcut: string): boolean {
+    return getSideSpecificModifiers(shortcut).every((modifier) =>
+      this.isModifierPressed(modifier)
+    );
+  }
+
+  /** Returns whether the given side-specific modifier is currently pressed. */
+  protected isModifierPressed(modifier: string): boolean {
+    return !modifier.endsWith('Left') && !modifier.endsWith('Right');
   }
 
   /**

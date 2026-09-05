@@ -11,7 +11,21 @@
 #ifndef NATIVE_HPP
 #define NATIVE_HPP
 
+#include <ApplicationServices/ApplicationServices.h>
 #include <napi.h>
+
+#include <atomic>
+#include <mutex>
+#include <string>
+#include <unordered_set>
+#include <vector>
+
+struct SystemShortcutBinding {
+  std::string            shortcut;
+  CGKeyCode              keyCode;
+  uint32_t               modifierMask;
+  std::vector<CGKeyCode> sideModifiers;
+};
 
 /**
  * This class allows moving the mouse pointer and simulating key presses on macOS. It uses
@@ -46,6 +60,22 @@ class Native : public Napi::Addon<Native> {
    *             number and a boolean.
    */
   void simulateKey(const Napi::CallbackInfo& info);
+
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  Napi::Value isModifierPressed(const Napi::CallbackInfo& info);
+
+  /** Starts forwarding and suppressing all keyboard events. */
+  Napi::Value startKeyboardCapture(const Napi::CallbackInfo& info);
+
+  /** Stops forwarding and suppressing keyboard events. */
+  void stopKeyboardCapture(const Napi::CallbackInfo& info);
+
+  /** Replaces shortcuts which should be handled by the native event tap. */
+  Napi::Value bindSystemShortcuts(const Napi::CallbackInfo& info);
+
+  /** Tracks physical modifier key transitions reported by the macOS event tap. */
+  static CGEventRef modifierEventTapCallback(CGEventTapProxy proxy,
+      CGEventType type, CGEventRef event, void* userInfo);
 
   /**
    * This function is called when the getActiveWindow function is called from JavaScript.
@@ -87,6 +117,37 @@ class Native : public Napi::Addon<Native> {
   // presses.
   uint32_t mLeftModifierMask  = 0;
   uint32_t mRightModifierMask = 0;
+
+  /** An event tap used to track modifiers and optionally capture keyboard input. */
+  CFMachPortRef     mModifierEventTap       = nullptr;
+  CFRunLoopSourceRef mModifierEventTapSource = nullptr;
+
+  /** Whether the event tap was created as an active filter. */
+  bool mCanSuppressKeyboardEvents = false;
+
+  /** Whether keyboard events are currently forwarded to JavaScript and suppressed. */
+  std::atomic<bool> mKeyboardCaptureEnabled{false};
+
+  /** JavaScript callback receiving captured key code and key state pairs. */
+  Napi::ThreadSafeFunction mKeyboardCaptureCallback;
+
+  /** Keys pressed during capture whose releases must also be suppressed. */
+  std::mutex                    mSuppressedKeysMutex;
+  std::unordered_set<CGKeyCode> mSuppressedKeys;
+
+  /** Shortcuts which Electron could not register with the operating system. */
+  std::mutex                         mSystemShortcutsMutex;
+  std::vector<SystemShortcutBinding> mSystemShortcuts;
+
+  /** JavaScript callback invoked when a native system shortcut is pressed. */
+  std::atomic<bool>       mSystemShortcutCallbackEnabled{false};
+  Napi::ThreadSafeFunction mSystemShortcutCallback;
+
+  /** Shortcut key releases which must not be delivered to the system. */
+  std::unordered_set<CGKeyCode> mSuppressedShortcutKeys;
+
+  /** Bit mask containing the currently pressed physical modifier keys. */
+  std::atomic<uint32_t> mPressedModifierKeys{0};
 };
 
 #endif // NATIVE_HPP

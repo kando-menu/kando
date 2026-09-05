@@ -31,6 +31,85 @@ export function mapKeys(keys: KeySequence, os: 'windows' | 'macos' | 'linux'): n
 }
 
 /**
+ * Converts a platform-specific scan code back to its DOM KeyboardEvent.code name.
+ *
+ * @param code The platform-specific scan code.
+ * @param os The platform from which the scan code originated.
+ * @returns The corresponding DOM code, or undefined if the code is unknown.
+ */
+export function unmapKey(
+  code: number,
+  os: 'windows' | 'macos' | 'linux'
+): string | undefined {
+  for (const [name, mapping] of KEY_CODES) {
+    if (mapping[os] === code) {
+      return PROPER_KEY_CASE.get(name);
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns a useful KeyboardEvent.key fallback for a DOM KeyboardEvent.code. Native
+ * shortcut capture only reports physical key codes, so this is used when reconstructing a
+ * keyboard event in the settings renderer.
+ */
+const KEY_VALUES = new Map([
+  ['MetaLeft', 'Meta'],
+  ['MetaRight', 'Meta'],
+  ['AltLeft', 'Alt'],
+  ['AltRight', 'Alt'],
+  ['ControlLeft', 'Control'],
+  ['ControlRight', 'Control'],
+  ['ShiftLeft', 'Shift'],
+  ['ShiftRight', 'Shift'],
+  ['Space', ' '],
+  ['Enter', 'Enter'],
+  ['NumpadEnter', 'Enter'],
+  ['Backquote', '`'],
+  ['Minus', '-'],
+  ['Equal', '='],
+  ['BracketLeft', '['],
+  ['BracketRight', ']'],
+  ['Backslash', '\\'],
+  ['Semicolon', ';'],
+  ['Quote', "'"],
+  ['Comma', ','],
+  ['Period', '.'],
+  ['Slash', '/'],
+  ['NumpadDecimal', ','],
+  ['NumpadAdd', '+'],
+  ['NumpadSubtract', '-'],
+  ['NumpadMultiply', '*'],
+  ['NumpadDivide', '/'],
+  ['AudioVolumeUp', 'VolumeUp'],
+  ['AudioVolumeDown', 'VolumeDown'],
+  ['AudioVolumeMute', 'VolumeMute'],
+  ['MediaTrackNext', 'MediaNextTrack'],
+  ['MediaTrackPrevious', 'MediaPreviousTrack'],
+]);
+
+export function getKeyValueFromCode(code: string): string {
+  if (/^Key[A-Z]$/.test(code)) {
+    return code.slice(3).toLowerCase();
+  }
+  if (/^Digit[0-9]$/.test(code)) {
+    return code.slice(5);
+  }
+  if (/^Numpad[0-9]$/.test(code)) {
+    return code.slice(6);
+  }
+
+  return KEY_VALUES.get(code) || code;
+}
+
+/** Resolves a side-agnostic physical modifier code to its conventional left key. */
+export function resolveModifierKeyCode(code: string): string {
+  return /^(Alt|Control|Meta|Shift)$/.test(code) ? `${code}Left` : code;
+}
+
+/**
  * This function fixes a key code case. If the key code is not known, it is returned as
  * is.
  *
