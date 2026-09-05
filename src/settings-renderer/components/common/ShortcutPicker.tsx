@@ -332,8 +332,8 @@ export default function ShortcutPicker(props: Props) {
   const renderShortcut = (value: string) => (
     <ShortcutLabel
       formatPart={(part) => impl.formatInput(part)}
-      isCompact={cIsMac}
-      isModifier={(part) => impl.isValidModifier(part)}
+      isCompact={props.mode === 'key-names' && cIsMac}
+      isModifier={(part) => props.mode === 'key-names' && impl.isValidModifier(part)}
       shortcut={value}
     />
   );
@@ -780,9 +780,9 @@ class KeyCodeImpl {
     };
   }
 
-  /** Formats physical modifier codes with native symbols on macOS. */
+  /** Key codes are displayed verbatim so they cannot be confused with key names. */
   public formatInput(shortcut: string): string {
-    return formatShortcutForDisplay(shortcut, cIsMac);
+    return shortcut;
   }
 
   /**
