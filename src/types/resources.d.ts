@@ -624,6 +624,18 @@ export default interface Resources {
           "tags": "Tags",
           "tags-info": "Tags can be used to group menus in menu collections.",
           "undo": "Undo",
+          "virtual-keyboard": {
+              "cancel": "Cancel",
+              "clear": "Clear",
+              "code-hint": "Physical keys use a US reference layout. The preview and tooltips show the saved key codes; your keyboard labels may differ.",
+              "common": "Common keys",
+              "confirm": "Confirm",
+              "double-press": "Double press",
+              "hint": "Click keys to select or deselect them. Click a modifier in the preview to change its side.",
+              "more": "More keys",
+              "name-hint": "Keys are saved by name. Grayed-out keys are unavailable in this mode or on this platform.",
+              "title": "Choose keys"
+          },
           "window-condition": "Limit to Specific Window Titles",
           "window-condition-info": "Show the menu only if the focused window's title contains a given text. This supports regex like /youtube|vimeo/i.",
           "window-condition-placeholder": "Window title",

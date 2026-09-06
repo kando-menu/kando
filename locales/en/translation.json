@@ -1,5 +1,17 @@
 {
     "settings": {
+        "virtual-keyboard": {
+            "title": "Choose keys",
+            "hint": "Click keys to select or deselect them. Click a modifier in the preview to change its side.",
+            "common": "Common keys",
+            "more": "More keys",
+            "double-press": "Double press",
+            "code-hint": "Physical keys use a US reference layout. The preview and tooltips show the saved key codes; your keyboard labels may differ.",
+            "name-hint": "Keys are saved by name. Grayed-out keys are unavailable in this mode or on this platform.",
+            "clear": "Clear",
+            "cancel": "Cancel",
+            "confirm": "Confirm"
+        },
         "icon-picker-dialog": {
             "base64-hint": "Base64 encoded icons provide an easy way to include any kind of icon into your menus. You can use a service like [www.base64-image.de]({{link}}) to convert any image into a base64 encoded string. This even works for animated gifs!",
             "base64-example": "Base64 example:",

@@ -10,7 +10,7 @@
 
 import React from 'react';
 import i18next from 'i18next';
-import { TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
+import { TbKeyboard, TbPlayerRecordFilled, TbPlayerStopFilled } from 'react-icons/tb';
 import classNames from 'classnames/bind';
 
 import type { WindowWithAPIs } from '../../settings-window-api';
@@ -27,6 +27,7 @@ import {
   getModifierShortcutTapCount,
 } from '../../../common/shortcut';
 import { Button, Popover, SettingsRow, ShortcutLabel } from '.';
+import VirtualKeyboard from './VirtualKeyboard';
 
 import * as classes from './ShortcutPicker.module.scss';
 const cx = classNames.bind(classes);
@@ -42,9 +43,8 @@ const MAC_MODIFIER_NAMES = new Map([
 
 type Props = {
   /**
-   * Function to call when the shortcut changes. This will be called when the user presses
-   * Enter after typing a value, or when the user clicks outside of the text field. But
-   * only if the shortcut is valid.
+   * Called with a valid shortcut after recording, side selection, or keyboard
+   * confirmation.
    */
   readonly onChange?: (shortcut: string) => void;
 
@@ -89,10 +89,9 @@ type Props = {
 };
 
 /**
- * This component displays a shortcut and allows the user to record a new one. Clicking
- * the shortcut opens a popover which displays each key separately. For key-name
- * shortcuts, modifier keys can be clicked to select the left key, the right key, or
- * either key.
+ * This component displays a shortcut and allows recording or virtual-keyboard selection.
+ * Clicking the shortcut opens a popover which displays each key separately. Modifier keys
+ * can be clicked to select the left key, the right key, or either key when enabled.
  *
  * There are two modes for the shortcut picker: key-names and key-codes. Shortcuts using
  * _key names_ are affected by the keyboard layout. Electron's global shortcut module
@@ -124,6 +123,8 @@ export default function ShortcutPicker(props: Props) {
   const [recording, setRecording] = React.useState(false);
   const [isStartingRecording, setIsStartingRecording] = React.useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false);
+  const [keyboardDraft, setKeyboardDraft] = React.useState('');
   const shortcutRef = React.useRef<HTMLDivElement>(null);
   const recordingRef = React.useRef(false);
   const capturedPressedKeysRef = React.useRef<Set<string>>(new Set());
@@ -277,6 +278,7 @@ export default function ShortcutPicker(props: Props) {
   };
 
   const startRecording = async () => {
+    setIsKeyboardOpen(false);
     clearPendingModifierRecording();
     setIsStartingRecording(true);
 
@@ -464,6 +466,7 @@ export default function ShortcutPicker(props: Props) {
             tabIndex={0}
             onClick={() => {
               if (!recording && shortcut) {
+                setIsKeyboardOpen(false);
                 setIsPopoverOpen(!isPopoverOpen);
               }
             }}
@@ -471,6 +474,7 @@ export default function ShortcutPicker(props: Props) {
               if (recording) {
                 recordInput(event);
               } else if ((event.key === 'Enter' || event.key === ' ') && shortcut) {
+                setIsKeyboardOpen(false);
                 setIsPopoverOpen(!isPopoverOpen);
                 event.preventDefault();
               }
@@ -488,6 +492,48 @@ export default function ShortcutPicker(props: Props) {
                   : props.placeholder || i18next.t('settings.not-bound')}
             </kbd>
           </div>
+        </Popover>
+        <Popover
+          useViewportBounds
+          content={
+            <VirtualKeyboard
+              isSideSelectionAllowed={Boolean(canSelectModifierSides)}
+              isStandaloneAllowed={Boolean(props.isStandaloneModifierAllowed)}
+              isModifier={(value) => impl.isValidModifier(value)}
+              isValid={isValid}
+              mode={props.mode}
+              normalize={(value) => impl.normalizeInput(value)}
+              renderShortcut={renderShortcut}
+              shortcut={keyboardDraft}
+              useModifiers={props.useModifiers}
+              onCancel={() => setIsKeyboardOpen(false)}
+              onChange={setKeyboardDraft}
+              onConfirm={() => {
+                if (isValid(keyboardDraft)) {
+                  commitShortcut(keyboardDraft);
+                  setIsKeyboardOpen(false);
+                }
+              }}
+            />
+          }
+          isVisible={isKeyboardOpen}
+          position="bottom"
+          onClose={() => setIsKeyboardOpen(false)}>
+          <button
+            aria-expanded={isKeyboardOpen}
+            aria-haspopup="dialog"
+            aria-label={i18next.t('settings.virtual-keyboard.title')}
+            className={classes.keyboardButton}
+            disabled={recording || isStartingRecording}
+            title={i18next.t('settings.virtual-keyboard.title')}
+            type="button"
+            onClick={() => {
+              setIsPopoverOpen(false);
+              setKeyboardDraft(shortcut);
+              setIsKeyboardOpen(!isKeyboardOpen);
+            }}>
+            <TbKeyboard />
+          </button>
         </Popover>
         <Button
           isGrouped

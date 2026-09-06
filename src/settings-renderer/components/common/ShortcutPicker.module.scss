@@ -57,6 +57,19 @@
   }
 }
 
+.keyboardButton {
+  @include normal-button;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 34px;
+  border-radius: 0;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
 .shortcutSummary {
   display: inline-block;
   color: $text-normal;

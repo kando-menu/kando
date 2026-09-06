@@ -1,5 +1,17 @@
 {
     "settings": {
+        "virtual-keyboard": {
+            "title": "選擇按鍵",
+            "hint": "點擊按鍵以選擇或取消選擇。點擊預覽中的修飾鍵可切換左右。",
+            "common": "常用鍵",
+            "more": "更多按鍵",
+            "double-press": "雙擊",
+            "code-hint": "實體按鍵按美式參考佈局排列。預覽和懸停提示顯示儲存的 key code，可能與你鍵盤上的標記不同。",
+            "name-hint": "按鍵按名稱儲存。灰色按鍵在目前模式或平台不可用。",
+            "clear": "清空",
+            "cancel": "取消",
+            "confirm": "確定"
+        },
         "icon-picker-dialog": {
             "base64-hint": "Base64 編碼圖示能讓您輕鬆地將各種圖示加入選單。使用如 [www.base64-image.de]({{link}}) 這樣的服務，可將任何圖片轉換為 Base64 字串，甚至支援動態 gif！",
             "base64-example": "Base64 範例：",

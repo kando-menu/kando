@@ -14,14 +14,14 @@ import {
   getKeyValueFromCode,
   resolveModifierKeyCode,
   unmapKey,
-} from '../src/common/key-codes';
+} from '../../src/common/key-codes';
 import {
   createNativeShortcutBinding,
   getWindowsMetaShortcutKeyCodes,
   NATIVE_MODIFIER_CONTROL,
   NATIVE_MODIFIER_META,
   NATIVE_MODIFIER_FN,
-} from '../src/main/backends/native-shortcut';
+} from '../../src/main/backends/native-shortcut';
 
 describe('createNativeShortcutBinding', () => {
   it('should bind Fn combinations only on macOS', () => {

@@ -1,0 +1,169 @@
+// SPDX-License-Identifier: MIT
+
+@use '../../variables.scss' as *;
+@use '../../mixins.scss' as *;
+
+.keyboard {
+  width: min(720px, calc(100vw - 40px));
+  max-height: calc(100vh - 60px);
+  overflow: auto;
+  color: $text-normal;
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 42px;
+
+  kbd {
+    font: inherit;
+  }
+  button:disabled {
+    opacity: 1;
+  }
+}
+
+.hint {
+  margin: 10px 0;
+  color: $text-muted;
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.toolbar,
+.footer,
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar {
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.footer {
+  justify-content: space-between;
+}
+.doublePress {
+  margin-left: auto;
+  font-size: 0.85em;
+}
+.layout {
+  display: flex;
+  gap: 14px;
+}
+.modifiers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 82px;
+  flex-shrink: 0;
+}
+.modifiers > button {
+  flex: 1;
+}
+.commonKeys,
+.moreKeys {
+  flex: 1;
+  min-width: 0;
+}
+.commonKeys {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.key {
+  @include normal-button;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px;
+  font: inherit;
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+
+  &[aria-pressed='true'] {
+    background: $widget-normal-active;
+    box-shadow: inset 0 0 0 2px light-dark($key-dark, $key-light);
+  }
+  &:focus-visible {
+    outline: 2px solid light-dark($key-dark, $key-light);
+    outline-offset: 1px;
+  }
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.row > button {
+  // Preserve the full label, including Escape and Backspace. If the window is too
+  // narrow, wrap keys onto another row instead of shrinking below their text width.
+  flex: 1 0 28px;
+  min-width: max-content;
+  padding: 5px 6px;
+  white-space: nowrap;
+}
+.row > [data-code='Space'] {
+  flex-grow: 4;
+}
+.row > :is([data-code='Backspace'], [data-code='Enter'], [data-code='CapsLock']) {
+  flex-grow: 2;
+}
+.moreKeys {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.functions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+.navigation {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 5px;
+  padding: 8px;
+  border-radius: 8px;
+  background: $widget-normal;
+}
+.numpad > [data-code='NumpadAdd'] {
+  grid-column: 4;
+  grid-row: 2 / 4;
+}
+.numpad > [data-code='NumpadEnter'] {
+  grid-column: 4;
+  grid-row: 4 / 6;
+}
+.numpad > [data-code='Numpad0'] {
+  grid-column: span 2;
+}
+
+@media (max-width: 600px) {
+  .layout {
+    gap: 6px;
+  }
+  .modifiers {
+    width: 62px;
+  }
+  .moreKeys {
+    grid-template-columns: 1fr;
+  }
+}

@@ -143,6 +143,18 @@
         }
     },
     "settings": {
+        "virtual-keyboard": {
+            "title": "选择按键",
+            "hint": "点击按键以选择或取消选择。点击预览中的修饰键可切换左右。",
+            "common": "常用键",
+            "more": "更多按键",
+            "double-press": "双击",
+            "code-hint": "物理按键按美式参考布局排列。预览和悬停提示显示保存的 key code，可能与你键盘上的标记不同。",
+            "name-hint": "按键按名称保存。灰色按键在当前模式或平台不可用。",
+            "clear": "清空",
+            "cancel": "取消",
+            "confirm": "确定"
+        },
         "about-dialog": {
             "chrome-version": "Chrome 版本",
             "electron-version": "Electron 版本",
