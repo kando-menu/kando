@@ -147,6 +147,7 @@ type KeyMapping = {
  * This map is used to convert the key names to proper case.
  */
 const PROPER_KEY_CASE: Map<string, string> = new Map([
+  ['fn', 'Fn'],
   ['again', 'Again'],
   ['altleft', 'AltLeft'],
   ['altright', 'AltRight'],
@@ -314,6 +315,7 @@ const PROPER_KEY_CASE: Map<string, string> = new Map([
 // The values in this map are derived from the tables on this page:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
 const KEY_CODES: Map<string, KeyMapping> = new Map([
+  ['fn', { windows: null, macos: 0x3f, linux: null }],
   [
     'again',
     {

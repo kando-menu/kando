@@ -20,9 +20,20 @@ import {
   getWindowsMetaShortcutKeyCodes,
   NATIVE_MODIFIER_CONTROL,
   NATIVE_MODIFIER_META,
+  NATIVE_MODIFIER_FN,
 } from '../src/main/backends/native-shortcut';
 
 describe('createNativeShortcutBinding', () => {
+  it('should bind Fn combinations only on macOS', () => {
+    expect(createNativeShortcutBinding('Fn+A', 'macos')).to.deep.equal({
+      shortcut: 'Fn+A',
+      keyCode: 0,
+      modifierMask: NATIVE_MODIFIER_FN,
+      sideModifiers: [],
+    });
+    expect(createNativeShortcutBinding('Fn+A', 'windows')).to.equal(undefined);
+    expect(unmapKey(0x3f, 'macos')).to.equal('Fn');
+  });
   it('should convert a macOS system shortcut', () => {
     expect(createNativeShortcutBinding('CommandRight+Tab', 'macos')).to.deep.equal({
       shortcut: 'CommandRight+Tab',

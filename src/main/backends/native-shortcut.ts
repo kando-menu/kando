@@ -15,6 +15,7 @@ export const NATIVE_MODIFIER_CONTROL = 1 << 0;
 export const NATIVE_MODIFIER_SHIFT = 1 << 1;
 export const NATIVE_MODIFIER_ALT = 1 << 2;
 export const NATIVE_MODIFIER_META = 1 << 3;
+export const NATIVE_MODIFIER_FN = 1 << 4;
 
 /** A shortcut which can be matched synchronously by a native keyboard hook. */
 export type NativeShortcutBinding = {
@@ -146,7 +147,13 @@ export function createNativeShortcutBinding(
     const { base, side } = splitModifierSide(part);
     let codeBase: string;
 
-    if (['Control', 'Ctrl'].includes(base)) {
+    if (base === 'Fn') {
+      if (os !== 'macos') {
+        return undefined;
+      }
+      modifierMask |= NATIVE_MODIFIER_FN;
+      continue;
+    } else if (['Control', 'Ctrl'].includes(base)) {
       modifierMask |= NATIVE_MODIFIER_CONTROL;
       codeBase = 'Control';
     } else if (base === 'Shift') {

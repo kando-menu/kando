@@ -412,7 +412,8 @@ export default function ShortcutPicker(props: Props) {
             return { part, key: `${part}-${occurrence}` };
           });
         })().map(({ part, key }, index) => {
-          const canSelectSide = canSelectModifierSides && impl.isValidModifier(part);
+          const canSelectSide =
+            canSelectModifierSides && part !== 'Fn' && impl.isValidModifier(part);
           const keyCap = <kbd>{renderShortcut(part)}</kbd>;
 
           if (canSelectSide) {
@@ -554,6 +555,9 @@ class KeyNameImpl {
     };
 
     if (this.useModifiers) {
+      if (cIsMac && event.code === 'Fn') {
+        push('Fn');
+      }
       if (event.ctrlKey) {
         push('Control');
       }
@@ -712,6 +716,9 @@ class KeyNameImpl {
    * @returns True if the modifier is valid, false otherwise.
    */
   public isValidModifier(modifier: string): boolean {
+    if (cIsMac && modifier === 'Fn') {
+      return true;
+    }
     const isModifier =
       /^(Command|Cmd|Control|Ctrl|CommandOrControl|CmdOrCtrl|Alt|Option|AltGr|Shift|Super|Meta)(Left|Right)?$/;
     return isModifier.test(modifier);
@@ -799,6 +806,7 @@ class KeyCodeImpl {
 
     // We then split the shortcut into its parts and normalize each part.
     const modifierNames = new Map([
+      ['fn', 'Fn'],
       ['alt', 'Alt'],
       ['control', 'Control'],
       ['meta', 'Meta'],
@@ -818,6 +826,9 @@ class KeyCodeImpl {
    * @returns True if the modifier is valid, false otherwise.
    */
   public isValidModifier(modifier: string): boolean {
+    if (cIsMac && modifier === 'Fn') {
+      return true;
+    }
     const isModifier = /^(Alt|Control|Meta|Shift)(Left|Right)?$/;
     return isModifier.test(modifier);
   }
@@ -830,6 +841,9 @@ class KeyCodeImpl {
    * @returns True if the key is valid, false otherwise.
    */
   public isValidKey(key: string): boolean {
+    if (key === 'Fn') {
+      return false;
+    }
     return isKnownKeyCode(key) && !this.isValidModifier(key);
   }
 }

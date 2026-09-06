@@ -124,6 +124,7 @@ class Native : public Napi::Addon<Native> {
 
   /** Whether the event tap was created as an active filter. */
   bool mCanSuppressKeyboardEvents = false;
+  bool mSuppressFn = false;
 
   /** Whether keyboard events are currently forwarded to JavaScript and suppressed. */
   std::atomic<bool> mKeyboardCaptureEnabled{false};

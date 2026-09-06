@@ -42,7 +42,8 @@ export type Native = {
       modifierMask: number;
       sideModifiers: number[];
     }>,
-    callback: (shortcut: string) => void
+    callback: (shortcut: string) => void,
+    suppressFn: boolean
   ): number;
 
   /**

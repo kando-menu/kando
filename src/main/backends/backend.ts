@@ -489,7 +489,9 @@ export abstract class Backend extends EventEmitter {
       const modifier = shortcut.split('+')[0];
       const { base, side } = splitModifierSide(modifier);
 
-      if (side === 'any') {
+      if (modifier === 'Fn') {
+        physicalModifiers.add('Fn');
+      } else if (side === 'any') {
         physicalModifiers.add(`${base}Left`);
         physicalModifiers.add(`${base}Right`);
       } else {

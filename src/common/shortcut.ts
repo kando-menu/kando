@@ -49,7 +49,7 @@ const SIDE_AWARE_MODIFIERS = new Set([
 
 /** Returns whether a shortcut part is a modifier with an optional side suffix. */
 export function isShortcutModifier(modifier: string): boolean {
-  return SIDE_AWARE_MODIFIERS.has(splitModifierSide(modifier).base);
+  return modifier === 'Fn' || SIDE_AWARE_MODIFIERS.has(splitModifierSide(modifier).base);
 }
 
 /**
@@ -110,6 +110,9 @@ export function getModifierShortcutFromCode(
   code: string,
   useMacNames: boolean
 ): string | undefined {
+  if (code === 'Fn' && useMacNames) {
+    return 'Fn';
+  }
   const side = code.endsWith('Left') ? 'Left' : code.endsWith('Right') ? 'Right' : '';
 
   if (code.startsWith('Control')) {
@@ -156,6 +159,9 @@ export function splitModifierSide(modifier: string): {
  * @returns The modifier with the next side selection.
  */
 export function cycleModifierSide(modifier: string): string {
+  if (modifier === 'Fn') {
+    return modifier;
+  }
   const { base, side } = splitModifierSide(modifier);
 
   if (side === 'any') {

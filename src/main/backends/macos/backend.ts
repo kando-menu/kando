@@ -112,7 +112,9 @@ export class MacosBackend extends Backend {
 
   /** Side-specific shortcuts must leave presses on the other side untouched. */
   protected override shouldBindShortcutNatively(shortcut: string): boolean {
-    return getSideSpecificModifiers(shortcut).length > 0;
+    return (
+      shortcut.split('+').includes('Fn') || getSideSpecificModifiers(shortcut).length > 0
+    );
   }
 
   /** Uses the active event tap for shortcuts reserved by macOS. */
@@ -120,14 +122,15 @@ export class MacosBackend extends Backend {
     shortcuts: string[],
     modifierOnlyShortcuts: string[]
   ): string[] {
-    void modifierOnlyShortcuts;
     const bindings = shortcuts
       .map((shortcut) => createNativeShortcutBinding(shortcut, 'macos'))
       .filter((binding) => binding !== undefined)
       .sort((a, b) => b.sideModifiers.length - a.sideModifiers.length);
 
-    const boundCount = native.bindSystemShortcuts(bindings, (shortcut) =>
-      this.onShortcutPressed(shortcut)
+    const boundCount = native.bindSystemShortcuts(
+      bindings,
+      (shortcut) => this.onShortcutPressed(shortcut),
+      modifierOnlyShortcuts.some((shortcut) => shortcut.split('+')[0] === 'Fn')
     );
     return bindings.slice(0, boundCount).map((binding) => binding.shortcut);
   }

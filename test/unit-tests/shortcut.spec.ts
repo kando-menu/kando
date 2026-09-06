@@ -46,6 +46,13 @@ describe('formatShortcutForDisplay', () => {
 });
 
 describe('modifier sides', () => {
+  it('should treat Fn as a modifier without sides', () => {
+    expect(cycleModifierSide('Fn')).to.equal('Fn');
+    expect(getModifierShortcutTapCount('Fn+Fn')).to.equal(2);
+    expect(getModifierShortcutFromCode('Fn', true)).to.equal('Fn');
+    expect(getModifierShortcutFromCode('Fn', false)).to.equal(undefined);
+    expect(findMatchingModifierShortcut(['Fn+Fn'], 'Fn', 2)).to.equal('Fn+Fn');
+  });
   it('should split modifier side suffixes', () => {
     expect(splitModifierSide('Shift')).to.deep.equal({ base: 'Shift', side: 'any' });
     expect(splitModifierSide('ShiftLeft')).to.deep.equal({

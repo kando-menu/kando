@@ -8,7 +8,11 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { KeySequence, SimulateHotkeyAction } from '../../common';
+import {
+  getModifierShortcutTapCount,
+  KeySequence,
+  SimulateHotkeyAction,
+} from '../../common';
 import { resolveModifierKeyCode } from '../../common/key-codes';
 import { KandoApp } from '../app';
 import { DeepReadonly } from '../settings';
@@ -25,6 +29,15 @@ export async function execute(action: DeepReadonly<SimulateHotkeyAction>, app: K
   const keyNames = action.hotkey.split('+').map(resolveModifierKeyCode);
 
   const keys: KeySequence = [];
+
+  if (getModifierShortcutTapCount(action.hotkey) === 2) {
+    for (const key of keyNames) {
+      keys.push({ name: key, down: true, delay: 10 });
+      keys.push({ name: key, down: false, delay: 10 });
+    }
+    await app.getBackend().simulateKeys(keys);
+    return;
+  }
 
   // First press all keys.
   for (const key of keyNames) {

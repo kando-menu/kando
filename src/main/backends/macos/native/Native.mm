@@ -251,6 +251,8 @@ uint32_t modifierBitForKeyCode(CGKeyCode keyCode) {
       return 1U << 6;
     case kVK_RightCommand:
       return 1U << 7;
+    case kVK_Function:
+      return 1U << 8;
     default:
       return 0;
   }
@@ -354,7 +356,14 @@ CGEventRef Native::modifierEventTapCallback(CGEventTapProxy proxy,
     native->mPressedModifierKeys.fetch_and(~modifierBit);
     down = false;
   } else if (type == kCGEventFlagsChanged) {
-    if (modifierBit != 0) {
+    if (keyCode == kVK_Function) {
+      down = (CGEventGetFlags(event) & kCGEventFlagMaskSecondaryFn) != 0;
+      if (down) {
+        native->mPressedModifierKeys.fetch_or(modifierBit);
+      } else {
+        native->mPressedModifierKeys.fetch_and(~modifierBit);
+      }
+    } else if (modifierBit != 0) {
       const uint32_t previous = native->mPressedModifierKeys.fetch_xor(modifierBit);
       down = (previous & modifierBit) == 0;
     } else {
@@ -405,15 +414,23 @@ CGEventRef Native::modifierEventTapCallback(CGEventTapProxy proxy,
   {
     std::lock_guard<std::mutex> lock(native->mSystemShortcutsMutex);
 
-    if (type == kCGEventKeyUp &&
+    if (!down &&
         native->mSuppressedShortcutKeys.erase(keyCode) > 0) {
+      return nullptr;
+    }
+
+    if (keyCode == kVK_Function && native->mSuppressFn) {
+      if (down) {
+        native->mSuppressedShortcutKeys.insert(keyCode);
+      }
       return nullptr;
     }
 
     if (type == kCGEventKeyDown &&
         CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat) == 0) {
-      const uint32_t eventModifierMask = nativeModifierMask(CGEventGetFlags(event));
       const uint32_t pressedModifiers  = native->mPressedModifierKeys.load();
+      const uint32_t eventModifierMask = nativeModifierMask(CGEventGetFlags(event)) |
+          ((pressedModifiers & modifierBitForKeyCode(kVK_Function)) ? (1U << 4) : 0);
 
       for (const auto& shortcut : native->mSystemShortcuts) {
         if (shortcut.keyCode != keyCode ||
@@ -496,8 +513,8 @@ void Native::stopKeyboardCapture(const Napi::CallbackInfo& info) {
 Napi::Value Native::bindSystemShortcuts(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
-  if (info.Length() != 2 || !info[0].IsArray() || !info[1].IsFunction()) {
-    Napi::TypeError::New(env, "Array and Function expected").ThrowAsJavaScriptException();
+  if (info.Length() != 3 || !info[0].IsArray() || !info[1].IsFunction() || !info[2].IsBoolean()) {
+    Napi::TypeError::New(env, "Array, Function and Boolean expected").ThrowAsJavaScriptException();
     return Napi::Number::New(env, 0);
   }
 
@@ -551,6 +568,7 @@ Napi::Value Native::bindSystemShortcuts(const Napi::CallbackInfo& info) {
   {
     std::lock_guard<std::mutex> lock(mSystemShortcutsMutex);
     mSystemShortcuts = std::move(bindings);
+    mSuppressFn = info[2].As<Napi::Boolean>().Value();
   }
 
   if (!mSystemShortcuts.empty()) {
@@ -633,11 +651,16 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
     setOrReleaseBit(mLeftModifierMask, kCGEventFlagMaskAlternate, press);
   } else if (keycode == kVK_RightOption) {
     setOrReleaseBit(mRightModifierMask, kCGEventFlagMaskAlternate, press);
+  } else if (keycode == kVK_Function) {
+    setOrReleaseBit(mLeftModifierMask, kCGEventFlagMaskSecondaryFn, press);
   }
 
   // Create a key event.
   CGEventSourceRef src = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
   CGEventRef event = CGEventCreateKeyboardEvent(src, keycode, press);
+  if (keycode == kVK_Function) {
+    CGEventSetType(event, kCGEventFlagsChanged);
+  }
   CFRelease(src);
 
   // Add modifier flags without removing system flags.
@@ -662,6 +685,7 @@ Napi::Value Native::isModifierPressed(const Napi::CallbackInfo& info) {
   }
 
   static const std::unordered_map<std::string, CGKeyCode> keyCodes = {
+      {"Fn", kVK_Function},
       {"ShiftLeft", kVK_Shift},
       {"ShiftRight", kVK_RightShift},
       {"ControlLeft", kVK_Control},
