@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
 import { isShortcutModifier, splitModifierSide } from './shortcut';
