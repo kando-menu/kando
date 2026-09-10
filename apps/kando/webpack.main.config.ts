@@ -24,6 +24,7 @@ export const mainConfig: Configuration = {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
     alias: (() => {
       const alias: Record<string, string> = {};
+      alias['@app'] = path.resolve(__dirname, 'src');
       // Use source alias only in dev/serve; for production let Node resolve the built package
       if (process.env.WEBPACK_SERVE || process.env.NODE_ENV === 'development') {
         alias['@kando/core'] = path.resolve(__dirname, '../..', 'packages/core/src');

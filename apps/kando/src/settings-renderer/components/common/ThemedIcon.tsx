@@ -11,7 +11,7 @@
 import React from 'react';
 
 import * as classes from './ThemedIcon.module.scss';
-import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '@app/common/icon-themes/icon-theme-registry';
 
 type Props = {
   /** The name of the icon. */

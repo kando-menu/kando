@@ -8,6 +8,10 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
+// Note: All core types and schemata are imported directly from @kando/core
+// throughout the codebase. We intentionally do not re-export them here anymore
+// to keep module boundaries clear.
+
 /** This type is used to pass command line arguments to the app. */
 export type CommandlineOptions = {
   // This optional parameter is specified using the --menu option. It is used to show a

@@ -14,9 +14,11 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
-import { KeySequence, MenuItem, AppDescription } from '../../../common';
+import { KeySequence } from '@kando/core';
+import { MenuItem } from '@kando/core/settings-schemata';
+import { AppDescription } from '@app/common';
 import { mapKeys } from '@kando/core/key-codes';
-import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
+import { ItemTypeRegistry } from '@app/common/item-types/item-type-registry';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses

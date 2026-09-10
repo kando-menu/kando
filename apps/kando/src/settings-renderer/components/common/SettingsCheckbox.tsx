@@ -12,7 +12,7 @@ import React from 'react';
 
 import Checkbox from './Checkbox';
 import { useGeneralSetting } from '../../state';
-import { GeneralSettings } from '../../../common';
+import { GeneralSettings } from '@kando/core/settings-schemata';
 
 type Props<K extends keyof GeneralSettings> = {
   /** The key in the general settings to manage. */

@@ -16,8 +16,9 @@ import { execSync } from 'child_process';
 import { isexe } from 'isexe';
 
 import { Backend } from '../backend';
-import { MenuItem, AppDescription } from '../../../common';
-import { ItemTypeRegistry } from '../../../common/item-types/item-type-registry';
+import { MenuItem } from '@kando/core/settings-schemata';
+import { AppDescription } from '@app/common';
+import { ItemTypeRegistry } from '@app/common/item-types/item-type-registry';
 
 /**
  * This generic Linux backend class provides the basic functionality for all Linux

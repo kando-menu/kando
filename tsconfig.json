@@ -13,7 +13,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
-      "*": ["node_modules/*"]
+      "*": ["node_modules/*"],
+      "@app/*": ["apps/kando/src/*"]
     },
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },

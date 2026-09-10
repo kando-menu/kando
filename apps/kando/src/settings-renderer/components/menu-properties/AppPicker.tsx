@@ -13,7 +13,7 @@ import i18next from 'i18next';
 import { TbCheck, TbX, TbBackspaceFilled } from 'react-icons/tb';
 
 import { Modal, Button, Scrollbox, ThemedIcon, Note, Swirl } from '../common';
-import { AppDescription } from '../../../common';
+import { AppDescription } from '@app/common';
 import { useAppState } from '../../state';
 
 import * as classes from './AppPicker.module.scss';

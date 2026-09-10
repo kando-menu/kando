@@ -31,6 +31,7 @@ export const rendererConfig: Configuration = {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
     alias: (() => {
       const alias: Record<string, string> = {};
+      alias['@app'] = path.resolve(__dirname, 'src');
       if (process.env.WEBPACK_SERVE || process.env.NODE_ENV === 'development') {
         alias['@kando/core'] = path.resolve(__dirname, '../..', 'packages/core/src');
       }

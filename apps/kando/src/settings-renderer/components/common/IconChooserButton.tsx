@@ -22,7 +22,7 @@ import {
   Dropdown,
 } from '.';
 
-import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
+import { IconThemeRegistry } from '@app/common/icon-themes/icon-theme-registry';
 
 import * as classes from './IconChooserButton.module.scss';
 

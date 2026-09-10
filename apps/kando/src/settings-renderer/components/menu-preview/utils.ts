@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '@kando/core/math';
-import { Vec2 } from '../../../common';
+import { Vec2 } from '@kando/core';
 
 /**
  * This function returns the direction towards the parent of an item with the given angle.

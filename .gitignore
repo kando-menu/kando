@@ -1,3 +1,33 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
+.vscode
+.webpack
+node_modules
+build
+out
+bin
+
+.DS_Store
+.codegpt
+
+# --- additional monorepo/pnpm ignores (appended non-intrusively) ---
+# pnpm
+pnpm-debug.log
+.pnpm-debug.log*
+**/package-lock.json
+
+# builds (monorepo)
+**/dist/
+**/build/
+coverage/
+*.tgz
+
+# app-specific
+apps/kando/.webpack/
+apps/kando/build/
+apps/kando/Release/
+**/.svelte-kit/
 # dependencies
 node_modules/
 pnpm-debug.log

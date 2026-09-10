@@ -13,8 +13,8 @@ import classNames from 'classnames/bind';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid } from 'react-window';
 
-import { IconThemeRegistry } from '../../../common/icon-themes/icon-theme-registry';
-import { SimpleIconsTheme } from '../../../common/icon-themes/simple-icons-theme';
+import { IconThemeRegistry } from '@app/common/icon-themes/icon-theme-registry';
+import { SimpleIconsTheme } from '@app/common/icon-themes/simple-icons-theme';
 import ThemedIcon from './ThemedIcon';
 
 import * as classes from './GridIconPicker.module.scss';
