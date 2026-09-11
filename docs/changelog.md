@@ -26,6 +26,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
+- **A new backend for the COSMIC desktop!** Kando now works on [COSMIC](https://system76.com/cosmic) under Wayland. It requires the small [kando-cosmic-integration](https://github.com/sam-ludford/kando-cosmic-integration) D-Bus helper, which provides the pointer position, the focused window, key simulation and pointer warping, and keeps the menu window full-size. Global shortcuts are not available on COSMIC, so menus are opened via `kando --menu "Name"` bound to a COSMIC custom shortcut. On COSMIC, the example menu also demonstrates COSMIC-specific actions such as sending the focused window to a named workspace. Thanks to [@sam-ludford](https://github.com/sam-ludford) for contributing this backend!
 - **Kando now supports Workflows!** Instead of fixed item types, we have now various _actions_ which can be combined in flexible ways. We only have two menu item types now: submenus and leaf items, called buttons. Buttons offer two workflows which can be filled with any number of actions:
   - The hover-workflow gets executed when you mouse-over the item. The default menu items do not use this, but you could put actions into this if you want.
   - The select-workflow gets triggered when you click the item. This usually contains two actions: first something like open-url, execute-command, or simulate-shortcut. And then: close-menu. You can reorder the actions to first close the menu and then execute the other action! Or decide not to close the menu at all...
