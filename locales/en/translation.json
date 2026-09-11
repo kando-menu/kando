@@ -563,6 +563,10 @@
         }
     },
     "backends": {
+        "cosmic": {
+            "error": "Could not connect to the Kando COSMIC helper (kando-cosmic-helper). Make sure it is installed and on your PATH. See {{link}}",
+            "shortcut-info": "COSMIC does not yet support the global-shortcuts portal. Open this menu using 'kando --menu \"Menu Name\"' bound to a custom shortcut in COSMIC Settings > Keyboard > Shortcuts."
+        },
         "gnome": {
             "error": "Could not connect to GNOME Shell Kando extension. You can get it from here: {{link}}"
         },
