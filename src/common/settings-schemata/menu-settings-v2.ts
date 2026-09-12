@@ -127,6 +127,17 @@ export const SET_CLIPBOARD_ACTION_SCHEMA_V2 = z.object({
   text: z.string(),
 });
 
+/** This action will send a message to a WebSocket server when triggered. */
+export const SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('send-websocket-message'),
+
+  /** The URL of the WebSocket server to connect to. */
+  url: z.string(),
+
+  /** The message to send to the WebSocket server. */
+  message: z.string(),
+});
+
 /** This action will simulate a hotkey when triggered. */
 export const SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('simulate-hotkey'),
@@ -149,6 +160,7 @@ export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
   OPEN_SETTINGS_ACTION_SCHEMA_V2,
   OPEN_URI_ACTION_SCHEMA_V2,
   SET_CLIPBOARD_ACTION_SCHEMA_V2,
+  SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2,
   SIMULATE_HOTKEY_ACTION_SCHEMA_V2,
 ]);
 
@@ -423,6 +435,9 @@ export type OpenMenuActionV2 = z.infer<typeof OPEN_MENU_ACTION_SCHEMA_V2>;
 export type OpenSettingsActionV2 = z.infer<typeof OPEN_SETTINGS_ACTION_SCHEMA_V2>;
 export type OpenURIActionV2 = z.infer<typeof OPEN_URI_ACTION_SCHEMA_V2>;
 export type SetClipboardActionV2 = z.infer<typeof SET_CLIPBOARD_ACTION_SCHEMA_V2>;
+export type SendWebSocketMessageActionV2 = z.infer<
+  typeof SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2
+>;
 export type SimulateHotkeyActionV2 = z.infer<typeof SIMULATE_HOTKEY_ACTION_SCHEMA_V2>;
 export type DelayActionV2 = z.infer<typeof DELAY_ACTION_SCHEMA_V2>;
 

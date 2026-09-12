@@ -23,6 +23,7 @@ export type {
   OpenSettingsActionV2 as OpenSettingsAction,
   OpenURIActionV2 as OpenURIAction,
   SetClipboardActionV2 as SetClipboardAction,
+  SendWebSocketMessageActionV2 as SendWebSocketMessageAction,
   SimulateHotkeyActionV2 as SimulateHotkeyAction,
   DelayActionV2 as DelayAction,
   MenuConditionsV2 as MenuConditions,

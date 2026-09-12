@@ -620,6 +620,14 @@
             "description": "Stores the given text in your clipboard. You can use a Ctrl+V hotkey action to paste the text after setting it to the clipboard.",
             "placeholder": "Insert any text…"
         },
+        "send-websocket-message": {
+            "name": "Send WebSocket Message",
+            "description": "Connects to a WebSocket server and sends a message.",
+            "url-label": "URL",
+            "url-placeholder": "Insert a WebSocket URL…",
+            "message-label": "Message",
+            "message-placeholder": "Insert a message…"
+        },
         "execute-macro": {
             "name": "Execute Macro",
             "description": "Types multiple keystrokes in sequence. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",

@@ -18,6 +18,7 @@ import { OpenFileActionConfig } from './OpenFileActionConfig';
 import { OpenMenuActionConfig } from './OpenMenuActionConfig';
 import { OpenURIActionConfig } from './OpenURIActionConfig';
 import { SetClipboardActionConfig } from './SetClipboardActionConfig';
+import { SendWebSocketMessageActionConfig } from './SendWebSocketMessageActionConfig';
 import { SimulateHotkeyActionConfig } from './SimulateHotkeyActionConfig';
 import { WorkflowAction } from '../../../../common';
 
@@ -82,6 +83,12 @@ export function getConfigComponent(
 
   if (action.type === 'set-clipboard') {
     return <SetClipboardActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
+  if (action.type === 'send-websocket-message') {
+    return (
+      <SendWebSocketMessageActionConfig action={action} onUpdateAction={onUpdateAction} />
+    );
   }
 
   if (action.type === 'simulate-hotkey') {

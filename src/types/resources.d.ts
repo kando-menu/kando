@@ -237,6 +237,14 @@ export default interface Resources {
               "name": "Open URI",
               "placeholder": "Insert any URI…"
           },
+          "send-websocket-message": {
+              "description": "Connects to a WebSocket server and sends a message.",
+              "message-label": "Message",
+              "message-placeholder": "Insert a message…",
+              "name": "Send WebSocket Message",
+              "url-label": "URL",
+              "url-placeholder": "Insert a WebSocket URL…"
+          },
           "set-clipboard": {
               "description": "Stores the given text in your clipboard. You can use a Ctrl+V hotkey action to paste the text after setting it to the clipboard.",
               "name": "Set Clipboard",
