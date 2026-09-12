@@ -222,6 +222,16 @@ export class ActionTypeRegistry {
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'set-clipboard', text: '' }),
       },
+      ['send-websocket-message']: {
+        name: i18next.t('menu-actions.send-websocket-message.name'),
+        icon: 'uri-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.send-websocket-message.description'),
+        supportedByBackend: true,
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({ type: 'send-websocket-message', url: '', message: '' }),
+      },
       ['simulate-hotkey']: {
         name: i18next.t('menu-actions.simulate-hotkey.name'),
         icon: 'hotkey-item.svg',
