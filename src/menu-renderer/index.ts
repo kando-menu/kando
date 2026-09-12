@@ -46,6 +46,7 @@ Promise.all([
   // The center text is not directly shown by the menu, but handled by a separate class.
   const centerText = new CenterText(document.getElementById('kando-menu'));
   centerText.setDiameter(menuTheme.centerTextWrapWidth);
+  centerText.setEnabled(menuTheme.drawCenterText);
 
   // This will be called below whenever the menu theme should be reloaded.
   const reloadMenuTheme = async () => {
