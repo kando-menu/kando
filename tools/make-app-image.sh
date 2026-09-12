@@ -66,9 +66,10 @@ exec "$CURRENTDIR"/kando --no-sandbox "$@"
 EOF
 chmod a+x ./AppRun
 
-# Get the appimagetool.
+# Get the appimagetool. Pinned to version 823 to avoid breakage from upstream changes.
 cd ..
-APPIMAGETOOL=$(wget -q https://api.github.com/repos/probonopd/go-appimage/releases -O - | sed 's/[()",{} ]/\n/g' | grep -oi "https.*continuous.*tool.*$ARCH.*mage$")
+APPIMAGETOOL_VERSION=823
+APPIMAGETOOL="https://github.com/probonopd/go-appimage/releases/download/832/appimagetool-$APPIMAGETOOL_VERSION-$ARCH.AppImage"
 echo "Downloading appimagetool from $APPIMAGETOOL..."
 wget -q "$APPIMAGETOOL" -O ./appimagetool
 chmod a+x ./appimagetool
