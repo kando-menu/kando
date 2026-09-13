@@ -34,7 +34,7 @@ export function SendWebSocketMessageActionConfig(props: Props) {
         label={i18next.t('menu-actions.send-websocket-message.url-label')}>
         <TextInput
           initialValue={props.action.url}
-          placeholder={i18next.t('menu-actions.send-websocket-message.url-placeholder')}
+          placeholder="ws://127.0.0.1:1234"
           onChange={(value) => {
             props.onUpdateAction({ ...props.action, url: value });
           }}

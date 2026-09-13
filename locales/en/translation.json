@@ -624,7 +624,6 @@
             "name": "Send WebSocket Message",
             "description": "Connects to a WebSocket server and sends a message.",
             "url-label": "URL",
-            "url-placeholder": "Insert a WebSocket URL…",
             "message-label": "Message",
             "message-placeholder": "Insert a message…"
         },
