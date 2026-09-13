@@ -8,7 +8,13 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { GeneralSettings, MenuItem, MenuThemeDescription } from '../common';
+import {
+  formatShortcutForDisplay,
+  GeneralSettings,
+  getModifierShortcutTapCount,
+  MenuItem,
+  MenuThemeDescription,
+} from '../common';
 import { IconThemeRegistry } from '../common/icon-themes/icon-theme-registry';
 import { getClosestEquivalentAngle } from '../common/math';
 import { RenderedMenuItem } from './rendered-menu-item';
@@ -413,6 +419,8 @@ export class MenuTheme {
     const mappedSymbol = MenuTheme.quickSelectKeySymbolMap[symbol];
     if (mappedSymbol) {
       symbol = mappedSymbol;
+    } else if (getModifierShortcutTapCount(symbol) > 0) {
+      symbol = formatShortcutForDisplay(symbol, cIsMac);
     }
 
     return symbol;

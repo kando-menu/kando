@@ -20,8 +20,14 @@ import {
   AppDescription,
   ActionTypeRegistry,
   WindowDescription,
+  ShortcutRecordingEvent,
+  getSideSpecificModifiers,
 } from '../../../common';
-import { mapKeys } from '../../../common/key-codes';
+import { mapKeys, unmapKey } from '../../../common/key-codes';
+import {
+  createNativeShortcutBinding,
+  getWindowsMetaShortcutKeyCodes,
+} from '../native-shortcut';
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -60,6 +66,8 @@ export class WindowsBackend extends Backend {
       supportsListingWindows: true,
       supportsFocusingWindows: true,
       supportsShortcuts: true,
+      supportsLeftRightModifiers: true,
+      supportsStandaloneModifierShortcuts: true,
       shouldUseTransparentSettingsWindow: transparencySupported,
     };
   }
@@ -84,7 +92,53 @@ export class WindowsBackend extends Backend {
 
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public override async deinit(): Promise<void> {
+    native.stopKeyboardCapture();
     await this.bindShortcuts([]);
+  }
+
+  /** Uses a low-level Windows keyboard hook to capture system-reserved shortcuts. */
+  public override startShortcutRecordingCapture(
+    callback: (event: ShortcutRecordingEvent) => void
+  ): boolean {
+    return native.startKeyboardCapture((scanCode, down) => {
+      const code = unmapKey(scanCode, 'windows');
+      if (code) {
+        callback({ type: down ? 'keydown' : 'keyup', code });
+      }
+    });
+  }
+
+  /** Stops the low-level Windows recording hook. */
+  public override stopShortcutRecordingCapture(): void {
+    native.stopKeyboardCapture();
+  }
+
+  /** Side-specific shortcuts must leave presses on the other side untouched. */
+  protected override shouldBindShortcutNatively(shortcut: string): boolean {
+    return getSideSpecificModifiers(shortcut).length > 0;
+  }
+
+  /** Uses the low-level hook for shortcuts reserved by Windows. */
+  protected override bindSystemShortcuts(
+    shortcuts: string[],
+    modifierOnlyShortcuts: string[]
+  ): string[] {
+    const bindings = shortcuts
+      .map((shortcut) => createNativeShortcutBinding(shortcut, 'windows'))
+      .filter((binding) => binding !== undefined)
+      .sort((a, b) => b.sideModifiers.length - a.sideModifiers.length);
+
+    const boundCount = native.bindSystemShortcuts(
+      bindings,
+      getWindowsMetaShortcutKeyCodes(modifierOnlyShortcuts),
+      (shortcut) => this.onShortcutPressed(shortcut)
+    );
+    return bindings.slice(0, boundCount).map((binding) => binding.shortcut);
+  }
+
+  /** Uses Win32 to inspect the currently pressed physical modifier keys. */
+  protected override isModifierPressed(modifier: string): boolean {
+    return native.isModifierPressed(modifier);
   }
 
   /**

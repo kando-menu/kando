@@ -14,7 +14,16 @@ import fsExtra from 'fs-extra';
 import mime from 'mime-types';
 import path from 'path';
 import json5 from 'json5';
-import { ipcMain, shell, Tray, Menu, app, nativeTheme, dialog } from 'electron';
+import {
+  ipcMain,
+  shell,
+  Tray,
+  Menu,
+  app,
+  nativeTheme,
+  dialog,
+  webContents,
+} from 'electron';
 import i18next from 'i18next';
 import type { ParseKeys } from 'i18next';
 
@@ -72,6 +81,12 @@ export class KandoApp {
 
   /** Set to a value > 0 if shortcuts are currently inhibited. */
   private inhibitAllShortcutsID = 0;
+
+  /** Shortcut-recording inhibitions and the settings renderer which owns each one. */
+  private shortcutRecordingInhibitions: Map<number, number> = new Map();
+
+  /** Whether a platform-native exclusive keyboard capture is currently active. */
+  private shortcutRecordingCaptureActive = false;
 
   /** This flag is used to determine if the bindShortcuts() method is currently running. */
   private bindingShortcuts = false;
@@ -540,6 +555,63 @@ export class KandoApp {
     ipcMain.handle('settings-window.get-backend-info', () => {
       return this.backend.getBackendInfo();
     });
+
+    ipcMain.handle('settings-window.begin-shortcut-recording', async (event) => {
+      const inhibitionID = await this.backend.inhibitAllShortcuts();
+
+      if (event.sender.isDestroyed()) {
+        await this.backend.releaseInhibition(inhibitionID);
+        return 0;
+      }
+
+      const senderID = event.sender.id;
+      this.shortcutRecordingInhibitions.set(inhibitionID, senderID);
+
+      if (this.shortcutRecordingInhibitions.size === 1) {
+        this.shortcutRecordingCaptureActive = this.backend.startShortcutRecordingCapture(
+          (input) => {
+            const owners = new Set(this.shortcutRecordingInhibitions.values());
+            for (const ownerID of owners) {
+              webContents
+                .fromId(ownerID)
+                ?.send('settings-window.shortcut-recording-event', input);
+            }
+          }
+        );
+      }
+
+      event.sender.once('destroyed', () => {
+        void this.releaseShortcutRecordingInhibitions(senderID);
+      });
+
+      return inhibitionID;
+    });
+
+    ipcMain.handle(
+      'settings-window.end-shortcut-recording',
+      async (event, inhibitionID: unknown) => {
+        if (typeof inhibitionID !== 'number') {
+          return;
+        }
+
+        const senderID = this.shortcutRecordingInhibitions.get(inhibitionID);
+        if (senderID !== event.sender.id) {
+          return;
+        }
+
+        this.shortcutRecordingInhibitions.delete(inhibitionID);
+
+        if (
+          this.shortcutRecordingCaptureActive &&
+          this.shortcutRecordingInhibitions.size === 0
+        ) {
+          this.backend.stopShortcutRecordingCapture();
+          this.shortcutRecordingCaptureActive = false;
+        }
+
+        await this.backend.releaseInhibition(inhibitionID);
+      }
+    );
 
     // Allow the renderer to retrieve information about the current app version.
     ipcMain.handle('settings-window.get-version', () => {
@@ -1384,6 +1456,29 @@ export class KandoApp {
 
     const contextMenu = Menu.buildFromTemplate(template);
     this.tray.setContextMenu(contextMenu);
+  }
+
+  /** Restores all recording-time shortcut inhibitions owned by a renderer process. */
+  private async releaseShortcutRecordingInhibitions(senderID: number): Promise<void> {
+    const inhibitionIDs = Array.from(this.shortcutRecordingInhibitions)
+      .filter(([, ownerID]) => ownerID === senderID)
+      .map(([inhibitionID]) => inhibitionID);
+
+    for (const inhibitionID of inhibitionIDs) {
+      this.shortcutRecordingInhibitions.delete(inhibitionID);
+    }
+
+    if (
+      this.shortcutRecordingCaptureActive &&
+      this.shortcutRecordingInhibitions.size === 0
+    ) {
+      this.backend.stopShortcutRecordingCapture();
+      this.shortcutRecordingCaptureActive = false;
+    }
+
+    for (const inhibitionID of inhibitionIDs) {
+      await this.backend.releaseInhibition(inhibitionID);
+    }
   }
 
   /**
