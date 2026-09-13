@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import i18next from 'i18next';
-import DBus from 'dbus-final';
+import DBus from 'dbus-native';
 import lodash from 'lodash';
 
 import { KDEWaylandFallback } from './fallback';
@@ -41,7 +41,7 @@ export class KDEWaylandBackend extends LinuxBackend {
   private globalShortcutsAvailable = false;
 
   /** This is the DBus interface of the Kando KWin integration extension. */
-  private interface?: DBus.ClientInterface;
+  private interface?: DBus.DBusInterface;
 
   /** This is used as a fallback if the KWin integration is not available. */
   private fallback?: KDEWaylandFallback;
@@ -92,12 +92,12 @@ export class KDEWaylandBackend extends LinuxBackend {
     try {
       const bus = DBus.sessionBus();
 
-      const obj = await bus.getProxyObject(
+      const obj = await bus.getObject(
         'menu.kando.KWinIntegration',
         '/menu/kando/KWinIntegration'
       );
 
-      this.interface = obj.getInterface('menu.kando.KWinIntegration1');
+      this.interface = obj.as('menu.kando.KWinIntegration1');
     } catch (e) {
       console.warn(
         "Failed to connect to Kando's KWin integration plugin! Some features will not work. See here for details: https://github.com/kando-menu/kwin-integration."
@@ -149,15 +149,15 @@ export class KDEWaylandBackend extends LinuxBackend {
     const info = await this.interface!.GetWMInfo();
 
     return {
-      windowName: info.windowName.value,
-      appName: info.appName.value,
-      pointerX: info.pointerX.value,
-      pointerY: info.pointerY.value,
+      windowName: info.windowName,
+      appName: info.appName,
+      pointerX: info.pointerX,
+      pointerY: info.pointerY,
       workArea: {
-        x: info.workAreaX.value,
-        y: info.workAreaY.value,
-        width: info.workAreaWidth.value,
-        height: info.workAreaHeight.value,
+        x: info.workAreaX,
+        y: info.workAreaY,
+        width: info.workAreaWidth,
+        height: info.workAreaHeight,
       },
     };
   }
@@ -306,8 +306,9 @@ export class KDEWaylandBackend extends LinuxBackend {
   ) {}
 
   /**
-   * Unwraps DBus values returned by dbus-final. Some values are plain JavaScript values,
-   * while others are wrapped in an object containing a `value` property.
+   * Unwraps DBus values returned by the integration plugin. Some values are plain
+   * JavaScript values, while others are wrapped in an object containing a `value`
+   * property.
    */
   private unwrapDBusValue(value: unknown): unknown {
     if (typeof value === 'object' && value !== null && 'value' in value) {

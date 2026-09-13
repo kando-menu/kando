@@ -11,7 +11,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import DBus from 'dbus-final';
+import DBus from 'dbus-native';
 import { EventEmitter } from 'events';
 
 import { desktopName as APP_ID } from '../../../../../package.json';
@@ -38,26 +38,18 @@ X-Kando-PortalFallback=true
 `;
 
 /**
- * The type information of DBus.MessageBus does not expose the name of the bus, even if
- * the property is actually there. This type is used to fix this.
- */
-type NamedMessageBus = {
-  name: string;
-} & DBus.MessageBus;
-
-/**
  * This is the base class for all portals. It provides some common functionality like
  * generating tokens and making requests. It extends the EventEmitter class so that
  * derived classes can emit events.
  */
 export class DesktopPortal extends EventEmitter {
-  private bus = DBus.sessionBus() as NamedMessageBus;
+  private bus = DBus.sessionBus();
 
   /**
    * This is the proxy object for the org.freedesktop.portal.Desktop interface. It should
    * be used by derived classes to retrieve the actual portal methods.
    */
-  protected portals: DBus.ProxyObject;
+  protected portals: DBus.DBusObject;
 
   /**
    * This promise is used to ensure that the app ID registration is only performed once
@@ -70,7 +62,7 @@ export class DesktopPortal extends EventEmitter {
    * called.
    */
   protected async init() {
-    this.portals = await this.bus.getProxyObject(
+    this.portals = await this.bus.getObject(
       'org.freedesktop.portal.Desktop',
       '/org/freedesktop/portal/desktop'
     );
@@ -92,32 +84,42 @@ export class DesktopPortal extends EventEmitter {
    * @see https://flatpak.github.io/xdg-desktop-portal/#idm9
    */
   protected async makeRequest(
-    method: (request: { token: string; path: string }) => Promise<unknown> | void
+    method: (request: { token: string; path: string }) => PromiseLike<unknown> | void
   ) {
-    return new Promise<DBus.Message>((resolve, reject) => {
-      const request = this.generateToken('request');
+    return new Promise<DBus.Message & { body: [number, Record<string, unknown>] }>(
+      (resolve, reject) => {
+        const request = this.generateToken('request');
 
-      const responseListener = (message: DBus.Message) => {
-        if (message.path === request.path) {
-          if (message.member !== 'Response') {
-            reject(`Got unexpected portal response: ${message.member}`);
+        const responseListener = (message: DBus.Message) => {
+          if (
+            message.type === DBus.messageType.signal &&
+            message.interface === 'org.freedesktop.portal.Request' &&
+            message.path === request.path
+          ) {
+            if (message.member !== 'Response') {
+              reject(`Got unexpected portal response: ${message.member}`);
+            }
+
+            this.bus.connection.removeListener('message', responseListener);
+            resolve(
+              message as DBus.Message & { body: [number, Record<string, unknown>] }
+            );
           }
+        };
 
-          this.bus.removeListener('message', responseListener);
-          resolve(message);
-        }
-      };
+        this.bus.connection.addListener('message', responseListener);
 
-      this.bus.addListener('message', responseListener);
-
-      // If the D-Bus call itself fails (for instance because the portal returns an error
-      // instead of replying with a Response signal), we have to reject the promise here.
-      // Otherwise it would never resolve and the unhandled rejection would crash the app.
-      Promise.resolve(method(request)).catch((error) => {
-        this.bus.removeListener('message', responseListener);
-        reject(error);
-      });
-    });
+        // If the D-Bus call itself fails (for instance because the portal returns an error
+        // instead of replying with a Response signal), we have to reject the promise here.
+        // Otherwise it would never resolve and the unhandled rejection would crash the app.
+        Promise.resolve()
+          .then(() => method(request))
+          .catch((error) => {
+            this.bus.connection.removeListener('message', responseListener);
+            reject(error);
+          });
+      }
+    );
   }
 
   /**
@@ -145,7 +147,7 @@ export class DesktopPortal extends EventEmitter {
    *
    * @param portals Proxy object for org.freedesktop.portal.Desktop.
    */
-  private async registerApp(portals: DBus.ProxyObject) {
+  private async registerApp(portals: DBus.DBusObject) {
     if (!DesktopPortal.registrationPromise) {
       DesktopPortal.registrationPromise = this.registerAppImpl(portals);
     }
@@ -160,14 +162,14 @@ export class DesktopPortal extends EventEmitter {
    *
    * @param portals Proxy object for org.freedesktop.portal.Desktop.
    */
-  private async registerAppImpl(portals: DBus.ProxyObject) {
-    const registry = portals.getInterface('org.freedesktop.host.portal.Registry');
-
+  private async registerAppImpl(portals: DBus.DBusObject) {
     try {
+      const registry = portals.as('org.freedesktop.host.portal.Registry');
       await registry.Register(APP_ID, {});
     } catch (e) {
       try {
         this.ensureDesktopFile(APP_ID);
+        const registry = portals.as('org.freedesktop.host.portal.Registry');
         await registry.Register(APP_ID, {});
       } catch (retryError) {
         // Failing to register is not fatal. On older portal versions the interface may
