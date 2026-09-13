@@ -39,6 +39,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 - It is now possible to **switch window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
 - Added support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
+- Added a new action type which can be used to **send messages to websockets**. This allows you to control external applications or services that support websocket communication. Thanks to [@dvd233](https://github.com/dvd233) for contributing this feature!
 - It's now **possible to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - The **General-Settings dialog has been redesigned**. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
 - Kando now remembers the size, position, maximized state, and sidebar widths of the settings window. Thanks to [@Morax](https://github.com/fzlzjerry) for contributing this feature!
