@@ -97,6 +97,10 @@ export default interface Resources {
           }
       },
       "backends": {
+          "cosmic": {
+              "error": "Could not connect to the Kando COSMIC helper (kando-cosmic-helper). Make sure it is installed and on your PATH. See {{link}}",
+              "shortcut-info": "COSMIC does not yet support the global-shortcuts portal. Open this menu using 'kando --menu \"Menu Name\"' bound to a custom shortcut in COSMIC Settings > Keyboard > Shortcuts."
+          },
           "gnome": {
               "error": "Could not connect to GNOME Shell Kando extension. You can get it from here: {{link}}"
           },
@@ -148,6 +152,67 @@ export default interface Resources {
               "cut": "Cut",
               "paste": "Paste",
               "submenu": "Clipboard"
+          },
+          "cosmic": {
+              "apps": {
+                  "email": "E-Mail",
+                  "files": "Files",
+                  "settings": "Settings",
+                  "submenu": "Apps",
+                  "terminal": "Terminal",
+                  "web-browser": "Web Browser"
+              },
+              "capture": {
+                  "copy": "Copy",
+                  "cut": "Cut",
+                  "paste": "Paste",
+                  "paste-plain": "Paste As Plain Text",
+                  "screenshot": "Screenshot",
+                  "screenshot-now": "Screenshot Now",
+                  "submenu": "Capture & Clipboard"
+              },
+              "go-to": {
+                  "browsing": "Browsing",
+                  "chat": "Chat",
+                  "coding": "Coding",
+                  "files": "Files",
+                  "main": "Main",
+                  "media": "Media",
+                  "submenu": "Go To Workspace"
+              },
+              "maximize": "Maximize",
+              "name": "COSMIC Menu",
+              "send-to": {
+                  "browsing": "Browsing",
+                  "chat": "Chat",
+                  "coding": "Coding",
+                  "files": "Files",
+                  "media": "Media",
+                  "submenu": "Send Window To"
+              },
+              "system": {
+                  "cosmic-settings": "COSMIC Settings",
+                  "kando-settings": "Kando Settings",
+                  "lock": "Lock Screen",
+                  "submenu": "System",
+                  "suspend": "Suspend"
+              },
+              "web-links": {
+                  "cosmic": "COSMIC Desktop",
+                  "kando-docs": "Kando Documentation",
+                  "kando-on-discord": "Kando on Discord",
+                  "kando-on-github": "Kando on GitHub",
+                  "kando-on-kofi": "Kando on Ko-fi",
+                  "submenu": "Web Links"
+              },
+              "window": {
+                  "close": "Close Window",
+                  "fullscreen": "Fullscreen",
+                  "minimize": "Minimize",
+                  "sticky": "Show On All Workspaces",
+                  "submenu": "Window",
+                  "toggle-maximize": "Maximize / Restore"
+              }
           },
           "name": "Example Menu",
           "next-workspace": "Next Workspace",

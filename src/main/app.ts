@@ -1805,6 +1805,51 @@ export class KandoApp {
     i18next.t('example-menu.bookmarks.desktop')
     i18next.t('example-menu.bookmarks.home')
     i18next.t('example-menu.bookmarks.music')
+    i18next.t('example-menu.cosmic.send-to.submenu')
+    i18next.t('example-menu.cosmic.send-to.coding')
+    i18next.t('example-menu.cosmic.send-to.browsing')
+    i18next.t('example-menu.cosmic.send-to.files')
+    i18next.t('example-menu.cosmic.send-to.chat')
+    i18next.t('example-menu.cosmic.send-to.media')
+    i18next.t('example-menu.cosmic.go-to.submenu')
+    i18next.t('example-menu.cosmic.go-to.main')
+    i18next.t('example-menu.cosmic.go-to.coding')
+    i18next.t('example-menu.cosmic.go-to.browsing')
+    i18next.t('example-menu.cosmic.go-to.files')
+    i18next.t('example-menu.cosmic.go-to.chat')
+    i18next.t('example-menu.cosmic.go-to.media')
+    i18next.t('example-menu.cosmic.window.submenu')
+    i18next.t('example-menu.cosmic.window.toggle-maximize')
+    i18next.t('example-menu.cosmic.window.minimize')
+    i18next.t('example-menu.cosmic.window.fullscreen')
+    i18next.t('example-menu.cosmic.window.sticky')
+    i18next.t('example-menu.cosmic.window.close')
+    i18next.t('example-menu.cosmic.maximize')
+    i18next.t('example-menu.cosmic.apps.submenu')
+    i18next.t('example-menu.cosmic.apps.terminal')
+    i18next.t('example-menu.cosmic.apps.files')
+    i18next.t('example-menu.cosmic.apps.web-browser')
+    i18next.t('example-menu.cosmic.apps.email')
+    i18next.t('example-menu.cosmic.apps.settings')
+    i18next.t('example-menu.cosmic.capture.submenu')
+    i18next.t('example-menu.cosmic.capture.screenshot')
+    i18next.t('example-menu.cosmic.capture.screenshot-now')
+    i18next.t('example-menu.cosmic.capture.copy')
+    i18next.t('example-menu.cosmic.capture.cut')
+    i18next.t('example-menu.cosmic.capture.paste')
+    i18next.t('example-menu.cosmic.capture.paste-plain')
+    i18next.t('example-menu.cosmic.system.submenu')
+    i18next.t('example-menu.cosmic.system.lock')
+    i18next.t('example-menu.cosmic.system.suspend')
+    i18next.t('example-menu.cosmic.system.cosmic-settings')
+    i18next.t('example-menu.cosmic.system.kando-settings')
+    i18next.t('example-menu.cosmic.web-links.submenu')
+    i18next.t('example-menu.cosmic.web-links.cosmic')
+    i18next.t('example-menu.cosmic.web-links.kando-docs')
+    i18next.t('example-menu.cosmic.web-links.kando-on-github')
+    i18next.t('example-menu.cosmic.web-links.kando-on-kofi')
+    i18next.t('example-menu.cosmic.web-links.kando-on-discord')
+    i18next.t('example-menu.cosmic.name')
     */
 
     let menu: MenuType;
@@ -1813,6 +1858,8 @@ export class KandoApp {
       menu = require('./example-menus/windows.json');
     } else if (process.platform === 'darwin') {
       menu = require('./example-menus/macos.json');
+    } else if ((process.env.XDG_CURRENT_DESKTOP || '').toLowerCase() === 'cosmic') {
+      menu = require('./example-menus/cosmic.json');
     } else {
       menu = require('./example-menus/linux.json');
     }
