@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import i18next from 'i18next';
-import DBus from 'dbus-final';
+import DBus from 'dbus-native';
 
 import { LinuxBackend } from '../../backend';
 import { KeySequence, WindowDescription } from '../../../../../common';
@@ -32,7 +32,7 @@ export class GnomeBackend extends LinuxBackend {
   private shortcutMap: { [gdkShortcut: string]: string } = {};
 
   /** This is the DBus interface of the Kando GNOME Shell integration extension. */
-  private interface?: DBus.ClientInterface;
+  private interface?: DBus.DBusInterface;
 
   /**
    * Dock On GNOME Shell, we use a dock window. This creates a floating window which is
@@ -62,13 +62,13 @@ export class GnomeBackend extends LinuxBackend {
     try {
       const bus = DBus.sessionBus();
 
-      const obj = await bus.getProxyObject(
+      const obj = await bus.getObject(
         'org.gnome.Shell',
         '/org/gnome/shell/extensions/KandoIntegration'
       );
 
-      this.interface = obj.getInterface('org.gnome.Shell.Extensions.KandoIntegration');
-      this.interface.on('ShortcutPressed', (gdkShortcut: string) => {
+      this.interface = obj.as('org.gnome.Shell.Extensions.KandoIntegration');
+      await this.interface.$subscribe('ShortcutPressed', (gdkShortcut: string) => {
         this.onShortcutPressed(this.shortcutMap[gdkShortcut]);
       });
 
