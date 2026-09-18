@@ -560,9 +560,74 @@
             "desktop": "Desktop",
             "home": "Home",
             "music": "Music"
+        },
+        "cosmic": {
+            "send-to": {
+                "submenu": "Send Window To",
+                "coding": "Coding",
+                "browsing": "Browsing",
+                "files": "Files",
+                "chat": "Chat",
+                "media": "Media"
+            },
+            "go-to": {
+                "submenu": "Go To Workspace",
+                "main": "Main",
+                "coding": "Coding",
+                "browsing": "Browsing",
+                "files": "Files",
+                "chat": "Chat",
+                "media": "Media"
+            },
+            "window": {
+                "submenu": "Window",
+                "toggle-maximize": "Maximize / Restore",
+                "minimize": "Minimize",
+                "fullscreen": "Fullscreen",
+                "sticky": "Show On All Workspaces",
+                "close": "Close Window"
+            },
+            "maximize": "Maximize",
+            "apps": {
+                "submenu": "Apps",
+                "terminal": "Terminal",
+                "files": "Files",
+                "web-browser": "Web Browser",
+                "email": "E-Mail",
+                "settings": "Settings"
+            },
+            "capture": {
+                "submenu": "Capture & Clipboard",
+                "screenshot": "Screenshot",
+                "screenshot-now": "Screenshot Now",
+                "copy": "Copy",
+                "cut": "Cut",
+                "paste": "Paste",
+                "paste-plain": "Paste As Plain Text"
+            },
+            "system": {
+                "submenu": "System",
+                "lock": "Lock Screen",
+                "suspend": "Suspend",
+                "cosmic-settings": "COSMIC Settings",
+                "kando-settings": "Kando Settings"
+            },
+            "web-links": {
+                "submenu": "Web Links",
+                "cosmic": "COSMIC Desktop",
+                "kando-docs": "Kando Documentation",
+                "kando-on-github": "Kando on GitHub",
+                "kando-on-kofi": "Kando on Ko-fi",
+                "kando-on-discord": "Kando on Discord"
+            },
+            "name": "COSMIC Menu"
         }
     },
     "backends": {
+        "cosmic": {
+            "error": "Could not connect to the Kando COSMIC helper (kando-cosmic-helper). Make sure it is installed and on your PATH. See {{link}}",
+            "shortcut-info": "COSMIC does not yet support the global-shortcuts portal. Open this menu using 'kando --menu \"Menu Name\"' bound to a custom shortcut in COSMIC Settings > Keyboard > Shortcuts."
+        },
         "gnome": {
             "error": "Could not connect to GNOME Shell Kando extension. You can get it from here: {{link}}"
         },
