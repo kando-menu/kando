@@ -1,5 +1,17 @@
 {
     "settings": {
+        "virtual-keyboard": {
+            "title": "選擇按鍵",
+            "hint": "點擊按鍵以選擇或取消選擇。點擊預覽中的修飾鍵可切換左右。",
+            "common": "常用鍵",
+            "more": "更多按鍵",
+            "double-press": "雙擊",
+            "code-hint": "實體按鍵按美式參考佈局排列。預覽和懸停提示顯示儲存的 key code，可能與你鍵盤上的標記不同。",
+            "name-hint": "按鍵按名稱儲存。灰色按鍵在目前模式或平台不可用。",
+            "clear": "清空",
+            "cancel": "取消",
+            "confirm": "確定"
+        },
         "icon-picker-dialog": {
             "base64-hint": "Base64 編碼圖示能讓您輕鬆地將各種圖示加入選單。使用如 [www.base64-image.de]({{link}}) 這樣的服務，可將任何圖片轉換為 Base64 字串，甚至支援動態 GIF！",
             "base64-example": "Base64 範例：",
@@ -273,7 +285,10 @@
         "area-condition-bottom-placeholder": "下",
         "area-condition-right-placeholder": "右",
         "area-condition-tooltip": "選取螢幕區域",
+        "shortcut-change-modifier-side": "變更 {{modifier}} 的左右側",
+        "shortcut-keys": "快捷鍵按鍵",
         "shortcut-recording": "按下快捷鍵…",
+        "shortcut-side-hint": "點擊修飾鍵可在「不區分左右」「左側」和「右側」之間循環切換。雙擊快捷鍵中的兩個按鍵會同步更改。錄製快捷鍵時預設不區分左右。",
         "shortcut-id-label": "快捷鍵 ID",
         "tags": "標籤",
         "duplicate-menu-item": "複製選單項目",
@@ -300,7 +315,7 @@
             "pick-window-title-title": "選取視窗標題",
             "confirm": "使用此值"
         },
-        "shortcut-info": "開啟此選單的快捷鍵。必須包含一個普通按鍵以及任意數量的修飾鍵，如 Ctrl、Alt 或 Shift。錄製時，不需一次按下所有按鍵，可一個接一個地按。當快捷鍵已綁定至另一個選單時，此功能會有所幫助！",
+        "shortcut-info": "開啟此選單的快捷鍵。可以包含一個普通按鍵以及任意數量的修飾鍵，也可以單擊或雙擊一個修飾鍵。",
         "area-condition-info": "僅在指標位於螢幕上指定區域時才顯示此選單。此區域是以像素為單位，相對於主螢幕左上角的座標。若將欄位留空，該方向將不設邊界。",
         "add-menu-item-hint": "將此項目拖曳至上方的選單即可新增！",
         "app-picker": {
