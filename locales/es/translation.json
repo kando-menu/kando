@@ -187,7 +187,8 @@
             "file-example": "Ejemplo de URI file:",
             "url-example": "Ejemplo de URL:",
             "hint": "Aprenda [aquí]({{link}}) a añadir o crear sus propios temas de iconos.",
-            "base64-hint": "Los iconos codificados en Base64 proporcionan una manera fácil de incluir cualquier tipo de icono dentro de sus menús. Puede usar un servicio como [www.base64.image.de] ({{link}}) para convertir cualquier imagen en código base64. ¡Esto también funciona con los gifs animados!"
+            "base64-hint": "Los iconos codificados en Base64 proporcionan una manera fácil de incluir cualquier tipo de icono dentro de sus menús. Puede usar un servicio como [www.base64.image.de] ({{link}}) para convertir cualquier imagen en código base64. ¡Esto también funciona con los gifs animados!",
+            "reload-button-tooltip": "Actualizar todos los temas de iconos"
         },
         "introduction-dialog": {
             "title": "Le damos la bienvenida a Kando!",
@@ -215,7 +216,10 @@
             "create-your-own-themes": "Cree sus propios temas",
             "menu-scale": "Escala del menú",
             "get-themes-online": "Obtener temas en línea",
-            "save-preset-error-title": "Error al guardar configuración"
+            "save-preset-error-title": "Error al guardar configuración",
+            "save-preset-error-message": "Ocurrió un error al guardar la preselección de colores. Revisa que el directorio es modificable. Error: {{error}}",
+            "default-colors": "Colores predeterminados",
+            "enable-menu-animations": "Animaciones del menú"
         },
         "not-bound": "No asignado",
         "shortcut-id-label": "Id. de atajo",
