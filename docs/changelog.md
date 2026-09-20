@@ -37,20 +37,20 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
   Also interesting is that each workflow has its own quick-select key. So usually, you would want to assign quick-select keys to the open-workflow of submenus and select-workflows of buttons. Yet you can also change the quick-select key of the workflow which gets triggered when you click the center of a submenu! Per default, this will be backspace (for closing the submenu).
 
-- It is now possible to **switch window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
-- Added support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
-- Added a new action type which can be used to **send messages to websockets**. This allows you to control external applications or services that support websocket communication. Thanks to [@dvd233](https://github.com/dvd233) for contributing this feature!
-- It's now **possible to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - The **General-Settings dialog has been redesigned**. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
 - Kando now remembers the size, position, maximized state, and sidebar widths of the settings window. Thanks to [@Morax](https://github.com/fzlzjerry) for contributing this feature!
-- Added an option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
-- Added an option to **move the mouse pointer back to where it opened the menu** after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
+- Added support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
 - Added an option to **hide the menu when it looses focus**. This is now enabled by default.
+- It is now possible to **switch window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
+- Added a new action type which can be used to **send messages to websockets**. This allows you to control external applications or services that support websocket communication. Thanks to [@dvd233](https://github.com/dvd233) for contributing this feature!
+- Added **a new menu theme** called "Purity". Thanks to [@Luctarie](https://github.com/Luctarie) for contributing this!
+- Menu **themes can now display a menu item's quick-select key**. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature! Also thanks to [@Luctarie](https://github.com/Luctarie) for updating the default themes to support this feature.
+- It's now **possible to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
+- Added an option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
 - It is now possible to **delete menu items by dragging them back into the preview footer area**. Thanks to [@ik2m](https://github.com/ik2m) for looking into this!
-- You can now **disable the animation of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
+- You can now **disable most animations of menu items**. Thanks to [@Yavuz-Kagan-Yadigar](https://github.com/Yavuz-Kagan-Yadigar) for contributing this feature!
+- Added an option to **move the mouse pointer back to where it opened the menu** after making a selection. Thanks to [@cocojojo5213](https://github.com/cocojojo5213) for contributing this feature!
 - Added support for **stylus input on KDE Wayland**. The menu will now open at the position of the pen tip when you use a drawing tablet! 
-- Added a global option to **return the pointer to the menu opening position** after selecting a button.
-- Menu **themes can now display a menu item's quick-select key**. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - There are new CSS properties `--start-angle` and `--end-angle` for menu items. These represent the start and end angles of the item's wedge. Themes can use these for additional visual effects.
 - There is now a new `--config-dir` command line option which allows you to specify a custom configuration directory. This is useful during development if you do not want to mess with your normal configuration files. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - It's now possible to **open user-configured menus via the IPC interface**. This allows you to open one of your configured menus by its name. This is similar to the `--menu <menu name>` command-line option, but is faster as it does not require starting a new Kando instance. This is especially useful if you want to open menus from other applications or scripts.
