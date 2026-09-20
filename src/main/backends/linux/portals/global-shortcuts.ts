@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import DBus from 'dbus-final';
+import DBus from 'dbus-native';
 
 import { DesktopPortal } from './desktop-portal';
 
@@ -29,7 +29,7 @@ import { DesktopPortal } from './desktop-portal';
  */
 export class GlobalShortcuts extends DesktopPortal {
   /** This is the proxy object for the org.freedesktop.portal.GlobalShortcuts interface. */
-  private interface: DBus.ClientInterface;
+  private interface: DBus.DBusInterface;
 
   /**
    * This is the version of the global shortcuts portal. The ConfigureShortcuts method was
@@ -88,8 +88,8 @@ export class GlobalShortcuts extends DesktopPortal {
       if (result.body?.length > 0) {
         const response = result.body[1];
 
-        if (response.shortcuts?.value.length > 0) {
-          return response.shortcuts.value.map((item: [string, unknown]) => item[0]);
+        if (Array.isArray(response.shortcuts)) {
+          return response.shortcuts.map((item: [string, unknown]) => item[0]);
         }
       }
     }
@@ -146,23 +146,21 @@ export class GlobalShortcuts extends DesktopPortal {
     try {
       await super.init();
 
-      this.interface = this.portals.getInterface(
-        'org.freedesktop.portal.GlobalShortcuts'
-      );
+      this.interface = this.portals.as('org.freedesktop.portal.GlobalShortcuts');
 
       // Get the version of the global shortcuts portal.
-      const properties = this.portals.getInterface('org.freedesktop.DBus.Properties');
+      const properties = this.portals.as('org.freedesktop.DBus.Properties');
       const result = await properties.Get(
         'org.freedesktop.portal.GlobalShortcuts',
         'version'
       );
 
-      this.version = result.value;
+      this.version = result;
       this.session = this.generateToken('session');
       await this.createSession();
 
       // Listen for shortcut activation events.
-      this.interface.on('Activated', (handle, id) => {
+      await this.interface.$subscribe('Activated', (handle, id) => {
         this.emit('ShortcutActivated', id);
       });
     } catch (e) {
