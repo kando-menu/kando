@@ -58,6 +58,8 @@ export function buildMenuWindowOptions(
     show: false,
     // A resizable frameless window still shows the macOS resize cursor at its edges.
     // The menu covers the work area, so those edges sit on the screen edges.
+    // resizable/movable false only blocks interactive user resize/move; showMenu still
+    // repositions via setBounds() when the pointer is on a secondary display.
     resizable: false,
     movable: false,
   };
