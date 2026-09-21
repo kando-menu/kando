@@ -37,13 +37,13 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
   Also interesting is that each workflow has its own quick-select key. So usually, you would want to assign quick-select keys to the open-workflow of submenus and select-workflows of buttons. Yet you can also change the quick-select key of the workflow which gets triggered when you click the center of a submenu! Per default, this will be backspace (for closing the submenu).
 
+- Added **a new menu theme** called "Purity". Thanks to [@Luctarie](https://github.com/Luctarie) for contributing this!
 - The **General-Settings dialog has been redesigned**. All the options are still there, but they are now organized in categories which should make it easier to navigate through the settings.
 - Kando now remembers the size, position, maximized state, and sidebar widths of the settings window. Thanks to [@Morax](https://github.com/fzlzjerry) for contributing this feature!
 - Added support for **navigating through the menu using the arrow keys**. Highlight items with the arrow keys and press <kbd>Enter</kbd> to select them.
 - Added an option to **hide the menu when it looses focus**. This is now enabled by default.
 - It is now possible to **switch window focus during workflows execution**. This means that you can now add a focus-window action to your workflows which will switch the focus to a specific window. This opens up many new possibilities for workflows, for instance, copying things from app A to app B.
 - Added a new action type which can be used to **send messages to websockets**. This allows you to control external applications or services that support websocket communication. Thanks to [@dvd233](https://github.com/dvd233) for contributing this feature!
-- Added **a new menu theme** called "Purity". Thanks to [@Luctarie](https://github.com/Luctarie) for contributing this!
 - Menu **themes can now display a menu item's quick-select key**. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature! Also thanks to [@Luctarie](https://github.com/Luctarie) for updating the default themes to support this feature.
 - It's now **possible to show menus at custom fixed positions**. Before, it was only possible to show menus at the mouse position or at the center of the screen. Now, you can specify an arbitrary position on the screen where the menu should be shown. Thanks to [@Linkazen](https://github.com/Linkazen) for contributing this feature!
 - Added an option to **trigger the center-click action of the menu on key release**. This is for advanced Turbo-Mode users who want to hide the menu if the shortcut key is released over the center of the menu. 
@@ -66,6 +66,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - :collision: Also as a consequence of the workflow changes, the sound-theme configuration has changed. Sound themes have to be updated to the new format. Check the [documentation](https://kando.menu/sound-themes/) for more information.
 - When exporting a single menu, the exported file now also contains the shortcut, tags, and conditions of the menu.
 - Updated many of the icons of the Kando icon theme. These are used for the actions and for the example menu items which can be created from the preview footer area.
+- Changed how shortcuts are displayed on macOS. They now follow the standard macOS convention for displaying keyboard shortcuts. Thanks to [@LitoMore](https://github.com/LitoMore) for contributing this change!
 - Changed the position of the delete-menu-item and duplicate-menu-item buttons in the settings dialog. They are now shown next to selected menu items in the preview area.
 - Changed the position of the menu context buttons (duplicate, export, delete). They are not shown in a Kando custom menu anymore. 
 - Changed what happens when you select a submenu in the menu preview in the settings: before, the submenu would open immediately. Now, it will be selected just as other menu items. To edit its content, you have to either double-click it or use the tiny edit button which appears when you select the submenu.
