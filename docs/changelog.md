@@ -18,9 +18,9 @@ Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 The [Unreleased] section contains changes which are not released yet. If you want to test these changes, you can [build Kando from source](https://kando.menu/compile-from-source/).
 
-## [Unreleased]
+## [Kando 3.0.0](https://github.com/kando-menu/kando/releases/tag/v3.0.0)
 
-**Release Date:** TBD
+**Release Date:** 2026-09-23
 
 **:collision: This major release contains many changes and new features and the configuration file format has changed significantly!** Kando will automatically convert your old configuration files to the new format when you start it for the first time after the update. However, you will not be able to switch back to an older version of Kando. If you want to do this at some point, make sure to [back up your configuration files properly](https://kando.menu/config-files/)!
 
