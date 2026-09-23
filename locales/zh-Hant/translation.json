@@ -1,7 +1,7 @@
 {
     "settings": {
         "icon-picker-dialog": {
-            "base64-hint": "Base64 編碼圖示能讓您輕鬆地將各種圖示加入選單。使用如 [www.base64-image.de]({{link}}) 這樣的服務，可將任何圖片轉換為 Base64 字串，甚至支援動態 GIF！",
+            "base64-hint": "Base64 編碼圖示能讓您輕鬆地將各種圖示加入選單。使用如 [www.base64-image.de]({{link}}) 這樣的服務，可將任何圖片轉換為 Base64 字串，甚至支援動態 gif！",
             "base64-example": "Base64 範例：",
             "file-example": "文件 URI 範例：",
             "url-example": "URL 範例：",
@@ -154,10 +154,13 @@
             "achievements": "成就",
             "keep-input-focus-warning": "這會停用部分功能，例如「極速模式」以及使用鍵盤選取項目的功能。請確切了解其影響後再啟用！",
             "enable-turbo-mode-warning": "由於已啟用「保持作用中應用程式的焦點」選項，此功能已被停用。",
-            "trigger-center-click-on-key-release": "放開按鍵後觸發中心點擊工作流程",
-            "trigger-center-click-on-key-release-warning": "此選項會在放開快捷鍵後立即關閉選單。請確切了解其影響後再啟用！",
+            "trigger-center-click-on-key-release": "在中心放開快捷鍵時關閉選單",
+            "trigger-center-click-on-key-release-warning": "根據您的中心點擊工作流程，放開快捷鍵時可能會立刻關閉選單。請確切瞭解其影響後再啟用！",
             "trigger-center-click-on-key-release-info": "當滑鼠指標懸停在選單中心時放開按鍵，將會觸發中心點擊工作流程。",
-            "re-open-menu": "重新開啟選單"
+            "re-open-menu": "重新開啟選單",
+            "sound-theme-load-failed-warning": "無法載入以下音效主題，很可能是由於版本不相容：{{themes}}",
+            "hide-on-focus-out-info": "當焦點切換至其他應用程式時，選單將會隱藏。",
+            "hide-on-focus-out": "失去焦點時隱藏選單"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 為您提供了一種獨特且高效的方式與電腦互動。",
@@ -399,7 +402,8 @@
         "fixed-position-y-placeholder": "Y",
         "fixed-position-tooltip": "選擇固定位置",
         "screen-position-picker": {
-            "value": "X: {{x}} | Y: {{y}}"
+            "value": "X: {{x}} | Y: {{y}}",
+            "instructions": "將十字游標拖曳至螢幕上指定選單的固定位置，或者從下方選擇預設位置。"
         }
     },
     "menu-items": {
@@ -685,6 +689,13 @@
             "name": "聚焦視窗",
             "description": "將指定視窗移至前景。在執行快捷鍵或巨集動作前，可使用此動作聚焦至目標應用程式。",
             "hint": "Kando 將嘗試尋找符合指定標題或應用程式名稱（或兩者皆符合）的視窗。可使用正規表達式進行更強大的匹配，例如 /firefox|chrome/i 以匹配任何網頁瀏覽器。"
+        },
+        "send-websocket-message": {
+            "name": "傳送 WebSocket 訊息",
+            "description": "連線至 WebSocket 伺服器並傳送訊息。",
+            "url-label": "URL",
+            "message-label": "訊息",
+            "message-placeholder": "輸入訊息…"
         }
     }
 }
