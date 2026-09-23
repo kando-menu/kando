@@ -22,6 +22,10 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 **Release Date:** 2026-09-23
 
+<a href="https://www.youtube.com/watch?v=PhUnN2cx5sI">
+<img align="right" width="400px" src="img/player24.jpg"></img>
+</a>
+
 **:collision: This major release contains many changes and new features and the configuration file format has changed significantly!** Kando will automatically convert your old configuration files to the new format when you start it for the first time after the update. However, you will not be able to switch back to an older version of Kando. If you want to do this at some point, make sure to [back up your configuration files properly](https://kando.menu/config-files/)!
 
 ### :tada: Added
