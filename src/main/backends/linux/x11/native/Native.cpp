@@ -19,6 +19,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +27,7 @@ Native::Native(Napi::Env env, Napi::Object exports) {
   DefineAddon(exports, {
                            InstanceMethod("movePointer", &Native::movePointer),
                            InstanceMethod("simulateKey", &Native::simulateKey),
+                           InstanceMethod("isModifierPressed", &Native::isModifierPressed),
                            InstanceMethod("getWMInfo", &Native::getWMInfo),
                            InstanceMethod("getOpenWindows", &Native::getOpenWindows),
                            InstanceMethod("focusWindow", &Native::focusWindow),
@@ -67,6 +69,64 @@ void Native::simulateKey(const Napi::CallbackInfo& info) {
   XTestFakeKeyEvent(display, keycode, press, CurrentTime);
 
   XCloseDisplay(display);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Napi::Value Native::isModifierPressed(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 1 || !info[0].IsString()) {
+    Napi::TypeError::New(env, "Modifier name expected").ThrowAsJavaScriptException();
+    return env.Undefined();
+  }
+
+  static const std::unordered_map<std::string, KeySym> keySymbols = {
+      {"ShiftLeft", XK_Shift_L},
+      {"ShiftRight", XK_Shift_R},
+      {"ControlLeft", XK_Control_L},
+      {"CtrlLeft", XK_Control_L},
+      {"CommandOrControlLeft", XK_Control_L},
+      {"CmdOrCtrlLeft", XK_Control_L},
+      {"ControlRight", XK_Control_R},
+      {"CtrlRight", XK_Control_R},
+      {"CommandOrControlRight", XK_Control_R},
+      {"CmdOrCtrlRight", XK_Control_R},
+      {"AltLeft", XK_Alt_L},
+      {"OptionLeft", XK_Alt_L},
+      {"AltGrLeft", XK_Alt_L},
+      {"AltRight", XK_Alt_R},
+      {"OptionRight", XK_Alt_R},
+      {"AltGrRight", XK_Alt_R},
+      {"CommandLeft", XK_Super_L},
+      {"CmdLeft", XK_Super_L},
+      {"MetaLeft", XK_Super_L},
+      {"SuperLeft", XK_Super_L},
+      {"CommandRight", XK_Super_R},
+      {"CmdRight", XK_Super_R},
+      {"MetaRight", XK_Super_R},
+      {"SuperRight", XK_Super_R},
+  };
+
+  const auto modifier  = info[0].As<Napi::String>().Utf8Value();
+  const auto keySymbol = keySymbols.find(modifier);
+  if (keySymbol == keySymbols.end()) {
+    return Napi::Boolean::New(env, false);
+  }
+
+  Display* display = XOpenDisplay(nullptr);
+  if (!display) {
+    return Napi::Boolean::New(env, false);
+  }
+
+  char keyMap[32];
+  XQueryKeymap(display, keyMap);
+  const KeyCode keyCode = XKeysymToKeycode(display, keySymbol->second);
+  const bool pressed = keyCode != 0 &&
+                       (keyMap[keyCode / 8] & (1 << (keyCode % 8))) != 0;
+  XCloseDisplay(display);
+
+  return Napi::Boolean::New(env, pressed);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

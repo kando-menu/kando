@@ -12,7 +12,11 @@ import i18next from 'i18next';
 import DBus from 'dbus-final';
 
 import { LinuxBackend } from '../../backend';
-import { KeySequence, WindowDescription } from '../../../../../common';
+import {
+  KeySequence,
+  WindowDescription,
+  stripShortcutModifierSides,
+} from '../../../../../common';
 import { mapKeys } from '../../../../../common/key-codes';
 import { screen } from 'electron';
 
@@ -250,6 +254,8 @@ export class GnomeBackend extends LinuxBackend {
    * @todo: Add information about the string format of the shortcut.
    */
   private toGdkShortcut(shortcut: string) {
+    shortcut = stripShortcutModifierSides(shortcut);
+
     if (shortcut.includes('Option')) {
       throw new Error('Shortcuts including Option are not yet supported on GNOME.');
     }

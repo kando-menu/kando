@@ -31,6 +31,9 @@ export type Native = {
    */
   simulateKey(keycode: number, down: boolean): void;
 
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  isModifierPressed(modifier: string): boolean;
+
   /**
    * Returns an array of all currently open windows, each with an 'app' (WM_CLASS instance
    * name) and a 'window' (_NET_WM_NAME title) property.
