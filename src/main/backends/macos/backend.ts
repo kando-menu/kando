@@ -57,11 +57,19 @@ export class MacosBackend extends Backend {
     // will be shown for a short moment when the app is started.
     app.dock?.hide();
 
-    // We can get a list of all installed applications on macOS.
+    // We can get a list of all installed applications on macOS. Several bundles can share
+    // the same id (e.g. two Siri.app). As "open -a" could not tell them apart anyway, we
+    // only keep the first one.
+    const seenIds = new Set<string>();
     native
       .listInstalledApplications()
       .sort((a, b) => a.name.localeCompare(b.name))
       .forEach((app) => {
+        if (seenIds.has(app.id)) {
+          return;
+        }
+        seenIds.add(app.id);
+
         this.installedApps.push({
           id: app.id,
           name: app.name,
