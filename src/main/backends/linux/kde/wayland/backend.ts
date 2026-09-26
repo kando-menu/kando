@@ -281,6 +281,19 @@ export class KDEWaylandBackend extends LinuxBackend {
       return;
     }
 
+    // Before portal version 2 (Plasma 6.4 and older), existing shortcuts are restored
+    // anyway and binding may open the shortcut settings. So only bind if one is new.
+    if ((await this.globalShortcuts.getVersion()) < 2) {
+      const oldShortcuts = await this.globalShortcuts.listShortcuts();
+      const hasNewShortcut = currentShortcuts.some(
+        (shortcut) => !oldShortcuts.includes(shortcut)
+      );
+
+      if (!hasNewShortcut) {
+        return;
+      }
+    }
+
     this.globalShortcuts.bindShortcuts(
       currentShortcuts.map((shortcut) => {
         return { id: shortcut, description: shortcut };
