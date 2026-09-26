@@ -476,6 +476,17 @@ export class KandoApp {
     });
 
     this.achievementTracker.incrementStat('settingsOpened');
+
+    // A freshly created settings window re-scans its own icons when it loads. The
+    // menu window, however, is long-lived and keeps the system icons it scanned when
+    // it was created: the only signal Kando uses to detect icon changes when a menu
+    // is shown is backend.systemIconsChanged(), which on Linux notices a change of
+    // the icon *theme name* - and a newly installed application just adds its icons
+    // to the current theme without renaming it. Its icons therefore keep showing as
+    // a "?" in the menu until Kando is restarted (see #1446). Re-scan the icon
+    // themes whenever a settings window is opened so that newly installed
+    // applications show up in the menu without a restart.
+    this.reloadIconThemes();
   }
 
   /**
