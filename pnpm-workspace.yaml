@@ -1,0 +1,6 @@
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  electron-winstaller: true
+  esbuild: true
+blockExoticSubdeps: false
