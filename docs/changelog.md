@@ -25,6 +25,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 ### :bug: Fixed
 
 - An issue on macOS where the app picker showed duplicate entries (e.g. "Siri") which multiplied with each search. Thanks to [@skanpaul](https://github.com/skanpaul) for the fix!
+- A regression on KDE Wayland 6.3 which would cause the shortcut settings of System Settings to open every time Kando was started.
 
 ## [Kando 3.0.0](https://github.com/kando-menu/kando/releases/tag/v3.0.0)
 
