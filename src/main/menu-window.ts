@@ -27,6 +27,7 @@ import { IPCCallback } from '../common/ipc';
 import * as math from '../common/math';
 import { WorkflowExecutor } from './workflow-executor';
 import { KandoApp } from './app';
+import { buildMenuWindowOptions } from './menu-window-options';
 
 declare const MENU_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 declare const MENU_WINDOW_WEBPACK_ENTRY: string;
@@ -101,33 +102,13 @@ export class MenuWindow extends BrowserWindow {
   ) {
     const display = screen.getPrimaryDisplay();
 
-    super({
-      webPreferences: {
-        contextIsolation: true,
-        sandbox: true,
-        // Electron only allows loading local resources from apps loaded from the file
-        // system. In development mode, the app is loaded from the webpack dev server.
-        // Hence, we have to disable webSecurity in development mode.
-        webSecurity: process.env.NODE_ENV !== 'development',
-        // Background throttling is disabled to make sure that the menu is properly
-        // hidden. Else it can happen that the last frame of a previous menu is still
-        // visible when the new menu is shown. For now, I have not seen any issues with
-        // background throttling disabled.
-        backgroundThrottling: false,
-        preload: MENU_WINDOW_PRELOAD_WEBPACK_ENTRY,
-        spellcheck: false,
-      },
-      transparent: true,
-      skipTaskbar: true,
-      frame: false,
-      hasShadow: false,
-      x: display.workArea.x,
-      y: display.workArea.y,
-      width: display.workArea.width + 1,
-      height: display.workArea.height + 1,
-      type: kando.getBackend().getBackendInfo().menuWindowType,
-      show: false,
-    });
+    super(
+      buildMenuWindowOptions(
+        display.workArea,
+        kando.getBackend().getBackendInfo().menuWindowType,
+        MENU_WINDOW_PRELOAD_WEBPACK_ENTRY
+      )
+    );
 
     // When the general settings change, we need to apply the zoom factor to the window.
     this.kando.getGeneralSettings().onChange('zoomFactor', (newValue) => {
