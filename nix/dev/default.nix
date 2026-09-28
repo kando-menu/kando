@@ -3,10 +3,7 @@
 		inputs.git_hook.flakeModule
 	];
 
-	# once loaded into the devshell for the first time, set up the project
-	# pnpm approve-builds
-	# pnpm install
-	# npm i --save-dev
+	# npm install
 
 	perSystem = { config, pkgs, ... }: {
 		devShells.default = pkgs.mkShell {
@@ -15,15 +12,13 @@
 			];
 
 			nativeBuildInputs = [
+			  pkgs.git
 				pkgs.bash-language-server
 				pkgs.nixd
 				pkgs.nixpkgs-fmt
-				pkgs.git
-				pkgs.git-lfs
 				pkgs.cocogitto
 				pkgs.pre-commit
 				pkgs.nodejs
-				pkgs.pnpm
 				pkgs.pkg-config
 				pkgs.glib
 				pkgs.gcc
@@ -40,10 +35,6 @@
 			];
 
 			shellHook = ''
-				${pkgs.git-lfs}/bin/git-lfs install --local --skip-repo --quiet > /dev/null 2>&1
-
-				${config.pre-commit.installationScript} > /dev/null 2>&1
-
 				export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [
           pkgs.glib
           pkgs.nspr
@@ -74,44 +65,5 @@
         ]}"
 			'';
 		};
-
-		pre-commit.check.enable = true;
-
-		pre-commit.settings.hooks.check-symlinks.enable = true;
-		pre-commit.settings.hooks.check-merge-conflicts.enable = true;
-		pre-commit.settings.hooks.check-added-large-files.enable = true;
-		pre-commit.settings.hooks.check-added-large-files.args = [
-			"--maxkb=50"
-			"--enforce-all"
-		];
-
-		pre-commit.settings.hooks.cog.enable = true;
-		pre-commit.settings.hooks.cog.entry = "${pkgs.cocogitto}/bin/cog verify --file";
-		pre-commit.settings.hooks.cog.stages = [
-			"commit-msg"
-		];
-
-		pre-commit.settings.hooks.ripsecrets.enable = true;
-
-		pre-commit.settings.hooks.check-yaml.enable = true;
-		pre-commit.settings.hooks.check-json.enable = true;
-		pre-commit.settings.hooks.check-toml.enable = true;
-
-		pre-commit.settings.hooks.trim-trailing-whitespace.enable = true;
-
-		pre-commit.settings.hooks.end-of-file-fixer.enable = true;
-		pre-commit.settings.hooks.end-of-file-fixer.excludes = [
-			"^target/"
-			"^build/"
-			"^node_modules/"
-			"^vendor/"
-			"^\\.git/"
-			"\\.min\\.js$"
-			"\\.min\\.css$"
-			"\\.svg$"
-			"\\.png$"
-			"\\.jpg$"
-			"\\.ico$"
-		];
 	};
 }
