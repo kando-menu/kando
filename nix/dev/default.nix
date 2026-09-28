@@ -1,7 +1,4 @@
 { ... }: {
-
-	# npm install
-
 	perSystem = { pkgs, ... }: {
 		devShells.default = pkgs.mkShell {
 			nativeBuildInputs = [
