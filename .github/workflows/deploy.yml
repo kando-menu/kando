@@ -34,7 +34,7 @@ jobs:
           npm run make
       - name: Create AppImage
         run: |
-          tools/make-app-image.sh
+          packaging/make-app-image.sh
       - name: Upload Packages
         uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de #v2.11.5
         with:
