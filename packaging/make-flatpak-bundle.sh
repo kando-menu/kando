@@ -9,7 +9,7 @@
 # This script here is only used during development to create a flatpak bundle for testing
 # purposes. It will create a flatpak bundle in out/make/flatpak. It assumes that you have
 # bundled Kando with `npm run package` and created the app image with
-# `tools/make-app-image.sh` before. It creates a temporary build/flatpak directory and
+# `packaging/make-app-image.sh` before. It creates a temporary build/flatpak directory and
 # uses the above mentioned repository to create the flatpak bundle.
 
 # Exit on errors.
@@ -39,7 +39,7 @@ OUTPUT_DIR="$SCRIPT_DIR/../out/make/flatpak"
 
 # Make sure that the input directory exists.
 if [ ! -f "$INPUT" ]; then
-  echo "Input $INPUT does not exist! Run 'tools/make-app-image.sh' first."
+  echo "Input $INPUT does not exist! Run 'packaging/make-app-image.sh' first."
   exit 1
 fi
 

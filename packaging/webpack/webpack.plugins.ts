@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 
 // List all directory names in locales/ directory.
-const localesDir = path.resolve(__dirname, 'locales');
+const localesDir = path.resolve(__dirname, '../../locales');
 const cLocales = fs
   .readdirSync(localesDir, { withFileTypes: true })
   .filter((dirent) => dirent.isDirectory())
