@@ -143,6 +143,9 @@ export class KandoApp {
             role: 'paste',
           },
           {
+            role: 'selectAll',
+          },
+          {
             label: 'Close',
             accelerator: process.platform === 'darwin' ? 'Cmd+W' : 'Alt+F4',
             click: () => {
