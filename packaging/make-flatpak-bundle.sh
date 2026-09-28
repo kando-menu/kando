@@ -58,7 +58,7 @@ git clone https://github.com/flathub/menu.kando.Kando.git
 cd menu.kando.Kando
 
 # Copy the AppImage and the metainfo into the flatpak directory.
-cp "$SCRIPT_DIR/../appstream/menu.kando.Kando.metainfo.xml" .
+cp "$SCRIPT_DIR/appstream/menu.kando.Kando.metainfo.xml" .
 cp "$INPUT" "kando.AppImage"
 
 # Replace AppImage url/sha256 with the file path.
