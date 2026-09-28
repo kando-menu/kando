@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+# SPDX-License-Identifier: CC0-1.0
+
 {
 	inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 	inputs.flake-parts.url = "github:hercules-ci/flake-parts";
