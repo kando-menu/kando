@@ -118,7 +118,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :bug: Fixed
 
-- A bug which caused the prebuilt binaries from GitHub to not launch on recent versions of KDE Plasma. The fix involved renaming the included desktop file from `kando.desktop` to `menu.kando.Kando.desktop` to match the application ID used by Kando. This only works for the Debian package and RPM package, the self-contained zip variant and the appimage will still not launch until you create a desktop file (like [this](https://github.com/kando-menu/kando/blob/main/appstream/menu.kando.Kando.desktop)) for them manually. See [#1367](https://github.com/kando-menu/kando/issues/1367) for more details.
+- A bug which caused the prebuilt binaries from GitHub to not launch on recent versions of KDE Plasma. The fix involved renaming the included desktop file from `kando.desktop` to `menu.kando.Kando.desktop` to match the application ID used by Kando. This only works for the Debian package and RPM package, the self-contained zip variant and the appimage will still not launch until you create a desktop file (like [this](https://github.com/kando-menu/kando/blob/main/packaging/appstream/menu.kando.Kando.desktop)) for them manually. See [#1367](https://github.com/kando-menu/kando/issues/1367) for more details.
 
 ## [Kando 2.3.0](https://github.com/kando-menu/kando/releases/tag/v2.3.0)
 
