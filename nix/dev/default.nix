@@ -1,16 +1,9 @@
-{ inputs, ... }: {
-	imports = [
-		inputs.git_hook.flakeModule
-	];
+{ ... }: {
 
 	# npm install
 
-	perSystem = { config, pkgs, ... }: {
+	perSystem = { pkgs, ... }: {
 		devShells.default = pkgs.mkShell {
-			inputsFrom = [
-				config.pre-commit.devShell
-			];
-
 			nativeBuildInputs = [
 			  pkgs.git
 				pkgs.bash-language-server
