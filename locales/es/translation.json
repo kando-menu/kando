@@ -219,7 +219,11 @@
             "save-preset-error-title": "Error al guardar configuración",
             "save-preset-error-message": "Ocurrió un error al guardar la preselección de colores. Revisa que el directorio es modificable. Error: {{error}}",
             "default-colors": "Colores predeterminados",
-            "enable-menu-animations": "Animaciones del menú"
+            "enable-menu-animations": "Animaciones del menú",
+            "accent-colors": "Colores de realce",
+            "enable-menu-animations-info": "Si se desactiva, se suprimen todas las transiciones y la mayoría de las animaciones del tema del menú.",
+            "enable-pointer-reactive-effects-info": "Si se desactiva, se suprimen algunos efectos de acercamiento o escalado del tema del menú que dependen de la posición actual del puntero.",
+            "enable-pointer-reactive-effects": "Efectos reactivos al puntero"
         },
         "not-bound": "No asignado",
         "shortcut-id-label": "Id. de atajo",
