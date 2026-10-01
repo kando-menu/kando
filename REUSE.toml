@@ -4,7 +4,7 @@
 version = 1
 
 [[annotations]]
-path = [".node-version", "tsconfig.json", "package.json", "package-lock.json", "patches/*", "src/main/example-menus/**"]
+path = [".node-version", "tsconfig.json", "package.json", "package-lock.json", "patches/*", "src/main/example-menus/**", "flake.lock"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Simon Schneegans <code@simonschneegans.de>"
 SPDX-License-Identifier = "CC0-1.0"
