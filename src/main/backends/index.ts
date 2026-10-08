@@ -58,6 +58,12 @@ export function getBackend(): Backend | null {
       return new KDEWaylandBackend();
     }
 
+    if (desktop === 'cosmic' && session === 'wayland') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { CosmicBackend } = require('./linux/cosmic/backend');
+      return new CosmicBackend();
+    }
+
     if (desktop === 'hyprland') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { HyprBackend } = require('./linux/hyprland/backend');
