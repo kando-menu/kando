@@ -138,6 +138,23 @@ export const SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2 = z.object({
   message: z.string(),
 });
 
+/** This action will send a message to a TCP server when triggered. */
+export const SEND_TCP_MESSAGE_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('send-tcp-message'),
+
+  /** The host name or IP address of the TCP server to connect to. */
+  host: z.string(),
+
+  /** The port of the TCP server to connect to. */
+  port: z.number(),
+
+  /** The message to send to the TCP server. */
+  message: z.string(),
+
+  /** If true, a CRLF line break will be appended to the message. */
+  appendNewline: z.boolean().default(false),
+});
+
 /** This action will simulate a hotkey when triggered. */
 export const SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
   type: z.literal('simulate-hotkey'),
@@ -161,6 +178,7 @@ export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
   OPEN_URI_ACTION_SCHEMA_V2,
   SET_CLIPBOARD_ACTION_SCHEMA_V2,
   SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2,
+  SEND_TCP_MESSAGE_ACTION_SCHEMA_V2,
   SIMULATE_HOTKEY_ACTION_SCHEMA_V2,
 ]);
 
@@ -438,6 +456,7 @@ export type SetClipboardActionV2 = z.infer<typeof SET_CLIPBOARD_ACTION_SCHEMA_V2
 export type SendWebSocketMessageActionV2 = z.infer<
   typeof SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2
 >;
+export type SendTCPMessageActionV2 = z.infer<typeof SEND_TCP_MESSAGE_ACTION_SCHEMA_V2>;
 export type SimulateHotkeyActionV2 = z.infer<typeof SIMULATE_HOTKEY_ACTION_SCHEMA_V2>;
 export type DelayActionV2 = z.infer<typeof DELAY_ACTION_SCHEMA_V2>;
 
