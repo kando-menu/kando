@@ -24,7 +24,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :bug: Fixed
 
-- Fixed a crash where a single invalid theme.json5 file (e.g. a missing comma) would make `json5.parse` throw and cause the entire menu and settings to fail to load via `Promise.all`. Broken menu and sound themes are now skipped gracefully; if the currently selected menu theme is broken, Kando falls back to the default theme and shows a notification. Thanks to [@hippi345](https://github.com/hippi345) for the fix!
+- Fixed an issue where a single invalid theme.json5 file prevented the menu and settings from loading. Thanks to [@hippi345](https://github.com/hippi345) for the fix!
 - Fixed an issue on macOS where the app picker showed duplicate entries (e.g. "Siri") which multiplied with each search. Thanks to [@skanpaul](https://github.com/skanpaul) for the fix!
 - Fixed an issue on macOS where it was possible to resize the menu window with the mouse. Thanks to [@rome-xi](https://github.com/rome-xi) for the fix!
 - Fixed a regression on KDE Wayland 6.3 which would cause the shortcut settings of System Settings to open every time Kando was started. Thanks to [@Tailszefox](https://github.com/Tailszefox) for the fix!

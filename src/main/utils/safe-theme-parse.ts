@@ -154,3 +154,23 @@ export async function parseSoundThemeFile(
     directory: themeDirectory,
   };
 }
+
+/**
+ * Returns `true` the first time a broken theme `id` is seen, `false` on every subsequent
+ * call with the same `id` and the same `notified` set. Call `notified.clear()` when the
+ * user switches to a different theme so the notification rearms.
+ *
+ * Extracted as an electron-free helper so the deduplication logic can be unit-tested
+ * independently.
+ *
+ * @param id The theme identifier (e.g. `'my-theme'`).
+ * @param notified The per-instance set that tracks which IDs have already been reported.
+ * @returns `true` if the caller should show a notification; `false` if already shown.
+ */
+export function shouldNotifyBrokenTheme(id: string, notified: Set<string>): boolean {
+  if (notified.has(id)) {
+    return false;
+  }
+  notified.add(id);
+  return true;
+}

@@ -16,6 +16,7 @@ import { expect } from 'chai';
 import {
   parseMenuThemeFile,
   parseSoundThemeFile,
+  shouldNotifyBrokenTheme,
 } from '../src/main/utils/safe-theme-parse';
 
 // Minimal valid menu theme (matches the structure expected by app.ts).
@@ -162,5 +163,34 @@ describe('parseSoundThemeFile', () => {
 
     expect(results[0].loadFailed).to.not.be.true;
     expect(results[1].loadFailed).to.be.true;
+  });
+});
+
+describe('shouldNotifyBrokenTheme', () => {
+  it('returns true the first time a broken id is seen', () => {
+    const notified = new Set<string>();
+    expect(shouldNotifyBrokenTheme('my-theme', notified)).to.be.true;
+  });
+
+  it('returns false on every subsequent call with the same id', () => {
+    const notified = new Set<string>();
+    shouldNotifyBrokenTheme('my-theme', notified);
+    expect(shouldNotifyBrokenTheme('my-theme', notified)).to.be.false;
+    expect(shouldNotifyBrokenTheme('my-theme', notified)).to.be.false;
+  });
+
+  it('returns true again after the set is cleared (user switches theme)', () => {
+    const notified = new Set<string>();
+    shouldNotifyBrokenTheme('my-theme', notified);
+    notified.clear();
+    expect(shouldNotifyBrokenTheme('my-theme', notified)).to.be.true;
+  });
+
+  it('tracks different ids independently', () => {
+    const notified = new Set<string>();
+    expect(shouldNotifyBrokenTheme('theme-a', notified)).to.be.true;
+    expect(shouldNotifyBrokenTheme('theme-b', notified)).to.be.true;
+    expect(shouldNotifyBrokenTheme('theme-a', notified)).to.be.false;
+    expect(shouldNotifyBrokenTheme('theme-b', notified)).to.be.false;
   });
 });

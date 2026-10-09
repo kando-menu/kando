@@ -50,7 +50,11 @@ import {
 } from './settings';
 import { IPCServer, IPCCallback } from '../common/ipc';
 import { Notification } from './utils/notification';
-import { parseMenuThemeFile, parseSoundThemeFile } from './utils/safe-theme-parse';
+import {
+  parseMenuThemeFile,
+  parseSoundThemeFile,
+  shouldNotifyBrokenTheme,
+} from './utils/safe-theme-parse';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
 import { supportsIsolatedProcesses } from './utils/shell';
@@ -103,6 +107,14 @@ export class KandoApp {
 
   /** Flag to indicate if the app is quitting. */
   private isQuitting = false;
+
+  /**
+   * Tracks which broken theme IDs have already triggered a notification this session.
+   * Cleared when the user selects a different (working) theme so the notification rearms
+   * if they return to the same broken theme after switching away.
+   */
+  private notifiedBrokenMenuThemes = new Set<string>();
+  private notifiedBrokenSoundThemes = new Set<string>();
 
   /**
    * Most of the initialization is done in the init() method. This constructor is only
@@ -617,12 +629,13 @@ export class KandoApp {
         path.join(__dirname, '../renderer/assets/menu-themes'),
       ]);
 
-      // Load all descriptions in parallel. Broken themes return null and are skipped.
+      // Load all descriptions in parallel; broken themes resolve with loadFailed: true
+      // and are excluded from the list.
       const results = await Promise.all(
         themes.map((theme) => this.loadMenuThemeDescription(theme))
       );
       const descriptions = results.filter(
-        (d): d is MenuThemeDescription => d !== null && !d.loadFailed
+        (d): d is MenuThemeDescription => !d.loadFailed
       );
 
       // Sort by the name property of the description.
@@ -745,14 +758,15 @@ export class KandoApp {
         path.join(__dirname, '../renderer/assets/sound-themes'),
       ]);
 
-      // Load all descriptions in parallel.
-      let descriptions = await Promise.all(
+      // Load all descriptions in parallel; broken themes resolve with loadFailed: true
+      // and are excluded from the list (the log line in parseSoundThemeFile records the
+      // cause). The 'none' placeholder is also excluded.
+      const allDescriptions = await Promise.all(
         themes.map((theme) => this.loadSoundThemeDescription(theme))
       );
-
-      // Filter out the placeholder for the 'none' theme, but keep themes which failed to
-      // load so that the renderer can show a warning about them.
-      descriptions = descriptions.filter((desc) => desc.id !== 'none');
+      const descriptions = allDescriptions.filter(
+        (desc) => desc.id !== 'none' && !desc.loadFailed
+      );
 
       // Sort by the name property of the description.
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
@@ -1209,12 +1223,17 @@ export class KandoApp {
       let description = await this.loadMenuThemeDescription(themeId);
 
       if (description?.loadFailed) {
-        Notification.show({
-          title: 'Failed to load menu theme',
-          message: `The menu theme "${themeId}" could not be loaded. Falling back to the default theme.`,
-          type: 'error',
-        });
+        if (shouldNotifyBrokenTheme(themeId, this.notifiedBrokenMenuThemes)) {
+          Notification.show({
+            title: 'Failed to load menu theme',
+            message: `The menu theme "${themeId}" could not be loaded. Falling back to the default theme.`,
+            type: 'error',
+          });
+        }
         description = await this.loadMenuThemeDescription('default');
+      } else {
+        // Theme loaded successfully – rearm notifications if the theme changed.
+        this.notifiedBrokenMenuThemes.clear();
       }
 
       return description;
@@ -1255,7 +1274,23 @@ export class KandoApp {
 
     // Allow the renderer to retrieve the description of the current sound theme.
     ipcMain.handle('common.get-sound-theme', async () => {
-      return this.loadSoundThemeDescription(this.generalSettings.get('soundTheme'));
+      const themeId = this.generalSettings.get('soundTheme');
+      const description = await this.loadSoundThemeDescription(themeId);
+
+      if (description.loadFailed && description.id !== 'none') {
+        if (shouldNotifyBrokenTheme(themeId, this.notifiedBrokenSoundThemes)) {
+          Notification.show({
+            title: 'Failed to load sound theme',
+            message: `The sound theme "${themeId}" could not be loaded. Please check its theme.json5 file.`,
+            type: 'error',
+          });
+        }
+      } else {
+        // Theme loaded successfully – rearm notifications if the theme changed.
+        this.notifiedBrokenSoundThemes.clear();
+      }
+
+      return description;
     });
 
     // Allow the renderer to retrieve all system icons.
@@ -1743,11 +1778,6 @@ export class KandoApp {
     const description = await parseSoundThemeFile(metaFile);
 
     if (description.loadFailed) {
-      Notification.show({
-        title: 'Failed to load sound theme',
-        message: `The sound theme "${theme}" could not be read or parsed. Please check the file at "${metaFile}".`,
-        type: 'error',
-      });
       return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
     }
 
