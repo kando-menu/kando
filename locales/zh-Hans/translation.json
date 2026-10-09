@@ -296,7 +296,10 @@
             "re-open-menu": "重新打开菜单",
             "trigger-center-click-on-key-release-info": "当按键释放且光标位于菜单中心区域内时，将启动菜单中心的工作流。",
             "trigger-center-click-on-key-release": "按键释放时触发菜单中心的工作流",
-            "trigger-center-click-on-key-release-warning": "此选项将导致您松开按键时立刻关闭菜单。请确保您了解此操作的影响后再启用！"
+            "trigger-center-click-on-key-release-warning": "此选项将导致您松开按键时立刻关闭菜单。请确保您了解此操作的影响后再启用！",
+            "sound-theme-load-failed-warning": "无法载入下列音效主题，这可能是因为版本不兼容：{{themes}}",
+            "hide-on-focus-out-info": "菜单将在聚焦在其它应用程序时隐藏。",
+            "hide-on-focus-out": "失去焦点时隐藏菜单"
         },
         "hover-mode": "悬停模式",
         "hover-mode-info": "仅限高级用户使用！将鼠标悬停在项目上以选择项目。",
@@ -488,8 +491,24 @@
         "workflow-editor": {
             "add-action": "新增动作",
             "button-select-workflow": {
-                "description": "选择此菜单项后，将触发下列动作。"
-            }
+                "description": "选择此菜单项后，将触发下列动作。",
+                "empty-hint": "当前选择此项目后没有可执行操作，请使用上方按钮为此工作流新增操作！",
+                "quick-select-key-hint": "当上层菜单开启时，按下此按键也会触发选取的工作流。"
+            },
+            "button-hover-workflow": {
+                "description": "当指针悬停在该菜单项时，会执行下列操作。",
+                "empty-hint": "当前悬停于此项目后没有可执行操作，请使用上方按钮为此工作流新增操作！",
+                "quick-select-key-hint": "当上层菜单开启时，按下此按键也会触发悬停的工作流。"
+            },
+            "submenu-open-workflow": {
+                "description": "打开此子菜单后，将触发下列动作。",
+                "empty-hint": "当前打开子菜单后没有可执行操作，请使用上方按钮为此工作流新增操作！",
+                "quick-select-key-hint": "按下此按键将打开子菜单。"
+            },
+            "hover-workflow-name": "悬停工作流",
+            "activate-workflow-name": "中心点击工作流",
+            "open-workflow-name": "打开工作流",
+            "action-not-supported": "当前后端不支持此操作。"
         },
         "fixed-position-mode": "固定位置模式",
         "fixed-position-mode-info": "让菜单在一个固定的点位打开，而非基于鼠标光标。",
@@ -504,7 +523,11 @@
         },
         "fixed-position-x-placeholder": "X",
         "fixed-position-y-placeholder": "Y",
-        "fixed-position-tooltip": "选择固定点"
+        "fixed-position-tooltip": "选择固定点",
+        "screen-position-picker": {
+            "instructions": "将十字准星拖拽到屏幕上的任意位置以定位菜单固定点，或者从下方选择预设位置。",
+            "value": "X: {{x}} | Y: {{y}}"
+        }
     },
     "achievements": {
         "attributes": {
