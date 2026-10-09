@@ -25,6 +25,7 @@ import { execute as openSettings } from './actions/open-settings';
 import { execute as openURI } from './actions/open-uri';
 import { execute as setClipboard } from './actions/set-clipboard';
 import { execute as sendWebSocketMessage } from './actions/send-websocket-message';
+import { execute as sendTCPMessage } from './actions/send-tcp-message';
 import { execute as simulateHotkey } from './actions/simulate-hotkey';
 import { execute as delay } from './actions/delay';
 
@@ -50,6 +51,7 @@ const ACTION_EXECUTORS = new Map<
   ['open-uri', openURI],
   ['set-clipboard', setClipboard],
   ['send-websocket-message', sendWebSocketMessage],
+  ['send-tcp-message', sendTCPMessage],
   ['simulate-hotkey', simulateHotkey],
 ]);
 

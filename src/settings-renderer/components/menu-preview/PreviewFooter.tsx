@@ -56,6 +56,7 @@ export default function PreviewFooter() {
         type.key !== 'close-menu' &&
         type.key !== 'close-submenu' &&
         type.key !== 'send-websocket-message' &&
+        type.key !== 'send-tcp-message' &&
         type.key !== 'focus-window' &&
         type.key !== 'inhibit-shortcuts'
     ),

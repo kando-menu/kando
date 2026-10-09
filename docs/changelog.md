@@ -22,6 +22,10 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 **Release Date:** TBD
 
+### :tada: Added
+
+- Added a new action type which can be used to **send messages to TCP servers**. This is useful for controlling applications which use Telnet or other simple line-based protocols. Thanks to [@TheNetherWatcher](https://github.com/TheNetherWatcher) for contributing this feature!
+
 ### :bug: Fixed
 
 - Fixed an issue on macOS where the app picker showed duplicate entries (e.g. "Siri") which multiplied with each search. Thanks to [@skanpaul](https://github.com/skanpaul) for the fix!

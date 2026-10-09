@@ -627,6 +627,16 @@
             "message-label": "Message",
             "message-placeholder": "Insert a message…"
         },
+        "send-tcp-message": {
+            "name": "Send TCP Message",
+            "description": "Connects to a TCP server, for instance a Telnet service, and sends a message.",
+            "host-label": "Host",
+            "port-label": "Port",
+            "message-label": "Message",
+            "message-placeholder": "Insert a message…",
+            "append-newline-label": "Append Line Break",
+            "append-newline-info": "If enabled, a line break (CRLF) is sent after the message. Many line-based protocols like Telnet expect this."
+        },
         "execute-macro": {
             "name": "Execute Macro",
             "description": "Types multiple keystrokes in sequence. Make sure to add a close-menu action before this if you want the shortcut to target the active application and not the menu!",
