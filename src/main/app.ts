@@ -50,7 +50,7 @@ import {
 } from './settings';
 import { IPCServer, IPCCallback } from '../common/ipc';
 import { Notification } from './utils/notification';
-import { safeParseThemeFile } from './utils/safe-theme-parse';
+import { parseMenuThemeFile, parseSoundThemeFile } from './utils/safe-theme-parse';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
 import { supportsIsolatedProcesses } from './utils/shell';
@@ -1705,57 +1705,7 @@ export class KandoApp {
       );
     }
 
-    const brokenStub = (): MenuThemeDescription => ({
-      id: theme,
-      name: theme,
-      author: '',
-      themeVersion: '',
-      engineVersion: 0,
-      license: '',
-      maxMenuRadius: 150,
-      centerTextWrapWidth: 90,
-      drawChildrenBelow: true,
-      drawCenterText: true,
-      drawSelectionWedges: false,
-      drawWedgeSeparators: false,
-      colors: {},
-      layers: [],
-      directory: '',
-      loadFailed: true,
-    });
-
-    let content: string;
-    try {
-      content = (await fs.promises.readFile(metaFile)).toString();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error(`Failed to read menu theme file "${metaFile}": ${message}`);
-      return brokenStub();
-    }
-
-    const parsed = safeParseThemeFile(metaFile, content);
-    if (!parsed) {
-      return brokenStub();
-    }
-
-    const directory = path.dirname(metaFile);
-
-    // Use defaults if some properties are not set.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const p = parsed as any;
-    const description: MenuThemeDescription = {
-      ...p,
-      id: path.basename(directory),
-      directory: path.dirname(directory),
-      maxMenuRadius: p.maxMenuRadius ?? 150,
-      centerTextWrapWidth: p.centerTextWrapWidth ?? 90,
-      drawChildrenBelow: p.drawChildrenBelow ?? true,
-      drawCenterText: p.drawCenterText ?? true,
-      drawSelectionWedges: p.drawSelectionWedges ?? false,
-      drawWedgeSeparators: p.drawWedgeSeparators ?? false,
-    };
-
-    return description;
+    return parseMenuThemeFile(metaFile);
   }
 
   /**
@@ -1790,31 +1740,16 @@ export class KandoApp {
       return emptyTheme;
     }
 
-    let rawContent: string;
-    try {
-      rawContent = (await fs.promises.readFile(metaFile)).toString();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error(`Failed to read sound theme file "${metaFile}": ${message}`);
+    const description = await parseSoundThemeFile(metaFile);
+
+    if (description.loadFailed) {
       Notification.show({
         title: 'Failed to load sound theme',
-        message: `The sound theme "${theme}" could not be read. Please check the file at "${metaFile}".`,
+        message: `The sound theme "${theme}" could not be read or parsed. Please check the file at "${metaFile}".`,
         type: 'error',
       });
       return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
     }
-
-    const parsed = safeParseThemeFile(metaFile, rawContent);
-    if (!parsed) {
-      Notification.show({
-        title: 'Failed to load sound theme',
-        message: `The sound theme "${theme}" contains invalid JSON5. Please check the file at "${metaFile}".`,
-        type: 'error',
-      });
-      return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
-    }
-
-    const description = parsed as SoundThemeDescription;
 
     if (description.engineVersion !== engineVersion) {
       console.warn(
@@ -1822,10 +1757,6 @@ export class KandoApp {
       );
       return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
     }
-
-    const directory = path.dirname(metaFile);
-    description.id = path.basename(directory);
-    description.directory = path.dirname(directory);
 
     return description;
   }
