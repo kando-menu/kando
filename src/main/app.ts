@@ -758,15 +758,14 @@ export class KandoApp {
         path.join(__dirname, '../renderer/assets/sound-themes'),
       ]);
 
-      // Load all descriptions in parallel; broken themes resolve with loadFailed: true
-      // and are excluded from the list (the log line in parseSoundThemeFile records the
-      // cause). The 'none' placeholder is also excluded.
-      const allDescriptions = await Promise.all(
+      // Load all descriptions in parallel.
+      let descriptions = await Promise.all(
         themes.map((theme) => this.loadSoundThemeDescription(theme))
       );
-      const descriptions = allDescriptions.filter(
-        (desc) => desc.id !== 'none' && !desc.loadFailed
-      );
+
+      // Filter out the placeholder for the 'none' theme, but keep themes which failed to
+      // load so that the renderer can show a warning about them.
+      descriptions = descriptions.filter((desc) => desc.id !== 'none');
 
       // Sort by the name property of the description.
       return descriptions.sort((a, b) => a.name.localeCompare(b.name));
