@@ -232,6 +232,22 @@ export class ActionTypeRegistry {
         prefersInhibitedShortcuts: false,
         createAction: () => ({ type: 'send-websocket-message', url: '', message: '' }),
       },
+      ['send-tcp-message']: {
+        name: i18next.t('menu-actions.send-tcp-message.name'),
+        icon: 'uri-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.send-tcp-message.description'),
+        supportedByBackend: true,
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({
+          type: 'send-tcp-message',
+          host: '127.0.0.1',
+          port: 23,
+          message: '',
+          appendNewline: false,
+        }),
+      },
       ['simulate-hotkey']: {
         name: i18next.t('menu-actions.simulate-hotkey.name'),
         icon: 'hotkey-item.svg',

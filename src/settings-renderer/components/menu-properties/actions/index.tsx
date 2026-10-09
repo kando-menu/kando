@@ -19,6 +19,7 @@ import { OpenMenuActionConfig } from './OpenMenuActionConfig';
 import { OpenURIActionConfig } from './OpenURIActionConfig';
 import { SetClipboardActionConfig } from './SetClipboardActionConfig';
 import { SendWebSocketMessageActionConfig } from './SendWebSocketMessageActionConfig';
+import { SendTCPMessageActionConfig } from './SendTCPMessageActionConfig';
 import { SimulateHotkeyActionConfig } from './SimulateHotkeyActionConfig';
 import { WorkflowAction } from '../../../../common';
 
@@ -89,6 +90,10 @@ export function getConfigComponent(
     return (
       <SendWebSocketMessageActionConfig action={action} onUpdateAction={onUpdateAction} />
     );
+  }
+
+  if (action.type === 'send-tcp-message') {
+    return <SendTCPMessageActionConfig action={action} onUpdateAction={onUpdateAction} />;
   }
 
   if (action.type === 'simulate-hotkey') {
