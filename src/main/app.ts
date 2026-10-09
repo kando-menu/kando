@@ -50,6 +50,7 @@ import {
 } from './settings';
 import { IPCServer, IPCCallback } from '../common/ipc';
 import { Notification } from './utils/notification';
+import { safeParseThemeFile } from './utils/safe-theme-parse';
 import { UpdateChecker } from './utils/update-checker';
 import { AchievementTracker } from './achievements/achievement-tracker';
 import { supportsIsolatedProcesses } from './utils/shell';
@@ -616,9 +617,12 @@ export class KandoApp {
         path.join(__dirname, '../renderer/assets/menu-themes'),
       ]);
 
-      // Load all descriptions in parallel.
-      const descriptions = await Promise.all(
+      // Load all descriptions in parallel. Broken themes return null and are skipped.
+      const results = await Promise.all(
         themes.map((theme) => this.loadMenuThemeDescription(theme))
+      );
+      const descriptions = results.filter(
+        (d): d is MenuThemeDescription => d !== null && !d.loadFailed
       );
 
       // Sort by the name property of the description.
@@ -1199,9 +1203,21 @@ export class KandoApp {
       const useDarkVariant =
         this.generalSettings.get('enableDarkModeForMenuThemes') &&
         nativeTheme.shouldUseDarkColors;
-      return this.loadMenuThemeDescription(
-        this.generalSettings.get(useDarkVariant ? 'darkMenuTheme' : 'menuTheme')
+      const themeId = this.generalSettings.get(
+        useDarkVariant ? 'darkMenuTheme' : 'menuTheme'
       );
+      let description = await this.loadMenuThemeDescription(themeId);
+
+      if (description?.loadFailed) {
+        Notification.show({
+          title: 'Failed to load menu theme',
+          message: `The menu theme "${themeId}" could not be loaded. Falling back to the default theme.`,
+          type: 'error',
+        });
+        description = await this.loadMenuThemeDescription('default');
+      }
+
+      return description;
     });
 
     // Allow the renderer to retrieve the current menu theme override colors. We return
@@ -1670,10 +1686,15 @@ export class KandoApp {
    * includes the path to the CSS file of the theme. If the theme is not found, the
    * default theme is used instead.
    *
+   * Returns a description with `loadFailed: true` if the theme file cannot be read or
+   * parsed (e.g. invalid JSON5). That sentinel is excluded from the theme list and
+   * triggers a fallback to the default theme when the broken theme is currently
+   * selected.
+   *
    * @param theme The name of the menu theme.
-   * @returns The description of the menu theme.
+   * @returns The description of the menu theme, or a stub with `loadFailed: true`.
    */
-  private async loadMenuThemeDescription(theme: string) {
+  private async loadMenuThemeDescription(theme: string): Promise<MenuThemeDescription> {
     let metaFile = await this.findThemePath('menu-themes', theme);
 
     if (!metaFile) {
@@ -1684,21 +1705,54 @@ export class KandoApp {
       );
     }
 
-    const content = await fs.promises.readFile(metaFile);
-    const parsed = json5.parse(content.toString());
+    const brokenStub = (): MenuThemeDescription => ({
+      id: theme,
+      name: theme,
+      author: '',
+      themeVersion: '',
+      engineVersion: 0,
+      license: '',
+      maxMenuRadius: 150,
+      centerTextWrapWidth: 90,
+      drawChildrenBelow: true,
+      drawCenterText: true,
+      drawSelectionWedges: false,
+      drawWedgeSeparators: false,
+      colors: {},
+      layers: [],
+      directory: '',
+      loadFailed: true,
+    });
+
+    let content: string;
+    try {
+      content = (await fs.promises.readFile(metaFile)).toString();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`Failed to read menu theme file "${metaFile}": ${message}`);
+      return brokenStub();
+    }
+
+    const parsed = safeParseThemeFile(metaFile, content);
+    if (!parsed) {
+      return brokenStub();
+    }
+
     const directory = path.dirname(metaFile);
 
     // Use defaults if some properties are not set.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const p = parsed as any;
     const description: MenuThemeDescription = {
-      ...parsed,
+      ...p,
       id: path.basename(directory),
       directory: path.dirname(directory),
-      maxMenuRadius: parsed.maxMenuRadius ?? 150,
-      centerTextWrapWidth: parsed.centerTextWrapWidth ?? 90,
-      drawChildrenBelow: parsed.drawChildrenBelow ?? true,
-      drawCenterText: parsed.drawCenterText ?? true,
-      drawSelectionWedges: parsed.drawSelectionWedges ?? false,
-      drawWedgeSeparators: parsed.drawWedgeSeparators ?? false,
+      maxMenuRadius: p.maxMenuRadius ?? 150,
+      centerTextWrapWidth: p.centerTextWrapWidth ?? 90,
+      drawChildrenBelow: p.drawChildrenBelow ?? true,
+      drawCenterText: p.drawCenterText ?? true,
+      drawSelectionWedges: p.drawSelectionWedges ?? false,
+      drawWedgeSeparators: p.drawWedgeSeparators ?? false,
     };
 
     return description;
@@ -1736,8 +1790,31 @@ export class KandoApp {
       return emptyTheme;
     }
 
-    const content = await fs.promises.readFile(metaFile);
-    const description = json5.parse(content.toString()) as SoundThemeDescription;
+    let rawContent: string;
+    try {
+      rawContent = (await fs.promises.readFile(metaFile)).toString();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`Failed to read sound theme file "${metaFile}": ${message}`);
+      Notification.show({
+        title: 'Failed to load sound theme',
+        message: `The sound theme "${theme}" could not be read. Please check the file at "${metaFile}".`,
+        type: 'error',
+      });
+      return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
+    }
+
+    const parsed = safeParseThemeFile(metaFile, rawContent);
+    if (!parsed) {
+      Notification.show({
+        title: 'Failed to load sound theme',
+        message: `The sound theme "${theme}" contains invalid JSON5. Please check the file at "${metaFile}".`,
+        type: 'error',
+      });
+      return { ...emptyTheme, id: theme, name: theme, loadFailed: true };
+    }
+
+    const description = parsed as SoundThemeDescription;
 
     if (description.engineVersion !== engineVersion) {
       console.warn(
