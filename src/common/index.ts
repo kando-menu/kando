@@ -376,6 +376,12 @@ export type MenuThemeDescription = {
     readonly class: string;
     readonly content: 'none' | 'name' | 'icon' | 'quick-select-key';
   }[];
+
+  /**
+   * True if the theme.json(5) file could not be read or parsed. A broken theme is
+   * excluded from the list of available themes in the settings.
+   */
+  readonly loadFailed?: boolean;
 };
 
 /**
