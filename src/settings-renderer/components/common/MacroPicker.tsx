@@ -15,6 +15,11 @@ import classNames from 'classnames/bind';
 
 import { MacroEvent } from '../../../common/';
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+import {
+  convertMacroToString as convertToString,
+  getMacroEventIndexAt,
+  insertMacroEvent,
+} from '../../utils/macro-utils';
 import { Button } from '.';
 
 import * as classes from './MacroPicker.module.scss';
@@ -49,6 +54,9 @@ export default function MacroPicker(props: Props) {
   );
   const [recording, setRecording] = React.useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  // The index at which the next recorded event will be inserted into the macro.
+  const insertIndex = React.useRef(0);
 
   // Update the value when the initialValue prop changes. This is necessary because the
   // initialValue prop might change after the component has been initialized.
@@ -97,14 +105,14 @@ export default function MacroPicker(props: Props) {
         }}
         onKeyDown={(event) => {
           if (recording) {
-            recordInput(event);
+            recordInput(event, insertIndex.current++);
             setTextValue(event.currentTarget.value);
             event.preventDefault();
           }
         }}
         onKeyUp={(event) => {
           if (recording) {
-            recordInput(event);
+            recordInput(event, insertIndex.current++);
             setTextValue(event.currentTarget.value);
             event.preventDefault();
           }
@@ -121,7 +129,15 @@ export default function MacroPicker(props: Props) {
               props.onChange?.(macro);
             }
           } else {
-            setTextValue('');
+            // New events are inserted at the caret position. If the current text is not
+            // a valid macro, we start from scratch.
+            if (convertToMacro(textValue)) {
+              const caret = inputRef.current?.selectionStart ?? textValue.length;
+              insertIndex.current = getMacroEventIndexAt(textValue, caret);
+            } else {
+              setTextValue('');
+              insertIndex.current = 0;
+            }
             inputRef.current?.focus();
           }
           setRecording(!recording);
@@ -174,38 +190,17 @@ function normalizeInput(input: string): string {
 }
 
 /**
- * This method appends the key code of the given KeyboardEvent to the input field.
+ * This method inserts the key code of the given KeyboardEvent into the input field.
  *
  * @param event The KeyboardEvent to get the macro for.
+ * @param index The index at which the new macro event is inserted.
  */
-function recordInput(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-  const macro = JSON5.parse('[' + event.currentTarget.value + ']' || '[]');
-
-  macro.push({
+function recordInput(event: React.KeyboardEvent<HTMLTextAreaElement>, index: number) {
+  event.currentTarget.value = insertMacroEvent(event.currentTarget.value, index, {
     type: event.type === 'keydown' ? 'keyDown' : 'keyUp',
     key: event.code,
     delay: 10,
   });
-
-  event.currentTarget.value = convertToString(macro);
-}
-
-/**
- * This method converts the given macro to a string as displayed in the input field. It
- * removes all line breaks and spaces, and formats the JSON string to be more readable.
- *
- * @param macro The macro to convert.
- * @returns The string representation of the macro.
- */
-function convertToString(macro: MacroEvent[]): string {
-  return JSON5.stringify(macro, null, 1)
-    .replace(/\n/g, '')
-    .replace(/ /g, '')
-    .replace(/\[/g, '')
-    .replace(/\]/g, '')
-    .replace(/\},/g, '},\n')
-    .replace(/:/g, ': ')
-    .replace(/,/g, ', ');
 }
 
 /**
