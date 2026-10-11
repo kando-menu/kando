@@ -30,6 +30,10 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - Fixed a regression on KDE Wayland 6.3 which would cause the shortcut settings of System Settings to open every time Kando was started. Thanks to [@Tailszefox](https://github.com/Tailszefox) for the fix!
 - <kbd>CMD</kbd>+<kbd>A</kbd> can now be used to select text in input fields on macOS.
 - Fixed an issue on KDE where the Flatpak version of Kando would not connect to the KWin integration plugin.
+- Fixed an issue on wlroots-based compositors like Niri where the menu would frequently open at the configured fallback position instead of at the pointer, because the just-received pointer position was discarded right before the wait loop started.
+- Fixed the "Pointer fallback position" setting being ignored on wlroots-based compositors; it always behaved as if "center" was selected.
+- Fixed the "previously reported position" fallback losing track of the last real pointer position after a timeout occurred.
+- Fixed fallback positions on wlroots-based compositors ignoring the output's position, always targeting the monitor at (0, 0) on multi-monitor setups.
 
 ## [Kando 3.0.0](https://github.com/kando-menu/kando/releases/tag/v3.0.0)
 
