@@ -375,7 +375,8 @@
             "enable-menu-animations-info": "Désactiver cette option empêche toutes les transitions et la plupart des animations du thème de menu.",
             "enable-menu-animations": "Animations de Menu",
             "enable-pointer-reactive-effects-info": "Désactiver cette option, empéchera certains effets de zoom ou de mise à l'échelle sur le thème du menu, qui dépendent de la position actuelle du curseur.",
-            "enable-pointer-reactive-effects": "Effets Réactifs au Curseur"
+            "enable-pointer-reactive-effects": "Effets Réactifs au Curseur",
+            "underline-quick-select-key-info": "Si cette option est activée, la première lettre du nom de l'élément de menu correspondant à la touche de sélection rapide de cet élément sera soulignée."
         },
         "not-bound": "Non-Attribué",
         "shortcut-id-label": "ID du raccourci clavier",
