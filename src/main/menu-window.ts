@@ -132,6 +132,12 @@ export class MenuWindow extends BrowserWindow {
       // resizable/movable false only blocks interactive user resize/move; showMenu still
       // repositions via setBounds() when the pointer is on a secondary display.
       ...(os.platform() === 'darwin' ? { resizable: false, movable: false } : {}),
+      // On macOS, Electron creates frameless windows as titled windows with hidden
+      // traffic-light buttons. Those buttons are still exposed via accessibility, so
+      // window managers like AeroSpace treat the menu as a regular window, assign it to a
+      // workspace, and switch to that workspace whenever the menu is shown. Disabling
+      // rounded corners makes Electron create a truly borderless window instead.
+      roundedCorners: os.platform() !== 'darwin',
     });
 
     // When the general settings change, we need to apply the zoom factor to the window.
