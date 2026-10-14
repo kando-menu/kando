@@ -38,6 +38,8 @@ export type Native = {
     pointerGetTimedOut: boolean;
     workAreaWidth: number;
     workAreaHeight: number;
+    outputX: number;
+    outputY: number;
   };
 
   /** Lists all currently open windows using the foreign-toplevel protocol. */

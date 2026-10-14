@@ -35,7 +35,6 @@ export abstract class WLRBackend extends LinuxBackend {
   private previouslyReportedX = 0;
   private previouslyReportedY = 0;
   public generalSettings: Settings<GeneralSettings>;
-  public defaultBehavior: PointerTimeoutBehavior = 'center';
 
   /** Uses the foreign-toplevel protocol to list currently open windows. */
   public async getOpenWindows(): Promise<WindowDescription[]> {
@@ -109,34 +108,38 @@ export abstract class WLRBackend extends LinuxBackend {
     );
     if (data.pointerGetTimedOut) {
       console.error('Pointer get timed out');
-      switch (this.defaultBehavior) {
+      const defaultBehavior: PointerTimeoutBehavior = this.generalSettings.get(
+        'wlrootsPointerGetTimeoutDefaultBehavior'
+      );
+      switch (defaultBehavior) {
         case 'top-left':
-          data.pointerX = 0;
-          data.pointerY = 0;
+          data.pointerX = data.outputX;
+          data.pointerY = data.outputY;
           break;
         case 'top-right':
-          data.pointerX = data.workAreaWidth;
-          data.pointerY = 0;
+          data.pointerX = data.outputX + data.workAreaWidth;
+          data.pointerY = data.outputY;
           break;
         case 'bottom-left':
-          data.pointerX = 0;
-          data.pointerY = data.workAreaHeight;
+          data.pointerX = data.outputX;
+          data.pointerY = data.outputY + data.workAreaHeight;
           break;
         case 'bottom-right':
-          data.pointerX = data.workAreaWidth;
-          data.pointerY = data.workAreaHeight;
+          data.pointerX = data.outputX + data.workAreaWidth;
+          data.pointerY = data.outputY + data.workAreaHeight;
           break;
         case 'center':
-          data.pointerX = data.workAreaWidth / 2;
-          data.pointerY = data.workAreaHeight / 2;
+          data.pointerX = data.outputX + data.workAreaWidth / 2;
+          data.pointerY = data.outputY + data.workAreaHeight / 2;
           break;
         case 'previously-reported-position':
           data.pointerX = this.previouslyReportedX;
           data.pointerY = this.previouslyReportedY;
       }
+    } else {
+      this.previouslyReportedX = data.pointerX;
+      this.previouslyReportedY = data.pointerY;
     }
-    this.previouslyReportedX = data.pointerX;
-    this.previouslyReportedY = data.pointerY;
     return data;
   }
 }
