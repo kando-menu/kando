@@ -49,10 +49,16 @@ type Props = {
    * The placeholder text to display in the ShortcutPicker when no quick select key is
    * bound.
    */
-  readonly quickSelectKeyPlaceholder: string;
+  readonly quickSelectKeyPlaceholder?: string;
 
   /** The info text shown for the quick select key in the ActionPicker. */
-  readonly quickSelectKeyInfo: string;
+  readonly quickSelectKeyInfo?: string;
+
+  /**
+   * If true, no quick select key can be assigned to the workflow. This is used for
+   * workflows which are not triggered by a key, such as the scroll workflows.
+   */
+  readonly hideQuickSelectKey?: boolean;
 
   /** Callback to update the workflow. */
   readonly onUpdateWorkflow: (workflow: Workflow) => void;
@@ -230,21 +236,23 @@ export default function ActionList(props: Props) {
             lastWorkflowType: props.isLastWorkflowType,
           })}>
           <div className={classes.actionItemContent} style={{ paddingTop: 10 }}>
-            <ShortcutPicker
-              initialValue={props.workflow?.quickSelectKey || ''}
-              label={i18next.t('settings.quick-select-key-label')}
-              info={props.quickSelectKeyInfo}
-              mode="key-names"
-              placeholder={props.quickSelectKeyPlaceholder}
-              recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
-              useModifiers={false}
-              onChange={(shortcut) => {
-                props.onUpdateWorkflow({
-                  ...props.workflow,
-                  quickSelectKey: shortcut || undefined,
-                });
-              }}
-            />
+            {props.hideQuickSelectKey ? null : (
+              <ShortcutPicker
+                initialValue={props.workflow?.quickSelectKey || ''}
+                label={i18next.t('settings.quick-select-key-label')}
+                info={props.quickSelectKeyInfo}
+                mode="key-names"
+                placeholder={props.quickSelectKeyPlaceholder}
+                recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
+                useModifiers={false}
+                onChange={(shortcut) => {
+                  props.onUpdateWorkflow({
+                    ...props.workflow,
+                    quickSelectKey: shortcut || undefined,
+                  });
+                }}
+              />
+            )}
             <Note marginTop={4}>{props.description}</Note>
           </div>
         </div>

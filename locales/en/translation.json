@@ -372,6 +372,14 @@
                 "empty-hint": "Currently, nothing will happen when you click the center of the submenu. Use the button above to add actions to this workflow!",
                 "quick-select-key-hint": "Pressing this key while the submenu is open will also trigger the center-click workflow."
             },
+            "scroll-up-workflow": {
+                "description": "The actions below will be executed when you scroll the mouse wheel up while hovering over the item. The menu stays open.",
+                "empty-hint": "Currently, nothing will happen when scrolling up over this item. Use the button above to add actions to this workflow!"
+            },
+            "scroll-down-workflow": {
+                "description": "The actions below will be executed when you scroll the mouse wheel down while hovering over the item. The menu stays open.",
+                "empty-hint": "Currently, nothing will happen when scrolling down over this item. Use the button above to add actions to this workflow!"
+            },
             "root-activate-workflow": {
                 "description": "The actions below will be executed when you click the center of the root menu.",
                 "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!",
@@ -384,6 +392,8 @@
             "hover-workflow-name": "Hover Workflow",
             "activate-workflow-name": "Center-Click Workflow",
             "open-workflow-name": "Open Workflow",
+            "scroll-up-workflow-name": "Scroll-Up Workflow",
+            "scroll-down-workflow-name": "Scroll-Down Workflow",
             "action-not-supported": "This action is not supported by the current backend."
         },
         "menu-conditions": "Menu Conditions",

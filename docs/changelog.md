@@ -22,6 +22,10 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 **Release Date:** TBD
 
+### :tada: Added
+
+- Buttons and submenus now have two new workflows: the scroll-up- and the scroll-down-workflow. They get executed when you scroll the mouse wheel while hovering over the item, without closing the menu. This can be used, for instance, to change the volume or the brightness.
+
 ### :bug: Fixed
 
 - Fixed an issue where a single invalid theme.json5 file prevented the menu and settings from loading. Thanks to [@hippi345](https://github.com/hippi345) for the fix!
