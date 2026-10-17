@@ -225,6 +225,12 @@ export const BUTTON_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
 
   /** The workflow which is triggered when the item is selected. */
   selectWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the mouse wheel is scrolled up over the item. */
+  scrollUpWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the mouse wheel is scrolled down over the item. */
+  scrollDownWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 });
 
 /**
@@ -248,6 +254,15 @@ export const SUBMENU_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
 
   /** The workflow which is triggered when the submenu center is clicked while open. */
   activateWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the mouse wheel is scrolled up over the submenu. */
+  scrollUpWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /**
+   * The workflow which is triggered when the mouse wheel is scrolled down over the
+   * submenu.
+   */
+  scrollDownWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
   /** The children of this menu item. */
   get children() {

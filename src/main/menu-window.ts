@@ -819,6 +819,23 @@ export class MenuWindow extends BrowserWindow {
           return;
         }
 
+        // For buttons and submenus, there are also the scroll-workflows.
+        if (
+          (type === MenuInteractionType.eScrollUp ||
+            type === MenuInteractionType.eScrollDown) &&
+          (item.type === 'button' || item.type === 'submenu')
+        ) {
+          const workflow =
+            type === MenuInteractionType.eScrollUp
+              ? item.scrollUpWorkflow
+              : item.scrollDownWorkflow;
+
+          if (workflow) {
+            this.executeWorkflow(workflow);
+          }
+          return;
+        }
+
         // For submenus, there is also the activate-workflow.
         if (type === MenuInteractionType.eActivateMenu && item.type === 'submenu') {
           if (item.activateWorkflow) {
