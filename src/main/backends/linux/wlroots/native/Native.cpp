@@ -126,6 +126,10 @@ static const zwlr_foreign_toplevel_handle_v1_listener foreignToplevelHandleListe
       auto* window = static_cast<ForeignToplevelWindow*>(data);
       window->closed = true;
     },
+    // Since we bind version 3, we must handle the parent event. libwayland aborts if an
+    // event arrives for which no listener is set. Some compositors send it for every
+    // toplevel, even if it has no parent.
+    .parent = [](void*, zwlr_foreign_toplevel_handle_v1*, zwlr_foreign_toplevel_handle_v1*) {},
 };
 
 static const zwlr_foreign_toplevel_manager_v1_listener foreignToplevelManagerListener = {
