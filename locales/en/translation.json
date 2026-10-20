@@ -575,6 +575,9 @@
         "niri": {
             "shortcut-info": "Niri does not yet support global shortcuts. But you can open this menu using 'kando --menu \"Menu Name\"' from the command line or from your niri config."
         },
+        "umbriel": {
+            "shortcut-info": "Umbriel does not yet support the global-shortcuts portal. But you can open this menu using 'kando --menu \"Menu Name\"' from the command line or from your Umbriel keybinds.toml."
+        },
         "kde": {
             "error": "Could not connect to KWin Kando plugin. Some functionality will not be available. You can get it from [here]({{link}})."
         }
