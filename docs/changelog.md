@@ -22,6 +22,10 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 **Release Date:** TBD
 
+### :tada: Added
+
+- Added a backend for the [Umbriel](https://github.com/noctalia-dev/umbriel) Wayland compositor.
+
 ### :bug: Fixed
 
 - Fixed an issue where a single invalid theme.json5 file prevented the menu and settings from loading. Thanks to [@hippi345](https://github.com/hippi345) for the fix!

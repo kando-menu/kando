@@ -521,6 +521,9 @@
         "niri": {
             "shortcut-info": "Niri 尚不支援全域快捷鍵。但可透過命令列或您的 Niri 設定檔，執行 'kando --menu \"選單名稱\"' 來開啟此選單。"
         },
+        "umbriel": {
+            "shortcut-info": "Umbriel 尚不支援全域快捷鍵入口（portal）。但可透過命令列或您的 Umbriel keybinds.toml，執行 'kando --menu \"選單名稱\"' 來開啟此選單。"
+        },
         "kde": {
             "error": "無法連線至 Kando 的 KWin 外掛程式，部分功能將無法使用。可從[此處]({{link}})取得。"
         }
