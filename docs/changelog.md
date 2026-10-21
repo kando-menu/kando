@@ -31,6 +31,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - <kbd>CMD</kbd>+<kbd>A</kbd> can now be used to select text in input fields on macOS.
 - Fixed an issue on KDE where the Flatpak version of Kando would not connect to the KWin integration plugin.
 - Fixed several issues related the "Pointer fallback position" on wlroots-based compositors like Niri. Thanks to [@presianbg](https://github.com/presianbg) for the fix!
+- Fixed a crash on wlroots-based Wayland compositors which send the foreign-toplevel `parent` event for every window.
 
 ## [Kando 3.0.0](https://github.com/kando-menu/kando/releases/tag/v3.0.0)
 
