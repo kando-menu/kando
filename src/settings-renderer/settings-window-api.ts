@@ -21,6 +21,7 @@ import {
   AppDescription,
   LevelProgress,
   SettingsWindowSidebarWidths,
+  ShortcutRecordingEvent,
 } from '../common';
 import { IPCMenuManager } from './utils/ipc-menu-manager';
 
@@ -41,6 +42,32 @@ export const SETTINGS_WINDOW_API = {
   /** This will return some information about the currently used backend. */
   getBackendInfo: (): Promise<BackendInfo> => {
     return ipcRenderer.invoke('settings-window.get-backend-info');
+  },
+
+  /** Temporarily disables global shortcuts while a shortcut is being recorded. */
+  beginShortcutRecording: (): Promise<number> => {
+    return ipcRenderer.invoke('settings-window.begin-shortcut-recording');
+  },
+
+  /** Restores global shortcuts after a shortcut recording has finished. */
+  endShortcutRecording: (inhibitionID: number): Promise<void> => {
+    return ipcRenderer.invoke('settings-window.end-shortcut-recording', inhibitionID);
+  },
+
+  /** Receives keyboard events captured natively while recording a shortcut. */
+  onShortcutRecordingEvent: (
+    callback: (event: ShortcutRecordingEvent) => void
+  ): (() => void) => {
+    const wrappedCallback = (
+      event: Electron.IpcRendererEvent,
+      input: ShortcutRecordingEvent
+    ) => callback(input);
+
+    ipcRenderer.on('settings-window.shortcut-recording-event', wrappedCallback);
+
+    return () => {
+      ipcRenderer.off('settings-window.shortcut-recording-event', wrappedCallback);
+    };
   },
 
   /** Returns the current version string of Kando. */

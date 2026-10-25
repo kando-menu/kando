@@ -93,6 +93,12 @@ export type BackendInfo = {
    */
   readonly supportsShortcuts: boolean;
 
+  /** Whether global shortcuts can distinguish left and right modifier keys. */
+  readonly supportsLeftRightModifiers?: boolean;
+
+  /** Whether a single modifier key can be used as a global shortcut. */
+  readonly supportsStandaloneModifierShortcuts?: boolean;
+
   /**
    * This hint is shown in the settings next to the shortcut-id input field if
    * supportsShortcuts is false. It should very briefly explain how to change the

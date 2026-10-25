@@ -231,6 +231,8 @@ export default function ActionList(props: Props) {
           })}>
           <div className={classes.actionItemContent} style={{ paddingTop: 10 }}>
             <ShortcutPicker
+              isModifierSideSelectionAllowed
+              isStandaloneModifierAllowed
               initialValue={props.workflow?.quickSelectKey || ''}
               label={i18next.t('settings.quick-select-key-label')}
               info={props.quickSelectKeyInfo}

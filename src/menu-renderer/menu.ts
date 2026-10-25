@@ -19,6 +19,10 @@ import {
   SelectionSource,
   MenuInteractionType,
   TypedEventEmitter,
+  DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS,
+  findMatchingModifierShortcut,
+  getModifierShortcutTapCount,
+  getModifierShortcutFromCode,
 } from '../common';
 import {
   RenderedChildMenuItem,
@@ -64,6 +68,14 @@ type MenuEvents = {
   // pointer to the center of the menu when it is shown.
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'move-pointer': [dist: Vec2];
+};
+
+type QuickSelectModifierTap = {
+  pressedAt: number;
+  released: boolean;
+  expired: boolean;
+  singlePressShortcut?: string;
+  timeout: ReturnType<typeof setTimeout>;
 };
 
 export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvents>) {
@@ -129,6 +141,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
   /** This timeout is used to initialize the menu position on mouse enter. */
   private initialPositionTimeout: NodeJS.Timeout;
+
+  /** First modifier presses which may become double-press quick-select shortcuts. */
+  private quickSelectModifierTaps: Map<string, QuickSelectModifierTap> = new Map();
+
+  /** Modifier quick-select shortcuts waiting for their final key-up event. */
+  private activeQuickSelectModifiers: Map<string, string> = new Map();
 
   /**
    * The time when the current menu was shown. Used to track selection times for
@@ -284,6 +302,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.hoveredItem = null;
     this.draggedItem = null;
     this.centerItem = null;
+    this.resetQuickSelectModifierState();
     clearTimeout(this.hideTimeout);
     clearTimeout(this.initialPositionTimeout);
     this.hideTimeout = null;
@@ -459,6 +478,211 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       }
     };
 
+    const triggerQuickSelectKey = (
+      shortcut: string,
+      eventType: 'keydown' | 'keyup',
+      includeNumberFallbacks = false
+    ): boolean => {
+      const normalizedShortcut = shortcut.toLocaleLowerCase();
+
+      // First check the center-click workflow of the center item.
+      if (
+        (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') &&
+        this.centerItem.activateWorkflow?.quickSelectKey?.toLocaleLowerCase() ===
+          normalizedShortcut
+      ) {
+        if (eventType === 'keydown') {
+          this.hoverItem(this.centerItem);
+        } else {
+          this.emitItemInteractionEvent(
+            MenuInteractionType.eActivateMenu,
+            this.centerItem.renderData.path
+          );
+        }
+        return true;
+      }
+
+      // Then check the select and open workflows of the child items.
+      if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
+        for (let i = 0; i < this.centerItem.children.length; i++) {
+          const child = this.centerItem.children[i] as RenderedChildMenuItem;
+          const selectionKeys: string[] = [];
+
+          if (child.type === 'button' && child.selectWorkflow?.quickSelectKey) {
+            selectionKeys.push(child.selectWorkflow.quickSelectKey.toLocaleLowerCase());
+          } else if (child.type === 'submenu' && child.openWorkflow?.quickSelectKey) {
+            selectionKeys.push(child.openWorkflow.quickSelectKey.toLocaleLowerCase());
+          } else if (includeNumberFallbacks && i < 9) {
+            selectionKeys.push(`${i + 1}`);
+            selectionKeys.push(`num${i + 1}`);
+          }
+
+          if (selectionKeys.includes(normalizedShortcut)) {
+            if (eventType === 'keydown') {
+              this.latestInput.button = ButtonState.eClicked;
+              this.hoverAngle(child.renderData.computedAngle);
+            } else {
+              if (child.type === 'submenu') {
+                this.emitItemInteractionEvent(
+                  MenuInteractionType.eOpenSubmenu,
+                  child.renderData.path
+                );
+                this.openSubmenu(child, this.getCenterItemPosition());
+              } else {
+                this.emitSelectionEvent(child, SelectionSource.eKeyboard);
+              }
+
+              this.latestInput.button = ButtonState.eReleased;
+              this.redraw();
+            }
+            return true;
+          }
+        }
+      }
+
+      // Finally check the hover workflows of the child items.
+      if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
+        for (const item of this.centerItem.children) {
+          const child = item as RenderedChildMenuItem;
+
+          if (
+            child.hoverWorkflow?.quickSelectKey?.toLocaleLowerCase() ===
+            normalizedShortcut
+          ) {
+            this.hoverAngle(child.renderData.computedAngle);
+            return true;
+          }
+        }
+      }
+
+      return false;
+    };
+
+    const getQuickSelectKeys = (): string[] => {
+      const shortcuts: string[] = [];
+
+      if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
+        if (this.centerItem.activateWorkflow?.quickSelectKey) {
+          shortcuts.push(this.centerItem.activateWorkflow.quickSelectKey);
+        }
+
+        for (const item of this.centerItem.children) {
+          const child = item as RenderedChildMenuItem;
+
+          if (child.type === 'button' && child.selectWorkflow?.quickSelectKey) {
+            shortcuts.push(child.selectWorkflow.quickSelectKey);
+          } else if (child.type === 'submenu' && child.openWorkflow?.quickSelectKey) {
+            shortcuts.push(child.openWorkflow.quickSelectKey);
+          }
+
+          if (child.hoverWorkflow?.quickSelectKey) {
+            shortcuts.push(child.hoverWorkflow.quickSelectKey);
+          }
+        }
+      }
+
+      return shortcuts;
+    };
+
+    const completeDelayedSinglePress = (shortcut?: string) => {
+      if (shortcut && !this.container.classList.contains('hidden')) {
+        triggerQuickSelectKey(shortcut, 'keydown');
+        triggerQuickSelectKey(shortcut, 'keyup');
+      }
+    };
+
+    const handleModifierQuickSelect = (event: KeyboardEvent): boolean => {
+      const modifier = getModifierShortcutFromCode(event.code, cIsMac);
+      if (!modifier || event.repeat) {
+        return false;
+      }
+
+      if (event.type === 'keyup') {
+        const activeShortcut = this.activeQuickSelectModifiers.get(modifier);
+        if (activeShortcut) {
+          this.activeQuickSelectModifiers.delete(modifier);
+          triggerQuickSelectKey(activeShortcut, 'keyup');
+          return true;
+        }
+
+        const tap = this.quickSelectModifierTaps.get(modifier);
+        if (!tap) {
+          return false;
+        }
+
+        tap.released = true;
+        if (
+          tap.expired ||
+          performance.now() - tap.pressedAt >= DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS
+        ) {
+          clearTimeout(tap.timeout);
+          this.quickSelectModifierTaps.delete(modifier);
+          completeDelayedSinglePress(tap.singlePressShortcut);
+        }
+        return true;
+      }
+
+      const quickSelectKeys = getQuickSelectKeys();
+      const singlePressShortcut = findMatchingModifierShortcut(
+        quickSelectKeys,
+        modifier,
+        1
+      );
+      const doublePressShortcut = findMatchingModifierShortcut(
+        quickSelectKeys,
+        modifier,
+        2
+      );
+      if (!singlePressShortcut && !doublePressShortcut) {
+        return false;
+      }
+
+      if (!doublePressShortcut) {
+        this.activeQuickSelectModifiers.set(modifier, singlePressShortcut);
+        triggerQuickSelectKey(singlePressShortcut, 'keydown');
+        return true;
+      }
+
+      const now = performance.now();
+      const previousTap = this.quickSelectModifierTaps.get(modifier);
+      if (
+        previousTap?.released &&
+        now - previousTap.pressedAt <= DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS
+      ) {
+        clearTimeout(previousTap.timeout);
+        this.quickSelectModifierTaps.delete(modifier);
+        this.activeQuickSelectModifiers.set(modifier, doublePressShortcut);
+        triggerQuickSelectKey(doublePressShortcut, 'keydown');
+        return true;
+      }
+
+      if (previousTap) {
+        clearTimeout(previousTap.timeout);
+        this.quickSelectModifierTaps.delete(modifier);
+        completeDelayedSinglePress(previousTap.singlePressShortcut);
+      }
+
+      const tap: QuickSelectModifierTap = {
+        pressedAt: now,
+        released: false,
+        expired: false,
+        singlePressShortcut,
+        timeout: setTimeout(() => {
+          if (this.quickSelectModifierTaps.get(modifier) !== tap) {
+            return;
+          }
+
+          tap.expired = true;
+          if (tap.released) {
+            this.quickSelectModifierTaps.delete(modifier);
+            completeDelayedSinglePress(tap.singlePressShortcut);
+          }
+        }, DOUBLE_MODIFIER_SHORTCUT_INTERVAL_MS),
+      };
+      this.quickSelectModifierTaps.set(modifier, tap);
+      return true;
+    };
+
     const onKeyEvent = (event: KeyboardEvent) => {
       if (this.container.classList.contains('hidden')) {
         return;
@@ -468,85 +692,25 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
         return;
       }
 
+      if (handleModifierQuickSelect(event)) {
+        event.preventDefault();
+        return;
+      }
+
       const anyModifierPressed =
         event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 
       if (!anyModifierPressed) {
         const eventKey = KeyMapper.getName(event).toLocaleLowerCase();
 
-        // Then we check whether the center-click-workflow of the center item got
-        // triggered. On key-down, we hover the center item and on key-up, we select it.
+        // A menu may become visible while its global modifier shortcut is already held.
+        // In that case, we receive only the key-up event and must not mistake it for a
+        // complete quick-select press.
         if (
-          (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') &&
-          this.centerItem.activateWorkflow?.quickSelectKey
+          getModifierShortcutTapCount(eventKey) === 0 &&
+          triggerQuickSelectKey(eventKey, event.type as 'keydown' | 'keyup', true)
         ) {
-          if (
-            this.centerItem.activateWorkflow.quickSelectKey.toLocaleLowerCase() ===
-            eventKey
-          ) {
-            if (event.type === 'keydown') {
-              this.hoverItem(this.centerItem);
-            } else {
-              this.emitItemInteractionEvent(
-                MenuInteractionType.eActivateMenu,
-                this.centerItem.renderData.path
-              );
-            }
-            return;
-          }
-        }
-
-        // Then we check whether any select-workflow of the menu items got triggered by
-        // the quick select key.
-        if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
-          for (let i = 0; i < this.centerItem.children.length; i++) {
-            const child = this.centerItem.children[i] as RenderedChildMenuItem;
-
-            const selectionKeys = [];
-            if (child.type === 'button' && child.selectWorkflow?.quickSelectKey) {
-              selectionKeys.push(child.selectWorkflow.quickSelectKey.toLocaleLowerCase());
-            } else if (child.type === 'submenu' && child.openWorkflow?.quickSelectKey) {
-              selectionKeys.push(child.openWorkflow.quickSelectKey.toLocaleLowerCase());
-            } else if (i < 9) {
-              selectionKeys.push(`${i + 1}`);
-              selectionKeys.push(`num${i + 1}`);
-            }
-
-            if (selectionKeys.includes(eventKey)) {
-              if (event.type === 'keydown') {
-                this.latestInput.button = ButtonState.eClicked;
-                this.hoverAngle(child.renderData.computedAngle);
-              } else {
-                if (child.type === 'submenu') {
-                  this.emitItemInteractionEvent(
-                    MenuInteractionType.eOpenSubmenu,
-                    child.renderData.path
-                  );
-                  this.openSubmenu(child, this.getCenterItemPosition());
-                } else {
-                  this.emitSelectionEvent(child, SelectionSource.eKeyboard);
-                }
-
-                this.latestInput.button = ButtonState.eReleased;
-                this.redraw();
-              }
-              return;
-            }
-          }
-        }
-
-        // Finally, we check whether any hover-workflow of the menu items got triggered.
-        if (this.centerItem.type === 'submenu' || this.centerItem.type === 'root') {
-          for (let i = 0; i < this.centerItem.children.length; i++) {
-            const child = this.centerItem.children[i] as RenderedChildMenuItem;
-
-            if (child.hoverWorkflow?.quickSelectKey) {
-              if (child.hoverWorkflow.quickSelectKey.toLocaleLowerCase() === eventKey) {
-                this.hoverAngle(child.renderData.computedAngle);
-                return;
-              }
-            }
-          }
+          return;
         }
 
         if (event.type === 'keydown') {
@@ -657,6 +821,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       return;
     }
 
+    this.resetQuickSelectModifierState();
     this.clickItem(null);
     this.dragItem(null);
 
@@ -762,6 +927,16 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.updateCSSClasses();
     this.updateConnectors();
     this.redraw();
+  }
+
+  /** Cancels modifier quick-select gestures which have not completed yet. */
+  private resetQuickSelectModifierState() {
+    for (const tap of this.quickSelectModifierTaps.values()) {
+      clearTimeout(tap.timeout);
+    }
+
+    this.quickSelectModifierTaps.clear();
+    this.activeQuickSelectModifiers.clear();
   }
 
   /**
