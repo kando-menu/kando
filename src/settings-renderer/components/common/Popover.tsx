@@ -169,7 +169,7 @@ export default function Popover(props: Props) {
           nodeRef={popoverContentRef}
           timeout={200}>
           <div ref={popoverContentRef} className={classes.popover}>
-            <div ref={popoverTriangleRef} className={classes.popoverTriangleRef} />
+            <div ref={popoverTriangleRef} className={classes.popoverTriangle} />
             {props.content}
           </div>
         </CSSTransition>,
