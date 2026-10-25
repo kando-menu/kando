@@ -54,7 +54,7 @@ export default function GeneralSettingsDialog() {
   const [transitionDirection, setTransitionDirection] =
     React.useState<TransitionDirection>('down');
   const categoryTransitionDuration = 320; // 280ms animation + 40ms enter delay
-  const activeOptionsPageRef = React.createRef<HTMLDivElement>();
+  const activeOptionsPageRef = React.useRef<HTMLDivElement>(null);
 
   const handleCategorySelect = (categoryIndex: number) => {
     if (categoryIndex === activeCategory) {

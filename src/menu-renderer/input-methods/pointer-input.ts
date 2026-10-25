@@ -324,7 +324,7 @@ export class PointerInput extends InputMethod {
       // Only if triggerCenterClickOnKeyRelease is enabled, we trigger the center-click-
       // workflow when a key is released while hovering over the center of a menu. Else,
       // we do not trigger selections on the center item in turbo mode.
-      let triggerSelection = false;
+      let triggerSelection;
 
       if (this.triggerCenterClickOnKeyRelease) {
         triggerSelection = true;

@@ -121,7 +121,6 @@ export default function GridIconPicker(props: Props) {
   return (
     <div style={{ flexGrow: 1, minHeight: 0 }}>
       <AutoSizer>
-        {/* eslint-disable-next-line react/no-unused-prop-types */}
         {({ width, height }: { readonly width: number; readonly height: number }) => (
           <Grid
             ref={setGridInstance}

@@ -76,9 +76,7 @@ function AccordionPanel(props: AccordionPanelProps) {
 
 /** Shows multiple collapsible boxes while allowing at most one open panel at a time. */
 export default function Accordion(props: Props) {
-  const children = React.Children.toArray(props.children).filter(
-    React.isValidElement
-  ) as AccordionItemElement[];
+  const children = Array.isArray(props.children) ? props.children : [props.children];
 
   return (
     <div>

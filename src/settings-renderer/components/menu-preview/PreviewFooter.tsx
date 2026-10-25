@@ -28,7 +28,7 @@ export default function PreviewFooter() {
   const deleteMenuItem = useMenuSettings((state) => state.deleteMenuItem);
 
   const [isDeleteDropActive, setIsDeleteDropActive] = React.useState(false);
-  const dragDepth = React.useRef(0);
+  const dragDepthRef = React.useRef(0);
 
   const allMetadata = ActionTypeRegistry.getInstance().getAllMetadata();
   const workflowItemTypes = (
@@ -70,7 +70,7 @@ export default function PreviewFooter() {
           return;
         }
 
-        dragDepth.current += 1;
+        dragDepthRef.current += 1;
 
         setIsDeleteDropActive(true);
         event.preventDefault();
@@ -87,9 +87,9 @@ export default function PreviewFooter() {
           return;
         }
 
-        dragDepth.current = Math.max(0, dragDepth.current - 1);
+        dragDepthRef.current = Math.max(0, dragDepthRef.current - 1);
 
-        if (dragDepth.current === 0) {
+        if (dragDepthRef.current === 0) {
           setIsDeleteDropActive(false);
         }
 
@@ -107,7 +107,7 @@ export default function PreviewFooter() {
         // handlers will not fire when the item is deleted.
         window.dispatchEvent(new CustomEvent('kando/menu-item-drag-end'));
 
-        dragDepth.current = 0;
+        dragDepthRef.current = 0;
         setIsDeleteDropActive(false);
 
         event.preventDefault();

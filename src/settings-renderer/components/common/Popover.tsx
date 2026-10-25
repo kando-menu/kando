@@ -48,22 +48,22 @@ type Props = {
  */
 export default function Popover(props: Props) {
   const { isVisible, position, onClose } = props;
-  const popoverContent = React.useRef(null);
-  const popoverTriangle = React.useRef(null);
-  const popoverTarget = React.useRef(null);
-  const pointerDownOutside = React.useRef(false);
+  const popoverContentRef = React.useRef(null);
+  const popoverTriangleRef = React.useRef(null);
+  const popoverTargetRef = React.useRef(null);
+  const pointerDownOutsideRef = React.useRef(false);
 
   // Show the popover if props.visible is true.
   React.useEffect(() => {
-    if (!isVisible || !popoverContent.current) {
+    if (!isVisible || !popoverContentRef.current) {
       return;
     }
 
     // Position the popover above or below the target element.
     const triangleSize = 10;
     const windowPadding = 10;
-    const targetRect = popoverTarget.current.getBoundingClientRect();
-    const contentRect = popoverContent.current.getBoundingClientRect();
+    const targetRect = popoverTargetRef.current.getBoundingClientRect();
+    const contentRect = popoverContentRef.current.getBoundingClientRect();
     const xDiff = targetRect.left - contentRect.width / 2 + targetRect.width / 2;
 
     // Clamp to window bounds left and right.
@@ -72,40 +72,41 @@ export default function Popover(props: Props) {
       Math.min(window.innerWidth - contentRect.width - windowPadding, xDiff)
     );
 
-    let yDiff = 0;
-
     if (position === 'bottom') {
-      yDiff = targetRect.bottom + triangleSize;
-      popoverTriangle.current.classList.add(classes.top);
-      popoverTriangle.current.classList.remove(classes.bottom);
+      popoverTriangleRef.current.classList.add(classes.top);
+      popoverTriangleRef.current.classList.remove(classes.bottom);
     } else {
-      yDiff = targetRect.top - contentRect.height - triangleSize;
-      popoverTriangle.current.classList.add(classes.bottom);
-      popoverTriangle.current.classList.remove(classes.top);
+      popoverTriangleRef.current.classList.add(classes.bottom);
+      popoverTriangleRef.current.classList.remove(classes.top);
     }
 
-    popoverContent.current.style.top = `${yDiff}px`;
-    popoverContent.current.style.left = `${clampedXDiff}px`;
-    popoverTriangle.current.style.left = `${contentRect.width / 2 - triangleSize + xDiff - clampedXDiff}px`;
+    const yDiff =
+      position === 'bottom'
+        ? targetRect.bottom + triangleSize
+        : targetRect.top - contentRect.height - triangleSize;
+
+    popoverContentRef.current.style.top = `${yDiff}px`;
+    popoverContentRef.current.style.left = `${clampedXDiff}px`;
+    popoverTriangleRef.current.style.left = `${contentRect.width / 2 - triangleSize + xDiff - clampedXDiff}px`;
 
     // Set the flag if the pointer down occurred outside the popover and target.
     const handlePointerDown = (event: PointerEvent) => {
-      pointerDownOutside.current =
-        popoverContent.current &&
-        !popoverContent.current.contains(event.target as Node) &&
-        popoverTarget.current &&
-        !popoverTarget.current.contains(event.target as Node);
+      pointerDownOutsideRef.current =
+        popoverContentRef.current &&
+        !popoverContentRef.current.contains(event.target as Node) &&
+        popoverTargetRef.current &&
+        !popoverTargetRef.current.contains(event.target as Node);
     };
 
     // Dismiss the popover when the user clicks outside of it.
     const handleClick = (event: MouseEvent) => {
       // Ensure the click started outside the popover and target.
       if (
-        pointerDownOutside.current &&
-        popoverContent.current &&
-        !popoverContent.current.contains(event.target as Node) &&
-        popoverTarget.current &&
-        !popoverTarget.current.contains(event.target as Node)
+        pointerDownOutsideRef.current &&
+        popoverContentRef.current &&
+        !popoverContentRef.current.contains(event.target as Node) &&
+        popoverTargetRef.current &&
+        !popoverTargetRef.current.contains(event.target as Node)
       ) {
         onClose();
       }
@@ -119,7 +120,7 @@ export default function Popover(props: Props) {
     };
 
     // Get the first focusable element inside the popover when it becomes visible.
-    const focusableElements = popoverContent.current?.querySelectorAll(
+    const focusableElements = popoverContentRef.current?.querySelectorAll(
       'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
     );
     const firstFocusableElement = focusableElements?.[0] as HTMLElement;
@@ -127,9 +128,9 @@ export default function Popover(props: Props) {
     // Trap focus within the popover.
     const handleFocusIn = (event: FocusEvent) => {
       if (
-        popoverContent.current &&
-        FocusTrapManager.isTopMost(popoverContent.current) &&
-        !popoverContent.current.contains(event.target as Node)
+        popoverContentRef.current &&
+        FocusTrapManager.isTopMost(popoverContentRef.current) &&
+        !popoverContentRef.current.contains(event.target as Node)
       ) {
         firstFocusableElement?.focus();
       }
@@ -139,9 +140,9 @@ export default function Popover(props: Props) {
     document.addEventListener('pointerup', handleClick);
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('focusin', handleFocusIn);
-    FocusTrapManager.add(popoverContent.current);
+    FocusTrapManager.add(popoverContentRef.current);
 
-    const currentPopoverContent = popoverContent.current;
+    const currentPopoverContent = popoverContentRef.current;
 
     return () => {
       document.removeEventListener('pointerdown', handlePointerDown);
@@ -154,7 +155,7 @@ export default function Popover(props: Props) {
 
   return (
     <>
-      <div ref={popoverTarget}>{props.children}</div>
+      <div ref={popoverTargetRef}>{props.children}</div>
       {createPortal(
         <CSSTransition
           unmountOnExit
@@ -165,10 +166,10 @@ export default function Popover(props: Props) {
             enterDone: classes.fadeEnterDone,
           }}
           in={props.isVisible}
-          nodeRef={popoverContent}
+          nodeRef={popoverContentRef}
           timeout={200}>
-          <div ref={popoverContent} className={classes.popover}>
-            <div ref={popoverTriangle} className={classes.popoverTriangle} />
+          <div ref={popoverContentRef} className={classes.popover}>
+            <div ref={popoverTriangleRef} className={classes.popoverTriangleRef} />
             {props.content}
           </div>
         </CSSTransition>,
