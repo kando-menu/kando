@@ -630,11 +630,10 @@
         "send-tcp-message": {
             "name": "Send TCP Message",
             "description": "Connects to a TCP server, for instance a Telnet service, and sends a message.",
-            "host-label": "Host",
-            "port-label": "Port",
-            "message-label": "Message",
+            "host-tooltip": "The host name or IP address of the TCP server.",
+            "port-tooltip": "The port number of the TCP server.",
             "message-placeholder": "Insert a message…",
-            "append-newline-label": "Append Line Break",
+            "append-newline-label": "Append line break",
             "append-newline-info": "If enabled, a line break (CRLF) is sent after the message. Many line-based protocols like Telnet expect this."
         },
         "execute-macro": {

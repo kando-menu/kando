@@ -29,39 +29,37 @@ type Props = {
 export function SendTCPMessageActionConfig(props: Props) {
   return (
     <>
-      <SettingsRow
-        isGrowing
-        label={i18next.t('menu-actions.send-tcp-message.host-label')}>
-        <TextInput
-          initialValue={props.action.host}
-          placeholder="127.0.0.1"
-          onChange={(value) => {
-            props.onUpdateAction({ ...props.action, host: value });
-          }}
-        />
+      <SettingsRow isGrowing>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <TextInput
+            initialValue={props.action.host}
+            placeholder="127.0.0.1"
+            tooltip={i18next.t('menu-actions.send-tcp-message.host-tooltip')}
+            onChange={(value) => {
+              props.onUpdateAction({ ...props.action, host: value });
+            }}
+          />
+          <Spinbutton
+            initialValue={props.action.port}
+            max={65535}
+            min={1}
+            step={1}
+            tooltip={i18next.t('menu-actions.send-tcp-message.port-tooltip')}
+            onChange={(value) => {
+              props.onUpdateAction({ ...props.action, port: Math.round(value) });
+            }}
+          />
+        </div>
       </SettingsRow>
-      <Spinbutton
-        initialValue={props.action.port}
-        label={i18next.t('menu-actions.send-tcp-message.port-label')}
-        max={65535}
-        min={1}
-        step={1}
+
+      <TextInput
+        isMultiline
+        initialValue={props.action.message}
+        placeholder={i18next.t('menu-actions.send-tcp-message.message-placeholder')}
         onChange={(value) => {
-          props.onUpdateAction({ ...props.action, port: Math.round(value) });
+          props.onUpdateAction({ ...props.action, message: value });
         }}
       />
-      <SettingsRow
-        isGrowing
-        label={i18next.t('menu-actions.send-tcp-message.message-label')}>
-        <TextInput
-          isMultiline
-          initialValue={props.action.message}
-          placeholder={i18next.t('menu-actions.send-tcp-message.message-placeholder')}
-          onChange={(value) => {
-            props.onUpdateAction({ ...props.action, message: value });
-          }}
-        />
-      </SettingsRow>
       <Checkbox
         info={i18next.t('menu-actions.send-tcp-message.append-newline-info')}
         initialValue={props.action.appendNewline}

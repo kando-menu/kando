@@ -27,6 +27,9 @@ type Props = {
   /** Optional placeholder text to display when the text input is empty. */
   readonly placeholder?: string;
 
+  /** Optional tooltip text to display when hovering over the text input. */
+  readonly tooltip?: string;
+
   /** Whether the text input is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
 
@@ -98,6 +101,8 @@ export default function TextInput(props: Props) {
       })}
       disabled={props.isDisabled}
       placeholder={props.placeholder}
+      data-tooltip-content={props.tooltip}
+      data-tooltip-id="main-tooltip"
       spellCheck="false"
       type="text"
       value={value}
