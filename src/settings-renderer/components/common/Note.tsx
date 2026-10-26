@@ -55,7 +55,7 @@ type Props = {
  */
 export default function Note(props: Props) {
   const handleLinkClick = (href?: string) => {
-    if (props.onLinkClick && href) {
+    if (props.onLinkClick) {
       props.onLinkClick(href); // Execute the callback with the link's href
     } else {
       window.open(href, '_blank'); // Default behavior: open in a new tab
