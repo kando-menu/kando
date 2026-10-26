@@ -4,7 +4,7 @@
   "version": "3.0.1",
   "description": "The Cross-Platform Pie Menu.",
   "copyright": "Copyright © 2026 Simon Schneegans",
-  "main": ".webpack/main",
+  "main": ".webpack/main/index.cjs",
   "scripts": {
     "postinstall": "cmake-js compile",
     "start": "tsx node_modules/@electron-forge/cli/src/electron-forge-start",
@@ -27,13 +27,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^7.11.2",
-    "@electron-forge/maker-deb": "^7.11.2",
-    "@electron-forge/maker-dmg": "^7.11.2",
-    "@electron-forge/maker-rpm": "^7.11.2",
-    "@electron-forge/maker-squirrel": "^7.11.2",
-    "@electron-forge/maker-zip": "^7.11.2",
-    "@electron-forge/plugin-webpack": "^7.11.2",
+    "@electron-forge/cli": "^8.0.1",
+    "@electron-forge/maker-deb": "^8.0.1",
+    "@electron-forge/maker-dmg": "^8.0.1",
+    "@electron-forge/maker-rpm": "^8.0.1",
+    "@electron-forge/maker-squirrel": "^8.0.1",
+    "@electron-forge/maker-zip": "^8.0.1",
+    "@electron-forge/plugin-webpack": "^8.0.1",
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^10.0.1",
     "@formkit/auto-animate": "0.8.2",
@@ -120,10 +120,6 @@
     "zod": "^4.6.7",
     "zundo": "^2.1.0",
     "zustand": "^5.0.16"
-  },
-  "//": "This is a workaround for https://github.com/electron/forge/issues/4277",
-  "overrides": {
-    "yauzl": "^3.3.1"
   },
   "allowScripts": {
     "@swc/core@1.15.41": true,
