@@ -55,11 +55,13 @@ export default function CollectionDetails(props: Props) {
 
   // Show the search bar when the user presses Ctrl+F.
   React.useEffect(() => {
+    let focusTimeout: ReturnType<typeof setTimeout> | undefined;
+
     MouseTrap.bind('mod+f', () => {
       if (!menuSearchBarVisible || selectedCollection !== -1) {
         selectCollection(-1);
         setMenuSearchBarVisible(true);
-        setTimeout(() => {
+        focusTimeout = setTimeout(() => {
           if (searchbarRef.current) {
             searchbarRef.current.focus();
           }
@@ -69,6 +71,9 @@ export default function CollectionDetails(props: Props) {
 
     return () => {
       MouseTrap.unbind('mod+f');
+      if (focusTimeout !== undefined) {
+        clearTimeout(focusTimeout);
+      }
     };
   }, [
     menuSearchBarVisible,

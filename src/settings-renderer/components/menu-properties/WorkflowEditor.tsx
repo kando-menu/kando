@@ -211,7 +211,7 @@ export default function WorkflowEditor() {
     const itemIndex =
       selectedChildPath.length > 0 ? selectedChildPath[selectedChildPath.length - 1] : -1;
 
-    let quickSelectKeyPlaceholder = '';
+    let quickSelectKeyPlaceholder;
     if (
       itemIndex < 9 &&
       (workflowType === 'buttonSelect' || workflowType === 'submenuOpen')

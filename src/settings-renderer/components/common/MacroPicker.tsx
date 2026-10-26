@@ -44,7 +44,9 @@ type Props = {
  * @returns A macro-picker element.
  */
 export default function MacroPicker(props: Props) {
-  const [textValue, setTextValue] = React.useState(convertToString(props.initialValue));
+  const [textValue, setTextValue] = React.useState(() =>
+    convertToString(props.initialValue)
+  );
   const [recording, setRecording] = React.useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 

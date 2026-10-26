@@ -68,14 +68,14 @@ type Props = {
  * @returns A modal element.
  */
 export default function Modal(props: Props) {
-  const modalContent = React.useRef(null);
-  const pointerDownOnBackground = React.useRef(false);
+  const modalContentRef = React.useRef(null);
+  const pointerDownOnBackgroundRef = React.useRef(false);
 
   const { isVisible, onClose } = props;
 
   React.useEffect(() => {
     // If the modal is not visible, we don't need to do anything.
-    if (!isVisible || !modalContent.current) {
+    if (!isVisible || !modalContentRef.current) {
       return;
     }
 
@@ -89,7 +89,7 @@ export default function Modal(props: Props) {
     };
 
     // Get the first focusable element inside the modal when it becomes visible.
-    const focusableElements = modalContent.current?.querySelectorAll(
+    const focusableElements = modalContentRef.current?.querySelectorAll(
       'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
     );
     const firstFocusableElement = focusableElements?.[0] as HTMLElement;
@@ -97,9 +97,9 @@ export default function Modal(props: Props) {
     // Trap focus within the modal.
     const handleFocusIn = (event: FocusEvent) => {
       if (
-        modalContent.current &&
-        FocusTrapManager.isTopMost(modalContent.current) &&
-        !modalContent.current.contains(event.target as Node)
+        modalContentRef.current &&
+        FocusTrapManager.isTopMost(modalContentRef.current) &&
+        !modalContentRef.current.contains(event.target as Node)
       ) {
         firstFocusableElement?.focus();
       }
@@ -107,9 +107,9 @@ export default function Modal(props: Props) {
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('focusin', handleFocusIn);
-    FocusTrapManager.add(modalContent.current);
+    FocusTrapManager.add(modalContentRef.current);
 
-    const currentModalContent = modalContent.current;
+    const currentModalContent = modalContentRef.current;
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -143,20 +143,23 @@ export default function Modal(props: Props) {
         enterDone: classes.fadeEnterDone,
       }}
       in={props.isVisible}
-      nodeRef={modalContent}
+      nodeRef={modalContentRef}
       timeout={200}>
       <div
-        ref={modalContent}
+        ref={modalContentRef}
         className={classes.modalBackground}
         onClick={(event) => {
           // Ensure that the click was on the background and the pointer down also started on the background.
-          if (pointerDownOnBackground.current && event.target === modalContent.current) {
+          if (
+            pointerDownOnBackgroundRef.current &&
+            event.target === modalContentRef.current
+          ) {
             props.onClose();
           }
         }}
         onPointerDown={(event) => {
           // Set the flag if the pointer down occurred on the background.
-          pointerDownOnBackground.current = event.target === modalContent.current;
+          pointerDownOnBackgroundRef.current = event.target === modalContentRef.current;
         }}>
         <div className={classes.modal} style={{ maxWidth: props.maxWidth }}>
           {props.title || props.icon ? (

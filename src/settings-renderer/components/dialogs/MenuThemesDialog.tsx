@@ -92,7 +92,7 @@ export default function MenuThemesDialog() {
   };
 
   const currentTheme = themes.find((theme) => isSelected(theme.id));
-  let accentColorsNode: ReactNode = null;
+  let accentColorsNode: ReactNode;
 
   // Presets state (declared unconditionally so hooks order stays stable)
   const [presets, setPresets] = React.useState<

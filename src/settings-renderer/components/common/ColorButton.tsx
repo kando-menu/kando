@@ -35,9 +35,9 @@ type Props = {
  */
 export default function ColorButton(props: Props) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const [pickerColor, setPickerColor] = React.useState(chroma(props.color).css());
-  const [cssColor, setCSSColor] = React.useState(chroma(props.color).css());
-  const [inputColor, setInputColor] = React.useState(chroma(props.color).css());
+  const [pickerColor, setPickerColor] = React.useState(() => chroma(props.color).css());
+  const [cssColor, setCSSColor] = React.useState(() => chroma(props.color).css());
+  const [inputColor, setInputColor] = React.useState(() => chroma(props.color).css());
 
   React.useEffect(() => {
     const color = chroma(props.color).css();

@@ -38,17 +38,17 @@ type Props = {
  * @returns A sidebar element.
  */
 export default function Sidebar(props: Props) {
-  const resizer = React.useRef<HTMLDivElement>(null);
-  const sidebar = React.useRef<HTMLDivElement>(null);
+  const resizerRef = React.useRef<HTMLDivElement>(null);
+  const sidebarRef = React.useRef<HTMLDivElement>(null);
   const { position, onWidthChanged } = props;
 
   React.useEffect(() => {
     // Function to handle the resizing of the sidebar.
     const resize = (e: MouseEvent) => {
       if (position === 'left') {
-        sidebar.current.style.width = e.clientX + 'px';
+        sidebarRef.current.style.width = e.clientX + 'px';
       } else {
-        sidebar.current.style.width = window.innerWidth - e.clientX + 'px';
+        sidebarRef.current.style.width = window.innerWidth - e.clientX + 'px';
       }
     };
 
@@ -59,8 +59,8 @@ export default function Sidebar(props: Props) {
       document.removeEventListener('mouseup', stopResize);
       document.body.style.cursor = '';
 
-      if (sidebar.current) {
-        onWidthChanged?.(sidebar.current.getBoundingClientRect().width);
+      if (sidebarRef.current) {
+        onWidthChanged?.(sidebarRef.current.getBoundingClientRect().width);
       }
     };
 
@@ -70,7 +70,7 @@ export default function Sidebar(props: Props) {
       document.body.style.cursor = 'col-resize';
     };
 
-    const resizerElement = resizer.current;
+    const resizerElement = resizerRef.current;
     resizerElement?.addEventListener('mousedown', startResize);
 
     return () => {
@@ -88,15 +88,15 @@ export default function Sidebar(props: Props) {
   return (
     <>
       {/* Render the resizer on the left if the sidebar is on the right. */}
-      {props.position === 'right' && <div ref={resizer} className={resizerClass} />}
+      {props.position === 'right' && <div ref={resizerRef} className={resizerClass} />}
       <div
-        ref={sidebar}
+        ref={sidebarRef}
         className={classes.sidebar + ' ' + directionClass}
         style={{ width: props.initialWidth }}>
         {props.children}
       </div>
       {/* Render the resizer on the right if the sidebar is on the left. */}
-      {props.position === 'left' && <div ref={resizer} className={resizerClass} />}
+      {props.position === 'left' && <div ref={resizerRef} className={resizerClass} />}
     </>
   );
 }

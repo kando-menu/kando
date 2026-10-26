@@ -21,6 +21,34 @@ import { IoArrowUndo, IoArrowRedo, IoSchool } from 'react-icons/io5';
 import { useAppState, useMenuSettings, useGeneralSetting } from '../../state';
 import { Headerbar, Button } from '../common';
 
+// Undo/Redo buttons that only re-render when undo/redo state changes.
+function UndoRedoButtons() {
+  const { futureStates, pastStates } = useMenuSettings.temporal.getState();
+  // Subscribe to any menu change to update buttons.
+  useMenuSettings();
+
+  return (
+    <>
+      <Button
+        isGrouped
+        icon={<IoArrowUndo />}
+        isDisabled={pastStates.length === 0}
+        tooltip={i18next.t('settings.undo')}
+        variant="tool"
+        onClick={() => useMenuSettings.temporal.getState().undo()}
+      />
+      <Button
+        isGrouped
+        icon={<IoArrowRedo />}
+        isDisabled={futureStates.length === 0}
+        tooltip={i18next.t('settings.redo')}
+        variant="tool"
+        onClick={() => useMenuSettings.temporal.getState().redo()}
+      />
+    </>
+  );
+}
+
 /**
  * This is the toolbar at the top of the menu-preview area. It contains some buttons for
  * undo/redo, and for opening the settings dialogs.
@@ -38,35 +66,6 @@ export default function PreviewHeader() {
   // tiny indicator on it if there are new achievements.
   const levelProgress = useAppState((state) => state.levelProgress);
   const [enableAchievements] = useGeneralSetting('enableAchievements');
-
-  // Undo/Redo buttons that only re-render when undo/redo state changes.
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const UndoRedoButtons = React.memo(() => {
-    const { futureStates, pastStates } = useMenuSettings.temporal.getState();
-    // Subscribe to any menu change to update buttons.
-    useMenuSettings();
-
-    return (
-      <>
-        <Button
-          isGrouped
-          icon={<IoArrowUndo />}
-          isDisabled={pastStates.length === 0}
-          tooltip={i18next.t('settings.undo')}
-          variant="tool"
-          onClick={() => useMenuSettings.temporal.getState().undo()}
-        />
-        <Button
-          isGrouped
-          icon={<IoArrowRedo />}
-          isDisabled={futureStates.length === 0}
-          tooltip={i18next.t('settings.redo')}
-          variant="tool"
-          onClick={() => useMenuSettings.temporal.getState().redo()}
-        />
-      </>
-    );
-  });
 
   return (
     <Headerbar
