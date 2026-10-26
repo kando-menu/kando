@@ -18,6 +18,14 @@ Kando uses [semantic versioning](https://semver.org).
 This changelog follows the rules of [Keep a Changelog](http://keepachangelog.com/).
 The [Unreleased] section contains changes which are not released yet. If you want to test these changes, you can [build Kando from source](https://kando.menu/compile-from-source/).
 
+## [unreleased]
+
+**Release Date:** TBD
+
+### :bug: Fixed
+
+- Fixed an issue which caused the link to the config-file directory in the Backup & Restore page of the General-Settings Dialog to not work.
+
 ## [Kando 3.0.1](https://github.com/kando-menu/kando/releases/tag/v3.0.1)
 
 **Release Date:** 2026-10-25
