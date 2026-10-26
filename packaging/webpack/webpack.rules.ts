@@ -22,20 +22,6 @@ export const rules: Required<ModuleOptions>['rules'] = [
     },
   },
   {
-    // The dbus-final module imports some native modules which are not actually used. We
-    // can safely ignore them.
-    test: /[/\\]node_modules[/\\]dbus-final[/\\]lib[/\\].+\.js$/,
-    use: {
-      loader: 'string-replace-loader',
-      options: {
-        multiple: [
-          { search: "require\\('usocket'\\)", replace: 'undefined', flags: 'g' },
-          { search: "require\\('x11'\\)", replace: 'undefined', flags: 'g' },
-        ],
-      },
-    },
-  },
-  {
     test: /\.tsx?$/,
     exclude: /(node_modules|\.webpack)/,
     use: {
