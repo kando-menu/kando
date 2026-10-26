@@ -12,7 +12,7 @@ import { WMInfo } from '../../../../../common';
 
 import { app } from 'electron';
 import fs from 'fs';
-import DBus from 'dbus-final';
+import DBus from 'dbus-native';
 import { exec } from 'child_process';
 import { screen } from 'electron';
 
@@ -32,7 +32,7 @@ export class KDEWaylandFallback {
    * scripts will acquire the required information for Kando (mouse pointer position and
    * name and app of the currently focused window) and send it to Kando via D-Bus.
    */
-  private scriptingInterface?: DBus.ClientInterface;
+  private scriptingInterface?: DBus.DBusInterface;
 
   /** This is the interface which is exposed by Kando for the KWin script to talk to. */
   private kandoInterface?: CustomInterface;
@@ -73,20 +73,19 @@ export class KDEWaylandFallback {
     );
 
     // Create the D-Bus interface for the KWin script to communicate with.
-    this.kandoInterface = new CustomInterface('menu.kando.Kando');
-    CustomInterface.configureMembers({
+    this.kandoInterface = new CustomInterface();
+    const bus = DBus.sessionBus();
+    bus.exportInterface(this.kandoInterface, '/menu/kando/Kando', {
+      name: 'menu.kando.Kando',
       methods: {
-        sendWMInfo: { inSignature: 'ssii', outSignature: '', noReply: false },
+        sendWMInfo: ['ssii', '', ['windowName', 'appName', 'pointerX', 'pointerY'], []],
       },
     });
-
-    const bus = DBus.sessionBus();
     await bus.requestName('menu.kando.Kando', 0);
-    bus.export('/menu/kando/Kando', this.kandoInterface);
 
     // Acquire the KWin scripting interface to run the scripts.
-    const obj = await bus.getProxyObject('org.kde.KWin', '/Scripting');
-    this.scriptingInterface = obj.getInterface('org.kde.kwin.Scripting');
+    const obj = await bus.getObject('org.kde.KWin', '/Scripting');
+    this.scriptingInterface = obj.as('org.kde.kwin.Scripting');
   }
 
   /**
@@ -143,14 +142,12 @@ export class KDEWaylandFallback {
   private async startScript(scriptPath: string) {
     const scriptInterface = this.kwinVersion![0] >= 6 ? '/Scripting/Script' : '/';
     const id = await this.scriptingInterface!.loadScript(scriptPath);
-    await DBus.sessionBus().call(
-      new DBus.Message({
-        destination: 'org.kde.KWin',
-        path: scriptInterface + id,
-        interface: 'org.kde.kwin.Script',
-        member: 'run',
-      })
-    );
+    await DBus.sessionBus().invoke({
+      destination: 'org.kde.KWin',
+      path: scriptInterface + id,
+      interface: 'org.kde.kwin.Script',
+      member: 'run',
+    });
 
     return id;
   }
@@ -162,14 +159,12 @@ export class KDEWaylandFallback {
    */
   private async stopScript(scriptID: number) {
     const scriptInterface = this.kwinVersion![0] >= 6 ? '/Scripting/Script' : '/';
-    await DBus.sessionBus().call(
-      new DBus.Message({
-        destination: 'org.kde.KWin',
-        path: scriptInterface + scriptID,
-        interface: 'org.kde.kwin.Script',
-        member: 'stop',
-      })
-    );
+    await DBus.sessionBus().invoke({
+      destination: 'org.kde.KWin',
+      path: scriptInterface + scriptID,
+      interface: 'org.kde.kwin.Script',
+      member: 'stop',
+    });
   }
 
   /**
@@ -204,7 +199,7 @@ export class KDEWaylandFallback {
 }
 
 // This class is available via DBus in the KWin script.
-class CustomInterface extends DBus.interface.Interface {
+class CustomInterface {
   // These callbacks are set by the KDEWaylandBackend class above.
   public wmInfoCallback?: (info: WMInfo) => void;
 
