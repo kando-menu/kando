@@ -7,10 +7,9 @@
   "main": ".webpack/main/index.cjs",
   "scripts": {
     "postinstall": "cmake-js compile",
-    "start": "tsx node_modules/@electron-forge/cli/src/electron-forge-start",
-    "package": "tsx node_modules/@electron-forge/cli/src/electron-forge-package",
-    "make": "tsx node_modules/@electron-forge/cli/src/electron-forge-make",
-    "publish": "tsx node_modules/@electron-forge/cli/src/electron-forge-publish",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
     "lint": "eslint .",
     "tscheck": "tsc --noEmit",
     "prettier": "prettier --check src",
