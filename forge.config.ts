@@ -6,7 +6,7 @@ import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerDMG } from '@electron-forge/maker-dmg';
-import { MakerRpm } from '@electron-forge/maker-rpm';
+import { MakerRpm, MakerRpmConfigOptions } from '@electron-forge/maker-rpm';
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 
 import { mainConfig } from './packaging/webpack/webpack.main.config';
@@ -45,16 +45,22 @@ const makerDeb = new MakerDeb({
 
 // This is used to create the RPM package for Linux. See the link below for the available options.
 // https://js.electronforge.io/interfaces/_electron_forge_maker_rpm.InternalOptions.MakerRpmConfigOptions.html
-const makerRPM = new MakerRpm({
-  options: {
-    productName: 'Kando',
-    genericName: 'Pie Menu',
-    icon: 'assets/icons/icon.svg',
-    homepage: 'https://github.com/kando-menu/kando',
-    requires: ['libXtst'],
-    categories: ['Utility'],
-  },
-});
+// The "specTemplate" option is passed through to electron-installer-redhat but is not part of
+// the MakerRpmConfigOptions type. Hence, we use a plain object intersected with the type here.
+const rpmOptions: MakerRpmConfigOptions & { specTemplate: string } = {
+  productName: 'Kando',
+  genericName: 'Pie Menu',
+  icon: 'assets/icons/icon.svg',
+  homepage: 'https://github.com/kando-menu/kando',
+  requires: ['libXtst'],
+  categories: ['Utility'],
+
+  // Disables build_id_links (https://github.com/kando-menu/kando/issues/502) and fixes the
+  // name of the desktop file and the %install step. See the template for details.
+  specTemplate: 'packaging/rpm/kando.spec.ejs',
+};
+
+const makerRPM = new MakerRpm({ options: rpmOptions });
 
 // The Linux makers create desktop files named after the package "name" option. We patch the
 // shared installer to support a dedicated desktop file base name so that we can keep the
@@ -75,54 +81,6 @@ if (makerDeb.isSupportedOnCurrentPlatform() || makerRPM.isSupportedOnCurrentPlat
     await this.createTemplatedFile(templatePath, desktopPath, 0o644);
 
     this.options.logger(`Desktop file created at ${desktopPath}`);
-  };
-}
-
-// Below comes an evil hack to fix this issue: https://github.com/kando-menu/kando/issues/502
-// For some reason, there seems to be no way to disable the build_id_links feature in the
-// electron-installer-redhat package which is used by electron-forge to create RPM packages.
-// The rpmbuild command is issued here: https://github.com/electron-userland/electron-installer-redhat/blob/main/src/installer.js#L66
-// And we need to pass the "--define _build_id_links none" argument to it. Hence we override the
-// createPackage method of the RedhatInstaller class to add this argument. This is a dirty hack
-// and will most likely break in the future... Does anyone have a better solution?
-if (makerRPM.isSupportedOnCurrentPlatform()) {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { Installer: RedhatInstaller } = require('electron-installer-redhat');
-  const { spawn } = require('@malept/cross-spawn-promise');
-  const fs = require('fs-extra');
-
-  RedhatInstaller.prototype.createPackage = async function () {
-    this.options.logger(
-      "+++ Running patched createPackage method! See Kando's forge.config.ts for details. +++"
-    );
-
-    const specContents = await fs.readFile(this.specPath, 'utf8');
-    const patchedSpecContents = specContents.replace(
-      '/usr/share/applications/kando.desktop',
-      '/usr/share/applications/menu.kando.Kando.desktop'
-    );
-    if (patchedSpecContents !== specContents) {
-      await fs.writeFile(this.specPath, patchedSpecContents);
-    }
-
-    this.options.logger(`Creating package at ${this.stagingDir}`);
-
-    const output = await spawn(
-      'rpmbuild',
-      [
-        '-bb',
-        this.specPath,
-        '--target',
-        `${this.options.arch}-${this.options.vendor}-${this.options.platform}`,
-        '--define',
-        `_topdir ${this.stagingDir}`,
-        '--define', // Here is the important part:
-        '_build_id_links none', // This is the argument we need to add.
-      ],
-      this.options.logger
-    );
-
-    this.options.logger(`rpmbuild output: ${output}`);
   };
 }
 
