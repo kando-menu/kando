@@ -12,6 +12,7 @@ import { expect } from 'chai';
 
 import {
   BUTTON_MENU_ITEM_SCHEMA_V2,
+  ROOT_MENU_ITEM_SCHEMA_V2,
   SUBMENU_MENU_ITEM_SCHEMA_V2,
 } from '../src/common/settings-schemata/menu-settings-v2';
 
@@ -43,6 +44,36 @@ describe('Scroll workflows', () => {
     });
 
     expect(item.scrollUpWorkflow).to.deep.equal(workflow);
+    expect(item.scrollDownWorkflow).to.equal(undefined);
+  });
+
+  it('should be kept for the root item', () => {
+    const item = ROOT_MENU_ITEM_SCHEMA_V2.parse({
+      type: 'root',
+      name: 'Volume',
+      icon: 'volume_up',
+      iconTheme: 'material-symbols-rounded',
+      scrollUpWorkflow: workflow,
+      scrollDownWorkflow: { actions: [{ type: 'close-menu' }] },
+      children: [],
+    });
+
+    expect(item.scrollUpWorkflow).to.deep.equal(workflow);
+    expect(item.scrollDownWorkflow).to.deep.equal({
+      actions: [{ type: 'close-menu' }],
+    });
+  });
+
+  it('should be optional for the root item', () => {
+    const item = ROOT_MENU_ITEM_SCHEMA_V2.parse({
+      type: 'root',
+      name: 'Volume',
+      icon: 'volume_up',
+      iconTheme: 'material-symbols-rounded',
+      children: [],
+    });
+
+    expect(item.scrollUpWorkflow).to.equal(undefined);
     expect(item.scrollDownWorkflow).to.equal(undefined);
   });
 

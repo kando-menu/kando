@@ -634,8 +634,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
   /**
    * This is called whenever the mouse wheel is moved. If the wheel is scrolled over a
-   * child item which has a scroll-workflow for the respective direction, the
-   * corresponding interaction is emitted. Nothing else happens, so the menu stays open.
+   * child item or the center of the root menu which has a scroll-workflow for the
+   * respective direction, the corresponding interaction is emitted.
    *
    * @param event The wheel event.
    */
@@ -645,13 +645,13 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       return;
     }
 
-    // Only child items of the current center item can have scroll-workflows.
+    // Only child items of the current center item and the center of the root menu can
+    // have scroll-workflows. The center of a submenu and the parent item are ignored.
     const item = this.hoveredItem;
     if (
       !item ||
-      item === this.centerItem ||
       item === this.centerItem.renderData.parent ||
-      (item.type !== 'button' && item.type !== 'submenu')
+      (item === this.centerItem && item.type !== 'root')
     ) {
       return;
     }

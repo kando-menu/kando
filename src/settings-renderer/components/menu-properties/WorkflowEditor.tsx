@@ -170,7 +170,7 @@ export default function WorkflowEditor() {
       'scrollDown'
     );
   } else if (selectedItem.type === 'root') {
-    workflowTypes.push('rootActivate');
+    workflowTypes.push('rootActivate', 'scrollUp', 'scrollDown');
   }
 
   // Make sure the selected workflow is valid for the current item type. If not, reset to the first workflow.
@@ -227,15 +227,9 @@ export default function WorkflowEditor() {
         (item.type === 'submenu' || item.type === 'root')
       ) {
         item.activateWorkflow = workflow;
-      } else if (
-        workflowType === 'scrollUp' &&
-        (item.type === 'button' || item.type === 'submenu')
-      ) {
+      } else if (workflowType === 'scrollUp') {
         item.scrollUpWorkflow = workflow;
-      } else if (
-        workflowType === 'scrollDown' &&
-        (item.type === 'button' || item.type === 'submenu')
-      ) {
+      } else if (workflowType === 'scrollDown') {
         item.scrollDownWorkflow = workflow;
       }
 
