@@ -35,8 +35,32 @@ import {
 } from '../common';
 import classNames from 'classnames/bind';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import type {
+  CSSTransitionClassNames,
+  CSSTransitionProps,
+} from 'react-transition-group/CSSTransition';
 import * as classes from './GeneralSettingsDialog.module.scss';
 const cx = classNames.bind(classes);
+
+/** A single page with its own ref, so entering and exiting pages don't share a node. */
+function OptionsPage(props: {
+  className: string;
+  classNames: CSSTransitionClassNames;
+  timeout: number;
+  children: React.ReactNode;
+}) {
+  const { className, children, ...transitionProps } = props;
+  const ref = React.useRef<HTMLDivElement>(null);
+  return (
+    <CSSTransition
+      {...(transitionProps as unknown as CSSTransitionProps<HTMLDivElement>)}
+      nodeRef={ref}>
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    </CSSTransition>
+  );
+}
 
 /** This dialog allows the user to configure some general settings of Kando. */
 export default function GeneralSettingsDialog() {
@@ -54,7 +78,6 @@ export default function GeneralSettingsDialog() {
   const [transitionDirection, setTransitionDirection] =
     React.useState<TransitionDirection>('down');
   const categoryTransitionDuration = 320; // 280ms animation + 40ms enter delay
-  const activeOptionsPageRef = React.createRef<HTMLDivElement>();
 
   const handleCategorySelect = (categoryIndex: number) => {
     if (categoryIndex === activeCategory) {
@@ -811,16 +834,23 @@ export default function GeneralSettingsDialog() {
         </div>
         <Blossom bottom={0} cropBottom={50} cropRight={50} right={0} size={350} />
         <div className={classes.options}>
-          <TransitionGroup component={null}>
-            <CSSTransition
+          <TransitionGroup
+            childFactory={(child) =>
+              // Exiting children keep their old props, so update the direction.
+              // eslint-disable-next-line @eslint-react/no-clone-element
+              React.cloneElement(
+                child as React.ReactElement<{ classNames: CSSTransitionClassNames }>,
+                { classNames: pageTransitionClasses }
+              )
+            }
+            component={null}>
+            <OptionsPage
               key={activeCategory}
+              className={classes.optionsPage}
               classNames={pageTransitionClasses}
-              nodeRef={activeOptionsPageRef}
               timeout={categoryTransitionDuration}>
-              <div ref={activeOptionsPageRef} className={classes.optionsPage}>
-                {categories[activeCategory].content}
-              </div>
-            </CSSTransition>
+              {categories[activeCategory].content}
+            </OptionsPage>
           </TransitionGroup>
         </div>
       </div>

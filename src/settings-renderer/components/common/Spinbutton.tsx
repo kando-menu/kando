@@ -32,6 +32,9 @@ type Props = {
   /** Optional information to display next to the label. */
   readonly info?: string;
 
+  /** Optional tooltip text to display when hovering over the spinbutton. */
+  readonly tooltip?: string;
+
   /** Whether the spinbutton is disabled. Defaults to false. */
   readonly isDisabled?: boolean;
 
@@ -95,7 +98,10 @@ export default function Spinbutton(props: Props) {
 
   return (
     <SettingsRow info={props.info} label={props.label}>
-      <div className={classes.spinbutton}>
+      <div
+        className={classes.spinbutton}
+        data-tooltip-content={props.tooltip}
+        data-tooltip-id="main-tooltip">
         {/* Button to decrease the value. */}
         <Button
           isGrouped

@@ -741,7 +741,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       // Now we want to move the root item so that the newly selected item is at the given
       // coordinates or at the mouse position. In anchored mode we want to always use the
       // initial menu position.
-      let targetAbsolutePosition = { x: 0, y: 0 };
+      let targetAbsolutePosition;
 
       if (this.showMenuOptions.anchoredMode) {
         targetAbsolutePosition = this.getInitialMenuPosition();

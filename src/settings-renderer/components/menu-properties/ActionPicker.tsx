@@ -105,7 +105,6 @@ export default function ActionPicker(props: Props) {
                     {metadata.name}{' '}
                     {metadata.supportedByBackend ? null : (
                       <InfoItem
-                        key="warning"
                         isWarning
                         info={i18next.t('settings.workflow-editor.action-not-supported')}
                       />

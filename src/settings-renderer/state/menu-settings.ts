@@ -421,21 +421,23 @@ export const useMenuSettings = create<MenuSettings & MenuStateActions>()(
  * @param mapFn - Mapping function to extract relevant properties from each menu.
  */
 export function useMappedMenuProperties<U>(mapFn: (menu: Menu) => U): U[] {
-  const lastMenus = useRef<Menu[]>([]);
-  const lastMapped = useRef<U[]>([]);
+  const lastMenusRef = useRef<Menu[]>([]);
+  const lastMappedRef = useRef<U[]>([]);
   return useMenuSettings((state) => {
     const changed =
-      state.menus.length !== lastMenus.current.length ||
-      state.menus.some((item, i) => !lodash.isEqual(mapFn(item), lastMapped.current[i]));
+      state.menus.length !== lastMenusRef.current.length ||
+      state.menus.some(
+        (item, i) => !lodash.isEqual(mapFn(item), lastMappedRef.current[i])
+      );
 
     if (!changed) {
-      return lastMapped.current;
+      return lastMappedRef.current;
     }
 
-    lastMenus.current = state.menus;
-    lastMapped.current = state.menus.map(mapFn);
+    lastMenusRef.current = state.menus;
+    lastMappedRef.current = state.menus.map(mapFn);
 
-    return lastMapped.current;
+    return lastMappedRef.current;
   });
 }
 
@@ -450,23 +452,23 @@ export function useMappedMenuProperties<U>(mapFn: (menu: Menu) => U): U[] {
 export function useMappedCollectionProperties<U>(
   mapFn: (menu: MenuCollection) => U
 ): U[] {
-  const lastCollections = useRef<MenuCollection[]>([]);
-  const lastMapped = useRef<U[]>([]);
+  const lastCollectionsRef = useRef<MenuCollection[]>([]);
+  const lastMappedRef = useRef<U[]>([]);
   return useMenuSettings((state) => {
     const changed =
-      state.collections.length !== lastCollections.current.length ||
+      state.collections.length !== lastCollectionsRef.current.length ||
       state.collections.some(
-        (item, i) => !lodash.isEqual(mapFn(item), lastMapped.current[i])
+        (item, i) => !lodash.isEqual(mapFn(item), lastMappedRef.current[i])
       );
 
     if (!changed) {
-      return lastMapped.current;
+      return lastMappedRef.current;
     }
 
-    lastCollections.current = state.collections;
-    lastMapped.current = state.collections.map(mapFn);
+    lastCollectionsRef.current = state.collections;
+    lastMappedRef.current = state.collections.map(mapFn);
 
-    return lastMapped.current;
+    return lastMappedRef.current;
   });
 }
 

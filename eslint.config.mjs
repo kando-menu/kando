@@ -35,10 +35,12 @@ export default defineConfig([
       },
     },
     rules: {
-      'react/boolean-prop-naming': [
-        'error',
-        { rule: '^(is|has|do|use|hide|initial|show)[A-Z]([A-Za-z0-9]?)+' },
-      ],
+      'preserve-caught-error': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'jsx-a11y-x/no-noninteractive-tabindex': 'off',
+      'jsx-a11y-x/alt-text': 'off',
+      'jsx-a11y-x/media-has-caption': 'off',
+      '@eslint-react/no-leaked-conditional-rendering': 'off',
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-var-requires': 'off',

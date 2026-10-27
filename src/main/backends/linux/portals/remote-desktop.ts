@@ -8,7 +8,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import DBus from 'dbus-final';
+import DBus from 'dbus-native';
 import fs from 'fs';
 import path from 'path';
 import { app } from 'electron';
@@ -24,7 +24,7 @@ import { DesktopPortal } from './desktop-portal';
  */
 export class RemoteDesktop extends DesktopPortal {
   /** This is the proxy object for the org.freedesktop.portal.RemoteDesktop interface. */
-  private interface: DBus.ClientInterface;
+  private interface: DBus.DBusInterface;
 
   /**
    * This is the token which is used to identify the session. It is generated when the
@@ -99,7 +99,7 @@ export class RemoteDesktop extends DesktopPortal {
     try {
       await super.init();
 
-      this.interface = this.portals.getInterface('org.freedesktop.portal.RemoteDesktop');
+      this.interface = this.portals.as('org.freedesktop.portal.RemoteDesktop');
       this.session = this.generateToken('session');
 
       await this.createSession();
@@ -113,15 +113,15 @@ export class RemoteDesktop extends DesktopPortal {
       if (result.body?.length > 0) {
         const response = result.body[1];
 
-        const devices = response.devices?.value;
+        const devices = response.devices;
         if (devices != (1 | 2)) {
           throw new Error('Not all devices were granted!');
         }
 
-        const restoreToken = response.restore_token?.value;
+        const restoreToken = response.restore_token;
 
         // Save the token in th app data directory.
-        if (restoreToken) {
+        if (typeof restoreToken === 'string' && restoreToken) {
           fs.writeFileSync(
             path.join(app.getPath('userData'), 'session', 'rdp-token'),
             restoreToken

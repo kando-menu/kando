@@ -237,6 +237,15 @@ export default interface Resources {
               "name": "Open URI",
               "placeholder": "Insert any URI…"
           },
+          "send-tcp-message": {
+              "append-newline-info": "If enabled, a line break (CRLF) is sent after the message. Many line-based protocols like Telnet expect this.",
+              "append-newline-label": "Append line break",
+              "description": "Connects to a TCP server, for instance a Telnet service, and sends a message.",
+              "host-tooltip": "The host name or IP address of the TCP server.",
+              "message-placeholder": "Insert a message…",
+              "name": "Send TCP Message",
+              "port-tooltip": "The port number of the TCP server."
+          },
           "send-websocket-message": {
               "description": "Connects to a WebSocket server and sends a message.",
               "message-label": "Message",

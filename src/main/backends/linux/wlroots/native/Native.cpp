@@ -126,6 +126,10 @@ static const zwlr_foreign_toplevel_handle_v1_listener foreignToplevelHandleListe
       auto* window = static_cast<ForeignToplevelWindow*>(data);
       window->closed = true;
     },
+    // Since we bind version 3, we must handle the parent event. libwayland aborts if an
+    // event arrives for which no listener is set. Some compositors send it for every
+    // toplevel, even if it has no parent.
+    .parent = [](void*, zwlr_foreign_toplevel_handle_v1*, zwlr_foreign_toplevel_handle_v1*) {},
 };
 
 static const zwlr_foreign_toplevel_manager_v1_listener foreignToplevelManagerListener = {
@@ -735,8 +739,7 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
     zxdg_output_v1_destroy(xdgOutput);
   }
 
-  int fd                      = wl_display_get_fd(mData.mDisplay);
-  mData.mPointerEventReceived = false;
+  int fd = wl_display_get_fd(mData.mDisplay);
 
   int timeoutMs = info[0].As<Napi::Number>().Int32Value();;
   if (mData.mSeatCapabilities & WL_SEAT_CAPABILITY_TOUCH) {
@@ -796,6 +799,8 @@ Napi::Value Native::getPointerPositionAndWorkAreaSize(const Napi::CallbackInfo& 
   result.Set("pointerGetTimedOut", Napi::Boolean::New(env,mPointerGetTimedOut));
   result.Set("workAreaWidth", Napi::Number::New(env, mData.mWorkAreaWidth));
   result.Set("workAreaHeight", Napi::Number::New(env, mData.mWorkAreaHeight));
+  result.Set("outputX", Napi::Number::New(env, mData.mOutputX));
+  result.Set("outputY", Napi::Number::New(env, mData.mOutputY));
 
   // Clean up Wayland resources
   destroySurfaceAndPointer();

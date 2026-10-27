@@ -24,7 +24,20 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
-- Buttons and submenus now have two new workflows: the scroll-up- and the scroll-down-workflow. They get executed when you scroll the mouse wheel while hovering over the item, without closing the menu. This can be used, for instance, to change the volume or the brightness.
+- Buttons and submenus now have two new workflows: the scroll-up- and the scroll-down-workflow. They get executed when you scroll the mouse wheel while hovering over the item, without closing the menu. This can be used, for instance, to change the volume or the brightness. Thanks to [Arslan-TR](https://github.com/Arslan-TR) for this contribution!
+- Added a new action type which can be used to **send messages to TCP servers**. This is useful for controlling applications which use Telnet or other simple line-based protocols. Thanks to [@TheNetherWatcher](https://github.com/TheNetherWatcher) for contributing this feature!
+- 
+### :wrench: Changed
+
+- Recording a macro no longer clears the already recorded keys. New keys are now inserted at the cursor position, so a long macro can be recorded piece by piece. Thanks to [@emirmrkaljevic](https://github.com/emirmrkaljevic) for the contribution!
+
+### :bug: Fixed
+
+- Fixed an issue which caused the link to the config-file directory in the Backup & Restore page of the General-Settings Dialog to not work.
+
+## [Kando 3.0.1](https://github.com/kando-menu/kando/releases/tag/v3.0.1)
+
+**Release Date:** 2026-10-25
 
 ### :bug: Fixed
 
@@ -34,6 +47,8 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - Fixed a regression on KDE Wayland 6.3 which would cause the shortcut settings of System Settings to open every time Kando was started. Thanks to [@Tailszefox](https://github.com/Tailszefox) for the fix!
 - <kbd>CMD</kbd>+<kbd>A</kbd> can now be used to select text in input fields on macOS.
 - Fixed an issue on KDE where the Flatpak version of Kando would not connect to the KWin integration plugin.
+- Fixed several issues related the "Pointer fallback position" on wlroots-based compositors like Niri. Thanks to [@presianbg](https://github.com/presianbg) for the fix!
+- Fixed a crash on wlroots-based Wayland compositors which send the foreign-toplevel `parent` event for every window. Thanks to [@wl-chuang](https://github.com/wl-chuang) for the fix!
 
 ## [Kando 3.0.0](https://github.com/kando-menu/kando/releases/tag/v3.0.0)
 
