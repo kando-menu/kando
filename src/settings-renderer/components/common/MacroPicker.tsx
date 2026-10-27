@@ -56,7 +56,7 @@ export default function MacroPicker(props: Props) {
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   // The index at which the next recorded event will be inserted into the macro.
-  const insertIndex = React.useRef(0);
+  const insertIndexRef = React.useRef(0);
 
   // Update the value when the initialValue prop changes. This is necessary because the
   // initialValue prop might change after the component has been initialized.
@@ -105,14 +105,14 @@ export default function MacroPicker(props: Props) {
         }}
         onKeyDown={(event) => {
           if (recording) {
-            recordInput(event, insertIndex.current++);
+            recordInput(event, insertIndexRef.current++);
             setTextValue(event.currentTarget.value);
             event.preventDefault();
           }
         }}
         onKeyUp={(event) => {
           if (recording) {
-            recordInput(event, insertIndex.current++);
+            recordInput(event, insertIndexRef.current++);
             setTextValue(event.currentTarget.value);
             event.preventDefault();
           }
@@ -133,10 +133,10 @@ export default function MacroPicker(props: Props) {
             // a valid macro, we start from scratch.
             if (convertToMacro(textValue)) {
               const caret = inputRef.current?.selectionStart ?? textValue.length;
-              insertIndex.current = getMacroEventIndexAt(textValue, caret);
+              insertIndexRef.current = getMacroEventIndexAt(textValue, caret);
             } else {
               setTextValue('');
-              insertIndex.current = 0;
+              insertIndexRef.current = 0;
             }
             inputRef.current?.focus();
           }
