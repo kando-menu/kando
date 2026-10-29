@@ -22,6 +22,10 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 **Release Date:** TBD
 
+### :tada: Added
+
+- Added a backend for the [Umbriel](https://github.com/noctalia-dev/umbriel) Wayland compositor.
+
 ### :wrench: Changed
 
 - Recording a macro no longer clears the already recorded keys. New keys are now inserted at the cursor position, so a long macro can be recorded piece by piece. Thanks to [@emirmrkaljevic](https://github.com/emirmrkaljevic) for the contribution!

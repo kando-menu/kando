@@ -70,6 +70,12 @@ export function getBackend(): Backend | null {
       return new NiriBackend();
     }
 
+    if (desktop === 'umbriel') {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { UmbrielBackend } = require('./linux/umbriel/backend');
+      return new UmbrielBackend();
+    }
+
     if (desktop === 'x-cinnamon' && session === 'x11') {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const { CinnamonBackend } = require('./linux/cinnamon/x11/backend');
