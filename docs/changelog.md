@@ -24,7 +24,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
-- Added a backend for the [Umbriel](https://github.com/noctalia-dev/umbriel) Wayland compositor.
+- Added a backend for the [Umbriel](https://github.com/noctalia-dev/umbriel) Wayland compositor. Thanks to [@wl-chuang](https://github.com/wl-chuang) for the contribution!
 
 ### :wrench: Changed
 
