@@ -83,7 +83,7 @@
     "match-sorter": "^8.3.0",
     "material-symbols": "^0.48.1",
     "mime-types": "^3.0.1",
-    "mocha": "^11.8.0",
+    "mocha": "^12.0.3",
     "mock-fs": "^5.5.0",
     "mousetrap": "^1.6.5",
     "node-abi": "^4.39.0",
