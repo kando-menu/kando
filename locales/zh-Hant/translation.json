@@ -382,7 +382,17 @@
             "hover-workflow-name": "懸停工作流程",
             "activate-workflow-name": "中心點擊工作流程",
             "open-workflow-name": "開啟工作流程",
-            "action-not-supported": "目前的後端不支援此動作。"
+            "action-not-supported": "目前的後端不支援此動作。",
+            "scroll-up-workflow": {
+                "description": "當指標懸停於此項目，並向上滾動滑鼠滾輪時，將會執行以下動作。",
+                "empty-hint": "目前向上滾動此項目時無可執行的動作。請使用上方按鈕為此工作流程新增動作！"
+            },
+            "scroll-down-workflow": {
+                "description": "當指標懸停於此項目，並向下滾動滑鼠滾輪時，將會執行以下動作。",
+                "empty-hint": "目前向下滾動此項目時無可執行的動作。請使用上方按鈕為此工作流程新增動作！"
+            },
+            "scroll-up-workflow-name": "向上滾動工作流程",
+            "scroll-down-workflow-name": "向下滾動工作流程"
         },
         "fix-menu-item-angle": "固定此選單項目的角度。啟用後，拖曳項目即可更新角度。",
         "edit-submenu": "編輯子選單",
@@ -699,6 +709,15 @@
             "url-label": "URL",
             "message-label": "訊息",
             "message-placeholder": "輸入訊息…"
+        },
+        "send-tcp-message": {
+            "name": "傳送 TCP 訊息",
+            "description": "連線至 TCP 伺服器（例如 Telnet 服務）並傳送訊息。",
+            "host-tooltip": "TCP 伺服器的主機名稱或 IP 位址。",
+            "port-tooltip": "TCP 伺服器的連接埠號碼。",
+            "message-placeholder": "輸入訊息…",
+            "append-newline-label": "附加換行符號",
+            "append-newline-info": "啟用後，將會在訊息後方傳送一個換行符號（CRLF）。許多基於行的協定（例如 Telnet）皆需此設定。"
         }
     }
 }
