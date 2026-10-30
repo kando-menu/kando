@@ -26,7 +26,8 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 - Buttons, submenus, and the root item (its center) now have two new workflows: the scroll-up- and the scroll-down-workflow. They get executed when you scroll the mouse wheel while hovering over the item. This can be used, for instance, to change the volume or the brightness. Thanks to [Arslan-TR](https://github.com/Arslan-TR) for this contribution!
 - Added a new action type which can be used to **send messages to TCP servers**. This is useful for controlling applications which use Telnet or other simple line-based protocols. Thanks to [@TheNetherWatcher](https://github.com/TheNetherWatcher) for contributing this feature!
-- 
+- Added a backend for the [Umbriel](https://github.com/noctalia-dev/umbriel) Wayland compositor. Thanks to [@wl-chuang](https://github.com/wl-chuang) for the contribution!
+
 ### :wrench: Changed
 
 - Recording a macro no longer clears the already recorded keys. New keys are now inserted at the cursor position, so a long macro can be recorded piece by piece. Thanks to [@emirmrkaljevic](https://github.com/emirmrkaljevic) for the contribution!

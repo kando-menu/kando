@@ -111,6 +111,9 @@ export default interface Resources {
           },
           "niri": {
               "shortcut-info": "Niri does not yet support global shortcuts. But you can open this menu using 'kando --menu \"Menu Name\"' from the command line or from your niri config."
+          },
+          "umbriel": {
+              "shortcut-info": "Umbriel does not yet support the global-shortcuts portal. But you can open this menu using 'kando --menu \"Menu Name\"' from the command line or from your Umbriel keybinds.toml."
           }
       },
       "example-menu": {
