@@ -30,6 +30,7 @@ import { WedgeSeparators } from './wedge-separators';
 import { CenterText } from './center-text';
 import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
+import { ScrollAccumulator } from './input-methods/scroll-accumulator';
 import { ButtonState, InputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
 
@@ -111,6 +112,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
   /** This detects mouse and touch gestures and emits selection events. */
   private pointerInput: PointerInput = new PointerInput();
+
+  /** This turns mouse wheel events into discrete scroll steps. */
+  private scrollAccumulator: ScrollAccumulator = new ScrollAccumulator();
 
   /**
    * The gamepad input is used to detect gamepad input. It polls the gamepad state and
@@ -623,6 +627,45 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.container.addEventListener('pointerup', (e) => {
       this.pointerInput.onPointerUpEvent(e);
     });
+    this.container.addEventListener('wheel', (e) => {
+      this.onWheelEvent(e);
+    });
+  }
+
+  /**
+   * This is called whenever the mouse wheel is moved. If the wheel is scrolled over a
+   * child item or the center of the root menu which has a scroll-workflow for the
+   * respective direction, the corresponding interaction is emitted.
+   *
+   * @param event The wheel event.
+   */
+  private onWheelEvent(event: WheelEvent) {
+    // Ignore all input if the menu is in the process of hiding.
+    if (this.container.classList.contains('hidden') || !this.centerItem) {
+      return;
+    }
+
+    // Only child items of the current center item and the center of the root menu can
+    // have scroll-workflows. The center of a submenu and the parent item are ignored.
+    const item = this.hoveredItem;
+    if (
+      !item ||
+      item === this.centerItem.renderData.parent ||
+      (item === this.centerItem && item.type !== 'root')
+    ) {
+      return;
+    }
+
+    const direction = this.scrollAccumulator.onWheel(event.deltaY, event.deltaMode);
+
+    if (direction < 0 && item.scrollUpWorkflow) {
+      this.emitItemInteractionEvent(MenuInteractionType.eScrollUp, item.renderData.path);
+    } else if (direction > 0 && item.scrollDownWorkflow) {
+      this.emitItemInteractionEvent(
+        MenuInteractionType.eScrollDown,
+        item.renderData.path
+      );
+    }
   }
 
   /** Hides the menu. */
@@ -794,6 +837,9 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     if (this.hoveredItem === item) {
       return;
     }
+
+    // Scrolling over a different item should start with a clean slate.
+    this.scrollAccumulator.reset();
 
     // Tell the selection wedges about the hovered wedge.
     if (this.selectionWedges) {
@@ -1578,6 +1624,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       | MenuInteractionType.eHoverCenter
       | MenuInteractionType.eHoverButton
       | MenuInteractionType.eHoverSubmenu
+      | MenuInteractionType.eScrollUp
+      | MenuInteractionType.eScrollDown
       | MenuInteractionType.eActivateMenu,
     path: number[]
   ) {

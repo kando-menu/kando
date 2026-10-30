@@ -27,14 +27,16 @@ type WorkflowType =
   | 'rootActivate'
   | 'submenuOpen'
   | 'submenuHover'
-  | 'submenuActivate';
+  | 'submenuActivate'
+  | 'scrollUp'
+  | 'scrollDown';
 
 type WorkflowMeta = {
   [key in WorkflowType]: {
     name: string;
     description: string;
     emptyHint: string;
-    quickSelectKeyHint: string;
+    quickSelectKeyHint?: string;
     icon: React.ReactNode;
     actionsMayChangeItem: boolean;
   };
@@ -138,17 +140,37 @@ export default function WorkflowEditor() {
       icon: <ThemedIcon name="workflow-activate.svg" size="1em" theme="kando" />,
       actionsMayChangeItem: false,
     },
+    scrollUp: {
+      name: i18next.t('settings.workflow-editor.scroll-up-workflow-name'),
+      description: i18next.t('settings.workflow-editor.scroll-up-workflow.description'),
+      emptyHint: i18next.t('settings.workflow-editor.scroll-up-workflow.empty-hint'),
+      icon: <ThemedIcon name="workflow-scroll-up.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
+    },
+    scrollDown: {
+      name: i18next.t('settings.workflow-editor.scroll-down-workflow-name'),
+      description: i18next.t('settings.workflow-editor.scroll-down-workflow.description'),
+      emptyHint: i18next.t('settings.workflow-editor.scroll-down-workflow.empty-hint'),
+      icon: <ThemedIcon name="workflow-scroll-down.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
+    },
   };
 
   // Determine which workflows are available based on item type.
   const workflowTypes: Array<WorkflowType> = [];
 
   if (selectedItem.type === 'button') {
-    workflowTypes.push('buttonSelect', 'buttonHover');
+    workflowTypes.push('buttonSelect', 'buttonHover', 'scrollUp', 'scrollDown');
   } else if (selectedItem.type === 'submenu') {
-    workflowTypes.push('submenuOpen', 'submenuHover', 'submenuActivate');
+    workflowTypes.push(
+      'submenuOpen',
+      'submenuHover',
+      'submenuActivate',
+      'scrollUp',
+      'scrollDown'
+    );
   } else if (selectedItem.type === 'root') {
-    workflowTypes.push('rootActivate');
+    workflowTypes.push('rootActivate', 'scrollUp', 'scrollDown');
   }
 
   // Make sure the selected workflow is valid for the current item type. If not, reset to the first workflow.
@@ -179,6 +201,12 @@ export default function WorkflowEditor() {
     ) {
       return item.activateWorkflow;
     }
+    if (workflowType === 'scrollUp' && 'scrollUpWorkflow' in item) {
+      return item.scrollUpWorkflow;
+    }
+    if (workflowType === 'scrollDown' && 'scrollDownWorkflow' in item) {
+      return item.scrollDownWorkflow;
+    }
     return undefined;
   };
 
@@ -199,6 +227,10 @@ export default function WorkflowEditor() {
         (item.type === 'submenu' || item.type === 'root')
       ) {
         item.activateWorkflow = workflow;
+      } else if (workflowType === 'scrollUp') {
+        item.scrollUpWorkflow = workflow;
+      } else if (workflowType === 'scrollDown') {
+        item.scrollDownWorkflow = workflow;
       }
 
       return item;
@@ -250,6 +282,9 @@ export default function WorkflowEditor() {
           isLastWorkflowType={workflowType === workflowTypes[workflowTypes.length - 1]}
           quickSelectKeyPlaceholder={quickSelectKeyPlaceholder}
           quickSelectKeyInfo={workflowMeta[workflowType].quickSelectKeyHint}
+          hideQuickSelectKey={
+            workflowType === 'scrollUp' || workflowType === 'scrollDown'
+          }
           workflow={workflow}
           onUpdateItem={(info) => {
             if (!workflowMeta[workflowType].actionsMayChangeItem) {

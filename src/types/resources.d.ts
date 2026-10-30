@@ -653,6 +653,16 @@ export default interface Resources {
                   "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!",
                   "quick-select-key-hint": "Pressing this key while the root menu is open will also trigger the center-click workflow."
               },
+              "scroll-down-workflow": {
+                  "description": "The actions below will be executed when you scroll the mouse wheel down while hovering over the item.",
+                  "empty-hint": "Currently, nothing will happen when scrolling down over this item. Use the button above to add actions to this workflow!"
+              },
+              "scroll-down-workflow-name": "Scroll-Down Workflow",
+              "scroll-up-workflow": {
+                  "description": "The actions below will be executed when you scroll the mouse wheel up while hovering over the item.",
+                  "empty-hint": "Currently, nothing will happen when scrolling up over this item. Use the button above to add actions to this workflow!"
+              },
+              "scroll-up-workflow-name": "Scroll-Up Workflow",
               "select-workflow-name": "Select Workflow",
               "submenu-activate-workflow": {
                   "description": "The actions below will be executed when you click the center of the submenu.",
