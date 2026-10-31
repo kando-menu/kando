@@ -14,4 +14,10 @@ There are many ways you can contribute to Kando! Whether it's reporting bugs, su
 - [Compile Kando from Source](https://kando.menu/compile-from-source/)
 - [Contribute Code to Kando](https://kando.menu/contribution-guide/)
 
+## Working from a checkout
+
+For local setup, development commands, and validation, see the [development guide](docs/development.md).
+The [architecture overview](docs/architecture.md) maps the source tree and explains the main process and platform backend boundaries.
+Coding agents can start with [`AGENTS.md`](AGENTS.md).
+
 <p align="center"><img src ="docs/img/hr.svg" /></p>
