@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/naming-convention, react-hooks/rules-of-hooks, no-empty-pattern */
 
 import { test as base, _electron as electron, Page } from '@playwright/test';
+import { execFile } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -37,6 +38,11 @@ export type KandoApp = {
   settingsWindow: Page;
   /** All errors printed to the console of any window, or uncaught exceptions. */
   errors: string[];
+  /**
+   * Runs the Kando executable with the given command line arguments. As Kando is a
+   * single-instance app, this forwards the arguments to the running instance.
+   */
+  runCommand: (...args: string[]) => Promise<void>;
 };
 
 /**
@@ -48,13 +54,20 @@ export const test = base.extend<{ kando: KandoApp }>({
   kando: async ({}, use) => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kando-e2e-'));
 
+    const executablePath = getExecutablePath();
+    const baseArgs = ['--no-sandbox', '--config-dir', path.join(tmp, 'config')];
+    const env = {
+      ...process.env,
+      LANGUAGE: 'en_US',
+      LC_ALL: 'en_US.UTF-8',
+      XDG_CONFIG_HOME: tmp,
+      APPDATA: tmp,
+    } as Record<string, string>;
+
     const app = await electron.launch({
-      executablePath: getExecutablePath(),
-      args: ['--no-sandbox', '--config-dir', path.join(tmp, 'config'), '--settings'],
-      env: { ...process.env, XDG_CONFIG_HOME: tmp, APPDATA: tmp } as Record<
-        string,
-        string
-      >,
+      executablePath,
+      args: [...baseArgs, '--settings'],
+      env,
     });
 
     const errors: string[] = [];
@@ -85,7 +98,14 @@ export const test = base.extend<{ kando: KandoApp }>({
     const menuWindow = await find('menu_window');
     const settingsWindow = await find('settings_window');
 
-    await use({ menuWindow, settingsWindow, errors });
+    const runCommand = (...args: string[]) =>
+      new Promise<void>((resolve, reject) => {
+        execFile(executablePath, [...baseArgs, ...args], { env }, (error) =>
+          error ? reject(error) : resolve()
+        );
+      });
+
+    await use({ menuWindow, settingsWindow, errors, runCommand });
 
     await app.close();
     fs.rmSync(tmp, { recursive: true, force: true });
