@@ -43,7 +43,8 @@ The [CI workflow](.github/workflows/checks.yml) runs these checks and REUSE comp
 | Shared types, APIs, IPC, and settings schemas | [`src/common/`](src/common/) |
 | Pie-menu window and input handling | [`src/menu-renderer/`](src/menu-renderer/) |
 | Settings window and its UI | [`src/settings-renderer/`](src/settings-renderer/) |
-| Tests | [`test/`](test/) |
+| Unit and integration tests | [`test/unit-tests/`](test/unit-tests/) |
+| End-to-end tests | [`test/e2e-tests/`](test/e2e-tests/) |
 
 Keep changes focused, preserve platform-specific behavior, and add or update tests when changing observable behavior.
 Read the relevant code and tests before editing; see the [architecture overview](docs/architecture.md) for process boundaries and backend guidance.

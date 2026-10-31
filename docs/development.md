@@ -42,7 +42,8 @@ Run the checks that apply to the files you changed:
 
 | Command | What it checks |
 | --- | --- |
-| `npm test` | Test suite in `test/` |
+| `npm test` | Unit tests in `test/unit-tests/` |
+| `npm run test:e2e` | End-to-end tests in `test/e2e-tests/` (run `npm run package` first) |
 | `npm run lint` | ESLint across the repository |
 | `npm run prettier` | Formatting of `src/` |
 | `npm run tscheck` | TypeScript type-check (`tsc --noEmit`) |

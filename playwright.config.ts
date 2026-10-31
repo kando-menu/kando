@@ -5,7 +5,7 @@ import { defineConfig } from '@playwright/test';
 
 // These end-to-end tests launch the packaged app (run `npm run package` first).
 export default defineConfig({
-  testDir: 'e2e',
+  testDir: 'test/e2e-tests',
   timeout: 60_000,
   retries: process.env.CI ? 1 : 0,
   workers: 1,

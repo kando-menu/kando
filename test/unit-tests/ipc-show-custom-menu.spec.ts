@@ -13,10 +13,10 @@ import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
 
-import * as IPCTypes from '../src/common/ipc/types';
-import { MenuInteractionType, RootMenuItem } from '../src/common';
-import { IPCServer } from '../src/common/ipc/ipc-server';
-import { IPCShowCustomMenuClient } from '../src/common/ipc/ipc-show-custom-menu-client';
+import * as IPCTypes from '../../src/common/ipc/types';
+import { MenuInteractionType, RootMenuItem } from '../../src/common';
+import { IPCServer } from '../../src/common/ipc/ipc-server';
+import { IPCShowCustomMenuClient } from '../../src/common/ipc/ipc-show-custom-menu-client';
 
 describe('IPC show-custom-menu Protocol', function () {
   const tmpDir = path.join(os.tmpdir(), 'kando_ipc_test');

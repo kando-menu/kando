@@ -11,9 +11,9 @@
 import { expect } from 'chai';
 import net from 'net';
 
-import { SendTCPMessageAction } from '../src/common';
-import { WORKFLOW_ACTION_SCHEMA_V2 } from '../src/common/settings-schemata/menu-settings-v2';
-import { execute } from '../src/main/actions/send-tcp-message';
+import { SendTCPMessageAction } from '../../src/common';
+import { WORKFLOW_ACTION_SCHEMA_V2 } from '../../src/common/settings-schemata/menu-settings-v2';
+import { execute } from '../../src/main/actions/send-tcp-message';
 
 function getUnusedPort(): Promise<number> {
   return new Promise((resolve, reject) => {

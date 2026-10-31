@@ -22,7 +22,8 @@ For setup and checks, see the [development guide](development.md).
 | [`src/menu-renderer/`](../src/menu-renderer/) | Pie-menu rendering, themes, and pointer/gesture/gamepad input |
 | [`src/settings-renderer/`](../src/settings-renderer/) | Settings-window UI and state |
 | [`src/types/`](../src/types/) | Type declarations shared with the TypeScript build |
-| [`test/`](../test/) | Unit and integration-style tests |
+| [`test/unit-tests/`](../test/unit-tests/) | Unit and integration-style tests |
+| [`test/e2e-tests/`](../test/e2e-tests/) | End-to-end tests that exercise the packaged application |
 
 ## Process and API boundaries
 

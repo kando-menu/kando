@@ -18,6 +18,7 @@ function getExecutablePath(): string {
   const out = path.join(
     __dirname,
     '..',
+    '..',
     'out',
     `Kando-${process.platform}-${process.arch}`
   );
