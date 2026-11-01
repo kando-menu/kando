@@ -69,8 +69,12 @@ export type KandoApp = {
   readonly menuWindow: Page;
   /** The settings window. */
   readonly settingsWindow: Page;
+  /** Number of renderer windows in the running app instance. */
+  readonly windowCount: number;
   /** All errors printed to the console of any window, or uncaught exceptions. */
   errors: string[];
+  /** Main-process output captured across app restarts. */
+  mainProcessOutput: string[];
   /** The temporary directory containing this app instance's configuration. */
   configDirectory: string;
   /** Local endpoints and a command that writes a marker file for action tests. */
@@ -88,6 +92,8 @@ export type KandoApp = {
    * single-instance app, this forwards the arguments to the running instance.
    */
   runCommand: (...args: string[]) => Promise<void>;
+  /** Runs a CLI command and returns its stdout and stderr. */
+  runCommandOutput: (...args: string[]) => Promise<{ stdout: string; stderr: string }>;
   /** Opens a menu and waits for its entrance animations to finish. */
   openMenu: (name: string) => Promise<void>;
   /** Opens a seeded menu through the settings window's preview API. */
@@ -107,6 +113,16 @@ export type KandoApp = {
   stubFileDialog: (kind: 'open' | 'save', filePath: string | null) => Promise<void>;
   /** Restarts the app while preserving its temporary configuration directory. */
   restart: () => Promise<void>;
+  /** Restarts the app after replacing one or more settings files with the given contents. */
+  restartWithSettingsFiles: (
+    files: Partial<Record<'config' | 'menus', string>>
+  ) => Promise<void>;
+  /** Stubs the GitHub update-check request so it cannot access the network. */
+  stubUpdateCheckRequest: () => Promise<void>;
+  /** Issues a request to the update-check URL through the app's main-process fetch. */
+  requestUpdateCheckEndpoint: () => Promise<number>;
+  /** Returns URLs requested by the update checker stub. */
+  readUpdateCheckRequests: () => Promise<string[]>;
 };
 
 /**
@@ -196,6 +212,9 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
 
       app.windows().forEach(watch);
       app.on('window', watch);
+      app.process().stdout?.on('data', (data: Buffer) => {
+        mainProcessOutput.push(data.toString());
+      });
       app.process().stderr?.on('data', (data: Buffer) => {
         mainProcessOutput.push(data.toString());
       });
@@ -237,6 +256,15 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
       new Promise<void>((resolve, reject) => {
         execFile(executablePath, [...baseArgs, ...args], { env }, (error) =>
           error ? reject(error) : resolve()
+        );
+      });
+    const runCommandOutput = (...args: string[]) =>
+      new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
+        execFile(
+          executablePath,
+          [...baseArgs, ...args],
+          { env },
+          (error, stdout, stderr) => (error ? reject(error) : resolve({ stdout, stderr }))
         );
       });
 
@@ -319,9 +347,18 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
         return current.menuWindow;
       },
       get settingsWindow() {
-        return current.settingsWindow;
+        return (
+          current.app
+            .windows()
+            .find((window) => window.url().includes('settings_window')) ??
+          current.settingsWindow
+        );
+      },
+      get windowCount() {
+        return current.app.windows().length;
       },
       errors,
+      mainProcessOutput,
       configDirectory,
       sideEffects: {
         tcpPort: tcpAddress.port,
@@ -333,6 +370,7 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
         fileOpenOutputPath,
       },
       runCommand,
+      runCommandOutput,
       // Open a menu through the app's normal command-line interface.
       openMenu: async (name) => {
         const menu = api.menuWindow.locator('#kando-menu');
@@ -466,6 +504,56 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
         await current.app.close();
         current = await startApp();
       },
+      restartWithSettingsFiles: async (files) => {
+        await current.app.close();
+        for (const [name, contents] of Object.entries(files)) {
+          if (contents === undefined) {
+            continue;
+          }
+          const fileName = name === 'menus' ? 'menus.json' : 'config.json';
+          fs.writeFileSync(path.join(configDirectory, fileName), contents);
+        }
+        current = await startApp();
+      },
+      stubUpdateCheckRequest: async () => {
+        await current.app.evaluate((appVersion) => {
+          const state = globalThis as typeof globalThis & {
+            kandoE2EUpdateCheckRequests?: string[];
+          };
+          state.kandoE2EUpdateCheckRequests = [];
+          const originalFetch = globalThis.fetch;
+          globalThis.fetch = async (input, init) => {
+            const url =
+              typeof input === 'string'
+                ? input
+                : input instanceof URL
+                  ? input.toString()
+                  : input.url;
+            if (url === 'https://api.github.com/repos/kando-menu/kando/releases') {
+              state.kandoE2EUpdateCheckRequests?.push(url);
+              return new Response(
+                JSON.stringify([{ prerelease: false, tag_name: `v${appVersion}` }]),
+                { status: 200 }
+              );
+            }
+            return originalFetch(input, init);
+          };
+        }, version);
+      },
+      requestUpdateCheckEndpoint: async () =>
+        current.app.evaluate(async () => {
+          const response = await fetch(
+            'https://api.github.com/repos/kando-menu/kando/releases'
+          );
+          return response.status;
+        }),
+      readUpdateCheckRequests: async () =>
+        current.app.evaluate(() => {
+          const state = globalThis as typeof globalThis & {
+            kandoE2EUpdateCheckRequests?: string[];
+          };
+          return state.kandoE2EUpdateCheckRequests ?? [];
+        }),
     };
 
     try {
