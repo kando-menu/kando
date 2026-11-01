@@ -61,8 +61,8 @@ export const TEST_COMMAND = '__KANDO_E2E_WRITE_COMMAND__';
 export const TEST_FILE_ICON_THEME = 'e2e-icons';
 
 /**
- * The app instance and test helpers provided by the `kando` fixture. Tests use these helpers
- * instead of controlling the Electron process and menu windows directly.
+ * The app instance and test helpers provided by the `kando` fixture. Tests use these
+ * helpers instead of controlling the Electron process and menu windows directly.
  */
 export type KandoApp = {
   /** The hidden window used for rendering pie menus. */
@@ -81,6 +81,7 @@ export type KandoApp = {
     webSocketMessages: string[];
     commandOutputPath: string;
     command: string;
+    fileOpenOutputPath: string;
   };
   /**
    * Runs the Kando executable with the given command line arguments. As Kando is a
@@ -98,6 +99,12 @@ export type KandoApp = {
   selectItem: (itemPath: number[]) => Promise<void>;
   /** Reads the current JSON content of config.json or menus.json. */
   readSettingsFile: (name?: 'config' | 'menus') => Promise<unknown>;
+  /** Replaces Electron's external URI handler with a local request recorder. */
+  stubExternalOpen: () => Promise<void>;
+  /** Returns URIs received by the local external-open stub. */
+  readExternalOpenRequests: () => Promise<string[]>;
+  /** Supplies the next native open/save dialog response. */
+  stubFileDialog: (kind: 'open' | 'save', filePath: string | null) => Promise<void>;
   /** Restarts the app while preserving its temporary configuration directory. */
   restart: () => Promise<void>;
 };
@@ -148,6 +155,19 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
       delete env.WAYLAND_DISPLAY;
       delete env.SWAYSOCK;
     }
+
+    const fileOpenOutputPath = path.join(tmp, 'file-open-output.jsonl');
+    const fileOpenStubDirectory = path.join(tmp, 'bin');
+    fs.mkdirSync(fileOpenStubDirectory, { recursive: true });
+    const fileOpenStubPath = path.join(fileOpenStubDirectory, 'xdg-open');
+    fs.writeFileSync(
+      fileOpenStubPath,
+      `#!/usr/bin/env node\nrequire('node:fs').appendFileSync(${JSON.stringify(
+        fileOpenOutputPath
+      )}, JSON.stringify(process.argv.slice(2)) + '\\n');\n`
+    );
+    fs.chmodSync(fileOpenStubPath, 0o755);
+    env.PATH = [fileOpenStubDirectory, env.PATH].filter(Boolean).join(path.delimiter);
 
     const errors: string[] = [];
     const mainProcessOutput: string[] = [];
@@ -224,6 +244,7 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
     const tcpMessages: string[] = [];
     const tcpServer = net.createServer((socket) => {
       socket.on('data', (data) => tcpMessages.push(data.toString()));
+      socket.on('end', () => socket.destroy());
     });
     await new Promise<void>((resolve, reject) => {
       tcpServer.once('error', reject);
@@ -309,6 +330,7 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
         webSocketMessages,
         commandOutputPath,
         command: `"${process.execPath}" "${commandScriptPath}"`,
+        fileOpenOutputPath,
       },
       runCommand,
       // Open a menu through the app's normal command-line interface.
@@ -340,15 +362,16 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
         if (itemPath.some((index) => !Number.isInteger(index) || index < 0)) {
           throw new Error(`Invalid menu item path: ${itemPath.join('.')}`);
         }
-        const seededMenu = seed?.menus?.find((menu) => menu.root.name === activeMenuName);
-        if (!seededMenu) {
+        const settings = (await api.readSettingsFile()) as { menus: MenuV2[] };
+        const menu = settings.menus.find((item) => item.root.name === activeMenuName);
+        if (!menu) {
           throw new Error(
-            `No seeded menu matches "${activeMenuName ?? 'the current menu'}".`
+            `No configured menu matches "${activeMenuName ?? 'the current menu'}".`
           );
         }
 
         type SeedMenuItem = MenuV2['root'] | MenuV2['root']['children'][number];
-        let selectedItem: SeedMenuItem = seededMenu.root;
+        let selectedItem: SeedMenuItem = menu.root;
         for (const index of itemPath) {
           if (!('children' in selectedItem)) {
             throw new Error(`Menu item at ${itemPath.join('.')} has no child items.`);
@@ -396,6 +419,46 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
         const fileName = name === 'menus' ? 'menus.json' : 'config.json';
         return JSON.parse(
           await fs.promises.readFile(path.join(configDirectory, fileName), 'utf8')
+        );
+      },
+      stubExternalOpen: async () => {
+        await current.app.evaluate(({ shell }) => {
+          const state = globalThis as typeof globalThis & {
+            kandoE2EExternalOpenRequests?: string[];
+          };
+          state.kandoE2EExternalOpenRequests = [];
+          shell.openExternal = async (url) => {
+            state.kandoE2EExternalOpenRequests?.push(url);
+          };
+        });
+      },
+      readExternalOpenRequests: async () =>
+        current.app.evaluate(() => {
+          const state = globalThis as typeof globalThis & {
+            kandoE2EExternalOpenRequests?: string[];
+          };
+          return state.kandoE2EExternalOpenRequests ?? [];
+        }),
+      stubFileDialog: async (kind, filePath) => {
+        await current.app.evaluate(
+          ({ dialog }, response) => {
+            if (response.kind === 'open') {
+              dialog.showOpenDialog = async () => ({
+                canceled: response.filePath === null,
+                filePaths: response.filePath === null ? [] : [response.filePath],
+              });
+              dialog.showMessageBox = async () => ({
+                response: 0,
+                checkboxChecked: false,
+              });
+            } else {
+              dialog.showSaveDialog = async () => ({
+                canceled: response.filePath === null,
+                filePath: response.filePath ?? '',
+              });
+            }
+          },
+          { kind, filePath }
         );
       },
       // Restarting reuses the same temporary configuration, allowing persistence tests.
