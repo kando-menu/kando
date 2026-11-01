@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { test, expect } from './fixtures';
+import { expect, test } from './fixtures';
 
 test('general settings dialog can be opened and closed with the mouse', async ({
   kando,
