@@ -8,27 +8,17 @@ test('menu can be opened via the command line and closed with escape', async ({
 }) => {
   const menu = kando.menuWindow.locator('#kando-menu');
 
-  const settle = async () => {
-    await menu.evaluate((el) =>
-      Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished))
-    );
-    await kando.menuWindow.waitForTimeout(300);
-  };
-
   // The menu is hidden until it is requested.
   await expect(menu.locator('.menu-node')).toHaveCount(0);
 
   // This is forwarded to the already running instance.
-  await kando.runCommand('--menu', 'Example Menu');
+  await kando.openMenu('Example Menu');
 
   await expect(menu).not.toHaveClass(/hidden/);
   await expect(menu.locator('.menu-node.type-root')).toHaveAttribute(
     'data-name',
     'Example Menu'
   );
-
-  // Let the fade-in and all menu animations finish before interacting with the menu.
-  await settle();
 
   await kando.menuWindow.keyboard.press('Escape');
 
