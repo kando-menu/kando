@@ -86,6 +86,7 @@ export type KandoApp = {
     commandOutputPath: string;
     command: string;
     fileOpenOutputPath: string;
+    fileToOpenPath: string;
   };
   /**
    * Runs the Kando executable with the given command line arguments. As Kando is a
@@ -109,6 +110,10 @@ export type KandoApp = {
   stubExternalOpen: () => Promise<void>;
   /** Returns URIs received by the local external-open stub. */
   readExternalOpenRequests: () => Promise<string[]>;
+  /** Replaces Electron's file opener with a local request recorder. */
+  stubFileOpen: () => Promise<void>;
+  /** Returns file paths received by the local file-open stub. */
+  readFileOpenRequests: () => Promise<string[]>;
   /** Supplies the next native open/save dialog response. */
   stubFileDialog: (kind: 'open' | 'save', filePath: string | null) => Promise<void>;
   /** Restarts the app while preserving its temporary configuration directory. */
@@ -173,6 +178,7 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
     }
 
     const fileOpenOutputPath = path.join(tmp, 'file-open-output.jsonl');
+    const fileToOpenPath = path.join(tmp, 'editor-e2e-file');
     const fileOpenStubDirectory = path.join(tmp, 'bin');
     fs.mkdirSync(fileOpenStubDirectory, { recursive: true });
     const fileOpenStubPath = path.join(fileOpenStubDirectory, 'xdg-open');
@@ -368,6 +374,7 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
         commandOutputPath,
         command: `"${process.execPath}" "${commandScriptPath}"`,
         fileOpenOutputPath,
+        fileToOpenPath,
       },
       runCommand,
       runCommandOutput,
@@ -477,6 +484,37 @@ export const test = base.extend<{ kando: KandoApp }, { seed: SeedData | undefine
           };
           return state.kandoE2EExternalOpenRequests ?? [];
         }),
+      stubFileOpen: async () => {
+        await current.app.evaluate(({ shell }) => {
+          const state = globalThis as typeof globalThis & {
+            kandoE2EFileOpenRequests?: string[];
+          };
+          state.kandoE2EFileOpenRequests = [];
+          shell.openPath = async (filePath) => {
+            state.kandoE2EFileOpenRequests?.push(filePath);
+            return '';
+          };
+        });
+      },
+      readFileOpenRequests: async () => {
+        if (process.platform !== 'linux') {
+          return current.app.evaluate(() => {
+            const state = globalThis as typeof globalThis & {
+              kandoE2EFileOpenRequests?: string[];
+            };
+            return state.kandoE2EFileOpenRequests ?? [];
+          });
+        }
+
+        if (!fs.existsSync(fileOpenOutputPath)) {
+          return [];
+        }
+        return (await fs.promises.readFile(fileOpenOutputPath, 'utf8'))
+          .trim()
+          .split('\n')
+          .filter(Boolean)
+          .map((line) => (JSON.parse(line) as string[])[0]);
+      },
       stubFileDialog: async (kind, filePath) => {
         await current.app.evaluate(
           ({ dialog }, response) => {

@@ -76,9 +76,12 @@ test.describe('editor menus', () => {
     await page.getByPlaceholder('Insert any URI…').fill('https://editor.example.test');
     await page.getByPlaceholder('Insert any URI…').press('Tab');
     await kando.stubExternalOpen();
+    await kando.stubFileOpen();
 
     await addAction(page, 'Open File');
-    await page.getByPlaceholder('Choose a file or folder…').fill('/tmp/editor-e2e-file');
+    await page
+      .getByPlaceholder('Choose a file or folder…')
+      .fill(kando.sideEffects.fileToOpenPath);
     await page.getByPlaceholder('Choose a file or folder…').press('Tab');
 
     await addAction(page, 'Delay');
@@ -101,15 +104,8 @@ test.describe('editor menus', () => {
       .poll(() => kando.readExternalOpenRequests())
       .toEqual(['https://editor.example.test']);
     await expect
-      .poll(() => fs.existsSync(kando.sideEffects.fileOpenOutputPath))
-      .toBe(true);
-    const openedFiles = (
-      await fs.promises.readFile(kando.sideEffects.fileOpenOutputPath, 'utf8')
-    )
-      .trim()
-      .split('\n')
-      .map((line) => JSON.parse(line));
-    expect(openedFiles).toContainEqual(['/tmp/editor-e2e-file']);
+      .poll(() => kando.readFileOpenRequests())
+      .toContain(kando.sideEffects.fileToOpenPath);
 
     await kando.menuWindow.keyboard.press('Escape');
     await expect(kando.menuWindow.locator('.menu-node')).toHaveCount(0);
