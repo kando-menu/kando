@@ -322,6 +322,7 @@ export default interface Resources {
           "area-condition-tooltip": "Select a screen area",
           "area-condition-top-placeholder": "Top",
           "cancel": "Cancel",
+          "close": "Close",
           "create-menu-button": "Add Menu",
           "delete-menu": "Delete menu",
           "delete-menu-item": "Delete menu item",

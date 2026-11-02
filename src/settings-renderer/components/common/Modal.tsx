@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18next from 'i18next';
 import { createPortal } from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
 import { RiCloseLargeFill } from 'react-icons/ri';
@@ -121,7 +122,12 @@ export default function Modal(props: Props) {
   // Define the close button with an icon. On macOS, the close button is displayed on the
   // left side of the header bar. On other platforms, it is displayed on the right side.
   const closeButton = (
-    <Button icon={<RiCloseLargeFill />} variant="tool" onClick={props.onClose} />
+    <Button
+      ariaLabel={i18next.t('settings.close')}
+      icon={<RiCloseLargeFill />}
+      variant="tool"
+      onClick={props.onClose}
+    />
   );
 
   // Both the title and the icon are optional. If no title is provided, only the icon will

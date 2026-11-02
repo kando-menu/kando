@@ -14,7 +14,7 @@ import {
   BUTTON_MENU_ITEM_SCHEMA_V2,
   ROOT_MENU_ITEM_SCHEMA_V2,
   SUBMENU_MENU_ITEM_SCHEMA_V2,
-} from '../src/common/settings-schemata/menu-settings-v2';
+} from '../../src/common/settings-schemata/menu-settings-v2';
 
 describe('Scroll workflows', () => {
   const workflow = { actions: [{ type: 'simulate-hotkey', hotkey: 'VolumeUp' }] };

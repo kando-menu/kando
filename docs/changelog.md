@@ -35,6 +35,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 ### :bug: Fixed
 
 - Fixed an issue which caused the link to the config-file directory in the Backup & Restore page of the General-Settings Dialog to not work.
+- Corrupted settings files with invalid JSON are now backed up before Kando restores and uses default settings.
 
 ## [Kando 3.0.1](https://github.com/kando-menu/kando/releases/tag/v3.0.1)
 

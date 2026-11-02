@@ -14,8 +14,8 @@ import { expect } from 'chai';
 import {
   assignCustomConfigDirectory,
   resetConfigDirectoryForTesting,
-} from '../src/main/settings';
-import { getConfigDirectory } from '../src/main/settings';
+} from '../../src/main/settings';
+import { getConfigDirectory } from '../../src/main/settings';
 import fs from 'node:fs';
 import { after, beforeEach } from 'mocha';
 
