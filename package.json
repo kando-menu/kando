@@ -52,7 +52,7 @@
     "@types/ws": "^8.18.2",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "chai": "^6.3.0",
-    "chokidar": "^5.0.0",
+    "chokidar": "^6.0.0",
     "chroma-js": "^3.2.0",
     "classnames": "^2.5.1",
     "clipboardy": "^5.3.2",
