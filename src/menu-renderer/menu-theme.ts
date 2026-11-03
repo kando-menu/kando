@@ -231,6 +231,24 @@ export class MenuTheme {
     return nodeDiv;
   }
 
+  /** Updates only the rendered icon, without changing the menu configuration. */
+  public setItemIcon(item: RenderedMenuItem, icon: string, iconTheme: string) {
+    this.description.layers
+      .filter((layer) => layer.content === 'icon')
+      .forEach((layer) => {
+        const layerDiv = item.renderData.nodeDiv.querySelector(
+          `:scope > .${layer.class}`
+        );
+        if (!layerDiv) {
+          return;
+        }
+
+        layerDiv.replaceChildren(
+          IconThemeRegistry.getInstance().createIcon(iconTheme, icon)
+        );
+      });
+  }
+
   /** Sets the colors defined in the theme description as CSS properties. */
   public setColors(colors: Record<string, string>) {
     Object.entries(colors).forEach(([name, color]) => {

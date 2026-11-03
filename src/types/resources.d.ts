@@ -255,6 +255,11 @@ export default interface Resources {
               "hotkey-info": "This hotkey will be triggered when the item is selected. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a hotkey is already bound to some global action!",
               "name": "Simulate Hotkey",
               "recording-placeholder": "Type a hotkey…"
+          },
+          "temporary-icon": {
+              "description": "Temporarily changes the menu item's icon while scrolling. The original icon returns 150 ms after scrolling stops.",
+              "icon-label": "Temporary icon",
+              "name": "Temporary Icon"
           }
       },
       "menu-items": {
@@ -629,6 +634,14 @@ export default interface Resources {
                   "empty-hint": "Currently, no actions will be executed when hovering over this item. Use the button above to add actions to this workflow!",
                   "quick-select-key-hint": "Pressing this key while the parent menu is open will also trigger the hover workflow."
               },
+              "button-scroll-down-workflow": {
+                  "description": "The actions below will be executed when you scroll down over this item.",
+                  "empty-hint": "Currently, no actions will be executed when scrolling down over this item. Use the button above to add actions to this workflow!"
+              },
+              "button-scroll-up-workflow": {
+                  "description": "The actions below will be executed when you scroll up over this item.",
+                  "empty-hint": "Currently, no actions will be executed when scrolling up over this item. Use the button above to add actions to this workflow!"
+              },
               "button-select-workflow": {
                   "description": "The actions below will be executed when you select the item.",
                   "empty-hint": "Currently, no actions will be executed when selecting this item. Use the button above to add actions to this workflow!",
@@ -641,6 +654,8 @@ export default interface Resources {
                   "empty-hint": "Currently, nothing will happen when you click the center of the root menu. Use the button above to add actions to this workflow!",
                   "quick-select-key-hint": "Pressing this key while the root menu is open will also trigger the center-click workflow."
               },
+              "scroll-down-workflow-name": "Scroll Down Workflow",
+              "scroll-up-workflow-name": "Scroll Up Workflow",
               "select-workflow-name": "Select Workflow",
               "submenu-activate-workflow": {
                   "description": "The actions below will be executed when you click the center of the submenu.",
@@ -656,6 +671,14 @@ export default interface Resources {
                   "description": "The actions below will be executed when the submenu is opened.",
                   "empty-hint": "Currently, no additional actions will be executed when opening this submenu. Use the button above to add actions to this workflow!",
                   "quick-select-key-hint": "Pressing this key will open the submenu."
+              },
+              "submenu-scroll-down-workflow": {
+                  "description": "The actions below will be executed when you scroll down over the submenu item.",
+                  "empty-hint": "Currently, no actions will be executed when scrolling down over this submenu. Use the button above to add actions to this workflow!"
+              },
+              "submenu-scroll-up-workflow": {
+                  "description": "The actions below will be executed when you scroll up over the submenu item.",
+                  "empty-hint": "Currently, no actions will be executed when scrolling up over this submenu. Use the button above to add actions to this workflow!"
               }
           }
       }

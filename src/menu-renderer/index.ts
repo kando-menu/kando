@@ -119,6 +119,10 @@ Promise.all([
     settings
   );
 
+  window.menuAPI.onSetTemporaryIcon((path, icon, iconTheme) => {
+    menu.setTemporaryIcon(path, icon, iconTheme);
+  });
+
   // Show the menu when the main process requests it.
   window.menuAPI.onShowMenu(async (root, menuOptions) => {
     if (menuOptions.systemIconsChanged) {

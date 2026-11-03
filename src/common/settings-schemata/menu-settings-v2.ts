@@ -146,6 +146,17 @@ export const SIMULATE_HOTKEY_ACTION_SCHEMA_V2 = z.object({
   hotkey: z.string(),
 });
 
+/** This action temporarily changes a menu item's icon. */
+export const TEMPORARY_ICON_ACTION_SCHEMA_V2 = z.object({
+  type: z.literal('temporary-icon'),
+
+  /** The icon to display until scrolling stops. */
+  icon: z.string(),
+
+  /** The icon theme to use. */
+  iconTheme: z.string(),
+});
+
 /** This type describes the possible actions that can be performed in a workflow. */
 export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
   CLOSE_MENU_ACTION_SCHEMA_V2,
@@ -162,6 +173,7 @@ export const WORKFLOW_ACTION_SCHEMA_V2 = z.discriminatedUnion('type', [
   SET_CLIPBOARD_ACTION_SCHEMA_V2,
   SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2,
   SIMULATE_HOTKEY_ACTION_SCHEMA_V2,
+  TEMPORARY_ICON_ACTION_SCHEMA_V2,
 ]);
 
 /** This type describes a workflow for a menu item is triggered when it is selected. */
@@ -223,6 +235,12 @@ export const BUTTON_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
   /** The workflow which is triggered when the item is hovered. */
   hoverWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
+  /** The workflow which is triggered when the mouse wheel is scrolled up over the item. */
+  scrollUpWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the mouse wheel is scrolled down over the item. */
+  scrollDownWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
   /** The workflow which is triggered when the item is selected. */
   selectWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 });
@@ -242,6 +260,15 @@ export const SUBMENU_MENU_ITEM_SCHEMA_V2 = BASE_MENU_ITEM_SCHEMA_V2.extend({
 
   /** The workflow which is triggered when the submenu is hovered. */
   hoverWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /** The workflow which is triggered when the mouse wheel is scrolled up over the submenu. */
+  scrollUpWorkflow: WORKFLOW_SCHEMA_V2.optional(),
+
+  /**
+   * The workflow which is triggered when the mouse wheel is scrolled down over the
+   * submenu.
+   */
+  scrollDownWorkflow: WORKFLOW_SCHEMA_V2.optional(),
 
   /** The workflow which is triggered when the submenu is opened. */
   openWorkflow: WORKFLOW_SCHEMA_V2.optional(),
@@ -439,6 +466,7 @@ export type SendWebSocketMessageActionV2 = z.infer<
   typeof SEND_WEBSOCKET_MESSAGE_ACTION_SCHEMA_V2
 >;
 export type SimulateHotkeyActionV2 = z.infer<typeof SIMULATE_HOTKEY_ACTION_SCHEMA_V2>;
+export type TemporaryIconActionV2 = z.infer<typeof TEMPORARY_ICON_ACTION_SCHEMA_V2>;
 export type DelayActionV2 = z.infer<typeof DELAY_ACTION_SCHEMA_V2>;
 
 export type RootMenuItemV2 = z.infer<typeof ROOT_MENU_ITEM_SCHEMA_V2>;

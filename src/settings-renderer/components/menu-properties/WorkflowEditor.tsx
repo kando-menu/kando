@@ -24,9 +24,13 @@ import ActionList from './ActionList';
 type WorkflowType =
   | 'buttonSelect'
   | 'buttonHover'
+  | 'buttonScrollUp'
+  | 'buttonScrollDown'
   | 'rootActivate'
   | 'submenuOpen'
   | 'submenuHover'
+  | 'submenuScrollUp'
+  | 'submenuScrollDown'
   | 'submenuActivate';
 
 type WorkflowMeta = {
@@ -34,9 +38,10 @@ type WorkflowMeta = {
     name: string;
     description: string;
     emptyHint: string;
-    quickSelectKeyHint: string;
+    quickSelectKeyHint?: string;
     icon: React.ReactNode;
     actionsMayChangeItem: boolean;
+    hideQuickSelectKey?: boolean;
   };
 };
 
@@ -88,6 +93,30 @@ export default function WorkflowEditor() {
       icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
       actionsMayChangeItem: true,
     },
+    buttonScrollUp: {
+      name: i18next.t('settings.workflow-editor.scroll-up-workflow-name'),
+      description: i18next.t(
+        'settings.workflow-editor.button-scroll-up-workflow.description'
+      ),
+      emptyHint: i18next.t(
+        'settings.workflow-editor.button-scroll-up-workflow.empty-hint'
+      ),
+      icon: <ThemedIcon name="workflow-scroll-up.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
+      hideQuickSelectKey: true,
+    },
+    buttonScrollDown: {
+      name: i18next.t('settings.workflow-editor.scroll-down-workflow-name'),
+      description: i18next.t(
+        'settings.workflow-editor.button-scroll-down-workflow.description'
+      ),
+      emptyHint: i18next.t(
+        'settings.workflow-editor.button-scroll-down-workflow.empty-hint'
+      ),
+      icon: <ThemedIcon name="workflow-scroll-down.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
+      hideQuickSelectKey: true,
+    },
     rootActivate: {
       name: i18next.t('settings.workflow-editor.activate-workflow-name'),
       description: i18next.t(
@@ -124,6 +153,30 @@ export default function WorkflowEditor() {
       icon: <ThemedIcon name="workflow-hover.svg" size="1em" theme="kando" />,
       actionsMayChangeItem: true,
     },
+    submenuScrollUp: {
+      name: i18next.t('settings.workflow-editor.scroll-up-workflow-name'),
+      description: i18next.t(
+        'settings.workflow-editor.submenu-scroll-up-workflow.description'
+      ),
+      emptyHint: i18next.t(
+        'settings.workflow-editor.submenu-scroll-up-workflow.empty-hint'
+      ),
+      icon: <ThemedIcon name="workflow-scroll-up.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
+      hideQuickSelectKey: true,
+    },
+    submenuScrollDown: {
+      name: i18next.t('settings.workflow-editor.scroll-down-workflow-name'),
+      description: i18next.t(
+        'settings.workflow-editor.submenu-scroll-down-workflow.description'
+      ),
+      emptyHint: i18next.t(
+        'settings.workflow-editor.submenu-scroll-down-workflow.empty-hint'
+      ),
+      icon: <ThemedIcon name="workflow-scroll-down.svg" size="1em" theme="kando" />,
+      actionsMayChangeItem: true,
+      hideQuickSelectKey: true,
+    },
     submenuActivate: {
       name: i18next.t('settings.workflow-editor.activate-workflow-name'),
       description: i18next.t(
@@ -144,9 +197,20 @@ export default function WorkflowEditor() {
   const workflowTypes: Array<WorkflowType> = [];
 
   if (selectedItem.type === 'button') {
-    workflowTypes.push('buttonSelect', 'buttonHover');
+    workflowTypes.push(
+      'buttonSelect',
+      'buttonHover',
+      'buttonScrollUp',
+      'buttonScrollDown'
+    );
   } else if (selectedItem.type === 'submenu') {
-    workflowTypes.push('submenuOpen', 'submenuHover', 'submenuActivate');
+    workflowTypes.push(
+      'submenuOpen',
+      'submenuHover',
+      'submenuScrollUp',
+      'submenuScrollDown',
+      'submenuActivate'
+    );
   } else if (selectedItem.type === 'root') {
     workflowTypes.push('rootActivate');
   }
@@ -166,6 +230,18 @@ export default function WorkflowEditor() {
     }
     if (workflowType === 'submenuOpen' && 'openWorkflow' in item) {
       return item.openWorkflow;
+    }
+    if (
+      (workflowType === 'buttonScrollUp' || workflowType === 'submenuScrollUp') &&
+      'scrollUpWorkflow' in item
+    ) {
+      return item.scrollUpWorkflow;
+    }
+    if (
+      (workflowType === 'buttonScrollDown' || workflowType === 'submenuScrollDown') &&
+      'scrollDownWorkflow' in item
+    ) {
+      return item.scrollDownWorkflow;
     }
     if (
       (workflowType === 'buttonHover' || workflowType === 'submenuHover') &&
@@ -189,6 +265,14 @@ export default function WorkflowEditor() {
         item.selectWorkflow = workflow;
       } else if (workflowType === 'submenuOpen' && item.type === 'submenu') {
         item.openWorkflow = workflow;
+      } else if (workflowType === 'buttonScrollUp' && item.type === 'button') {
+        item.scrollUpWorkflow = workflow;
+      } else if (workflowType === 'buttonScrollDown' && item.type === 'button') {
+        item.scrollDownWorkflow = workflow;
+      } else if (workflowType === 'submenuScrollUp' && item.type === 'submenu') {
+        item.scrollUpWorkflow = workflow;
+      } else if (workflowType === 'submenuScrollDown' && item.type === 'submenu') {
+        item.scrollDownWorkflow = workflow;
       } else if (
         (workflowType === 'buttonHover' || workflowType === 'submenuHover') &&
         (item.type === 'button' || item.type === 'submenu')
@@ -249,7 +333,14 @@ export default function WorkflowEditor() {
           isFirstWorkflowType={workflowType === workflowTypes[0]}
           isLastWorkflowType={workflowType === workflowTypes[workflowTypes.length - 1]}
           quickSelectKeyPlaceholder={quickSelectKeyPlaceholder}
-          quickSelectKeyInfo={workflowMeta[workflowType].quickSelectKeyHint}
+          quickSelectKeyInfo={workflowMeta[workflowType].quickSelectKeyHint || ''}
+          hideQuickSelectKey={workflowMeta[workflowType].hideQuickSelectKey}
+          isTemporaryIconAllowed={
+            workflowType === 'buttonScrollUp' ||
+            workflowType === 'buttonScrollDown' ||
+            workflowType === 'submenuScrollUp' ||
+            workflowType === 'submenuScrollDown'
+          }
           workflow={workflow}
           onUpdateItem={(info) => {
             if (!workflowMeta[workflowType].actionsMayChangeItem) {

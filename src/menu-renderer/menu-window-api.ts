@@ -53,6 +53,15 @@ export const MENU_WINDOW_API = {
     );
   },
 
+  /** Apply a temporary icon to a menu item. */
+  onSetTemporaryIcon: (
+    func: (path: number[], icon: string, iconTheme: string) => void
+  ) => {
+    ipcRenderer.on('menu-window.set-temporary-icon', (event, path, icon, iconTheme) =>
+      func(path, icon, iconTheme)
+    );
+  },
+
   /**
    * The host can request the renderer process to initiate several menu interactions, such
    * as closing the menu or closing the current submenu. The renderer process will act

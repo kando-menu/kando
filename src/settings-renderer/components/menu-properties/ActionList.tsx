@@ -54,6 +54,12 @@ type Props = {
   /** The info text shown for the quick select key in the ActionPicker. */
   readonly quickSelectKeyInfo: string;
 
+  /** Whether to hide quick-select controls for this workflow. */
+  readonly hideQuickSelectKey?: boolean;
+
+  /** Whether the temporary icon action is available in this workflow. */
+  readonly isTemporaryIconAllowed?: boolean;
+
   /** Callback to update the workflow. */
   readonly onUpdateWorkflow: (workflow: Workflow) => void;
 
@@ -230,21 +236,23 @@ export default function ActionList(props: Props) {
             lastWorkflowType: props.isLastWorkflowType,
           })}>
           <div className={classes.actionItemContent} style={{ paddingTop: 10 }}>
-            <ShortcutPicker
-              initialValue={props.workflow?.quickSelectKey || ''}
-              label={i18next.t('settings.quick-select-key-label')}
-              info={props.quickSelectKeyInfo}
-              mode="key-names"
-              placeholder={props.quickSelectKeyPlaceholder}
-              recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
-              useModifiers={false}
-              onChange={(shortcut) => {
-                props.onUpdateWorkflow({
-                  ...props.workflow,
-                  quickSelectKey: shortcut || undefined,
-                });
-              }}
-            />
+            {props.hideQuickSelectKey ? null : (
+              <ShortcutPicker
+                initialValue={props.workflow?.quickSelectKey || ''}
+                label={i18next.t('settings.quick-select-key-label')}
+                info={props.quickSelectKeyInfo}
+                mode="key-names"
+                placeholder={props.quickSelectKeyPlaceholder}
+                recordingPlaceholder={i18next.t('settings.quick-select-key-recording')}
+                useModifiers={false}
+                onChange={(shortcut) => {
+                  props.onUpdateWorkflow({
+                    ...props.workflow,
+                    quickSelectKey: shortcut || undefined,
+                  });
+                }}
+              />
+            )}
             <Note marginTop={4}>{props.description}</Note>
           </div>
         </div>
@@ -270,6 +278,7 @@ export default function ActionList(props: Props) {
 
       <ActionPicker
         isVisible={actionPickerVisible}
+        excludeActionTypes={props.isTemporaryIconAllowed ? [] : ['temporary-icon']}
         onClose={() => setActionPickerVisible(false)}
         onSelect={(action) => {
           handleAddAction(action);

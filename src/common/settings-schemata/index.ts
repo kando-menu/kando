@@ -25,6 +25,7 @@ export type {
   SetClipboardActionV2 as SetClipboardAction,
   SendWebSocketMessageActionV2 as SendWebSocketMessageAction,
   SimulateHotkeyActionV2 as SimulateHotkeyAction,
+  TemporaryIconActionV2 as TemporaryIconAction,
   DelayActionV2 as DelayAction,
   MenuConditionsV2 as MenuConditions,
   MacroEventV2 as MacroEvent,

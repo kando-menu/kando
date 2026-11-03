@@ -27,10 +27,12 @@ import { execute as setClipboard } from './actions/set-clipboard';
 import { execute as sendWebSocketMessage } from './actions/send-websocket-message';
 import { execute as simulateHotkey } from './actions/simulate-hotkey';
 import { execute as delay } from './actions/delay';
+import { execute as temporaryIcon } from './actions/temporary-icon';
 
 type WorkflowActionExecutor<T extends WorkflowActionType> = (
   action: DeepReadonly<Extract<WorkflowAction, { type: T }>>,
-  app: KandoApp
+  app: KandoApp,
+  menuItemPath?: number[]
 ) => Promise<() => Promise<void>> | Promise<void>;
 
 const ACTION_EXECUTORS = new Map<
@@ -51,6 +53,7 @@ const ACTION_EXECUTORS = new Map<
   ['set-clipboard', setClipboard],
   ['send-websocket-message', sendWebSocketMessage],
   ['simulate-hotkey', simulateHotkey],
+  ['temporary-icon', temporaryIcon],
 ]);
 
 /**
@@ -85,7 +88,11 @@ export class WorkflowExecutor {
    * @param workflow The select-workflow to execute.
    * @param app The app which executed the action.
    */
-  public async executeWorkflow(workflow: DeepReadonly<Workflow>, app: KandoApp) {
+  public async executeWorkflow(
+    workflow: DeepReadonly<Workflow>,
+    app: KandoApp,
+    menuItemPath?: number[]
+  ) {
     if (!workflow.actions || workflow.actions.length === 0) {
       return;
     }
@@ -94,7 +101,7 @@ export class WorkflowExecutor {
 
     try {
       for (const action of workflow.actions) {
-        const finalizeCall = await this.executeAction(action, app);
+        const finalizeCall = await this.executeAction(action, app, menuItemPath);
         if (finalizeCall) {
           finalizeCalls.push(finalizeCall);
         }
@@ -150,9 +157,10 @@ export class WorkflowExecutor {
    */
   private executeAction(
     action: DeepReadonly<WorkflowAction>,
-    app: KandoApp
+    app: KandoApp,
+    menuItemPath?: number[]
   ): Promise<() => Promise<void>> | Promise<void> {
     const executor = ACTION_EXECUTORS.get(action.type);
-    return executor(action, app);
+    return executor(action, app, menuItemPath);
   }
 }

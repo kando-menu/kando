@@ -242,6 +242,20 @@ export class ActionTypeRegistry {
         prefersInhibitedShortcuts: true,
         createAction: () => ({ type: 'simulate-hotkey', hotkey: '' }),
       },
+      ['temporary-icon']: {
+        name: i18next.t('menu-actions.temporary-icon.name'),
+        icon: 'icon-item.svg',
+        iconTheme: 'kando',
+        description: i18next.t('menu-actions.temporary-icon.description'),
+        supportedByBackend: true,
+        prefersDelayedExecution: false,
+        prefersInhibitedShortcuts: false,
+        createAction: () => ({
+          type: 'temporary-icon',
+          icon: '',
+          iconTheme: 'material-symbols-rounded',
+        }),
+      },
     };
   }
 

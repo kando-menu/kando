@@ -20,6 +20,7 @@ import { OpenURIActionConfig } from './OpenURIActionConfig';
 import { SetClipboardActionConfig } from './SetClipboardActionConfig';
 import { SendWebSocketMessageActionConfig } from './SendWebSocketMessageActionConfig';
 import { SimulateHotkeyActionConfig } from './SimulateHotkeyActionConfig';
+import { TemporaryIconActionConfig } from './TemporaryIconActionConfig';
 import { WorkflowAction } from '../../../../common';
 
 /**
@@ -93,6 +94,10 @@ export function getConfigComponent(
 
   if (action.type === 'simulate-hotkey') {
     return <SimulateHotkeyActionConfig action={action} onUpdateAction={onUpdateAction} />;
+  }
+
+  if (action.type === 'temporary-icon') {
+    return <TemporaryIconActionConfig action={action} onUpdateAction={onUpdateAction} />;
   }
 
   return null;

@@ -32,6 +32,7 @@ import { GamepadInput } from './input-methods/gamepad-input';
 import { PointerInput } from './input-methods/pointer-input';
 import { ButtonState, InputState, SelectionType } from './input-methods/input-method';
 import { MenuTheme } from './menu-theme';
+import { ScrollAccumulator } from './scroll-accumulator';
 
 /**
  * The menu is the main class of Kando. It stores a tree of items which is used to render
@@ -64,6 +65,13 @@ type MenuEvents = {
   // pointer to the center of the menu when it is shown.
   // eslint-disable-next-line @typescript-eslint/naming-convention
   'move-pointer': [dist: Vec2];
+};
+
+type TemporaryIcon = {
+  item: RenderedMenuItem;
+  icon: string;
+  iconTheme: string;
+  timeout: NodeJS.Timeout;
 };
 
 export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvents>) {
@@ -118,6 +126,12 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    */
   private gamepadInput: GamepadInput = new GamepadInput();
 
+  /** Converts wheel deltas into discrete scroll steps. */
+  private scrollAccumulator: ScrollAccumulator = new ScrollAccumulator();
+
+  /** Icons temporarily displayed while scrolling over menu items. */
+  private temporaryIcons = new Map<string, TemporaryIcon>();
+
   /**
    * This object contains information on the latest pointer state. Is it updated whenever
    * an input pointer is moved.
@@ -156,6 +170,49 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
 
     this.updateSettings(settings);
     this.initializeInput();
+  }
+
+  private getItemAtPath(path: number[]): RenderedMenuItem | null {
+    let item: RenderedMenuItem = this.root;
+    for (const index of path) {
+      if (!item || (item.type !== 'root' && item.type !== 'submenu')) {
+        return null;
+      }
+      item = item.children[index] as RenderedMenuItem;
+    }
+    return item;
+  }
+
+  private createTemporaryIconTimeout(key: string) {
+    return setTimeout(() => this.restoreTemporaryIcon(key), 150);
+  }
+
+  private keepTemporaryIconWhileScrolling(item: RenderedMenuItem) {
+    if (!item) {
+      return;
+    }
+
+    const key = JSON.stringify(item.renderData.path);
+    const temporaryIcon = this.temporaryIcons.get(key);
+    if (temporaryIcon) {
+      clearTimeout(temporaryIcon.timeout);
+      temporaryIcon.timeout = this.createTemporaryIconTimeout(key);
+    }
+  }
+
+  private restoreTemporaryIcon(key: string) {
+    const temporaryIcon = this.temporaryIcons.get(key);
+    if (!temporaryIcon) {
+      return;
+    }
+
+    clearTimeout(temporaryIcon.timeout);
+    this.theme.setItemIcon(
+      temporaryIcon.item,
+      temporaryIcon.icon,
+      temporaryIcon.iconTheme
+    );
+    this.temporaryIcons.delete(key);
   }
 
   /**
@@ -273,8 +330,34 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     }
   }
 
+  /** Temporarily change the rendered icon of the item at the given path. */
+  public setTemporaryIcon(path: number[], icon: string, iconTheme: string) {
+    const item = this.getItemAtPath(path);
+    if (!item || (item.type !== 'button' && item.type !== 'submenu')) {
+      return;
+    }
+
+    const key = JSON.stringify(path);
+    const current = this.temporaryIcons.get(key);
+    if (current) {
+      clearTimeout(current.timeout);
+      current.timeout = this.createTemporaryIconTimeout(key);
+    } else {
+      this.temporaryIcons.set(key, {
+        item,
+        icon: item.icon,
+        iconTheme: item.iconTheme,
+        timeout: this.createTemporaryIconTimeout(key),
+      });
+    }
+
+    this.theme.setItemIcon(item, icon, iconTheme);
+  }
+
   /** Removes all DOM elements from the menu and resets the root menu item. */
   public clear() {
+    this.temporaryIcons.forEach(({ timeout }) => clearTimeout(timeout));
+    this.temporaryIcons.clear();
     this.container.className = 'hidden';
     this.container.innerHTML = '';
     this.root = null;
@@ -623,6 +706,45 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     this.container.addEventListener('pointerup', (e) => {
       this.pointerInput.onPointerUpEvent(e);
     });
+    this.container.addEventListener(
+      'wheel',
+      (event) => {
+        if (this.container.classList.contains('hidden')) {
+          this.scrollAccumulator.reset();
+          return;
+        }
+
+        const item = this.hoveredItem;
+        this.keepTemporaryIconWhileScrolling(item);
+        if (
+          !item ||
+          (item.type !== 'button' && item.type !== 'submenu') ||
+          (!item.scrollUpWorkflow && !item.scrollDownWorkflow)
+        ) {
+          this.scrollAccumulator.reset();
+          return;
+        }
+
+        event.preventDefault();
+
+        const step = this.scrollAccumulator.accumulate(event.deltaY, event.deltaMode);
+        if (step === 0) {
+          return;
+        }
+
+        const isScrollUp = step < 0;
+        const workflow = isScrollUp ? item.scrollUpWorkflow : item.scrollDownWorkflow;
+        if (!workflow) {
+          return;
+        }
+
+        this.emitItemInteractionEvent(
+          isScrollUp ? MenuInteractionType.eScrollUp : MenuInteractionType.eScrollDown,
+          item.renderData.path
+        );
+      },
+      { passive: false }
+    );
   }
 
   /** Hides the menu. */
@@ -794,6 +916,13 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     if (this.hoveredItem === item) {
       return;
     }
+
+    this.scrollAccumulator.reset();
+    this.temporaryIcons.forEach((temporaryIcon, key) => {
+      if (temporaryIcon.item !== item) {
+        this.restoreTemporaryIcon(key);
+      }
+    });
 
     // Tell the selection wedges about the hovered wedge.
     if (this.selectionWedges) {
@@ -1578,6 +1707,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       | MenuInteractionType.eHoverCenter
       | MenuInteractionType.eHoverButton
       | MenuInteractionType.eHoverSubmenu
+      | MenuInteractionType.eScrollUp
+      | MenuInteractionType.eScrollDown
       | MenuInteractionType.eActivateMenu,
     path: number[]
   ) {

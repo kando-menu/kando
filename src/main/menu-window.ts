@@ -410,6 +410,13 @@ export class MenuWindow extends BrowserWindow {
     }
   }
 
+  /** Temporarily change a rendered menu item's icon. */
+  public setTemporaryIcon(path: number[], icon: string, iconTheme: string) {
+    if (this.isVisible()) {
+      this.webContents.send('menu-window.set-temporary-icon', path, icon, iconTheme);
+    }
+  }
+
   /**
    * This hides the window. It will wait for the fade-out animation to finish before
    * actually hiding the window.
@@ -795,7 +802,7 @@ export class MenuWindow extends BrowserWindow {
         // The user clicked the root menu item.
         if (type === MenuInteractionType.eActivateMenu && item.type === 'root') {
           if (this.lastMenu.root.activateWorkflow) {
-            this.executeWorkflow(this.lastMenu.root.activateWorkflow);
+            this.executeWorkflow(this.lastMenu.root.activateWorkflow, path);
           }
           return;
         }
@@ -803,7 +810,23 @@ export class MenuWindow extends BrowserWindow {
         // If the target of the selection is a submenu, we execute its open-workflow.
         if (type === MenuInteractionType.eOpenSubmenu && item.type === 'submenu') {
           if (item.openWorkflow) {
-            this.executeWorkflow(item.openWorkflow);
+            this.executeWorkflow(item.openWorkflow, path);
+          }
+          return;
+        }
+
+        if (
+          type === MenuInteractionType.eScrollUp ||
+          type === MenuInteractionType.eScrollDown
+        ) {
+          if (item.type === 'button' || item.type === 'submenu') {
+            const workflow =
+              type === MenuInteractionType.eScrollUp
+                ? item.scrollUpWorkflow
+                : item.scrollDownWorkflow;
+            if (workflow) {
+              this.executeWorkflow(workflow, path);
+            }
           }
           return;
         }
@@ -814,7 +837,7 @@ export class MenuWindow extends BrowserWindow {
           (type === MenuInteractionType.eHoverSubmenu && item.type === 'submenu')
         ) {
           if (item.hoverWorkflow) {
-            this.executeWorkflow(item.hoverWorkflow);
+            this.executeWorkflow(item.hoverWorkflow, path);
           }
           return;
         }
@@ -822,7 +845,7 @@ export class MenuWindow extends BrowserWindow {
         // For submenus, there is also the activate-workflow.
         if (type === MenuInteractionType.eActivateMenu && item.type === 'submenu') {
           if (item.activateWorkflow) {
-            this.executeWorkflow(item.activateWorkflow);
+            this.executeWorkflow(item.activateWorkflow, path);
           }
           return;
         }
@@ -836,7 +859,7 @@ export class MenuWindow extends BrowserWindow {
           await this.returnPointerToMenuOpeningPosition(menuOpeningPointerPosition);
 
           if (item.selectWorkflow) {
-            await this.executeWorkflow(item.selectWorkflow);
+            await this.executeWorkflow(item.selectWorkflow, path);
           }
 
           this.kando.achievementTracker.onSelectionMade(
@@ -900,12 +923,12 @@ export class MenuWindow extends BrowserWindow {
    *
    * @param workflow The workflow to execute.
    */
-  private executeWorkflow(workflow: DeepReadonly<Workflow>) {
+  private executeWorkflow(workflow: DeepReadonly<Workflow>, path?: number[]) {
     if (this.noopInteraction) {
       this.noopInteraction = WorkflowExecutor.getInstance().isNoopWorkflow(workflow);
     }
 
-    return WorkflowExecutor.getInstance().executeWorkflow(workflow, this.kando);
+    return WorkflowExecutor.getInstance().executeWorkflow(workflow, this.kando, path);
   }
 
   /**
