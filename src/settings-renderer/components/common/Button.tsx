@@ -24,6 +24,9 @@ type Props = {
   /** Optional label text to display inside the button. */
   readonly label?: string;
 
+  /** Optional accessible name, useful for buttons which only show an icon. */
+  readonly ariaLabel?: string;
+
   /** Optional tooltip text to display when hovering over the button. */
   readonly tooltip?: string;
 
@@ -94,6 +97,7 @@ export default function Button(props: Props) {
 
   return (
     <button
+      aria-label={props.ariaLabel}
       className={className}
       data-tooltip-content={props.tooltip}
       data-tooltip-id="main-tooltip"

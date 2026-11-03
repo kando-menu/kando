@@ -10,7 +10,7 @@
 
 import { expect } from 'chai';
 
-import { ScrollAccumulator } from '../src/menu-renderer/input-methods/scroll-accumulator';
+import { ScrollAccumulator } from '../../src/menu-renderer/input-methods/scroll-accumulator';
 
 describe('ScrollAccumulator', () => {
   it('should report one step per mouse wheel notch', () => {

@@ -17,7 +17,7 @@ import {
   parseMenuThemeFile,
   parseSoundThemeFile,
   shouldNotifyBrokenTheme,
-} from '../src/main/utils/safe-theme-parse';
+} from '../../src/main/utils/safe-theme-parse';
 
 // Minimal valid menu theme (matches the structure expected by app.ts).
 const VALID_MENU_THEME = `{

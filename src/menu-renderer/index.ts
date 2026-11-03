@@ -48,6 +48,8 @@ Promise.all([
   centerText.setDiameter(menuTheme.centerTextWrapWidth);
   centerText.setEnabled(menuTheme.drawCenterText);
 
+  let menu: Menu = null;
+
   // This will be called below whenever the menu theme should be reloaded.
   const reloadMenuTheme = async () => {
     Promise.all([
@@ -61,9 +63,11 @@ Promise.all([
       centerText.setEnabled(menuTheme.drawCenterText);
 
       // Reload the menu if it is currently shown.
-      const [root, menuOptions] = menu.getCurrentRequest();
-      if (root) {
-        menu.show(root, menuOptions);
+      if (menu) {
+        const [root, menuOptions] = menu.getCurrentRequest();
+        if (root) {
+          menu.show(root, menuOptions);
+        }
       }
     });
   };
@@ -112,12 +116,7 @@ Promise.all([
 
   // Now, we create the menu. It will be responsible for drawing the menu and handling
   // user input. It is re-used for every menu that is shown.
-  const menu = new Menu(
-    document.getElementById('kando-menu'),
-    menuTheme,
-    centerText,
-    settings
-  );
+  menu = new Menu(document.getElementById('kando-menu'), menuTheme, centerText, settings);
 
   // Show the menu when the main process requests it.
   window.menuAPI.onShowMenu(async (root, menuOptions) => {

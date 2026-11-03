@@ -276,6 +276,7 @@
         "add-menu-items": "Add Menu Items",
         "undo": "Undo",
         "redo": "Redo",
+        "close": "Close",
         "app-picker": {
             "hint": "You can also drag and drop an app from your start menu to Kando's menu editor!",
             "search-placeholder": "Search for an app…",

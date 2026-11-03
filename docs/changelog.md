@@ -31,10 +31,13 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 ### :wrench: Changed
 
 - Recording a macro no longer clears the already recorded keys. New keys are now inserted at the cursor position, so a long macro can be recorded piece by piece. Thanks to [@emirmrkaljevic](https://github.com/emirmrkaljevic) for the contribution!
+- Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
+- Many translation updates: **Thanks to all the contributors!**
 
 ### :bug: Fixed
 
 - Fixed an issue which caused the link to the config-file directory in the Backup & Restore page of the General-Settings Dialog to not work.
+- Corrupted settings files with invalid JSON are now backed up before Kando restores and uses default settings.
 - Fixed an issue where the Kando menu-window would appear in the wrong position on certain Linux compositors by constraining a macOS resize/move fix to macOS only.
 
 ## [Kando 3.0.1](https://github.com/kando-menu/kando/releases/tag/v3.0.1)
