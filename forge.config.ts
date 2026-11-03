@@ -11,6 +11,7 @@ import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 
 import { mainConfig } from './packaging/webpack/webpack.main.config';
 import { rendererConfig } from './packaging/webpack/webpack.renderer.config';
+import { preloadConfig } from './packaging/webpack/webpack.preload.config';
 
 // This is used to create the Windows installer. See the link below for the available options.
 // https://js.electronforge.io/interfaces/_electron_forge_maker_squirrel.InternalOptions.SquirrelWindowsOptions.html
@@ -132,6 +133,7 @@ const config: ForgeConfig = {
             name: 'menu_window',
             preload: {
               js: './src/menu-renderer/preload.ts',
+              config: preloadConfig,
             },
           },
           {
@@ -140,6 +142,7 @@ const config: ForgeConfig = {
             name: 'settings_window',
             preload: {
               js: './src/settings-renderer/preload.ts',
+              config: preloadConfig,
             },
           },
         ],
