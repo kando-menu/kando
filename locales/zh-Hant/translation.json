@@ -414,7 +414,8 @@
         "screen-position-picker": {
             "value": "X: {{x}} | Y: {{y}}",
             "instructions": "將十字游標拖曳至螢幕上指定選單的固定位置，或者從下方選擇預設位置。"
-        }
+        },
+        "close": "關閉"
     },
     "menu-items": {
         "text": {
