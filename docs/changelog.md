@@ -38,6 +38,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 - Fixed an issue which caused the link to the config-file directory in the Backup & Restore page of the General-Settings Dialog to not work.
 - Corrupted settings files with invalid JSON are now backed up before Kando restores and uses default settings.
+- Fixed an issue on Windows where app and window conditions never matched for applications whose main window has an owner window (e.g. older Delphi VCL applications). The window picker in the menu settings also stayed empty for these applications. Thanks to [@sap1110](https://github.com/sap1110) for the fix!
 
 ## [Kando 3.0.1](https://github.com/kando-menu/kando/releases/tag/v3.0.1)
 

@@ -115,8 +115,18 @@ std::string WStringToString(const std::wstring& wstr) {
   return str;
 }
 
-bool getWindowAppAndName(HWND hwnd, std::string& appName, std::string& windowName) {
-  if (!hwnd || !IsWindowVisible(hwnd) || GetWindow(hwnd, GW_OWNER) != nullptr) {
+// Retrieves the title and the executable name of the given window. If skipOwnedWindows is
+// true, windows with an owner (usually dialogs or tool windows) are ignored. This is used
+// when enumerating windows. For the foreground window, owned windows must not be skipped,
+// as some applications (e.g. older Delphi VCL applications) give their main window an
+// owner.
+bool getWindowAppAndName(
+    HWND hwnd, std::string& appName, std::string& windowName, bool skipOwnedWindows) {
+  if (!hwnd || !IsWindowVisible(hwnd)) {
+    return false;
+  }
+
+  if (skipOwnedWindows && GetWindow(hwnd, GW_OWNER) != nullptr) {
     return false;
   }
 
@@ -178,7 +188,7 @@ BOOL CALLBACK enumerateWindowsForList(HWND hwnd, LPARAM lParam) {
 
   std::string appName;
   std::string windowName;
-  if (getWindowAppAndName(hwnd, appName, windowName)) {
+  if (getWindowAppAndName(hwnd, appName, windowName, true)) {
     context->windows.emplace_back(appName, windowName);
   }
 
@@ -199,7 +209,7 @@ BOOL CALLBACK enumerateWindowsForFocus(HWND hwnd, LPARAM lParam) {
 
   std::string appName;
   std::string windowName;
-  if (!getWindowAppAndName(hwnd, appName, windowName)) {
+  if (!getWindowAppAndName(hwnd, appName, windowName, true)) {
     return TRUE;
   }
 
@@ -281,7 +291,7 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
 
   std::string appName;
   std::string windowName;
-  getWindowAppAndName(foreground_window, appName, windowName);
+  getWindowAppAndName(foreground_window, appName, windowName, false);
 
   obj.Set("window", windowName);
   obj.Set("app", appName);
