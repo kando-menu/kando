@@ -38,6 +38,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 - Fixed an issue which caused the link to the config-file directory in the Backup & Restore page of the General-Settings Dialog to not work.
 - Corrupted settings files with invalid JSON are now backed up before Kando restores and uses default settings.
+- Fixed an issue on Windows where app and window conditions never matched for applications whose main window has an owner window (e.g. older Delphi VCL applications). The window picker in the menu settings also stayed empty for these applications. Thanks to [@sap1110](https://github.com/sap1110) for the fix!
 - Fixed the Open File action on Linux so that file paths containing characters like `$`, `"`, `'`, or a backtick are opened correctly instead of being interpreted by the shell. Thanks to [@ChandraChaan](https://github.com/ChandraChaan) for the fix!
 - Fixed an issue where the Kando menu-window would appear in the wrong position on certain Linux compositors by constraining a macOS resize/move fix to macOS only. Thanks to [@CoreParadox](https://github.com/CoreParadox) for the fix!
 
