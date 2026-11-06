@@ -131,8 +131,7 @@ export class MenuWindow extends BrowserWindow {
       // The menu covers the work area, so those edges sit on the screen edges.
       // resizable/movable false only blocks interactive user resize/move; showMenu still
       // repositions via setBounds() when the pointer is on a secondary display.
-      resizable: false,
-      movable: false,
+      ...(os.platform() === 'darwin' ? { resizable: false, movable: false } : {}),
     });
 
     // When the general settings change, we need to apply the zoom factor to the window.
