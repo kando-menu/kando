@@ -28,7 +28,12 @@ export async function execute(action: DeepReadonly<OpenFileAction>) {
   // Electron's xdg-open call is here:
   // https://github.com/electron/electron/blob/16b5776b0170a501d8acb8105e14b15846533442/shell/common/platform_util_linux.cc#L324
   if (process.platform === 'linux') {
-    return exec(`xdg-open "${action.path}"`, {
+    // The command is run by a shell, so we wrap the path in single quotes (and escape
+    // any single quotes inside of it) to make sure that characters such as $, ` or " are
+    // not interpreted.
+    const quotedPath = `'${action.path.replace(/'/g, `'\\''`)}'`;
+
+    return exec(`xdg-open ${quotedPath}`, {
       detach: true,
       isolate: false,
     });
