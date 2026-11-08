@@ -136,8 +136,9 @@ export class MenuWindow extends BrowserWindow {
       // traffic-light buttons. Those buttons are still exposed via accessibility, so
       // window managers like AeroSpace treat the menu as a regular window, assign it to a
       // workspace, and switch to that workspace whenever the menu is shown. Disabling
-      // rounded corners makes Electron create a truly borderless window instead.
-      roundedCorners: os.platform() !== 'darwin',
+      // rounded corners makes Electron create a truly borderless window instead. On other
+      // platforms, this has no visible effect as the window is transparent.
+      roundedCorners: false,
     });
 
     // When the general settings change, we need to apply the zoom factor to the window.
