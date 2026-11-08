@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: MIT
 
 import * as math from '../../common/math';
-import { Vec2, SelectionSource } from '../../common';
+import { Vec2, SelectionSource, GeneralSettings } from '../../common';
 import { InputMethod, ButtonState, InputState, SelectionType } from './input-method';
 import { GestureDetector } from './gesture-detector';
 
@@ -54,6 +54,19 @@ export class PointerInput extends InputMethod {
   public triggerCenterClickOnKeyRelease = false;
 
   /**
+   * Determines what happens when the right mouse button is pressed. The menu can be
+   * closed, the parent item can be selected, or the click can be ignored.
+   */
+  public rightMouseButtonBehavior: GeneralSettings['rightMouseButtonBehavior'] = 'close';
+
+  /**
+   * Determines what happens when the middle mouse button is pressed. The menu can be
+   * closed, the parent item can be selected, or the click can be ignored.
+   */
+  public middleMouseButtonBehavior: GeneralSettings['middleMouseButtonBehavior'] =
+    'nothing';
+
+  /**
    * This is used to detect gestures in "Marking Mode" and "Turbo Mode". It is fed with
    * motion events and emits a selection event if either the mouse pointer was stationary
    * for some time or if the mouse pointer made a sharp turn.
@@ -90,6 +103,15 @@ export class PointerInput extends InputMethod {
    * ignoreNextMotionEvents() method for more information.
    */
   private ignoreMotionEvents = 0;
+
+  /**
+   * Browsers only send a pointerdown event for the first button of a chord and a
+   * pointerup event for the last one. If the right or middle button triggered its
+   * behavior on pointerdown, the next pointerup event must therefore be ignored,
+   * regardless of which button it reports. Else it would end a running gesture or trigger
+   * a selection.
+   */
+  private ignoreNextPointerUp = false;
 
   /**
    * Motion events come in very frequently. To avoid performance issues, we throttle them
@@ -135,6 +157,7 @@ export class PointerInput extends InputMethod {
     this.ignoreMotionEvents = 2;
     this.buttonState = ButtonState.eReleased;
     this.deferredTurboMode = deferTurboMode;
+    this.ignoreNextPointerUp = false;
   }
 
   /*
@@ -222,9 +245,17 @@ export class PointerInput extends InputMethod {
     event.preventDefault();
     event.stopPropagation();
 
-    // Go back or hide the menu on right click events.
+    // The right and middle mouse buttons trigger the configured behavior right away. They
+    // never start a click or drag gesture.
     if ((event as MouseEvent).button === 2) {
-      this.closeCallback();
+      this.ignoreNextPointerUp = true;
+      this.applyButtonBehavior(this.rightMouseButtonBehavior);
+      return;
+    }
+
+    if ((event as MouseEvent).button === 1) {
+      this.ignoreNextPointerUp = true;
+      this.applyButtonBehavior(this.middleMouseButtonBehavior);
       return;
     }
 
@@ -237,6 +268,11 @@ export class PointerInput extends InputMethod {
       );
       return;
     }
+
+    // A pointerdown only fires if no other button is held. So if we get here, a pointerup
+    // we may have been waiting for never arrived (e.g. it was released outside of the menu
+    // container). Forget about it so that it cannot swallow the release of this press.
+    this.ignoreNextPointerUp = false;
 
     if (event instanceof MouseEvent) {
       this.clickPosition = { x: event.clientX, y: event.clientY };
@@ -264,6 +300,14 @@ export class PointerInput extends InputMethod {
   public onPointerUpEvent(event: MouseEvent | TouchEvent) {
     event.preventDefault();
     event.stopPropagation();
+
+    // Releasing a button which was handled in onPointerDownEvent must neither select
+    // anything nor disturb a running gesture, as the button state may be eDragged (hover
+    // mode or turbo mode).
+    if (this.ignoreNextPointerUp) {
+      this.ignoreNextPointerUp = false;
+      return;
+    }
 
     this.gestureDetector.reset();
 
@@ -348,6 +392,23 @@ export class PointerInput extends InputMethod {
   }
 
   // Private interface -------------------------------------------------------------------
+
+  /**
+   * Executes the configured behavior of the right or middle mouse button.
+   *
+   * @param behavior What to do when the button is pressed.
+   */
+  private applyButtonBehavior(behavior: GeneralSettings['rightMouseButtonBehavior']) {
+    if (behavior === 'close') {
+      this.closeCallback();
+    } else if (behavior === 'select-parent') {
+      this.selectCallback(
+        this.pointerPosition,
+        SelectionType.eParent,
+        SelectionSource.eClick
+      );
+    }
+  }
 
   /**
    * Store the absolute mouse position, as well as the current center of the menu, and the

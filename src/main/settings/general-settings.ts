@@ -82,20 +82,25 @@ export function tryLoadGeneralSettingsFile(path: string): GeneralSettings {
  * @returns An object containing the parsed settings and a boolean indicating whether a
  *   migration was performed.
  */
-function loadGeneralSettings(content: object): {
+export function loadGeneralSettings(content: object): {
   settings: GeneralSettings;
   didMigration: boolean;
 } {
+  // There used to be a boolean rmbSelectsParent property which was replaced by
+  // rightMouseButtonBehavior. The schema parsing below would strip the old property, so
+  // we have to convert it first. This is also necessary if the version matches.
+  const { content: converted, didConvert } = convertRmbSelectsParent(content);
+
   // If the version field is not present, we assume this is an old settings file.
-  if (!('version' in content)) {
-    const settings = migrateToGeneralSettingsV1(content);
+  if (!('version' in converted)) {
+    const settings = migrateToGeneralSettingsV1(converted);
     return { settings, didMigration: true };
   }
 
   // Here we could compare the version to the current version and decide whether any
   // migration is necessary. For now, no further migrations are needed.
-  if (content.version !== version) {
-    const settings = GENERAL_SETTINGS_SCHEMA.parse(content, { reportInput: true });
+  if (converted.version !== version) {
+    const settings = GENERAL_SETTINGS_SCHEMA.parse(converted, { reportInput: true });
 
     // Yet we still need to update the version to the current version. We set
     // didMigration to true to indicate that the settings file has been updated.
@@ -104,9 +109,41 @@ function loadGeneralSettings(content: object): {
   }
 
   return {
-    settings: GENERAL_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
-    didMigration: false,
+    settings: GENERAL_SETTINGS_SCHEMA.parse(converted, { reportInput: true }),
+    didMigration: didConvert,
   };
+}
+
+/**
+ * Replaces the legacy top-level rmbSelectsParent property with the new
+ * rightMouseButtonBehavior property. An explicitly set rightMouseButtonBehavior takes
+ * precedence over the old value. The given object is not modified.
+ *
+ * @param content The content of the settings file as an object.
+ * @returns A copy of the content without the old property, and a boolean indicating
+ *   whether the old property was present.
+ */
+function convertRmbSelectsParent(content: object): {
+  content: object;
+  didConvert: boolean;
+} {
+  if (!('rmbSelectsParent' in content)) {
+    return { content, didConvert: false };
+  }
+
+  const { rmbSelectsParent, ...rest } = content as {
+    rmbSelectsParent: unknown;
+    rightMouseButtonBehavior?: unknown;
+  };
+
+  if (
+    rest.rightMouseButtonBehavior === undefined &&
+    typeof rmbSelectsParent === 'boolean'
+  ) {
+    rest.rightMouseButtonBehavior = rmbSelectsParent ? 'select-parent' : 'close';
+  }
+
+  return { content: rest, didConvert: true };
 }
 
 /**
@@ -150,10 +187,21 @@ function migrateToGeneralSettingsV1(oldSettings: object): GeneralSettingsV1 {
     migrated.gestureJitterThreshold = raw.menuOptions.gestureJitterThreshold;
     migrated.gesturePauseTimeout = raw.menuOptions.gesturePauseTimeout;
     migrated.fixedStrokeLength = raw.menuOptions.fixedStrokeLength;
-    migrated.rmbSelectsParent = raw.menuOptions.rmbSelectsParent;
     migrated.enableGamepad = raw.menuOptions.enableGamepad;
     migrated.gamepadBackButton = raw.menuOptions.gamepadBackButton;
     migrated.gamepadCloseButton = raw.menuOptions.gamepadCloseButton;
+  }
+
+  // The rmbSelectsParent property was replaced by rightMouseButtonBehavior. If the old
+  // value is present in the menuOptions, it is converted unless the new property was set
+  // explicitly in the settings file.
+  if (
+    typeof raw.menuOptions?.rmbSelectsParent === 'boolean' &&
+    raw.rightMouseButtonBehavior === undefined
+  ) {
+    migrated.rightMouseButtonBehavior = raw.menuOptions.rmbSelectsParent
+      ? 'select-parent'
+      : 'close';
   }
 
   // Parse the migrated settings again to ensure that the values set above match the

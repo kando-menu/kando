@@ -139,3 +139,31 @@ test('editing menus.json on disk updates the running app', async ({ kando }) => 
   );
   expect(kando.errors).toEqual([]);
 });
+
+for (const [legacy, expected] of [
+  [true, 'select-parent'],
+  [false, 'close'],
+] as const) {
+  test(`the legacy rmbSelectsParent: ${legacy} setting migrates to ${expected}`, async ({
+    kando,
+  }) => {
+    await kando.restartWithSettingsFiles({
+      config: JSON.stringify({ version, rmbSelectsParent: legacy }),
+    });
+
+    await expect
+      .poll(async () => {
+        const config = (await kando.readSettingsFile('config')) as Record<
+          string,
+          unknown
+        >;
+        return {
+          right: config.rightMouseButtonBehavior,
+          middle: config.middleMouseButtonBehavior,
+          hasOld: 'rmbSelectsParent' in config,
+        };
+      })
+      .toEqual({ right: expected, middle: 'nothing', hasOld: false });
+    expect(kando.errors).toEqual([]);
+  });
+}
