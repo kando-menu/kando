@@ -42,6 +42,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 - Fixed the Open File action on Linux so that file paths containing characters like `$`, `"`, `'`, or a backtick are opened correctly instead of being interpreted by the shell. Thanks to [@ChandraChaan](https://github.com/ChandraChaan) for the fix!
 - Fixed an issue where the Kando menu-window would appear in the wrong position on certain Linux compositors by constraining a macOS resize/move fix to macOS only. Thanks to [@CoreParadox](https://github.com/CoreParadox) for the fix!
 - Fixed an issue on KDE Wayland where the remote-desktop permission dialog was shown on every login because the restore token returned by xdg-desktop-portal-kde was discarded. Thanks to [@rinaldosenofonte](https://github.com/rinaldosenofonte) for the fix!
+- Fixed an issue on macOS where opening a menu with the [AeroSpace](https://github.com/nikitabobko/AeroSpace) window manager switched to the workspace the menu was first opened on. The menu window is now truly borderless, so AeroSpace no longer manages it.
 
 ## [Kando 3.0.1](https://github.com/kando-menu/kando/releases/tag/v3.0.1)
 
