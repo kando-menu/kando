@@ -141,6 +141,7 @@ export class WindowsBackend extends Backend {
     if (!this.mouseHookRunning && buttons.length > 0) {
       native.startMouseHook((event, button) => {
         const trigger = MOUSE_TRIGGER_PREFIX + button;
+                console.log('[mouse-trigger]', event, trigger);
 
         if (event === 'press') {
           this.onShortcutPressed(trigger);
