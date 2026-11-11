@@ -549,7 +549,9 @@ export default function GeneralSettingsDialog() {
               info={i18next.t(
                 'settings.general-settings-dialog.mouse-trigger-hold-time-info'
               )}
-              label={i18next.t('settings.general-settings-dialog.mouse-trigger-hold-time')}
+              label={i18next.t(
+                'settings.general-settings-dialog.mouse-trigger-hold-time'
+              )}
               max={2000}
               min={50}
               settingsKey="mouseTriggerHoldTime"

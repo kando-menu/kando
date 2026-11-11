@@ -294,8 +294,8 @@ export type ShowMenuOptions = {
 
   /**
    * If this is set, the menu was opened by holding down a mouse button and the button is
-   * still pressed. The menu will then behave like in turbo mode: An item is selected
-   * when the button is released.
+   * still pressed. The menu will then behave like in turbo mode: An item is selected when
+   * the button is released.
    */
   readonly mouseTriggerHeld: boolean;
 

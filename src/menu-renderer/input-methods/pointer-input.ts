@@ -75,7 +75,8 @@ export class PointerInput extends InputMethod {
   /**
    * If set to true, the menu was opened by holding down a mouse button (a mouse-hold
    * trigger) and this button is still pressed. This behaves like a pressed key in turbo
-   * mode: Moving the pointer enters turbo mode and releasing the button selects the item.
+   * mode: Moving the pointer enters turbo mode and releasing the button selects the
+   * item.
    */
   private mouseTriggerHeld = false;
 

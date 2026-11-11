@@ -128,7 +128,11 @@ export default function ShortcutPicker(props: Props) {
     }
 
     // Mouse-hold triggers are standalone: They cannot be combined with other keys.
-    if (props.mode === 'key-names' && props.allowMouseTriggers && isMouseTrigger(shortcut)) {
+    if (
+      props.mode === 'key-names' &&
+      props.allowMouseTriggers &&
+      isMouseTrigger(shortcut)
+    ) {
       return true;
     }
 
