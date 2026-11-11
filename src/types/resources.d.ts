@@ -453,6 +453,7 @@ export default interface Resources {
               "sakura-dark": "Sakura Dark",
               "sakura-light": "Sakura Light",
               "sakura-system": "Sakura System",
+              "select-item": "Select item",
               "select-parent": "Navigate up one level",
               "settings-button-position": "Settings button position",
               "settings-button-position-info": "Choose the screen corner where the settings button will be shown.",

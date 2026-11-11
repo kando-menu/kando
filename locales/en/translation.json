@@ -157,6 +157,7 @@
             "right-mouse-button-behavior": "Right mouse button",
             "middle-mouse-button-behavior-info": "This determines what happens when the middle mouse button is pressed while a menu is shown.",
             "middle-mouse-button-behavior": "Middle mouse button",
+            "select-item": "Select item",
             "select-parent": "Navigate up one level",
             "enable-gamepad-support-info": "If checked, you can use a connected gamepad to control the menu.",
             "enable-gamepad-support": "Enable gamepad support",

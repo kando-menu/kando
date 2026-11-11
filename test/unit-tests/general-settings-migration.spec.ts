@@ -11,90 +11,130 @@
 import { expect } from 'chai';
 
 import { loadGeneralSettings } from '../../src/main/settings/general-settings';
-import { version } from '../../package.json';
 
-describe('general settings migration of rmbSelectsParent', () => {
-  // The different shapes a settings file can have. Each one places the old
-  // rmbSelectsParent value (or nothing, if no value is given) at a different location.
-  const paths: {
-    name: string;
-    build: (old?: boolean, extra?: object) => Record<string, unknown>;
-  }[] = [
-    {
-      name: 'current version',
-      build: (old, extra) => ({
-        version,
-        ...(old === undefined ? {} : { rmbSelectsParent: old }),
-        ...extra,
-      }),
-    },
-    {
-      name: 'different version',
-      build: (old, extra) => ({
-        version: '0.0.1',
-        ...(old === undefined ? {} : { rmbSelectsParent: old }),
-        ...extra,
-      }),
-    },
-    {
-      name: 'no version, top-level key',
-      build: (old, extra) => ({
-        ...(old === undefined ? {} : { rmbSelectsParent: old }),
-        ...extra,
-      }),
-    },
-    {
-      name: 'no version, menuOptions key',
-      build: (old, extra) => ({
-        menuOptions: old === undefined ? {} : { rmbSelectsParent: old },
-        ...extra,
-      }),
-    },
-  ];
-
-  for (const { name, build } of paths) {
-    describe(name, () => {
-      it('migrates true to select-parent', () => {
-        const result = loadGeneralSettings(build(true));
-        expect(result.settings.rightMouseButtonBehavior).to.equal('select-parent');
-        expect(result.didMigration).to.equal(true);
-      });
-
-      it('migrates false to close', () => {
-        const result = loadGeneralSettings(build(false));
-        expect(result.settings.rightMouseButtonBehavior).to.equal('close');
-        expect(result.didMigration).to.equal(true);
-      });
-
-      it('lets an explicit new key win', () => {
-        const content = build(true, { rightMouseButtonBehavior: 'nothing' });
-        // The explicit key is only meaningful at the top level.
-        const result = loadGeneralSettings(content);
-        expect(result.settings.rightMouseButtonBehavior).to.equal('nothing');
-      });
-
-      it('uses the defaults if nothing is set', () => {
-        const result = loadGeneralSettings(build());
-        expect(result.settings.rightMouseButtonBehavior).to.equal('close');
-        expect(result.settings.middleMouseButtonBehavior).to.equal('nothing');
-      });
-
-      it('does not keep the old key', () => {
-        const result = loadGeneralSettings(build(true));
-        expect(result.settings).to.not.have.property('rmbSelectsParent');
-      });
-
-      it('does not mutate the given content', () => {
-        const content = build(true);
-        const copy = JSON.parse(JSON.stringify(content));
-        loadGeneralSettings(content);
-        expect(content).to.deep.equal(copy);
-      });
+describe('general settings migration to V2', () => {
+  describe('settings files without a version', () => {
+    it('converts a top-level rmbSelectsParent of true to select-parent', () => {
+      const result = loadGeneralSettings({ rmbSelectsParent: true });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('select-parent');
+      expect(result.didMigration).to.equal(true);
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
     });
-  }
 
-  it('does not report a migration for an up-to-date file', () => {
-    const result = loadGeneralSettings({ version, rightMouseButtonBehavior: 'nothing' });
-    expect(result.didMigration).to.equal(false);
+    it('converts a top-level rmbSelectsParent of false to close', () => {
+      const result = loadGeneralSettings({ rmbSelectsParent: false });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('close');
+      expect(result.didMigration).to.equal(true);
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
+    });
+
+    it('converts a menuOptions.rmbSelectsParent of true to select-parent', () => {
+      const result = loadGeneralSettings({ menuOptions: { rmbSelectsParent: true } });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('select-parent');
+      expect(result.didMigration).to.equal(true);
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
+    });
+  });
+
+  describe('settings files written by Kando 3.0.x', () => {
+    it('converts rmbSelectsParent of true to select-parent', () => {
+      const result = loadGeneralSettings({ version: '3.0.1', rmbSelectsParent: true });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('select-parent');
+      expect(result.didMigration).to.equal(true);
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
+    });
+
+    it('converts rmbSelectsParent of false to close', () => {
+      const result = loadGeneralSettings({ version: '3.0.1', rmbSelectsParent: false });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('close');
+      expect(result.didMigration).to.equal(true);
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
+    });
+
+    // Development builds of Kando 3.1.0 still report version 3.0.1. Settings which they
+    // saved must not lose the new properties when they are loaded again.
+    it('keeps the new properties if they are already present', () => {
+      const result = loadGeneralSettings({
+        version: '3.0.1',
+        rightMouseButtonBehavior: 'nothing',
+        middleMouseButtonBehavior: 'close',
+      });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('nothing');
+      expect(result.settings.middleMouseButtonBehavior).to.equal('close');
+    });
+
+    it('lets the new property win over the old one', () => {
+      const result = loadGeneralSettings({
+        version: '3.0.1',
+        rmbSelectsParent: true,
+        rightMouseButtonBehavior: 'nothing',
+      });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('nothing');
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
+    });
+
+    it('falls back to the default if a new property is invalid', () => {
+      const result = loadGeneralSettings({
+        version: '3.0.1',
+        rightMouseButtonBehavior: 'invalid',
+        middleMouseButtonBehavior: 42,
+      });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('close');
+      expect(result.settings.middleMouseButtonBehavior).to.equal('select');
+    });
+  });
+
+  describe('version handling', () => {
+    it('converts rmbSelectsParent for files written by Kando 3.0.0', () => {
+      const result = loadGeneralSettings({ version: '3.0.0', rmbSelectsParent: true });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('select-parent');
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
+    });
+
+    // Files from 3.1.0 use the V2 schema, so a stale rmbSelectsParent must be ignored and
+    // not be converted.
+    it('does not convert a stale rmbSelectsParent in a 3.1.0 file', () => {
+      const result = loadGeneralSettings({ version: '3.1.0', rmbSelectsParent: true });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('close');
+      expect(result.settings).to.not.have.property('rmbSelectsParent');
+    });
+
+    it('does not throw for a malformed version string', () => {
+      const result = loadGeneralSettings({ version: 'garbage' });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('close');
+      expect(result.settings.middleMouseButtonBehavior).to.equal('select');
+      expect(result.didMigration).to.equal(true);
+    });
+
+    it('does not mutate the given content', () => {
+      const content = {
+        version: '3.0.1',
+        rmbSelectsParent: true,
+        middleMouseButtonBehavior: 'close',
+      };
+      const copy = JSON.parse(JSON.stringify(content));
+      loadGeneralSettings(content);
+      expect(content).to.deep.equal(copy);
+    });
+  });
+
+  describe('settings files written by Kando 3.1.0', () => {
+    it('parses the new properties directly', () => {
+      const result = loadGeneralSettings({
+        version: '3.1.0',
+        rightMouseButtonBehavior: 'select',
+        middleMouseButtonBehavior: 'select-parent',
+      });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('select');
+      expect(result.settings.middleMouseButtonBehavior).to.equal('select-parent');
+    });
+  });
+
+  describe('defaults', () => {
+    it('closes the menu on right click and selects on middle click', () => {
+      const result = loadGeneralSettings({ version: '3.1.0' });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('close');
+      expect(result.settings.middleMouseButtonBehavior).to.equal('select');
+    });
   });
 });

@@ -351,6 +351,10 @@ export default function GeneralSettingsDialog() {
             maxWidth={200}
             options={[
               {
+                value: 'select',
+                label: i18next.t('settings.general-settings-dialog.select-item'),
+              },
+              {
                 value: 'nothing',
                 label: i18next.t('settings.general-settings-dialog.do-nothing'),
               },
@@ -374,6 +378,10 @@ export default function GeneralSettingsDialog() {
             )}
             maxWidth={200}
             options={[
+              {
+                value: 'select',
+                label: i18next.t('settings.general-settings-dialog.select-item'),
+              },
               {
                 value: 'nothing',
                 label: i18next.t('settings.general-settings-dialog.do-nothing'),

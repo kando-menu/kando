@@ -215,23 +215,10 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
   fixedStrokeLength: z.number().min(0).default(0),
 
   /**
-   * Determines what happens when the right mouse button is pressed while the menu is
-   * open. 'select-parent' navigates up one level, 'close' closes the menu, and 'nothing'
-   * ignores the click.
+   * If enabled, the parent of a selected item will be selected on a right mouse button
+   * click. Else the menu will be closed directly.
    */
-  rightMouseButtonBehavior: z
-    .enum(['nothing', 'close', 'select-parent'])
-    .default('close'),
-
-  /**
-   * Determines what happens when the middle mouse button is pressed while the menu is
-   * open. 'select-parent' navigates up one level, 'close' closes the menu, and 'nothing'
-   * ignores the click.
-   */
-  middleMouseButtonBehavior: z
-    .enum(['nothing', 'close', 'select-parent'])
-    .default('nothing'),
-
+  rmbSelectsParent: z.boolean().default(false),
   /**
    * If disabled, gamepad input will be ignored. This can be useful if the gamepad is not
    * connected or if the user prefers to use the mouse.

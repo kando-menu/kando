@@ -53,7 +53,19 @@ test('menu behavior tab offers configurable right and middle mouse buttons', asy
 
   // Check the defaults, then change both and check that the config file follows.
   await expect(rightSelect).toHaveValue('close');
-  await expect(middleSelect).toHaveValue('nothing');
+  await expect(middleSelect).toHaveValue('select');
+
+  // Each dropdown offers the same four options.
+  const expectedOptions = [
+    'Select item',
+    'Do nothing',
+    'Close menu',
+    'Navigate up one level',
+  ];
+  for (const select of [rightSelect, middleSelect]) {
+    await expect(select.locator('option')).toHaveText(expectedOptions);
+  }
+
   await rightSelect.selectOption('select-parent');
   await middleSelect.selectOption('close');
 
@@ -66,5 +78,16 @@ test('menu behavior tab offers configurable right and middle mouse buttons', asy
       return [config.rightMouseButtonBehavior, config.middleMouseButtonBehavior];
     })
     .toEqual(['select-parent', 'close']);
+
+  // Also exercise the 'select' value, choosing one that differs from the current one.
+  await rightSelect.selectOption({ label: 'Select item' });
+  await expect
+    .poll(async () => {
+      const config = (await kando.readSettingsFile('config')) as {
+        rightMouseButtonBehavior: string;
+      };
+      return config.rightMouseButtonBehavior;
+    })
+    .toBe('select');
   expect(kando.errors).toEqual([]);
 });

@@ -9,11 +9,17 @@
 // SPDX-License-Identifier: MIT
 
 import fs from 'fs-extra';
+import semver from 'semver';
 
 import {
   GENERAL_SETTINGS_SCHEMA_V1,
   GeneralSettingsV1,
 } from '../../common/settings-schemata/general-settings-v1';
+
+import {
+  GENERAL_SETTINGS_SCHEMA_V2,
+  GeneralSettingsV2,
+} from '../../common/settings-schemata/general-settings-v2';
 
 import { GENERAL_SETTINGS_SCHEMA, GeneralSettings } from '../../common/settings-schemata';
 
@@ -86,21 +92,26 @@ export function loadGeneralSettings(content: object): {
   settings: GeneralSettings;
   didMigration: boolean;
 } {
-  // There used to be a boolean rmbSelectsParent property which was replaced by
-  // rightMouseButtonBehavior. The schema parsing below would strip the old property, so
-  // we have to convert it first. This is also necessary if the version matches.
-  const { content: converted, didConvert } = convertRmbSelectsParent(content);
-
   // If the version field is not present, we assume this is an old settings file.
-  if (!('version' in converted)) {
-    const settings = migrateToGeneralSettingsV1(converted);
-    return { settings, didMigration: true };
+  if (!('version' in content)) {
+    const settingsV1 = migrateToGeneralSettingsV1(content);
+    const settingsV2 = migrateToGeneralSettingsV2(settingsV1, content);
+    return { settings: settingsV2, didMigration: true };
   }
 
-  // Here we could compare the version to the current version and decide whether any
-  // migration is necessary. For now, no further migrations are needed.
-  if (converted.version !== version) {
-    const settings = GENERAL_SETTINGS_SCHEMA.parse(converted, { reportInput: true });
+  // Settings files written by Kando 3.0.x or earlier use the V1 schema. Starting with
+  // Kando 3.1.0, the V2 schema is used. For files written by 3.1.0 or later, we can just
+  // parse the settings according to the latest schema and update the version field if
+  // necessary.
+  const contentVersion = typeof content.version === 'string' ? content.version : '';
+  const parsedVersion = semver.coerce(contentVersion);
+
+  if (parsedVersion && semver.lt(parsedVersion, '3.1.0-alpha.0')) {
+    const settingsV1 = GENERAL_SETTINGS_SCHEMA_V1.parse(content, { reportInput: true });
+    const settingsV2 = migrateToGeneralSettingsV2(settingsV1, content);
+    return { settings: settingsV2, didMigration: true };
+  } else if (content.version !== version) {
+    const settings = GENERAL_SETTINGS_SCHEMA.parse(content, { reportInput: true });
 
     // Yet we still need to update the version to the current version. We set
     // didMigration to true to indicate that the settings file has been updated.
@@ -109,41 +120,60 @@ export function loadGeneralSettings(content: object): {
   }
 
   return {
-    settings: GENERAL_SETTINGS_SCHEMA.parse(converted, { reportInput: true }),
-    didMigration: didConvert,
+    settings: GENERAL_SETTINGS_SCHEMA.parse(content, { reportInput: true }),
+    didMigration: false,
   };
 }
 
 /**
- * Replaces the legacy top-level rmbSelectsParent property with the new
- * rightMouseButtonBehavior property. An explicitly set rightMouseButtonBehavior takes
- * precedence over the old value. The given object is not modified.
+ * The GeneralSettingsV2 format replaces the boolean rmbSelectsParent property with the
+ * rightMouseButtonBehavior property. This function migrates a GeneralSettingsV1 object to
+ * a GeneralSettingsV2 object. An rmbSelectsParent value of true becomes 'select-parent',
+ * a value of false becomes 'close'.
  *
- * @param content The content of the settings file as an object.
- * @returns A copy of the content without the old property, and a boolean indicating
- *   whether the old property was present.
+ * Development builds of Kando 3.1.0 still report a version older than 3.1.0 but already
+ * store the new properties. As parsing the V1 schema strips them, they are read from the
+ * raw settings object. If they are present there and valid, they take precedence over the
+ * converted rmbSelectsParent value. Invalid values fall back to the defaults.
+ *
+ * @param oldSettings The GeneralSettingsV1 object to migrate.
+ * @param rawSettings The settings object as read from the file, before parsing.
+ * @returns The migrated settings object in the GeneralSettingsV2 format.
  */
-function convertRmbSelectsParent(content: object): {
-  content: object;
-  didConvert: boolean;
-} {
-  if (!('rmbSelectsParent' in content)) {
-    return { content, didConvert: false };
-  }
+function migrateToGeneralSettingsV2(
+  oldSettings: GeneralSettingsV1,
+  rawSettings: object
+): GeneralSettingsV2 {
+  console.log('Migrating general settings to GeneralSettingsV2 format...');
 
-  const { rmbSelectsParent, ...rest } = content as {
-    rmbSelectsParent: unknown;
-    rightMouseButtonBehavior?: unknown;
-  };
+  const { shape } = GENERAL_SETTINGS_SCHEMA_V2;
+  const raw = rawSettings as Record<string, unknown>;
 
-  if (
-    rest.rightMouseButtonBehavior === undefined &&
-    typeof rmbSelectsParent === 'boolean'
-  ) {
-    rest.rightMouseButtonBehavior = rmbSelectsParent ? 'select-parent' : 'close';
-  }
+  const rightMouseButtonBehavior = shape.rightMouseButtonBehavior.safeParse(
+    raw.rightMouseButtonBehavior
+  );
+  const middleMouseButtonBehavior = shape.middleMouseButtonBehavior.safeParse(
+    raw.middleMouseButtonBehavior
+  );
 
-  return { content: rest, didConvert: true };
+  // Parsing with the V2 schema drops the old rmbSelectsParent property.
+  return GENERAL_SETTINGS_SCHEMA_V2.parse(
+    {
+      ...oldSettings,
+      version,
+      rightMouseButtonBehavior:
+        raw.rightMouseButtonBehavior !== undefined && rightMouseButtonBehavior.success
+          ? rightMouseButtonBehavior.data
+          : oldSettings.rmbSelectsParent
+            ? 'select-parent'
+            : 'close',
+      middleMouseButtonBehavior:
+        raw.middleMouseButtonBehavior !== undefined && middleMouseButtonBehavior.success
+          ? middleMouseButtonBehavior.data
+          : undefined,
+    },
+    { reportInput: true }
+  );
 }
 
 /**
@@ -187,21 +217,10 @@ function migrateToGeneralSettingsV1(oldSettings: object): GeneralSettingsV1 {
     migrated.gestureJitterThreshold = raw.menuOptions.gestureJitterThreshold;
     migrated.gesturePauseTimeout = raw.menuOptions.gesturePauseTimeout;
     migrated.fixedStrokeLength = raw.menuOptions.fixedStrokeLength;
+    migrated.rmbSelectsParent = raw.menuOptions.rmbSelectsParent;
     migrated.enableGamepad = raw.menuOptions.enableGamepad;
     migrated.gamepadBackButton = raw.menuOptions.gamepadBackButton;
     migrated.gamepadCloseButton = raw.menuOptions.gamepadCloseButton;
-  }
-
-  // The rmbSelectsParent property was replaced by rightMouseButtonBehavior. If the old
-  // value is present in the menuOptions, it is converted unless the new property was set
-  // explicitly in the settings file.
-  if (
-    typeof raw.menuOptions?.rmbSelectsParent === 'boolean' &&
-    raw.rightMouseButtonBehavior === undefined
-  ) {
-    migrated.rightMouseButtonBehavior = raw.menuOptions.rmbSelectsParent
-      ? 'select-parent'
-      : 'close';
   }
 
   // Parse the migrated settings again to ensure that the values set above match the

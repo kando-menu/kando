@@ -163,7 +163,66 @@ for (const [legacy, expected] of [
           hasOld: 'rmbSelectsParent' in config,
         };
       })
-      .toEqual({ right: expected, middle: 'nothing', hasOld: false });
+      .toEqual({ right: expected, middle: 'select', hasOld: false });
     expect(kando.errors).toEqual([]);
   });
 }
+
+test('new mouse button settings in a file labelled 3.0.1 are kept', async ({ kando }) => {
+  // Development builds still report version 3.0.1 but already store the new properties.
+  const expectKept = async () => {
+    await expect
+      .poll(async () => {
+        const config = (await kando.readSettingsFile('config')) as Record<
+          string,
+          unknown
+        >;
+        return {
+          right: config.rightMouseButtonBehavior,
+          middle: config.middleMouseButtonBehavior,
+          hasOld: 'rmbSelectsParent' in config,
+        };
+      })
+      .toEqual({ right: 'nothing', middle: 'close', hasOld: false });
+  };
+
+  await kando.restartWithSettingsFiles({
+    config: JSON.stringify({
+      version: '3.0.1',
+      warpMouse: false,
+      rightMouseButtonBehavior: 'nothing',
+      middleMouseButtonBehavior: 'close',
+    }),
+  });
+  await expectKept();
+
+  await kando.restart();
+  await expectKept();
+
+  // The file content alone does not prove that the running app loaded the values. With
+  // 'nothing' a right click must keep the menu open, and with 'close' a middle click must
+  // close it (which also serves as a positive control for the right click above).
+  const menu = kando.menuWindow.locator('#kando-menu');
+  await kando.openMenu('E2E Menu');
+  const root = await menu
+    .locator('.menu-node.active > .icon-layer > .icon-container')
+    .boundingBox();
+  if (!root) {
+    throw new Error('Could not measure the active menu icon.');
+  }
+  const x = root.x + root.width / 2;
+  const y = root.y + root.height / 2;
+  await kando.menuWindow.mouse.move(x + 3, y + 3);
+  await kando.menuWindow.mouse.move(x, y);
+  await kando.menuWindow.mouse.click(x, y, { button: 'right' });
+  await kando.menuWindow.waitForTimeout(500);
+  await expect(menu.locator('.type-root.active')).toHaveAttribute(
+    'data-name',
+    'E2E Menu'
+  );
+  await expect(menu).not.toHaveClass(/hidden/);
+
+  await kando.menuWindow.mouse.click(x, y, { button: 'middle' });
+  await expect(menu.locator('.menu-node')).toHaveCount(0);
+  expect(kando.errors).toEqual([]);
+});

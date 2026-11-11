@@ -112,7 +112,7 @@ describe('PointerInput mouse buttons', () => {
 
   it('should have the expected default behaviors', () => {
     expect(input.rightMouseButtonBehavior).to.equal('close');
-    expect(input.middleMouseButtonBehavior).to.equal('nothing');
+    expect(input.middleMouseButtonBehavior).to.equal('select');
   });
 
   for (const [name, button] of [
@@ -147,6 +147,51 @@ describe('PointerInput mouse buttons', () => {
         expect(selections).to.deep.equal([
           { type: SelectionType.eParent, source: SelectionSource.eClick },
         ]);
+      });
+
+      it("should select the item on release for 'select'", () => {
+        input[field] = 'select';
+        down(button);
+        up(button);
+        expect(closes).to.equal(0);
+        expect(selections).to.deep.equal([
+          { type: SelectionType.eActiveItem, source: SelectionSource.eClick },
+        ]);
+      });
+
+      it("should start marking mode for 'select'", () => {
+        input[field] = 'select';
+        input.enableHoverMode = false;
+        input.enableTurboMode = false;
+        down(button, 0, 0);
+        expect(states[states.length - 1]).to.equal(ButtonState.eClicked);
+        move(100, 0);
+        move(200, 0);
+        expect(states[states.length - 1]).to.equal(ButtonState.eDragged);
+        expect(selections).to.have.length(0);
+        up(button, 200, 0);
+        expect(selections).to.deep.equal([
+          { type: SelectionType.eActiveItem, source: SelectionSource.eClick },
+        ]);
+        expect(closes).to.equal(0);
+        expect(states[states.length - 1]).to.equal(ButtonState.eReleased);
+      });
+
+      it("should clear a stale ignored pointer-up when pressed again with 'select'", () => {
+        // A press with 'nothing' sets the ignore flag, but its pointerup never arrives.
+        input[field] = 'nothing';
+        down(button);
+        expect(selections).to.have.length(0);
+
+        // After switching to 'select', the new press must clear the stale flag. Else the
+        // release would be swallowed and no selection would happen.
+        input[field] = 'select';
+        down(button);
+        up(button);
+        expect(selections).to.deep.equal([
+          { type: SelectionType.eActiveItem, source: SelectionSource.eClick },
+        ]);
+        expect(closes).to.equal(0);
       });
 
       it("should not select anything on release in hover mode for 'nothing'", () => {
