@@ -23,6 +23,7 @@ import {
   GeneralSettings,
 } from '../../common';
 import { Settings } from '../settings';
+import { isMouseTrigger } from '../../common/shortcut';
 
 /**
  * This abstract class must be extended by all backends. A backend is responsible for
@@ -228,6 +229,12 @@ export abstract class Backend extends EventEmitter {
    * @returns A promise which resolves when the shortcuts have been bound.
    */
   public async bindShortcuts(shortcuts: string[]): Promise<void> {
+    // Mouse-hold triggers can only be used by backends which explicitly support them.
+    // All other backends will never see them.
+    if (!this.getBackendInfo().supportsMouseTriggers) {
+      shortcuts = shortcuts.filter((s) => !isMouseTrigger(s));
+    }
+
     if (!lodash.isEqual(shortcuts, this.boundShortcuts)) {
       const previousShortcuts = Array.from(this.boundShortcuts);
       const previousEffectiveShortcuts = this.getEffectiveShortcuts();
@@ -324,6 +331,28 @@ export abstract class Backend extends EventEmitter {
   }
 
   /**
+   * Backends which support mouse-hold triggers should call this method when the mouse
+   * button of an active mouse-hold trigger is released. This is the counterpart to
+   * onShortcutPressed() and is used to select the item below the pointer.
+   *
+   * @param shortcut The mouse trigger that was released, e.g. 'MouseRight'.
+   */
+  protected onShortcutReleased(shortcut: string): void {
+    this.emit('shortcutReleased', shortcut);
+  }
+
+  /**
+   * Backends which set 'supportsMouseTriggers' in their BackendInfo should override this
+   * method. It is called whenever the set of effectively bound mouse-hold triggers
+   * changes. The default implementation does nothing.
+   *
+   * @param triggers The currently active mouse triggers, e.g. ['MouseRight'].
+   */
+  protected onMouseTriggersChanged(triggers: string[]): void {
+    void triggers;
+  }
+
+  /**
    * This method is called by the bind-shortcuts and inhibit-shortcuts methods above to
    * actually bind the shortcuts. The implementation in this class uses Electron's
    * globalShortcut module, however, this does not work on all platforms. Therefore,
@@ -349,6 +378,22 @@ export abstract class Backend extends EventEmitter {
     currentEffectiveShortcuts: string[],
     previousEffectiveShortcuts: string[]
   ): Promise<void> {
+    // Mouse-hold triggers are not handled by Electron's globalShortcut module. They are
+    // forwarded to the backend, which may implement them using a global mouse hook.
+    const currentMouseTriggers = currentEffectiveShortcuts.filter(isMouseTrigger);
+    const previousMouseTriggers = previousEffectiveShortcuts.filter(isMouseTrigger);
+
+    if (!lodash.isEqual(currentMouseTriggers, previousMouseTriggers)) {
+      this.onMouseTriggersChanged(currentMouseTriggers);
+    }
+
+    currentEffectiveShortcuts = currentEffectiveShortcuts.filter(
+      (s) => !isMouseTrigger(s)
+    );
+    previousEffectiveShortcuts = previousEffectiveShortcuts.filter(
+      (s) => !isMouseTrigger(s)
+    );
+
     // Use a shortcut if we unbind all shortcuts :)
     if (currentEffectiveShortcuts.length === 0) {
       globalShortcut.unregisterAll();

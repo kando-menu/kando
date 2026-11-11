@@ -89,6 +89,28 @@ class Native : public Napi::Addon<Native> {
    * contain no arguments.
    */
   Napi::Value listInstalledApplications(const Napi::CallbackInfo& info);
+
+  /**
+   * Installs a global low-level mouse hook which is used for mouse-hold triggers. The
+   * given callback is called with ('press' | 'release', buttonName) whenever a
+   * configured trigger button was held long enough or released afterwards.
+   *
+   * @param info The arguments passed to the startMouseHook function. It should contain
+   *             a callback function.
+   */
+  void startMouseHook(const Napi::CallbackInfo& info);
+
+  /** Removes the global mouse hook again. */
+  void stopMouseHook(const Napi::CallbackInfo& info);
+
+  /**
+   * Configures which mouse buttons act as triggers.
+   *
+   * @param info The arguments passed to the setMouseTriggers function. It should contain
+   *             an array of button names ('Right', 'Middle', 'X1', 'X2'), the hold time
+   *             in milliseconds, and the movement tolerance in pixels.
+   */
+  void setMouseTriggers(const Napi::CallbackInfo& info);
 };
 
 #endif // NATIVE_HPP

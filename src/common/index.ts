@@ -94,6 +94,13 @@ export type BackendInfo = {
   readonly supportsShortcuts: boolean;
 
   /**
+   * If true, menus can also be opened by holding down a mouse button. In this case, the
+   * shortcut of a menu can be a mouse-hold trigger like 'MouseRight' (see
+   * common/shortcut.ts). Backends which do not set this flag will ignore such triggers.
+   */
+  readonly supportsMouseTriggers?: boolean;
+
+  /**
    * This hint is shown in the settings next to the shortcut-id input field if
    * supportsShortcuts is false. It should very briefly explain how to change the
    * shortcuts in the operating system. If supportsShortcuts is true, this is not
@@ -284,6 +291,13 @@ export type ShowMenuOptions = {
    * be selected by only hovering over them.
    */
   readonly hoverMode: boolean;
+
+  /**
+   * If this is set, the menu was opened by holding down a mouse button and the button is
+   * still pressed. The menu will then behave like in turbo mode: An item is selected
+   * when the button is released.
+   */
+  readonly mouseTriggerHeld: boolean;
 
   /**
    * If this is set, the system-icon theme has changed since the last time the menu was

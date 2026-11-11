@@ -175,6 +175,12 @@ export const GENERAL_SETTINGS_SCHEMA_V1 = z.object({
    */
   enableTurboMode: z.boolean().default(true),
 
+  /**
+   * If a menu uses a mouse-hold trigger (e.g. 'MouseRight' as shortcut), the menu will
+   * open when the button is held down for this many milliseconds.
+   */
+  mouseTriggerHoldTime: z.number().min(50).default(250),
+
   /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
   warpMouse: z.boolean().default(true),
 

@@ -10,6 +10,8 @@
 
 #include "Native.hpp"
 
+#include "MouseHook.hpp"
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
@@ -234,6 +236,9 @@ Native::Native(Napi::Env env, Napi::Object exports) {
           InstanceMethod("focusWindow", &Native::focusWindow),
           InstanceMethod("fixAcrylicEffect", &Native::fixAcrylicEffect),
           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
+          InstanceMethod("startMouseHook", &Native::startMouseHook),
+          InstanceMethod("stopMouseHook", &Native::stopMouseHook),
+          InstanceMethod("setMouseTriggers", &Native::setMouseTriggers),
       });
 }
 
@@ -471,3 +476,53 @@ Napi::Value Native::listInstalledApplications(const Napi::CallbackInfo& info) {
 NODE_API_ADDON(Native)
 
 //////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::startMouseHook(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1 || !info[0].IsFunction()) {
+    Napi::TypeError::New(env, "Function expected").ThrowAsJavaScriptException();
+    return;
+  }
+
+  MouseHook::start(env, info[0].As<Napi::Function>());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::stopMouseHook(const Napi::CallbackInfo& info) {
+  MouseHook::stop();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+void Native::setMouseTriggers(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 3 || !info[0].IsArray() || !info[1].IsNumber() ||
+      !info[2].IsNumber()) {
+    Napi::TypeError::New(env, "Array, number, and number expected")
+        .ThrowAsJavaScriptException();
+    return;
+  }
+
+  std::array<bool, MouseHook::eButtonCount> enabled{};
+
+  Napi::Array names = info[0].As<Napi::Array>();
+  for (uint32_t i = 0; i < names.Length(); ++i) {
+    Napi::Value name = names.Get(i);
+    if (!name.IsString()) {
+      continue;
+    }
+
+    int button = MouseHook::buttonFromName(name.As<Napi::String>().Utf8Value());
+    if (button >= 0) {
+      enabled[button] = true;
+    }
+  }
+
+  unsigned holdTime  = info[1].As<Napi::Number>().Uint32Value();
+  int      tolerance = info[2].As<Napi::Number>().Int32Value();
+
+  MouseHook::setTriggers(enabled, holdTime, tolerance);
+}

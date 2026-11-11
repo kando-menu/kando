@@ -163,6 +163,15 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
   }
 
   /**
+   * This is called when the mouse button which opened the menu (a mouse-hold trigger) has
+   * been released. If the pointer is over an item, it will be selected, just like when a
+   * key is released in turbo mode.
+   */
+  public onMouseTriggerReleased() {
+    this.pointerInput.onMouseTriggerReleased();
+  }
+
+  /**
    * This method is called when the menu is shown. It will create the DOM tree for the
    * given root item and all its children. It will also set up the angles and positions of
    * all items and show the menu.
@@ -185,7 +194,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
     // If the pointer is not warped to the center of the menu, we should not enter
     // turbo-mode right away.
     const deferTurboMode = !this.settings.warpMouse && showMenuOptions.useFixedPosition;
-    this.pointerInput.onShowMenu(deferTurboMode);
+    this.pointerInput.onShowMenu(deferTurboMode, showMenuOptions.mouseTriggerHeld);
 
     // In anchored mode, we have to disable turbo and marking mode.
     this.pointerInput.enableMarkingMode =
