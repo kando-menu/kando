@@ -154,9 +154,10 @@ LRESULT CALLBACK lowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
   const auto* ms = reinterpret_cast<const MSLLHOOKSTRUCT*>(lParam);
 
-  // Never touch injected events. This includes our own replayed clicks as well as input
-  // from other automation tools, remote desktops, and touch-to-mouse translation.
-  if (ms->flags & (LLMHF_INJECTED | LLMHF_LOWER_IL_INJECTED)) {
+  // Ignore the clicks which we replayed ourselves. We must not ignore other injected
+  // events: Precision touchpads, many mouse drivers, and remote desktop sessions deliver
+  // their clicks as injected events, and we want those to work as well.
+  if ((ms->flags & LLMHF_INJECTED) && ms->dwExtraInfo == kReplayMarker) {
     return CallNextHookEx(nullptr, nCode, wParam, lParam);
   }
 
