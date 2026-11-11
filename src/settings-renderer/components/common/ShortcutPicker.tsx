@@ -227,14 +227,13 @@ export default function ShortcutPicker(props: Props) {
             }
 
             // Button 0 is the left button, which is used to focus the field.
-            const buttons: Record<number, string> = {
-              1: 'MouseMiddle',
-              2: 'MouseRight',
-              3: 'MouseX1',
-              4: 'MouseX2',
-            };
-
-            const trigger = buttons[event.button];
+            const buttons = new Map<number, string>([
+              [1, 'MouseMiddle'],
+              [2, 'MouseRight'],
+              [3, 'MouseX1'],
+              [4, 'MouseX2'],
+            ]);
+            const trigger = buttons.get(event.button);
             if (trigger) {
               event.preventDefault();
               event.currentTarget.value = trigger;
