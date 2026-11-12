@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { expect, test } from './fixtures';
+import { expect, test, KandoApp } from './fixtures';
+import type { GeneralSettings } from '../../src/common/settings-schemata';
 import { menus, interactionSeed, releaseDeferredTurboMode } from './interaction-menus';
 
 test.use({ seed: interactionSeed });
@@ -244,4 +245,227 @@ test('scroll deltas accumulate before triggering root scroll workflows', async (
     .poll(() => kando.sideEffects.tcpMessages.join(''))
     .toContain('root scroll up');
   expect(kando.errors).toEqual([]);
+});
+
+// Presses the given mouse button on the center of the currently shown menu using real
+// input events. The pointer is moved a few times first so that the menu has seen a
+// proper pointer position.
+const pressMouseButton = async (
+  kando: KandoApp,
+  button: 'right' | 'middle'
+): Promise<void> => {
+  const root = await kando.menuWindow
+    .locator('#kando-menu .menu-node.active > .icon-layer > .icon-container')
+    .boundingBox();
+  if (!root) {
+    throw new Error('Could not measure the active menu icon.');
+  }
+  const x = root.x + root.width / 2;
+  const y = root.y + root.height / 2;
+  await kando.menuWindow.mouse.move(x + 3, y + 3);
+  await kando.menuWindow.mouse.move(x, y);
+  await kando.menuWindow.mouse.click(x, y, { button });
+};
+
+// Positive control: a left click on 'TCP action' must still run its action, proving that
+// the menu is alive and processes input after a right or middle button press.
+const expectMenuStillSelectsActions = async (kando: KandoApp): Promise<void> => {
+  const action = await kando.menuWindow
+    .locator(
+      '#kando-menu .type-button[data-name="TCP action"] > .icon-layer > .icon-container'
+    )
+    .boundingBox();
+  if (!action) {
+    throw new Error('Could not measure the TCP action item.');
+  }
+  const x = action.x + action.width / 2;
+  const y = action.y + action.height / 2;
+  await kando.menuWindow.mouse.move(x - 3, y - 3);
+  await kando.menuWindow.mouse.move(x, y);
+  await kando.menuWindow.mouse.click(x, y);
+  await expect.poll(() => kando.sideEffects.tcpMessages.join('')).toContain('tcp hit');
+};
+
+const mouseButtonSeed = (
+  config: Partial<GeneralSettings>
+): { menus: typeof menus; config: Partial<GeneralSettings> } => ({
+  menus,
+  config: { ...interactionSeed.config, ...config },
+});
+
+// Hovers the "TCP action" item and clicks it with the given mouse button.
+const clickTcpAction = async (
+  kando: KandoApp,
+  button: 'left' | 'right' | 'middle'
+): Promise<void> => {
+  const menu = kando.menuWindow.locator('#kando-menu');
+  const item = menu.locator('.type-button[data-name="TCP action"]');
+  const action = await item
+    .locator(':scope > .icon-layer > .icon-container')
+    .boundingBox();
+  if (!action) {
+    throw new Error('Could not measure the TCP action item.');
+  }
+  const x = action.x + action.width / 2;
+  const y = action.y + action.height / 2;
+  await kando.menuWindow.mouse.move(x - 3, y - 3);
+  await expect(async () => {
+    await kando.menuWindow.mouse.move(x, y);
+    await expect(item).toHaveClass(/hovered/, { timeout: 500 });
+  }).toPass();
+  await kando.menuWindow.mouse.click(x, y, { button });
+};
+
+test.describe('default middle mouse button', () => {
+  test('selects the hovered item like a left click', async ({ kando }) => {
+    await kando.openMenu('E2E Menu');
+    await clickTcpAction(kando, 'middle');
+    await expect.poll(() => kando.sideEffects.tcpMessages.join('')).toContain('tcp hit');
+    expect(kando.errors).toEqual([]);
+  });
+});
+
+test.describe('middle mouse button set to nothing', () => {
+  test.use({ seed: mouseButtonSeed({ middleMouseButtonBehavior: 'nothing' }) });
+
+  test('does nothing instead of acting like a left click', async ({ kando }) => {
+    const menu = kando.menuWindow.locator('#kando-menu');
+    await kando.openMenu('E2E Menu');
+    await clickTcpAction(kando, 'middle');
+
+    // Give a (wrongly) triggered action time to arrive.
+    await kando.menuWindow.waitForTimeout(500);
+    expect(kando.sideEffects.tcpMessages.join('')).not.toContain('tcp hit');
+    await expect(menu.locator('.type-root.active')).toHaveAttribute(
+      'data-name',
+      'E2E Menu'
+    );
+    await expect(menu).not.toHaveClass(/hidden/);
+    await expectMenuStillSelectsActions(kando);
+    expect(kando.errors).toEqual([]);
+  });
+});
+
+test.describe('right mouse button set to select', () => {
+  test.use({ seed: mouseButtonSeed({ rightMouseButtonBehavior: 'select' }) });
+
+  test('selects the hovered item like a left click', async ({ kando }) => {
+    await kando.openMenu('E2E Menu');
+    await clickTcpAction(kando, 'right');
+    await expect.poll(() => kando.sideEffects.tcpMessages.join('')).toContain('tcp hit');
+    expect(kando.errors).toEqual([]);
+  });
+
+  test('supports marking mode by dragging to a submenu', async ({ kando }) => {
+    const menu = kando.menuWindow.locator('#kando-menu');
+    await kando.openMenu('E2E Menu');
+
+    const rootBox = await menu
+      .locator('.type-root > .icon-layer > .icon-container')
+      .boundingBox();
+    const submenuBox = await menu
+      .locator('.type-submenu[data-name="Submenu"] > .icon-layer > .icon-container')
+      .boundingBox();
+    if (!rootBox || !submenuBox) {
+      throw new Error('Could not measure the menu items for the marking-mode gesture.');
+    }
+
+    await kando.menuWindow.mouse.move(
+      rootBox.x + rootBox.width / 2,
+      rootBox.y + rootBox.height / 2
+    );
+    await kando.menuWindow.mouse.down({ button: 'right' });
+    await kando.menuWindow.mouse.move(
+      submenuBox.x + submenuBox.width / 2,
+      submenuBox.y + submenuBox.height / 2,
+      { steps: 8 }
+    );
+    await kando.menuWindow.mouse.up({ button: 'right' });
+
+    await expect(menu.locator('.type-submenu.active')).toHaveAttribute(
+      'data-name',
+      'Submenu'
+    );
+    expect(kando.errors).toEqual([]);
+  });
+});
+
+test.describe('right mouse button set to nothing', () => {
+  test.use({ seed: mouseButtonSeed({ rightMouseButtonBehavior: 'nothing' }) });
+
+  test('keeps the menu open', async ({ kando }) => {
+    const menu = kando.menuWindow.locator('#kando-menu');
+    await kando.openMenu('E2E Menu');
+    await pressMouseButton(kando, 'right');
+
+    await kando.menuWindow.waitForTimeout(500);
+    await expect(menu.locator('.type-root.active')).toHaveAttribute(
+      'data-name',
+      'E2E Menu'
+    );
+    await expect(menu).not.toHaveClass(/hidden/);
+    expect(kando.sideEffects.tcpMessages.join('')).not.toContain('tcp hit');
+    await expectMenuStillSelectsActions(kando);
+    expect(kando.errors).toEqual([]);
+  });
+});
+
+test.describe('right mouse button set to select-parent', () => {
+  test.use({ seed: mouseButtonSeed({ rightMouseButtonBehavior: 'select-parent' }) });
+
+  test('goes back from a submenu and closes the menu at the root', async ({ kando }) => {
+    const menu = kando.menuWindow.locator('#kando-menu');
+    await kando.openMenu('E2E Menu');
+    await kando.selectItem([0]);
+    await expect(menu.locator('.type-submenu.active')).toHaveAttribute(
+      'data-name',
+      'Submenu'
+    );
+
+    await pressMouseButton(kando, 'right');
+    await expect(menu.locator('.type-root.active')).toHaveAttribute(
+      'data-name',
+      'E2E Menu'
+    );
+    await expect(menu).not.toHaveClass(/hidden/);
+
+    // At the root there is no parent, so the menu is closed.
+    await pressMouseButton(kando, 'right');
+    await expect(menu.locator('.menu-node')).toHaveCount(0);
+    expect(kando.errors).toEqual([]);
+  });
+});
+
+test.describe('middle mouse button set to select-parent', () => {
+  test.use({ seed: mouseButtonSeed({ middleMouseButtonBehavior: 'select-parent' }) });
+
+  test('goes back from a submenu', async ({ kando }) => {
+    const menu = kando.menuWindow.locator('#kando-menu');
+    await kando.openMenu('E2E Menu');
+    await kando.selectItem([0]);
+    await expect(menu.locator('.type-submenu.active')).toHaveAttribute(
+      'data-name',
+      'Submenu'
+    );
+
+    await pressMouseButton(kando, 'middle');
+    await expect(menu.locator('.type-root.active')).toHaveAttribute(
+      'data-name',
+      'E2E Menu'
+    );
+    await expect(menu).not.toHaveClass(/hidden/);
+    expect(kando.errors).toEqual([]);
+  });
+});
+
+test.describe('middle mouse button set to close', () => {
+  test.use({ seed: mouseButtonSeed({ middleMouseButtonBehavior: 'close' }) });
+
+  test('closes the menu', async ({ kando }) => {
+    const menu = kando.menuWindow.locator('#kando-menu');
+    await kando.openMenu('E2E Menu');
+    await pressMouseButton(kando, 'middle');
+    await expect(menu.locator('.menu-node')).toHaveCount(0);
+    expect(kando.errors).toEqual([]);
+  });
 });

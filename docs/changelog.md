@@ -24,6 +24,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
+- The right and the middle mouse button can now be configured in the General Settings. Each can either do nothing, select the item like a left click, close the menu, or navigate up one level. This replaces the old "Right mouse button selects parent" checkbox; its value is migrated automatically. Also, the gamepad close button now always closes the menu; it used to go up one level if the old checkbox was enabled. Thanks to [@grujicdd](https://github.com/grujicdd) for this contribution!
 - Buttons, submenus, and the root item (its center) now have two new workflows: the scroll-up- and the scroll-down-workflow. They get executed when you scroll the mouse wheel while hovering over the item. This can be used, for instance, to change the volume or the brightness. Thanks to [Arslan-TR](https://github.com/Arslan-TR) for this contribution!
 - Added a new action type which can be used to **send messages to TCP servers**. This is useful for controlling applications which use Telnet or other simple line-based protocols. Thanks to [@TheNetherWatcher](https://github.com/TheNetherWatcher) for contributing this feature!
 - Added a backend for the [Umbriel](https://github.com/noctalia-dev/umbriel) Wayland compositor. Thanks to [@wl-chuang](https://github.com/wl-chuang) for the contribution!

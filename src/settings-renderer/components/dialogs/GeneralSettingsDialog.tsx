@@ -341,14 +341,61 @@ export default function GeneralSettingsDialog() {
             )}
             settingsKey="returnPointerToMenuOpeningPosition"
           />
-          <SettingsCheckbox
+          <SettingsDropdown
             info={i18next.t(
-              'settings.general-settings-dialog.right-mouse-button-selects-parent-info'
+              'settings.general-settings-dialog.right-mouse-button-behavior-info'
             )}
             label={i18next.t(
-              'settings.general-settings-dialog.right-mouse-button-selects-parent'
+              'settings.general-settings-dialog.right-mouse-button-behavior'
             )}
-            settingsKey="rmbSelectsParent"
+            maxWidth={200}
+            options={[
+              {
+                value: 'select',
+                label: i18next.t('settings.general-settings-dialog.select-item'),
+              },
+              {
+                value: 'nothing',
+                label: i18next.t('settings.general-settings-dialog.do-nothing'),
+              },
+              {
+                value: 'close',
+                label: i18next.t('settings.general-settings-dialog.close-menu'),
+              },
+              {
+                value: 'select-parent',
+                label: i18next.t('settings.general-settings-dialog.select-parent'),
+              },
+            ]}
+            settingsKey="rightMouseButtonBehavior"
+          />
+          <SettingsDropdown
+            info={i18next.t(
+              'settings.general-settings-dialog.middle-mouse-button-behavior-info'
+            )}
+            label={i18next.t(
+              'settings.general-settings-dialog.middle-mouse-button-behavior'
+            )}
+            maxWidth={200}
+            options={[
+              {
+                value: 'select',
+                label: i18next.t('settings.general-settings-dialog.select-item'),
+              },
+              {
+                value: 'nothing',
+                label: i18next.t('settings.general-settings-dialog.do-nothing'),
+              },
+              {
+                value: 'close',
+                label: i18next.t('settings.general-settings-dialog.close-menu'),
+              },
+              {
+                value: 'select-parent',
+                label: i18next.t('settings.general-settings-dialog.select-parent'),
+              },
+            ]}
+            settingsKey="middleMouseButtonBehavior"
           />
           <SettingsDropdown
             info={i18next.t('settings.general-settings-dialog.press-again-behavior-info')}
