@@ -544,6 +544,21 @@ export default function GeneralSettingsDialog() {
             step={10}
             width={spinbuttonWidth}
           />
+          {backend.supportsMouseTriggers && (
+            <SettingsSpinbutton
+              info={i18next.t(
+                'settings.general-settings-dialog.mouse-trigger-hold-time-info'
+              )}
+              label={i18next.t(
+                'settings.general-settings-dialog.mouse-trigger-hold-time'
+              )}
+              max={2000}
+              min={50}
+              settingsKey="mouseTriggerHoldTime"
+              step={50}
+              width={spinbuttonWidth}
+            />
+          )}
           <SettingsSpinbutton
             info={i18next.t(
               'settings.general-settings-dialog.minimum-gesture-length-info'

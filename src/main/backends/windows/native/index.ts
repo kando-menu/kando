@@ -64,6 +64,29 @@ export type Native = {
     name: string;
     base64Icon: string;
   }[];
+
+  /**
+   * This installs a global low-level mouse hook which is used for mouse-hold triggers.
+   * Configure the monitored buttons with setMouseTriggers().
+   *
+   * @param callback Called with 'press' when a trigger button was held long enough, and
+   *   with 'release' when it is released afterwards. The second argument is the button
+   *   name: 'Right', 'Middle', 'X1', or 'X2'.
+   */
+  startMouseHook(callback: (event: 'press' | 'release', button: string) => void): void;
+
+  /** This removes the global mouse hook again. */
+  stopMouseHook(): void;
+
+  /**
+   * Configures which mouse buttons act as mouse-hold triggers.
+   *
+   * @param buttons The buttons to monitor: any of 'Right', 'Middle', 'X1', 'X2'.
+   * @param holdTimeMs How long a button has to be held before 'press' is reported.
+   * @param moveTolerancePx If the pointer moves further than this while waiting, the
+   *   press is passed on to the application as a normal drag.
+   */
+  setMouseTriggers(buttons: string[], holdTimeMs: number, moveTolerancePx: number): void;
 };
 
 const native: Native = require('./../../../../../build/Release/NativeWin32.node');

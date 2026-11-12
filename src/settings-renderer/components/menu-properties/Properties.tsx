@@ -73,7 +73,13 @@ export default function Properties() {
         <ShortcutPicker
           isGrowing
           useModifiers
-          info={i18next.t('settings.shortcut-info')}
+          allowMouseTriggers={backend.supportsMouseTriggers}
+          info={
+            i18next.t('settings.shortcut-info') +
+            (backend.supportsMouseTriggers
+              ? ' ' + i18next.t('settings.shortcut-info-mouse')
+              : '')
+          }
           initialValue={menus[selectedMenu].shortcut}
           label={i18next.t('settings.shortcut-label')}
           mode="key-names"

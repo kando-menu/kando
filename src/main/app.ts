@@ -49,6 +49,7 @@ import {
   loadExportedMenu,
 } from './settings';
 import { IPCServer, IPCCallback } from '../common/ipc';
+import { isMouseTrigger } from '../common/shortcut';
 import { Notification } from './utils/notification';
 import {
   parseMenuThemeFile,
@@ -73,6 +74,12 @@ export class KandoApp {
    * the pie menu.
    */
   private menuWindow?: MenuWindow;
+
+  /**
+   * This is true while the mouse button of a mouse-hold trigger is held down after it
+   * opened a menu.
+   */
+  private mouseTriggerHeld = false;
   private settingsWindow?: SettingsWindow;
 
   /** Set to a value > 0 if shortcuts are currently inhibited. */
@@ -181,11 +188,23 @@ export class KandoApp {
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
     this.backend.on('shortcutPressed', (trigger) => {
+      // For mouse-hold triggers, the button is still pressed at this point. We remember
+      // this so that the renderer can select the item below the pointer once the button
+      // is released.
+      this.mouseTriggerHeld = isMouseTrigger(trigger);
+
       this.showMenu({ trigger });
 
       // We use the opportunity to check for updates. If an update is available, we show
       // a notification to the user. This notification is only shown once per session.
       this.updateChecker.checkForUpdates();
+    });
+
+    // When the button of a mouse-hold trigger is released, the renderer is told to select
+    // the item below the pointer (just like when releasing a key in turbo mode).
+    this.backend.on('shortcutReleased', () => {
+      this.mouseTriggerHeld = false;
+      this.menuWindow?.webContents.send('menu-window.mouse-trigger-released');
     });
 
     // We ensure that there is always a menu available. If the user deletes all menus,
@@ -396,6 +415,14 @@ export class KandoApp {
    */
   public getMenuSettings() {
     return this.menuSettings;
+  }
+
+  /**
+   * @returns True while the button of a mouse-hold trigger is held down after it opened a
+   *   menu.
+   */
+  public isMouseTriggerHeld() {
+    return this.mouseTriggerHeld;
   }
 
   /**

@@ -14,14 +14,23 @@ import { isexe } from 'isexe';
 
 import { native } from './native';
 import { Backend } from '../backend';
+import { Settings } from '../../settings';
 import {
   KeySequence,
   MenuItem,
   AppDescription,
   ActionTypeRegistry,
   WindowDescription,
+  GeneralSettings,
 } from '../../../common';
 import { mapKeys } from '../../../common/key-codes';
+import { getMouseTriggerButton, MOUSE_TRIGGER_PREFIX } from '../../../common/shortcut';
+
+/**
+ * If the pointer moves further than this many pixels while a mouse button is held down
+ * but the hold time is not yet over, the press is treated as a normal drag.
+ */
+const MOUSE_TRIGGER_MOVE_TOLERANCE = 6;
 
 /**
  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
@@ -40,6 +49,15 @@ export class WindowsBackend extends Backend {
    * value is the base64-encoded icon.
    */
   private systemIcons: Map<string, string> = new Map();
+
+  /** The general settings. They are used to get the hold time of mouse-hold triggers. */
+  private generalSettings: Settings<GeneralSettings>;
+
+  /** The mouse triggers (e.g. 'MouseRight') which are currently active. */
+  private mouseTriggers: string[] = [];
+
+  /** True while the native mouse hook is installed. */
+  private mouseHookRunning = false;
 
   /**
    * On Windows, the 'toolbar' window type is used. This is actually the only window type
@@ -60,12 +78,20 @@ export class WindowsBackend extends Backend {
       supportsListingWindows: true,
       supportsFocusingWindows: true,
       supportsShortcuts: true,
+      supportsMouseTriggers: true,
       shouldUseTransparentSettingsWindow: transparencySupported,
     };
   }
 
   /** This is called when the backend is created. */
-  public override async init() {
+  public override async init(generalSettings: Settings<GeneralSettings>) {
+    this.generalSettings = generalSettings;
+
+    // Changing the hold time should take effect immediately.
+    generalSettings.onChange('mouseTriggerHoldTime', () => {
+      this.updateMouseTriggers();
+    });
+
     native
       .listInstalledApplications()
       .sort((a, b) => a.name.localeCompare(b.name))
@@ -85,6 +111,51 @@ export class WindowsBackend extends Backend {
   /** We only need to unbind all shortcuts when the backend is destroyed. */
   public override async deinit(): Promise<void> {
     await this.bindShortcuts([]);
+
+    if (this.mouseHookRunning) {
+      native.stopMouseHook();
+      this.mouseHookRunning = false;
+    }
+  }
+
+  /**
+   * This is called whenever the set of active mouse-hold triggers changes. The native
+   * mouse hook is only installed while at least one trigger is active.
+   *
+   * @param triggers The active triggers, e.g. ['MouseRight'].
+   */
+  protected override onMouseTriggersChanged(triggers: string[]): void {
+    this.mouseTriggers = triggers;
+    this.updateMouseTriggers();
+  }
+
+  /** Pushes the current mouse triggers and the hold time to the native hook. */
+  private updateMouseTriggers() {
+    const buttons = this.mouseTriggers
+      .map((trigger) => getMouseTriggerButton(trigger))
+      .filter((button): button is NonNullable<typeof button> => button !== null);
+
+    // We keep the hook running as long as a trigger is configured, even if it is
+    // temporarily inhibited: A button which is currently held must still be released
+    // properly. The native hook only reacts to new presses of enabled buttons.
+    if (!this.mouseHookRunning && buttons.length > 0) {
+      native.startMouseHook((event, button) => {
+        const trigger = MOUSE_TRIGGER_PREFIX + button;
+                console.log('[mouse-trigger]', event, trigger);
+
+        if (event === 'press') {
+          this.onShortcutPressed(trigger);
+        } else {
+          this.onShortcutReleased(trigger);
+        }
+      });
+      this.mouseHookRunning = true;
+    }
+
+    if (this.mouseHookRunning) {
+      const holdTime = this.generalSettings?.get('mouseTriggerHoldTime') ?? 250;
+      native.setMouseTriggers(buttons, holdTime, MOUSE_TRIGGER_MOVE_TOLERANCE);
+    }
   }
 
   /**

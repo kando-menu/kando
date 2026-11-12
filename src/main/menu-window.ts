@@ -354,6 +354,7 @@ export class MenuWindow extends BrowserWindow {
         },
         anchoredMode: this.lastMenu.anchored,
         hoverMode: this.lastMenu.hoverMode,
+        mouseTriggerHeld: this.kando.isMouseTriggerHeld(),
         systemIconsChanged,
       },
       {

@@ -1,0 +1,1297 @@
+diff -ruN a/locales/en/translation.json b/locales/en/translation.json
+--- a/locales/en/translation.json	2026-11-09 19:24:19.000000000 +0000
++++ b/locales/en/translation.json	2026-11-11 05:06:02.119541082 +0000
+@@ -180,6 +180,8 @@
+             "minimum-submenu-distance": "Minimum submenu distance",
+             "movement-threshold-info": "Smaller mouse movements will not be considered in Marking or Turbo mode. Default is 15px.",
+             "movement-threshold": "Movement threshold",
++            "mouse-trigger-hold-time-info": "If a menu is opened by holding down a mouse button, this is how long the button has to be held down in milliseconds. Default is 250ms.",
++            "mouse-trigger-hold-time": "Mouse hold time",
+             "minimum-gesture-length-info": "Straight movements must be at least this long to trigger a selection. Default is 150px.",
+             "minimum-gesture-length": "Minimum Gesture Length",
+             "minimum-gesture-angle-info": "Smaller deviations from straight movements will not trigger selections. Default is 20°.",
+@@ -317,6 +319,7 @@
+         "shortcut-info": "This shortcut opens the menu. It must contain one normal key and any number of modifiers such as Ctrl, Alt, or Shift. When recording, you do not have to press all keys at once, you can also press them one after another. This is useful if a shortcut is already bound to another menu!",
+         "shortcut-label": "Shortcut",
+         "shortcut-recording": "Press a shortcut…",
++        "shortcut-info-mouse": "On this system, you can also press a mouse button (right, middle, or one of the side buttons) while recording. The menu will then open when you hold this button down and select an item as soon as you release it.",
+         "shortcut-id-label": "Shortcut ID",
+         "tags-info": "Tags can be used to group menus in menu collections.",
+         "tags": "Tags",
+diff -ruN a/src/common/index.ts b/src/common/index.ts
+--- a/src/common/index.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/common/index.ts	2026-11-11 05:03:50.745968093 +0000
+@@ -94,6 +94,13 @@
+   readonly supportsShortcuts: boolean;
+ 
+   /**
++   * If true, menus can also be opened by holding down a mouse button. In this case, the
++   * shortcut of a menu can be a mouse-hold trigger like 'MouseRight' (see
++   * common/shortcut.ts). Backends which do not set this flag will ignore such triggers.
++   */
++  readonly supportsMouseTriggers?: boolean;
++
++  /**
+    * This hint is shown in the settings next to the shortcut-id input field if
+    * supportsShortcuts is false. It should very briefly explain how to change the
+    * shortcuts in the operating system. If supportsShortcuts is true, this is not
+@@ -286,6 +293,13 @@
+   readonly hoverMode: boolean;
+ 
+   /**
++   * If this is set, the menu was opened by holding down a mouse button and the button is
++   * still pressed. The menu will then behave like in turbo mode: An item is selected
++   * when the button is released.
++   */
++  readonly mouseTriggerHeld: boolean;
++
++  /**
+    * If this is set, the system-icon theme has changed since the last time the menu was
+    * opened. This is used to determine if the menu needs to be reloaded.
+    */
+diff -ruN a/src/common/settings-schemata/general-settings-v1.ts b/src/common/settings-schemata/general-settings-v1.ts
+--- a/src/common/settings-schemata/general-settings-v1.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/common/settings-schemata/general-settings-v1.ts	2026-11-11 05:04:53.426982153 +0000
+@@ -175,6 +175,12 @@
+    */
+   enableTurboMode: z.boolean().default(true),
+ 
++  /**
++   * If a menu uses a mouse-hold trigger (e.g. 'MouseRight' as shortcut), the menu will
++   * open when the button is held down for this many milliseconds.
++   */
++  mouseTriggerHoldTime: z.number().min(50).default(250),
++
+   /** If true, the mouse pointer will be warped to the center of the menu when necessary. */
+   warpMouse: z.boolean().default(true),
+ 
+diff -ruN a/src/common/shortcut.ts b/src/common/shortcut.ts
+--- a/src/common/shortcut.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/common/shortcut.ts	2026-11-11 05:03:50.745666581 +0000
+@@ -8,6 +8,47 @@
+ // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+ // SPDX-License-Identifier: MIT
+ 
++/**
++ * Shortcuts which start with this prefix are not keyboard accelerators but "mouse-hold
++ * triggers": The menu opens when the respective mouse button is held down for a short
++ * time and the selection is made when the button is released. Currently, the following
++ * triggers exist: 'MouseRight', 'MouseMiddle', 'MouseX1', and 'MouseX2'.
++ */
++export const MOUSE_TRIGGER_PREFIX = 'Mouse';
++
++/** The mouse buttons which can be used as a mouse-hold trigger. */
++export const MOUSE_TRIGGER_BUTTONS = ['Right', 'Middle', 'X1', 'X2'] as const;
++
++export type MouseTriggerButton = (typeof MOUSE_TRIGGER_BUTTONS)[number];
++
++/**
++ * Checks whether the given shortcut string describes a mouse-hold trigger instead of a
++ * keyboard accelerator.
++ *
++ * @param shortcut The shortcut string to check.
++ * @returns True if the shortcut is a mouse-hold trigger like 'MouseRight'.
++ */
++export function isMouseTrigger(shortcut: string): boolean {
++  return getMouseTriggerButton(shortcut) !== null;
++}
++
++/**
++ * Extracts the mouse button from a mouse-hold trigger string.
++ *
++ * @param shortcut The shortcut string, e.g. 'MouseRight'.
++ * @returns The button name, or null if the string is not a mouse-hold trigger.
++ */
++export function getMouseTriggerButton(shortcut: string): MouseTriggerButton | null {
++  if (!shortcut.startsWith(MOUSE_TRIGGER_PREFIX)) {
++    return null;
++  }
++
++  const button = shortcut.slice(MOUSE_TRIGGER_PREFIX.length);
++  return (MOUSE_TRIGGER_BUTTONS as readonly string[]).includes(button)
++    ? (button as MouseTriggerButton)
++    : null;
++}
++
+ const MAC_MODIFIER_SYMBOLS = new Map([
+   ['Command', '⌘'],
+   ['Cmd', '⌘'],
+diff -ruN a/src/main/app.ts b/src/main/app.ts
+--- a/src/main/app.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/main/app.ts	2026-11-11 05:05:21.184684238 +0000
+@@ -49,6 +49,7 @@
+   loadExportedMenu,
+ } from './settings';
+ import { IPCServer, IPCCallback } from '../common/ipc';
++import { isMouseTrigger } from '../common/shortcut';
+ import { Notification } from './utils/notification';
+ import {
+   parseMenuThemeFile,
+@@ -73,6 +74,12 @@
+    * the pie menu.
+    */
+   private menuWindow?: MenuWindow;
++
++  /**
++   * This is true while the mouse button of a mouse-hold trigger is held down after it
++   * opened a menu.
++   */
++  private mouseTriggerHeld = false;
+   private settingsWindow?: SettingsWindow;
+ 
+   /** Set to a value > 0 if shortcuts are currently inhibited. */
+@@ -181,6 +188,11 @@
+   /** This is called when the app is started. It initializes the backend and the window. */
+   public async init() {
+     this.backend.on('shortcutPressed', (trigger) => {
++      // For mouse-hold triggers, the button is still pressed at this point. We remember
++      // this so that the renderer can select the item below the pointer once the button
++      // is released.
++      this.mouseTriggerHeld = isMouseTrigger(trigger);
++
+       this.showMenu({ trigger });
+ 
+       // We use the opportunity to check for updates. If an update is available, we show
+@@ -188,6 +200,13 @@
+       this.updateChecker.checkForUpdates();
+     });
+ 
++    // When the button of a mouse-hold trigger is released, the renderer is told to select
++    // the item below the pointer (just like when releasing a key in turbo mode).
++    this.backend.on('shortcutReleased', () => {
++      this.mouseTriggerHeld = false;
++      this.menuWindow?.webContents.send('menu-window.mouse-trigger-released');
++    });
++
+     // We ensure that there is always a menu available. If the user deletes all menus,
+     // we create a new example menu when Kando is started the next time.
+     if (this.menuSettings.get('menus').length === 0) {
+@@ -399,6 +418,14 @@
+   }
+ 
+   /**
++   * @returns True while the button of a mouse-hold trigger is held down after it opened a
++   *   menu.
++   */
++  public isMouseTriggerHeld() {
++    return this.mouseTriggerHeld;
++  }
++
++  /**
+    * Allow access to the backend object.
+    *
+    * @returns The backend object.
+diff -ruN a/src/main/backends/backend.ts b/src/main/backends/backend.ts
+--- a/src/main/backends/backend.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/main/backends/backend.ts	2026-11-11 05:03:59.780688551 +0000
+@@ -23,6 +23,7 @@
+   GeneralSettings,
+ } from '../../common';
+ import { Settings } from '../settings';
++import { isMouseTrigger } from '../../common/shortcut';
+ 
+ /**
+  * This abstract class must be extended by all backends. A backend is responsible for
+@@ -228,6 +229,12 @@
+    * @returns A promise which resolves when the shortcuts have been bound.
+    */
+   public async bindShortcuts(shortcuts: string[]): Promise<void> {
++    // Mouse-hold triggers can only be used by backends which explicitly support them.
++    // All other backends will never see them.
++    if (!this.getBackendInfo().supportsMouseTriggers) {
++      shortcuts = shortcuts.filter((s) => !isMouseTrigger(s));
++    }
++
+     if (!lodash.isEqual(shortcuts, this.boundShortcuts)) {
+       const previousShortcuts = Array.from(this.boundShortcuts);
+       const previousEffectiveShortcuts = this.getEffectiveShortcuts();
+@@ -324,6 +331,28 @@
+   }
+ 
+   /**
++   * Backends which support mouse-hold triggers should call this method when the mouse
++   * button of an active mouse-hold trigger is released. This is the counterpart to
++   * onShortcutPressed() and is used to select the item below the pointer.
++   *
++   * @param shortcut The mouse trigger that was released, e.g. 'MouseRight'.
++   */
++  protected onShortcutReleased(shortcut: string): void {
++    this.emit('shortcutReleased', shortcut);
++  }
++
++  /**
++   * Backends which set 'supportsMouseTriggers' in their BackendInfo should override this
++   * method. It is called whenever the set of effectively bound mouse-hold triggers
++   * changes. The default implementation does nothing.
++   *
++   * @param triggers The currently active mouse triggers, e.g. ['MouseRight'].
++   */
++  protected onMouseTriggersChanged(triggers: string[]): void {
++    void triggers;
++  }
++
++  /**
+    * This method is called by the bind-shortcuts and inhibit-shortcuts methods above to
+    * actually bind the shortcuts. The implementation in this class uses Electron's
+    * globalShortcut module, however, this does not work on all platforms. Therefore,
+@@ -349,6 +378,22 @@
+     currentEffectiveShortcuts: string[],
+     previousEffectiveShortcuts: string[]
+   ): Promise<void> {
++    // Mouse-hold triggers are not handled by Electron's globalShortcut module. They are
++    // forwarded to the backend, which may implement them using a global mouse hook.
++    const currentMouseTriggers = currentEffectiveShortcuts.filter(isMouseTrigger);
++    const previousMouseTriggers = previousEffectiveShortcuts.filter(isMouseTrigger);
++
++    if (!lodash.isEqual(currentMouseTriggers, previousMouseTriggers)) {
++      this.onMouseTriggersChanged(currentMouseTriggers);
++    }
++
++    currentEffectiveShortcuts = currentEffectiveShortcuts.filter(
++      (s) => !isMouseTrigger(s)
++    );
++    previousEffectiveShortcuts = previousEffectiveShortcuts.filter(
++      (s) => !isMouseTrigger(s)
++    );
++
+     // Use a shortcut if we unbind all shortcuts :)
+     if (currentEffectiveShortcuts.length === 0) {
+       globalShortcut.unregisterAll();
+diff -ruN a/src/main/backends/windows/backend.ts b/src/main/backends/windows/backend.ts
+--- a/src/main/backends/windows/backend.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/main/backends/windows/backend.ts	2026-11-11 05:05:03.279898741 +0000
+@@ -14,14 +14,23 @@
+ 
+ import { native } from './native';
+ import { Backend } from '../backend';
++import { Settings } from '../../settings';
+ import {
+   KeySequence,
+   MenuItem,
+   AppDescription,
+   ActionTypeRegistry,
+   WindowDescription,
++  GeneralSettings,
+ } from '../../../common';
+ import { mapKeys } from '../../../common/key-codes';
++import { getMouseTriggerButton, MOUSE_TRIGGER_PREFIX } from '../../../common/shortcut';
++
++/**
++ * If the pointer moves further than this many pixels while a mouse button is held down
++ * but the hold time is not yet over, the press is treated as a normal drag.
++ */
++const MOUSE_TRIGGER_MOVE_TOLERANCE = 6;
+ 
+ /**
+  * This backend is used on Windows. It uses the native Win32 API to simulate key presses
+@@ -41,6 +50,15 @@
+    */
+   private systemIcons: Map<string, string> = new Map();
+ 
++  /** The general settings. They are used to get the hold time of mouse-hold triggers. */
++  private generalSettings: Settings<GeneralSettings>;
++
++  /** The mouse triggers (e.g. 'MouseRight') which are currently active. */
++  private mouseTriggers: string[] = [];
++
++  /** True while the native mouse hook is installed. */
++  private mouseHookRunning = false;
++
+   /**
+    * On Windows, the 'toolbar' window type is used. This is actually the only window type
+    * supported by Electron on Windows.
+@@ -60,12 +78,20 @@
+       supportsListingWindows: true,
+       supportsFocusingWindows: true,
+       supportsShortcuts: true,
++      supportsMouseTriggers: true,
+       shouldUseTransparentSettingsWindow: transparencySupported,
+     };
+   }
+ 
+   /** This is called when the backend is created. */
+-  public override async init() {
++  public override async init(generalSettings: Settings<GeneralSettings>) {
++    this.generalSettings = generalSettings;
++
++    // Changing the hold time should take effect immediately.
++    generalSettings.onChange('mouseTriggerHoldTime', () => {
++      this.updateMouseTriggers();
++    });
++
+     native
+       .listInstalledApplications()
+       .sort((a, b) => a.name.localeCompare(b.name))
+@@ -85,6 +111,50 @@
+   /** We only need to unbind all shortcuts when the backend is destroyed. */
+   public override async deinit(): Promise<void> {
+     await this.bindShortcuts([]);
++
++    if (this.mouseHookRunning) {
++      native.stopMouseHook();
++      this.mouseHookRunning = false;
++    }
++  }
++
++  /**
++   * This is called whenever the set of active mouse-hold triggers changes. The native
++   * mouse hook is only installed while at least one trigger is active.
++   *
++   * @param triggers The active triggers, e.g. ['MouseRight'].
++   */
++  protected override onMouseTriggersChanged(triggers: string[]): void {
++    this.mouseTriggers = triggers;
++    this.updateMouseTriggers();
++  }
++
++  /** Pushes the current mouse triggers and the hold time to the native hook. */
++  private updateMouseTriggers() {
++    const buttons = this.mouseTriggers
++      .map((trigger) => getMouseTriggerButton(trigger))
++      .filter((button): button is NonNullable<typeof button> => button !== null);
++
++    // We keep the hook running as long as a trigger is configured, even if it is
++    // temporarily inhibited: A button which is currently held must still be released
++    // properly. The native hook only reacts to new presses of enabled buttons.
++    if (!this.mouseHookRunning && buttons.length > 0) {
++      native.startMouseHook((event, button) => {
++        const trigger = MOUSE_TRIGGER_PREFIX + button;
++
++        if (event === 'press') {
++          this.onShortcutPressed(trigger);
++        } else {
++          this.onShortcutReleased(trigger);
++        }
++      });
++      this.mouseHookRunning = true;
++    }
++
++    if (this.mouseHookRunning) {
++      const holdTime = this.generalSettings?.get('mouseTriggerHoldTime') ?? 250;
++      native.setMouseTriggers(buttons, holdTime, MOUSE_TRIGGER_MOVE_TOLERANCE);
++    }
+   }
+ 
+   /**
+diff -ruN a/src/main/backends/windows/native/MouseHook.cpp b/src/main/backends/windows/native/MouseHook.cpp
+--- a/src/main/backends/windows/native/MouseHook.cpp	1970-01-01 00:00:00.000000000 +0000
++++ b/src/main/backends/windows/native/MouseHook.cpp	2026-11-11 05:04:53.425933105 +0000
+@@ -0,0 +1,351 @@
++//////////////////////////////////////////////////////////////////////////////////////////
++//   _  _ ____ _  _ ___  ____                                                           //
++//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
++//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
++//                                                                                      //
++//////////////////////////////////////////////////////////////////////////////////////////
++
++// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
++// SPDX-License-Identifier: MIT
++
++#include "MouseHook.hpp"
++
++#include <atomic>
++#include <cmath>
++#include <future>
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++namespace {
++
++// Events injected by us carry this marker in dwExtraInfo so that the hook can ignore
++// them. ("KAND" in ASCII.)
++constexpr ULONG_PTR kReplayMarker = 0x4B414E44;
++
++const char* const kButtonNames[MouseHook::eButtonCount] = {
++    "Right", "Middle", "X1", "X2"};
++
++enum class Phase {
++  eIdle,        // No trigger button is down.
++  ePending,     // A trigger button is down, we wait for the hold time to pass.
++  eHolding,     // The hold time passed, the menu is (being) shown.
++  ePassthrough, // The press was replayed as a normal press. We do not interfere anymore.
++};
++
++struct Event {
++  std::string kind; // "press" or "release"
++  int         button;
++};
++
++// Configuration. Written from the JS thread, read from the hook thread.
++std::mutex                                   gConfigMutex;
++std::array<bool, MouseHook::eButtonCount>    gEnabled{};
++unsigned                                     gHoldTimeMs     = 250;
++int                                          gMoveTolerance  = 6;
++
++// State of the hook thread. Only accessed from the hook thread.
++Phase     gPhase        = Phase::eIdle;
++int       gActiveButton = -1;
++POINT     gDownPos      = {0, 0};
++UINT_PTR  gTimerId      = 0;
++
++// Thread management.
++std::thread                     gThread;
++std::atomic<DWORD>              gThreadId{0};
++HHOOK                           gHook = nullptr;
++Napi::ThreadSafeFunction        gCallback;
++bool                            gRunning = false;
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++void emit(const char* kind, int button) {
++  if (!gCallback) {
++    return;
++  }
++
++  auto* event = new Event{kind, button};
++  napi_status status = gCallback.NonBlockingCall(
++      event, [](Napi::Env env, Napi::Function jsCallback, Event* e) {
++        if (env != nullptr) {
++          jsCallback.Call({Napi::String::New(env, e->kind),
++              Napi::String::New(env, kButtonNames[e->button])});
++        }
++        delete e;
++      });
++
++  if (status != napi_ok) {
++    delete event;
++  }
++}
++
++// Sends a button press or release which will be ignored by our own hook.
++void injectButton(int button, bool down) {
++  INPUT in{};
++  in.type           = INPUT_MOUSE;
++  in.mi.dwExtraInfo = kReplayMarker;
++
++  switch (button) {
++  case MouseHook::eRight:
++    in.mi.dwFlags = down ? MOUSEEVENTF_RIGHTDOWN : MOUSEEVENTF_RIGHTUP;
++    break;
++  case MouseHook::eMiddle:
++    in.mi.dwFlags = down ? MOUSEEVENTF_MIDDLEDOWN : MOUSEEVENTF_MIDDLEUP;
++    break;
++  case MouseHook::eX1:
++    in.mi.dwFlags   = down ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
++    in.mi.mouseData = XBUTTON1;
++    break;
++  case MouseHook::eX2:
++    in.mi.dwFlags   = down ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
++    in.mi.mouseData = XBUTTON2;
++    break;
++  default:
++    return;
++  }
++
++  SendInput(1, &in, sizeof(INPUT));
++}
++
++void cancelTimer() {
++  if (gTimerId != 0) {
++    KillTimer(nullptr, gTimerId);
++    gTimerId = 0;
++  }
++}
++
++// Called on the hook thread when the hold time has passed.
++void CALLBACK onHoldTimer(HWND, UINT, UINT_PTR, DWORD) {
++  cancelTimer();
++
++  if (gPhase == Phase::ePending) {
++    gPhase = Phase::eHolding;
++    emit("press", gActiveButton);
++  }
++}
++
++// Returns the button for the given mouse message or -1. Sets 'down' accordingly.
++int classify(WPARAM wParam, const MSLLHOOKSTRUCT* ms, bool& down) {
++  switch (wParam) {
++  case WM_RBUTTONDOWN:
++    down = true;
++    return MouseHook::eRight;
++  case WM_RBUTTONUP:
++    down = false;
++    return MouseHook::eRight;
++  case WM_MBUTTONDOWN:
++    down = true;
++    return MouseHook::eMiddle;
++  case WM_MBUTTONUP:
++    down = false;
++    return MouseHook::eMiddle;
++  case WM_XBUTTONDOWN:
++  case WM_XBUTTONUP:
++    down = (wParam == WM_XBUTTONDOWN);
++    return HIWORD(ms->mouseData) == XBUTTON1 ? MouseHook::eX1 : MouseHook::eX2;
++  default:
++    return -1;
++  }
++}
++
++LRESULT CALLBACK lowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
++  if (nCode != HC_ACTION) {
++    return CallNextHookEx(nullptr, nCode, wParam, lParam);
++  }
++
++  const auto* ms = reinterpret_cast<const MSLLHOOKSTRUCT*>(lParam);
++
++  // Never touch injected events. This includes our own replayed clicks as well as input
++  // from other automation tools, remote desktops, and touch-to-mouse translation.
++  if (ms->flags & (LLMHF_INJECTED | LLMHF_LOWER_IL_INJECTED)) {
++    return CallNextHookEx(nullptr, nCode, wParam, lParam);
++  }
++
++  // If the pointer moves too far while we are waiting for the hold time, the user is
++  // dragging. Replay the swallowed press and let everything pass from now on.
++  if (wParam == WM_MOUSEMOVE) {
++    if (gPhase == Phase::ePending) {
++      int tolerance;
++      {
++        std::lock_guard<std::mutex> lock(gConfigMutex);
++        tolerance = gMoveTolerance;
++      }
++
++      double dx = static_cast<double>(ms->pt.x - gDownPos.x);
++      double dy = static_cast<double>(ms->pt.y - gDownPos.y);
++
++      if (std::sqrt(dx * dx + dy * dy) > tolerance) {
++        cancelTimer();
++        gPhase = Phase::ePassthrough;
++        injectButton(gActiveButton, true);
++      }
++    }
++
++    return CallNextHookEx(nullptr, nCode, wParam, lParam);
++  }
++
++  bool down = false;
++  int  button = classify(wParam, ms, down);
++
++  if (button < 0) {
++    return CallNextHookEx(nullptr, nCode, wParam, lParam);
++  }
++
++  if (down) {
++    // A new press of the active button while we think it is still down means we missed a
++    // release (e.g. on the secure desktop). Start over.
++    if (button == gActiveButton && gPhase != Phase::eIdle) {
++      cancelTimer();
++      gPhase = Phase::eIdle;
++      gActiveButton = -1;
++    }
++
++    bool enabled;
++    unsigned holdTime;
++    {
++      std::lock_guard<std::mutex> lock(gConfigMutex);
++      enabled  = gEnabled[button];
++      holdTime = gHoldTimeMs;
++    }
++
++    if (enabled && gPhase == Phase::eIdle) {
++      gPhase        = Phase::ePending;
++      gActiveButton = button;
++      gDownPos      = ms->pt;
++      gTimerId      = SetTimer(nullptr, 0, holdTime, onHoldTimer);
++
++      // Swallow the press. It will be replayed if this turns out to be a normal click.
++      return 1;
++    }
++
++    return CallNextHookEx(nullptr, nCode, wParam, lParam);
++  }
++
++  // Button release. We always handle the release of the active button, even if the
++  // trigger has been disabled in the meantime.
++  if (button == gActiveButton) {
++    switch (gPhase) {
++    case Phase::ePending:
++      // A short click: replay press and release so that the application sees a normal
++      // click. Context menus open on release anyway, so this feels identical.
++      cancelTimer();
++      gPhase        = Phase::eIdle;
++      gActiveButton = -1;
++      injectButton(button, true);
++      injectButton(button, false);
++      return 1;
++
++    case Phase::eHolding:
++      gPhase        = Phase::eIdle;
++      gActiveButton = -1;
++      emit("release", button);
++      return 1;
++
++    case Phase::ePassthrough:
++      gPhase        = Phase::eIdle;
++      gActiveButton = -1;
++      break;
++
++    default:
++      break;
++    }
++  }
++
++  return CallNextHookEx(nullptr, nCode, wParam, lParam);
++}
++
++void hookThreadMain(std::promise<bool> started) {
++  gHook = SetWindowsHookExW(WH_MOUSE_LL, lowLevelMouseProc, GetModuleHandleW(nullptr), 0);
++
++  if (gHook == nullptr) {
++    started.set_value(false);
++    return;
++  }
++
++  gPhase        = Phase::eIdle;
++  gActiveButton = -1;
++  gTimerId      = 0;
++
++  // Force creation of the thread's message queue before we tell the caller that we are
++  // ready to receive WM_QUIT.
++  MSG msg;
++  PeekMessageW(&msg, nullptr, WM_USER, WM_USER, PM_NOREMOVE);
++  gThreadId = GetCurrentThreadId();
++  started.set_value(true);
++
++  // The message loop is required for the low-level hook and for the timer.
++  while (GetMessageW(&msg, nullptr, 0, 0) > 0) {
++    TranslateMessage(&msg);
++    DispatchMessageW(&msg);
++  }
++
++  cancelTimer();
++  UnhookWindowsHookEx(gHook);
++  gHook = nullptr;
++  gThreadId = 0;
++}
++
++} // namespace
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++int MouseHook::buttonFromName(const std::string& name) {
++  for (int i = 0; i < eButtonCount; ++i) {
++    if (name == kButtonNames[i]) {
++      return i;
++    }
++  }
++  return -1;
++}
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++void MouseHook::start(Napi::Env env, Napi::Function callback) {
++  if (gRunning) {
++    return;
++  }
++
++  gCallback = Napi::ThreadSafeFunction::New(env, callback, "KandoMouseHook", 0, 1);
++
++  // The callback should not keep the process alive on its own.
++  gCallback.Unref(env);
++
++  std::promise<bool> started;
++  std::future<bool>  startedFuture = started.get_future();
++  gThread = std::thread(hookThreadMain, std::move(started));
++
++  if (!startedFuture.get()) {
++    gThread.join();
++    gCallback.Release();
++    gCallback = Napi::ThreadSafeFunction();
++    Napi::Error::New(env, "Failed to install the low-level mouse hook.")
++        .ThrowAsJavaScriptException();
++    return;
++  }
++
++  gRunning = true;
++}
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++void MouseHook::stop() {
++  if (!gRunning) {
++    return;
++  }
++
++  PostThreadMessageW(gThreadId, WM_QUIT, 0, 0);
++  gThread.join();
++
++  gCallback.Release();
++  gCallback = Napi::ThreadSafeFunction();
++  gRunning  = false;
++}
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++void MouseHook::setTriggers(
++    std::array<bool, eButtonCount> enabled, unsigned holdTimeMs, int moveTolerancePx) {
++  std::lock_guard<std::mutex> lock(gConfigMutex);
++  gEnabled       = enabled;
++  gHoldTimeMs    = holdTimeMs;
++  gMoveTolerance = moveTolerancePx;
++}
+diff -ruN a/src/main/backends/windows/native/MouseHook.hpp b/src/main/backends/windows/native/MouseHook.hpp
+--- a/src/main/backends/windows/native/MouseHook.hpp	1970-01-01 00:00:00.000000000 +0000
++++ b/src/main/backends/windows/native/MouseHook.hpp	2026-11-11 05:04:09.984815726 +0000
+@@ -0,0 +1,63 @@
++//////////////////////////////////////////////////////////////////////////////////////////
++//   _  _ ____ _  _ ___  ____                                                           //
++//   |_/  |__| |\ | |  \ |  |    This file belongs to Kando, the cross-platform         //
++//   | \_ |  | | \| |__/ |__|    pie menu. Read more on github.com/kando-menu/kando     //
++//                                                                                      //
++//////////////////////////////////////////////////////////////////////////////////////////
++
++// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
++// SPDX-License-Identifier: MIT
++
++#ifndef MOUSE_HOOK_HPP
++#define MOUSE_HOOK_HPP
++
++#include <napi.h>
++
++#include <windows.h>
++
++#include <array>
++#include <mutex>
++#include <string>
++#include <thread>
++
++/**
++ * This class implements "mouse-hold triggers": A global low-level mouse hook watches
++ * the configured mouse buttons. If such a button is held down for a certain time without
++ * moving the pointer much, a 'press' event is sent to JavaScript. When the button is
++ * released afterwards, a 'release' event is sent.
++ *
++ * While the button is held, the original button events are swallowed so that the
++ * application below the pointer does not see them. If the button is released before the
++ * hold time is over (or if the pointer moves too much), the swallowed events are replayed
++ * so that normal clicks and drags still work everywhere.
++ *
++ * All timing is done on the hook thread because the decision whether an event should be
++ * swallowed has to be made synchronously.
++ */
++class MouseHook {
++ public:
++  /** The buttons which can be used as triggers. The order must match kButtonNames. */
++  enum Button { eRight = 0, eMiddle, eX1, eX2, eButtonCount };
++
++  /** Starts the hook thread. Does nothing if it is already running. */
++  static void start(Napi::Env env, Napi::Function callback);
++
++  /** Stops the hook thread and releases the JavaScript callback. */
++  static void stop();
++
++  /**
++   * Sets the buttons which are monitored.
++   *
++   * @param enabled          For each button, whether it acts as a trigger.
++   * @param holdTimeMs       How long a button has to be held before the menu opens.
++   * @param moveTolerancePx  If the pointer moves further than this while waiting for the
++   *                         hold time, the press is treated as a normal drag.
++   */
++  static void setTriggers(
++      std::array<bool, eButtonCount> enabled, unsigned holdTimeMs, int moveTolerancePx);
++
++  /** Converts 'Right', 'Middle', 'X1', or 'X2' to a button. Returns -1 if unknown. */
++  static int buttonFromName(const std::string& name);
++};
++
++#endif // MOUSE_HOOK_HPP
+diff -ruN a/src/main/backends/windows/native/Native.cpp b/src/main/backends/windows/native/Native.cpp
+--- a/src/main/backends/windows/native/Native.cpp	2026-11-09 19:24:19.000000000 +0000
++++ b/src/main/backends/windows/native/Native.cpp	2026-11-11 05:04:42.488880144 +0000
+@@ -10,6 +10,8 @@
+ 
+ #include "Native.hpp"
+ 
++#include "MouseHook.hpp"
++
+ #define STB_IMAGE_WRITE_IMPLEMENTATION
+ #include "stb_image_write.h"
+ 
+@@ -234,6 +236,9 @@
+           InstanceMethod("focusWindow", &Native::focusWindow),
+           InstanceMethod("fixAcrylicEffect", &Native::fixAcrylicEffect),
+           InstanceMethod("listInstalledApplications", &Native::listInstalledApplications),
++          InstanceMethod("startMouseHook", &Native::startMouseHook),
++          InstanceMethod("stopMouseHook", &Native::stopMouseHook),
++          InstanceMethod("setMouseTriggers", &Native::setMouseTriggers),
+       });
+ }
+ 
+@@ -471,3 +476,53 @@
+ NODE_API_ADDON(Native)
+ 
+ //////////////////////////////////////////////////////////////////////////////////////////
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++void Native::startMouseHook(const Napi::CallbackInfo& info) {
++  Napi::Env env = info.Env();
++  if (info.Length() < 1 || !info[0].IsFunction()) {
++    Napi::TypeError::New(env, "Function expected").ThrowAsJavaScriptException();
++    return;
++  }
++
++  MouseHook::start(env, info[0].As<Napi::Function>());
++}
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++void Native::stopMouseHook(const Napi::CallbackInfo& info) {
++  MouseHook::stop();
++}
++
++//////////////////////////////////////////////////////////////////////////////////////////
++
++void Native::setMouseTriggers(const Napi::CallbackInfo& info) {
++  Napi::Env env = info.Env();
++  if (info.Length() < 3 || !info[0].IsArray() || !info[1].IsNumber() ||
++      !info[2].IsNumber()) {
++    Napi::TypeError::New(env, "Array, number, and number expected")
++        .ThrowAsJavaScriptException();
++    return;
++  }
++
++  std::array<bool, MouseHook::eButtonCount> enabled{};
++
++  Napi::Array names = info[0].As<Napi::Array>();
++  for (uint32_t i = 0; i < names.Length(); ++i) {
++    Napi::Value name = names.Get(i);
++    if (!name.IsString()) {
++      continue;
++    }
++
++    int button = MouseHook::buttonFromName(name.As<Napi::String>().Utf8Value());
++    if (button >= 0) {
++      enabled[button] = true;
++    }
++  }
++
++  unsigned holdTime  = info[1].As<Napi::Number>().Uint32Value();
++  int      tolerance = info[2].As<Napi::Number>().Int32Value();
++
++  MouseHook::setTriggers(enabled, holdTime, tolerance);
++}
+diff -ruN a/src/main/backends/windows/native/Native.hpp b/src/main/backends/windows/native/Native.hpp
+--- a/src/main/backends/windows/native/Native.hpp	2026-11-09 19:24:19.000000000 +0000
++++ b/src/main/backends/windows/native/Native.hpp	2026-11-11 05:04:42.488614251 +0000
+@@ -89,6 +89,28 @@
+    * contain no arguments.
+    */
+   Napi::Value listInstalledApplications(const Napi::CallbackInfo& info);
++
++  /**
++   * Installs a global low-level mouse hook which is used for mouse-hold triggers. The
++   * given callback is called with ('press' | 'release', buttonName) whenever a
++   * configured trigger button was held long enough or released afterwards.
++   *
++   * @param info The arguments passed to the startMouseHook function. It should contain
++   *             a callback function.
++   */
++  void startMouseHook(const Napi::CallbackInfo& info);
++
++  /** Removes the global mouse hook again. */
++  void stopMouseHook(const Napi::CallbackInfo& info);
++
++  /**
++   * Configures which mouse buttons act as triggers.
++   *
++   * @param info The arguments passed to the setMouseTriggers function. It should contain
++   *             an array of button names ('Right', 'Middle', 'X1', 'X2'), the hold time
++   *             in milliseconds, and the movement tolerance in pixels.
++   */
++  void setMouseTriggers(const Napi::CallbackInfo& info);
+ };
+ 
+ #endif // NATIVE_HPP
+\ No newline at end of file
+diff -ruN a/src/main/backends/windows/native/index.ts b/src/main/backends/windows/native/index.ts
+--- a/src/main/backends/windows/native/index.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/main/backends/windows/native/index.ts	2026-11-11 05:04:53.426584474 +0000
+@@ -64,6 +64,29 @@
+     name: string;
+     base64Icon: string;
+   }[];
++
++  /**
++   * This installs a global low-level mouse hook which is used for mouse-hold triggers.
++   * Configure the monitored buttons with setMouseTriggers().
++   *
++   * @param callback Called with 'press' when a trigger button was held long enough, and
++   *   with 'release' when it is released afterwards. The second argument is the button
++   *   name: 'Right', 'Middle', 'X1', or 'X2'.
++   */
++  startMouseHook(callback: (event: 'press' | 'release', button: string) => void): void;
++
++  /** This removes the global mouse hook again. */
++  stopMouseHook(): void;
++
++  /**
++   * Configures which mouse buttons act as mouse-hold triggers.
++   *
++   * @param buttons The buttons to monitor: any of 'Right', 'Middle', 'X1', 'X2'.
++   * @param holdTimeMs How long a button has to be held before 'press' is reported.
++   * @param moveTolerancePx If the pointer moves further than this while waiting, the
++   *   press is passed on to the application as a normal drag.
++   */
++  setMouseTriggers(buttons: string[], holdTimeMs: number, moveTolerancePx: number): void;
+ };
+ 
+ const native: Native = require('./../../../../../build/Release/NativeWin32.node');
+diff -ruN a/src/main/menu-window.ts b/src/main/menu-window.ts
+--- a/src/main/menu-window.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/main/menu-window.ts	2026-11-11 05:05:21.185209787 +0000
+@@ -354,6 +354,7 @@
+         },
+         anchoredMode: this.lastMenu.anchored,
+         hoverMode: this.lastMenu.hoverMode,
++        mouseTriggerHeld: this.kando.isMouseTriggerHeld(),
+         systemIconsChanged,
+       },
+       {
+diff -ruN a/src/menu-renderer/index.ts b/src/menu-renderer/index.ts
+--- a/src/menu-renderer/index.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/menu-renderer/index.ts	2026-11-11 05:05:21.185960342 +0000
+@@ -119,12 +119,34 @@
+   menu = new Menu(document.getElementById('kando-menu'), menuTheme, centerText, settings);
+ 
+   // Show the menu when the main process requests it.
++  // If the button of a mouse-hold trigger is released while the menu is still being set
++  // up, we remember this and apply it as soon as the menu is shown.
++  let showingMenu = false;
++  let triggerReleasedWhileShowing = false;
++
+   window.menuAPI.onShowMenu(async (root, menuOptions) => {
++    showingMenu = true;
++    triggerReleasedWhileShowing = false;
++
+     if (menuOptions.systemIconsChanged) {
+       await IconThemeRegistry.getInstance().reloadSystemIcons();
+     }
+     menu.show(root, menuOptions);
+     settingsButton.show();
++
++    showingMenu = false;
++    if (triggerReleasedWhileShowing) {
++      menu.onMouseTriggerReleased();
++    }
++  });
++
++  // The button of a mouse-hold trigger was released: Select the item below the pointer.
++  window.menuAPI.onMouseTriggerReleased(() => {
++    if (showingMenu) {
++      triggerReleasedWhileShowing = true;
++    } else {
++      menu.onMouseTriggerReleased();
++    }
+   });
+ 
+   // Tell the menu about interactions triggered by the host process. This includes closing
+diff -ruN a/src/menu-renderer/input-methods/pointer-input.ts b/src/menu-renderer/input-methods/pointer-input.ts
+--- a/src/menu-renderer/input-methods/pointer-input.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/menu-renderer/input-methods/pointer-input.ts	2026-11-11 05:05:32.635208052 +0000
+@@ -72,6 +72,13 @@
+    */
+   private deferredTurboMode = false;
+ 
++  /**
++   * If set to true, the menu was opened by holding down a mouse button (a mouse-hold
++   * trigger) and this button is still pressed. This behaves like a pressed key in turbo
++   * mode: Moving the pointer enters turbo mode and releasing the button selects the item.
++   */
++  private mouseTriggerHeld = false;
++
+   /** The position where the mouse was when the user pressed a mouse button the last time. */
+   private clickPosition: Vec2 = { x: 0, y: 0 };
+ 
+@@ -131,10 +138,11 @@
+    * We simply ignore these events. This code is currently used on all platforms but I
+    * think it's not an issue.
+    */
+-  public onShowMenu(deferTurboMode: boolean) {
++  public onShowMenu(deferTurboMode: boolean, mouseTriggerHeld = false) {
+     this.ignoreMotionEvents = 2;
+     this.buttonState = ButtonState.eReleased;
+     this.deferredTurboMode = deferTurboMode;
++    this.mouseTriggerHeld = mouseTriggerHeld;
+   }
+ 
+   /*
+@@ -187,6 +195,7 @@
+     if (canEnterTurboMode) {
+       if (
+         this.enableHoverMode ||
++        this.mouseTriggerHeld ||
+         event.ctrlKey ||
+         event.metaKey ||
+         event.shiftKey ||
+@@ -309,6 +318,12 @@
+       return;
+     }
+ 
++    // If the menu was opened with a mouse-hold trigger, only releasing the mouse button
++    // may select an item.
++    if (this.mouseTriggerHeld) {
++      return;
++    }
++
+     // On some (all?) Linux environments, event.metaKey is not false even if the key has
+     // been released with this event. Therefore, we explicitly check if the key was
+     // released: https://github.com/kando-menu/kando/issues/788
+@@ -319,37 +334,62 @@
+       event.altKey;
+ 
+     if (!stillAnyModifierPressed) {
+-      this.deferredTurboMode = false;
++      this.releaseTrigger();
++    }
++  }
+ 
+-      // Only if triggerCenterClickOnKeyRelease is enabled, we trigger the center-click-
+-      // workflow when a key is released while hovering over the center of a menu. Else,
+-      // we do not trigger selections on the center item in turbo mode.
+-      let triggerSelection;
+-
+-      if (this.triggerCenterClickOnKeyRelease) {
+-        triggerSelection = true;
+-      } else {
+-        triggerSelection =
+-          this.buttonState === ButtonState.eDragged &&
+-          math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
+-      }
++  /**
++   * This method should be called when the mouse button which opened the menu (a
++   * mouse-hold trigger) has been released. It behaves like releasing the key of a
++   * shortcut in turbo mode.
++   */
++  public onMouseTriggerReleased() {
++    if (!this.mouseTriggerHeld) {
++      return;
++    }
+ 
+-      if (triggerSelection) {
+-        this.gestureDetector.reset();
+-        this.selectCallback(
+-          this.pointerPosition,
+-          SelectionType.eActiveItem,
+-          SelectionSource.eGesture
+-        );
+-      }
++    this.mouseTriggerHeld = false;
+ 
+-      this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);
++    if (this.enableTurboMode) {
++      this.releaseTrigger();
+     }
+   }
+ 
+   // Private interface -------------------------------------------------------------------
+ 
+   /**
++   * This is called when the key or mouse button which was used to open the menu has been
++   * released. In turbo mode, this selects the currently hovered item.
++   */
++  private releaseTrigger() {
++    this.deferredTurboMode = false;
++
++    // Only if triggerCenterClickOnKeyRelease is enabled, we trigger the center-click-
++    // workflow when a key is released while hovering over the center of a menu. Else,
++    // we do not trigger selections on the center item in turbo mode.
++    let triggerSelection;
++
++    if (this.triggerCenterClickOnKeyRelease) {
++      triggerSelection = true;
++    } else {
++      triggerSelection =
++        this.buttonState === ButtonState.eDragged &&
++        math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
++    }
++
++    if (triggerSelection) {
++      this.gestureDetector.reset();
++      this.selectCallback(
++        this.pointerPosition,
++        SelectionType.eActiveItem,
++        SelectionSource.eGesture
++      );
++    }
++
++    this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);
++  }
++
++  /**
+    * Store the absolute mouse position, as well as the current center of the menu, and the
+    * current button state. If either of these values changed, a new state will be
+    * emitted.
+diff -ruN a/src/menu-renderer/menu-window-api.ts b/src/menu-renderer/menu-window-api.ts
+--- a/src/menu-renderer/menu-window-api.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/menu-renderer/menu-window-api.ts	2026-11-11 05:05:21.185649566 +0000
+@@ -54,6 +54,16 @@
+   },
+ 
+   /**
++   * This will be triggered by the host process when the mouse button which opened the
++   * menu (a mouse-hold trigger) has been released.
++   *
++   * @param callback This callback will be called when the button has been released.
++   */
++  onMouseTriggerReleased: (func: () => void) => {
++    ipcRenderer.on('menu-window.mouse-trigger-released', () => func());
++  },
++
++  /**
+    * The host can request the renderer process to initiate several menu interactions, such
+    * as closing the menu or closing the current submenu. The renderer process will act
+    * accordingly and call the finalizeInteraction callback afterwards.
+diff -ruN a/src/menu-renderer/menu.ts b/src/menu-renderer/menu.ts
+--- a/src/menu-renderer/menu.ts	2026-11-09 19:24:19.000000000 +0000
++++ b/src/menu-renderer/menu.ts	2026-11-11 05:05:21.186382819 +0000
+@@ -163,6 +163,15 @@
+   }
+ 
+   /**
++   * This is called when the mouse button which opened the menu (a mouse-hold trigger) has
++   * been released. If the pointer is over an item, it will be selected, just like when a
++   * key is released in turbo mode.
++   */
++  public onMouseTriggerReleased() {
++    this.pointerInput.onMouseTriggerReleased();
++  }
++
++  /**
+    * This method is called when the menu is shown. It will create the DOM tree for the
+    * given root item and all its children. It will also set up the angles and positions of
+    * all items and show the menu.
+@@ -185,7 +194,7 @@
+     // If the pointer is not warped to the center of the menu, we should not enter
+     // turbo-mode right away.
+     const deferTurboMode = !this.settings.warpMouse && showMenuOptions.useFixedPosition;
+-    this.pointerInput.onShowMenu(deferTurboMode);
++    this.pointerInput.onShowMenu(deferTurboMode, showMenuOptions.mouseTriggerHeld);
+ 
+     // In anchored mode, we have to disable turbo and marking mode.
+     this.pointerInput.enableMarkingMode =
+diff -ruN a/src/settings-renderer/components/common/ShortcutPicker.tsx b/src/settings-renderer/components/common/ShortcutPicker.tsx
+--- a/src/settings-renderer/components/common/ShortcutPicker.tsx	2026-11-09 19:24:19.000000000 +0000
++++ b/src/settings-renderer/components/common/ShortcutPicker.tsx	2026-11-11 05:06:02.121024182 +0000
+@@ -15,7 +15,7 @@
+ 
+ import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
+ import KeyMapper from '../../../common/key-mapper';
+-import { formatShortcutForDisplay } from '../../../common/shortcut';
++import { formatShortcutForDisplay, isMouseTrigger } from '../../../common/shortcut';
+ import { Button, SettingsRow } from '.';
+ 
+ import * as classes from './ShortcutPicker.module.scss';
+@@ -40,6 +40,13 @@
+   readonly initialValue: string;
+ 
+   /**
++   * If set to true, mouse-hold triggers such as 'MouseRight' are accepted as well. They
++   * can be recorded by pressing a mouse button while recording. Only used in the
++   * 'key-names' mode.
++   */
++  readonly allowMouseTriggers?: boolean;
++
++  /**
+    * Placeholder text to display when the shortcut picker is not bound. Defaults to a
+    * localized "Not bound" string.
+    */
+@@ -120,6 +127,11 @@
+       return true;
+     }
+ 
++    // Mouse-hold triggers are standalone: They cannot be combined with other keys.
++    if (props.mode === 'key-names' && props.allowMouseTriggers && isMouseTrigger(shortcut)) {
++      return true;
++    }
++
+     // Make sure the shortcut does not start or end with a '+'.
+     if (shortcut.startsWith('+') || shortcut.endsWith('+')) {
+       return false;
+@@ -199,6 +211,34 @@
+               }, 0);
+             }
+           }}
++          onContextMenu={(event) => {
++            // The right mouse button can be recorded, so we must not open a context menu.
++            if (recording && props.allowMouseTriggers) {
++              event.preventDefault();
++            }
++          }}
++          onMouseDown={(event) => {
++            if (!recording || !props.allowMouseTriggers || props.mode !== 'key-names') {
++              return;
++            }
++
++            // Button 0 is the left button, which is used to focus the field.
++            const buttons: Record<number, string> = {
++              1: 'MouseMiddle',
++              2: 'MouseRight',
++              3: 'MouseX1',
++              4: 'MouseX2',
++            };
++
++            const trigger = buttons[event.button];
++            if (trigger) {
++              event.preventDefault();
++              event.currentTarget.value = trigger;
++              setRecording(false);
++              setShortcut(trigger);
++              event.currentTarget.blur();
++            }
++          }}
+           onKeyDown={(event) => {
+             if (recording) {
+               const isComplete = impl.recordInput(event);
+@@ -381,6 +421,10 @@
+       ['Mediastop', 'MediaStop'],
+       ['Mediaplaypause', 'MediaPlayPause'],
+       ['Printscreen', 'PrintScreen'],
++      ['Mouseright', 'MouseRight'],
++      ['Mousemiddle', 'MouseMiddle'],
++      ['Mousex1', 'MouseX1'],
++      ['Mousex2', 'MouseX2'],
+     ]);
+ 
+     parts = parts.map((part) => multipleCapitals.get(part) || part);
+diff -ruN a/src/settings-renderer/components/dialogs/GeneralSettingsDialog.tsx b/src/settings-renderer/components/dialogs/GeneralSettingsDialog.tsx
+--- a/src/settings-renderer/components/dialogs/GeneralSettingsDialog.tsx	2026-11-09 19:24:19.000000000 +0000
++++ b/src/settings-renderer/components/dialogs/GeneralSettingsDialog.tsx	2026-11-11 05:06:02.120103215 +0000
+@@ -544,6 +544,19 @@
+             step={10}
+             width={spinbuttonWidth}
+           />
++          {backend.supportsMouseTriggers && (
++            <SettingsSpinbutton
++              info={i18next.t(
++                'settings.general-settings-dialog.mouse-trigger-hold-time-info'
++              )}
++              label={i18next.t('settings.general-settings-dialog.mouse-trigger-hold-time')}
++              max={2000}
++              min={50}
++              settingsKey="mouseTriggerHoldTime"
++              step={50}
++              width={spinbuttonWidth}
++            />
++          )}
+           <SettingsSpinbutton
+             info={i18next.t(
+               'settings.general-settings-dialog.minimum-gesture-length-info'
+diff -ruN a/src/settings-renderer/components/menu-properties/Properties.tsx b/src/settings-renderer/components/menu-properties/Properties.tsx
+--- a/src/settings-renderer/components/menu-properties/Properties.tsx	2026-11-09 19:24:19.000000000 +0000
++++ b/src/settings-renderer/components/menu-properties/Properties.tsx	2026-11-11 05:06:02.120669536 +0000
+@@ -73,7 +73,13 @@
+         <ShortcutPicker
+           isGrowing
+           useModifiers
+-          info={i18next.t('settings.shortcut-info')}
++          allowMouseTriggers={backend.supportsMouseTriggers}
++          info={
++            i18next.t('settings.shortcut-info') +
++            (backend.supportsMouseTriggers
++              ? ' ' + i18next.t('settings.shortcut-info-mouse')
++              : '')
++          }
+           initialValue={menus[selectedMenu].shortcut}
+           label={i18next.t('settings.shortcut-label')}
+           mode="key-names"

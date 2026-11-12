@@ -15,7 +15,7 @@ import classNames from 'classnames/bind';
 
 import { fixKeyCodeCase, isKnownKeyCode } from '../../../common/key-codes';
 import KeyMapper from '../../../common/key-mapper';
-import { formatShortcutForDisplay } from '../../../common/shortcut';
+import { formatShortcutForDisplay, isMouseTrigger } from '../../../common/shortcut';
 import { Button, SettingsRow } from '.';
 
 import * as classes from './ShortcutPicker.module.scss';
@@ -38,6 +38,13 @@ type Props = {
 
   /** Initial shortcut. */
   readonly initialValue: string;
+
+  /**
+   * If set to true, mouse-hold triggers such as 'MouseRight' are accepted as well. They
+   * can be recorded by pressing a mouse button while recording. Only used in the
+   * 'key-names' mode.
+   */
+  readonly allowMouseTriggers?: boolean;
 
   /**
    * Placeholder text to display when the shortcut picker is not bound. Defaults to a
@@ -120,6 +127,15 @@ export default function ShortcutPicker(props: Props) {
       return true;
     }
 
+    // Mouse-hold triggers are standalone: They cannot be combined with other keys.
+    if (
+      props.mode === 'key-names' &&
+      props.allowMouseTriggers &&
+      isMouseTrigger(shortcut)
+    ) {
+      return true;
+    }
+
     // Make sure the shortcut does not start or end with a '+'.
     if (shortcut.startsWith('+') || shortcut.endsWith('+')) {
       return false;
@@ -197,6 +213,33 @@ export default function ShortcutPicker(props: Props) {
               setTimeout(() => {
                 event.target.setSelectionRange(start, end);
               }, 0);
+            }
+          }}
+          onContextMenu={(event) => {
+            // The right mouse button can be recorded, so we must not open a context menu.
+            if (recording && props.allowMouseTriggers) {
+              event.preventDefault();
+            }
+          }}
+          onMouseDown={(event) => {
+            if (!recording || !props.allowMouseTriggers || props.mode !== 'key-names') {
+              return;
+            }
+
+            // Button 0 is the left button, which is used to focus the field.
+            const buttons = new Map<number, string>([
+              [1, 'MouseMiddle'],
+              [2, 'MouseRight'],
+              [3, 'MouseX1'],
+              [4, 'MouseX2'],
+            ]);
+            const trigger = buttons.get(event.button);
+            if (trigger) {
+              event.preventDefault();
+              event.currentTarget.value = trigger;
+              setRecording(false);
+              setShortcut(trigger);
+              event.currentTarget.blur();
             }
           }}
           onKeyDown={(event) => {
@@ -381,6 +424,10 @@ class KeyNameImpl {
       ['Mediastop', 'MediaStop'],
       ['Mediaplaypause', 'MediaPlayPause'],
       ['Printscreen', 'PrintScreen'],
+      ['Mouseright', 'MouseRight'],
+      ['Mousemiddle', 'MouseMiddle'],
+      ['Mousex1', 'MouseX1'],
+      ['Mousex2', 'MouseX2'],
     ]);
 
     parts = parts.map((part) => multipleCapitals.get(part) || part);

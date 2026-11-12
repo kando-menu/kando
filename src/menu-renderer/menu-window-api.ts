@@ -54,6 +54,16 @@ export const MENU_WINDOW_API = {
   },
 
   /**
+   * This will be triggered by the host process when the mouse button which opened the
+   * menu (a mouse-hold trigger) has been released.
+   *
+   * @param callback This callback will be called when the button has been released.
+   */
+  onMouseTriggerReleased: (func: () => void) => {
+    ipcRenderer.on('menu-window.mouse-trigger-released', () => func());
+  },
+
+  /**
    * The host can request the renderer process to initiate several menu interactions, such
    * as closing the menu or closing the current submenu. The renderer process will act
    * accordingly and call the finalizeInteraction callback afterwards.

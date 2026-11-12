@@ -119,12 +119,34 @@ Promise.all([
   menu = new Menu(document.getElementById('kando-menu'), menuTheme, centerText, settings);
 
   // Show the menu when the main process requests it.
+  // If the button of a mouse-hold trigger is released while the menu is still being set
+  // up, we remember this and apply it as soon as the menu is shown.
+  let showingMenu = false;
+  let triggerReleasedWhileShowing = false;
+
   window.menuAPI.onShowMenu(async (root, menuOptions) => {
+    showingMenu = true;
+    triggerReleasedWhileShowing = false;
+
     if (menuOptions.systemIconsChanged) {
       await IconThemeRegistry.getInstance().reloadSystemIcons();
     }
     menu.show(root, menuOptions);
     settingsButton.show();
+
+    showingMenu = false;
+    if (triggerReleasedWhileShowing) {
+      menu.onMouseTriggerReleased();
+    }
+  });
+
+  // The button of a mouse-hold trigger was released: Select the item below the pointer.
+  window.menuAPI.onMouseTriggerReleased(() => {
+    if (showingMenu) {
+      triggerReleasedWhileShowing = true;
+    } else {
+      menu.onMouseTriggerReleased();
+    }
   });
 
   // Tell the menu about interactions triggered by the host process. This includes closing

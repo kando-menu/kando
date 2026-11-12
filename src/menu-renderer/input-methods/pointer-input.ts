@@ -72,6 +72,14 @@ export class PointerInput extends InputMethod {
    */
   private deferredTurboMode = false;
 
+  /**
+   * If set to true, the menu was opened by holding down a mouse button (a mouse-hold
+   * trigger) and this button is still pressed. This behaves like a pressed key in turbo
+   * mode: Moving the pointer enters turbo mode and releasing the button selects the
+   * item.
+   */
+  private mouseTriggerHeld = false;
+
   /** The position where the mouse was when the user pressed a mouse button the last time. */
   private clickPosition: Vec2 = { x: 0, y: 0 };
 
@@ -131,10 +139,11 @@ export class PointerInput extends InputMethod {
    * We simply ignore these events. This code is currently used on all platforms but I
    * think it's not an issue.
    */
-  public onShowMenu(deferTurboMode: boolean) {
+  public onShowMenu(deferTurboMode: boolean, mouseTriggerHeld = false) {
     this.ignoreMotionEvents = 2;
     this.buttonState = ButtonState.eReleased;
     this.deferredTurboMode = deferTurboMode;
+    this.mouseTriggerHeld = mouseTriggerHeld;
   }
 
   /*
@@ -187,6 +196,7 @@ export class PointerInput extends InputMethod {
     if (canEnterTurboMode) {
       if (
         this.enableHoverMode ||
+        this.mouseTriggerHeld ||
         event.ctrlKey ||
         event.metaKey ||
         event.shiftKey ||
@@ -309,6 +319,12 @@ export class PointerInput extends InputMethod {
       return;
     }
 
+    // If the menu was opened with a mouse-hold trigger, only releasing the mouse button
+    // may select an item.
+    if (this.mouseTriggerHeld) {
+      return;
+    }
+
     // On some (all?) Linux environments, event.metaKey is not false even if the key has
     // been released with this event. Therefore, we explicitly check if the key was
     // released: https://github.com/kando-menu/kando/issues/788
@@ -319,35 +335,60 @@ export class PointerInput extends InputMethod {
       event.altKey;
 
     if (!stillAnyModifierPressed) {
-      this.deferredTurboMode = false;
+      this.releaseTrigger();
+    }
+  }
 
-      // Only if triggerCenterClickOnKeyRelease is enabled, we trigger the center-click-
-      // workflow when a key is released while hovering over the center of a menu. Else,
-      // we do not trigger selections on the center item in turbo mode.
-      let triggerSelection;
+  /**
+   * This method should be called when the mouse button which opened the menu (a
+   * mouse-hold trigger) has been released. It behaves like releasing the key of a
+   * shortcut in turbo mode.
+   */
+  public onMouseTriggerReleased() {
+    if (!this.mouseTriggerHeld) {
+      return;
+    }
 
-      if (this.triggerCenterClickOnKeyRelease) {
-        triggerSelection = true;
-      } else {
-        triggerSelection =
-          this.buttonState === ButtonState.eDragged &&
-          math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
-      }
+    this.mouseTriggerHeld = false;
 
-      if (triggerSelection) {
-        this.gestureDetector.reset();
-        this.selectCallback(
-          this.pointerPosition,
-          SelectionType.eActiveItem,
-          SelectionSource.eGesture
-        );
-      }
-
-      this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);
+    if (this.enableTurboMode) {
+      this.releaseTrigger();
     }
   }
 
   // Private interface -------------------------------------------------------------------
+
+  /**
+   * This is called when the key or mouse button which was used to open the menu has been
+   * released. In turbo mode, this selects the currently hovered item.
+   */
+  private releaseTrigger() {
+    this.deferredTurboMode = false;
+
+    // Only if triggerCenterClickOnKeyRelease is enabled, we trigger the center-click-
+    // workflow when a key is released while hovering over the center of a menu. Else,
+    // we do not trigger selections on the center item in turbo mode.
+    let triggerSelection;
+
+    if (this.triggerCenterClickOnKeyRelease) {
+      triggerSelection = true;
+    } else {
+      triggerSelection =
+        this.buttonState === ButtonState.eDragged &&
+        math.getDistance(this.pointerPosition, this.centerPosition) > this.centerRadius;
+    }
+
+    if (triggerSelection) {
+      this.gestureDetector.reset();
+      this.selectCallback(
+        this.pointerPosition,
+        SelectionType.eActiveItem,
+        SelectionSource.eGesture
+      );
+    }
+
+    this.update(this.pointerPosition, this.centerPosition, ButtonState.eReleased);
+  }
 
   /**
    * Store the absolute mouse position, as well as the current center of the menu, and the
