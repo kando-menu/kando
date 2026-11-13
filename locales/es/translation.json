@@ -231,7 +231,10 @@
             "no-accent-colors": "Este tema no admite colores de énfasis.",
             "fade-in-time-info": "Tiempo que tarda el menú en aparecer gradualmente. El valor predeterminado es 75 ms.",
             "fade-in-time": "Duración de la aparición gradual",
-            "fade-out-time-info": "Tiempo que tarda el menú en desaparecer gradualmente. El valor predeterminado es 100 ms."
+            "fade-out-time-info": "Tiempo que tarda el menú en desaparecer gradualmente. El valor predeterminado es 100 ms.",
+            "fade-out-time": "Duración de la desaparición gradual",
+            "menu-scale-info": "Usa esta opción para aumentar o reducir el tamaño de los menús. El valor predeterminado es 1.0.",
+            "selection-wedges-info": "Si está habilitada y el tema seleccionado lo admite, se resaltará el área seleccionable de los elementos del menú."
         },
         "not-bound": "No asignado",
         "shortcut-id-label": "Id. de atajo",
