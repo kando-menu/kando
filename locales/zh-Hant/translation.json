@@ -160,7 +160,13 @@
             "re-open-menu": "重新開啟選單",
             "sound-theme-load-failed-warning": "無法載入以下音效主題，很可能是由於版本不相容：{{themes}}",
             "hide-on-focus-out-info": "當焦點切換至其他應用程式時，選單將會隱藏。",
-            "hide-on-focus-out": "失去焦點時隱藏選單"
+            "hide-on-focus-out": "失去焦點時隱藏選單",
+            "right-mouse-button-behavior": "滑鼠右鍵",
+            "middle-mouse-button-behavior": "滑鼠中鍵",
+            "right-mouse-button-behavior-info": "當選單顯示時，按下滑鼠右鍵的行為。",
+            "middle-mouse-button-behavior-info": "當選單顯示時，按下滑鼠中鍵的行為。",
+            "select-item": "選取項目",
+            "select-parent": "返回上一層"
         },
         "introduction-dialog": {
             "slide1-title": "Kando 為您提供了一種獨特且高效的方式與電腦互動。",
