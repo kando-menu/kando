@@ -180,7 +180,13 @@ export class KandoApp {
 
   /** This is called when the app is started. It initializes the backend and the window. */
   public async init() {
-    this.backend.on('shortcutPressed', (trigger) => {
+    this.backend.on('shortcutPressed', async (trigger) => {
+      // The shortcut for toggling all shortcuts takes priority over the menu shortcuts.
+      if (trigger === this.getToggleShortcutsShortcut()) {
+        await this.toggleShortcutInhibition();
+        return;
+      }
+
       this.showMenu({ trigger });
 
       // We use the opportunity to check for updates. If an update is available, we show
@@ -205,6 +211,14 @@ export class KandoApp {
         await this.bindShortcuts();
       }
       this.updateTrayMenu();
+    });
+
+    // The shortcut for toggling all shortcuts is bound together with the menu shortcuts.
+    // So we need to rebind the shortcuts if it changes.
+    this.generalSettings.onChange('toggleShortcutsShortcut', async () => {
+      if (!this.menuWindow?.isVisible()) {
+        await this.bindShortcuts();
+      }
     });
 
     // Update the tray icon if the tray icon flavor changes.
@@ -1407,25 +1421,16 @@ export class KandoApp {
       click: () => this.showSettings(),
     });
 
-    // Add an entry to pause or unpause the shortcuts.
-    if (this.inhibitAllShortcutsID > 0) {
-      template.push({
-        label: i18next.t('main.un-inhibit-shortcuts'),
-        click: async () => {
-          await this.backend.releaseInhibition(this.inhibitAllShortcutsID);
-          this.inhibitAllShortcutsID = 0;
-          this.updateTrayMenu();
-        },
-      });
-    } else {
-      template.push({
-        label: i18next.t('main.inhibit-shortcuts'),
-        click: async () => {
-          this.inhibitAllShortcutsID = await this.backend.inhibitAllShortcuts();
-          this.updateTrayMenu();
-        },
-      });
-    }
+    // Add an entry to pause or unpause the shortcuts. The same can be done with the
+    // shortcut for toggling all shortcuts, so both share the same logic.
+    template.push({
+      label: i18next.t(
+        this.inhibitAllShortcutsID > 0
+          ? 'main.un-inhibit-shortcuts'
+          : 'main.inhibit-shortcuts'
+      ),
+      click: () => this.toggleShortcutInhibition(),
+    });
 
     template.push({ type: 'separator' });
 
@@ -1460,11 +1465,19 @@ export class KandoApp {
       return shortcut;
     });
 
+    // The shortcut for toggling all shortcuts is bound as well. It must not be affected
+    // when all shortcuts are inhibited, else it could not be used to re-enable them.
+    const toggleShortcut = this.getToggleShortcutsShortcut();
+    shortcuts.push(toggleShortcut);
+
     // Make them unique.
     shortcuts = Array.from(new Set(shortcuts)).filter((trigger) => trigger !== '');
 
     // Finally, we bind the shortcuts.
     try {
+      await this.backend.setUninhibitableShortcuts(
+        toggleShortcut ? [toggleShortcut] : []
+      );
       await this.backend.bindShortcuts(shortcuts);
     } catch (error) {
       Notification.show({
@@ -1475,6 +1488,36 @@ export class KandoApp {
     }
 
     this.bindingShortcuts = false;
+  }
+
+  /**
+   * Returns the shortcut which toggles the inhibition of all other shortcuts. This is
+   * only supported on backends which can bind shortcuts directly. On all other backends,
+   * or if no shortcut is set, an empty string is returned.
+   *
+   * @returns The shortcut or an empty string.
+   */
+  private getToggleShortcutsShortcut() {
+    return this.backend.getBackendInfo().supportsShortcuts
+      ? this.generalSettings.get('toggleShortcutsShortcut')
+      : '';
+  }
+
+  /**
+   * Temporarily disables all shortcuts or re-enables them. This is called by the
+   * corresponding tray menu entry and by the shortcut for toggling all shortcuts. The
+   * tray menu is updated so that the label of its entry always reflects the current
+   * state.
+   */
+  private async toggleShortcutInhibition() {
+    if (this.inhibitAllShortcutsID > 0) {
+      await this.backend.releaseInhibition(this.inhibitAllShortcutsID);
+      this.inhibitAllShortcutsID = 0;
+    } else {
+      this.inhibitAllShortcutsID = await this.backend.inhibitAllShortcuts();
+    }
+
+    this.updateTrayMenu();
   }
 
   /**

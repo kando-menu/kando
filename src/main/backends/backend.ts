@@ -50,6 +50,13 @@ export abstract class Backend extends EventEmitter {
   private nextInhibitionID: number = 1;
 
   /**
+   * A list of bound shortcuts which are not affected by inhibitAllShortcuts(). This is
+   * used for the shortcut which toggles the inhibition of all other shortcuts: It must
+   * stay bound, else it would not be possible to re-enable the shortcuts with it.
+   */
+  private uninhibitableShortcuts: string[] = [];
+
+  /**
    * Each backend must provide some basic information about the backend. See IBackendInfo
    * for more information. This method may be called before the backend is initialized.
    *
@@ -289,6 +296,36 @@ export abstract class Backend extends EventEmitter {
   }
 
   /**
+   * Sets the shortcuts which should not be affected by inhibitAllShortcuts(). They still
+   * have to be bound using bindShortcuts() and they can still be inhibited individually
+   * using inhibitShortcut().
+   *
+   * @param shortcuts The shortcuts or shortcut IDs which should stay bound when all
+   *   shortcuts are inhibited.
+   * @returns A promise which resolves when the effectively bound shortcuts have been
+   *   updated.
+   */
+  public async setUninhibitableShortcuts(shortcuts: string[]): Promise<void> {
+    if (lodash.isEqual(shortcuts, this.uninhibitableShortcuts)) {
+      return;
+    }
+
+    const previousEffectiveShortcuts = this.getEffectiveShortcuts();
+    this.uninhibitableShortcuts = shortcuts;
+    const currentEffectiveShortcuts = this.getEffectiveShortcuts();
+
+    // This only changes something if all shortcuts are currently inhibited.
+    if (!lodash.isEqual(previousEffectiveShortcuts, currentEffectiveShortcuts)) {
+      await this.onShortcutsChanged(
+        this.boundShortcuts,
+        this.boundShortcuts,
+        currentEffectiveShortcuts,
+        previousEffectiveShortcuts
+      );
+    }
+  }
+
+  /**
    * Releases a previously created inhibition.
    *
    * @param inhibitionID The inhibition ID that was returned by inhibitShortcut() or
@@ -393,13 +430,16 @@ export abstract class Backend extends EventEmitter {
   protected isShortcutInhibited(shortcut: string): boolean {
     const inhibitedShortcuts = Array.from(this.inhibitedShortcuts.values());
 
-    // If all shortcuts are inhibited, return true.
-    if (inhibitedShortcuts.includes('*')) {
+    // If the shortcut is inhibited individually, return true.
+    if (inhibitedShortcuts.includes(shortcut)) {
       return true;
     }
 
-    // Otherwise, check if the given shortcut is in the list of inhibited shortcuts.
-    return inhibitedShortcuts.includes(shortcut);
+    // If all shortcuts are inhibited, return true unless the shortcut is exempt from
+    // this.
+    return (
+      inhibitedShortcuts.includes('*') && !this.uninhibitableShortcuts.includes(shortcut)
+    );
   }
 
   /**
@@ -412,12 +452,14 @@ export abstract class Backend extends EventEmitter {
   private getEffectiveShortcuts(): string[] {
     const inhibitedShortcuts = Array.from(this.inhibitedShortcuts.values());
 
-    // If all shortcuts are inhibited, return an empty list.
-    if (inhibitedShortcuts.includes('*')) {
-      return [];
-    }
+    // If all shortcuts are inhibited, only the uninhibitable shortcuts stay bound.
+    const allInhibited = inhibitedShortcuts.includes('*');
 
-    // Otherwise, return the bound shortcuts minus the inhibited ones.
-    return this.boundShortcuts.filter((s) => !inhibitedShortcuts.includes(s));
+    // Return the bound shortcuts minus the inhibited ones.
+    return this.boundShortcuts.filter(
+      (s) =>
+        !inhibitedShortcuts.includes(s) &&
+        (!allInhibited || this.uninhibitableShortcuts.includes(s))
+    );
   }
 }
