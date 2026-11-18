@@ -1,0 +1,936 @@
+{
+  "root": {
+    "type": "root",
+    "name": "example-menu.cosmic.name",
+    "icon": "orbit",
+    "iconTheme": "material-symbols-rounded",
+    "activateWorkflow": {
+      "quickSelectKey": "Backspace",
+      "actions": [
+        {
+          "type": "close-menu"
+        }
+      ]
+    },
+    "children": [
+      {
+        "type": "submenu",
+        "name": "example-menu.cosmic.send-to.submenu",
+        "icon": "outbox",
+        "iconTheme": "material-symbols-rounded",
+        "openWorkflow": {
+          "quickSelectKey": "S",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.send-to.coding",
+            "icon": "code",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "C",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace send \"Coding\"",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.send-to.browsing",
+            "icon": "public",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "B",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace send \"Browsing\"",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.send-to.files",
+            "icon": "folder",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "F",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace send \"Files\"",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.send-to.chat",
+            "icon": "chat",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "H",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace send \"Chat\"",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.send-to.media",
+            "icon": "movie",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "M",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace send \"Media\"",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "type": "submenu",
+        "name": "example-menu.cosmic.go-to.submenu",
+        "icon": "workspaces",
+        "iconTheme": "material-symbols-rounded",
+        "openWorkflow": {
+          "quickSelectKey": "G",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.go-to.main",
+            "icon": "home",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "1",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace goto \"1\"",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.go-to.coding",
+            "icon": "code",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "C",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace goto \"Coding\"",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.go-to.browsing",
+            "icon": "public",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "B",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace goto \"Browsing\"",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.go-to.files",
+            "icon": "folder",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "F",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace goto \"Files\"",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.go-to.chat",
+            "icon": "chat",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "H",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace goto \"Chat\"",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.go-to.media",
+            "icon": "movie",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "M",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper workspace goto \"Media\"",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "type": "submenu",
+        "name": "example-menu.cosmic.window.submenu",
+        "icon": "select_window",
+        "iconTheme": "material-symbols-rounded",
+        "openWorkflow": {
+          "quickSelectKey": "W",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.window.toggle-maximize",
+            "icon": "open_in_full",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "M",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper state @focused \"\" toggle-maximize",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.window.minimize",
+            "icon": "minimize",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "N",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper state @focused \"\" minimize",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.window.fullscreen",
+            "icon": "fullscreen",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "F",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper state @focused \"\" fullscreen",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.window.sticky",
+            "icon": "push_pin",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "P",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper state @focused \"\" toggle-sticky",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.window.close",
+            "icon": "close",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "X",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.15
+                },
+                {
+                  "type": "execute-command",
+                  "command": "kando-cosmic-helper state @focused \"\" close",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "example-menu.cosmic.maximize",
+        "icon": "open_in_full",
+        "iconTheme": "material-symbols-rounded",
+        "selectWorkflow": {
+          "quickSelectKey": "M",
+          "actions": [
+            {
+              "type": "close-menu"
+            },
+            {
+              "type": "delay",
+              "duration": 0.15
+            },
+            {
+              "type": "execute-command",
+              "command": "kando-cosmic-helper state @focused \"\" toggle-maximize",
+              "detached": true,
+              "isolated": false
+            }
+          ]
+        }
+      },
+      {
+        "type": "submenu",
+        "name": "example-menu.cosmic.apps.submenu",
+        "icon": "apps",
+        "iconTheme": "material-symbols-rounded",
+        "openWorkflow": {
+          "quickSelectKey": "A",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.apps.terminal",
+            "icon": "terminal",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "T",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "cosmic-term",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.apps.files",
+            "icon": "folder_open",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "F",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "cosmic-files",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.apps.web-browser",
+            "icon": "globe",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "W",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "x-www-browser",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.apps.email",
+            "icon": "mail",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "E",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "xdg-email",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.apps.settings",
+            "icon": "settings",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "S",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "cosmic-settings",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "type": "submenu",
+        "name": "example-menu.cosmic.capture.submenu",
+        "icon": "content_paste",
+        "iconTheme": "material-symbols-rounded",
+        "openWorkflow": {
+          "quickSelectKey": "P",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.capture.screenshot",
+            "icon": "screenshot_monitor",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "S",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.2
+                },
+                {
+                  "type": "execute-command",
+                  "command": "cosmic-screenshot",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.capture.screenshot-now",
+            "icon": "screenshot",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "N",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "delay",
+                  "duration": 0.2
+                },
+                {
+                  "type": "execute-command",
+                  "command": "cosmic-screenshot --interactive=false -s \"$(xdg-user-dir PICTURES)\"",
+                  "detached": true,
+                  "isolated": false
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.capture.copy",
+            "icon": "content_copy",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "C",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "ControlLeft+KeyC"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.capture.cut",
+            "icon": "content_cut",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "X",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "ControlLeft+KeyX"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.capture.paste",
+            "icon": "content_paste_go",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "V",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "ControlLeft+KeyV"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.capture.paste-plain",
+            "icon": "format_clear",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "T",
+              "actions": [
+                {
+                  "type": "close-menu"
+                },
+                {
+                  "type": "simulate-hotkey",
+                  "hotkey": "ControlLeft+ShiftLeft+KeyV"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "type": "submenu",
+        "name": "example-menu.cosmic.system.submenu",
+        "icon": "power_settings_new",
+        "iconTheme": "material-symbols-rounded",
+        "openWorkflow": {
+          "quickSelectKey": "Y",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.system.lock",
+            "icon": "lock",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "L",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "loginctl lock-session",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.system.suspend",
+            "icon": "bedtime",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "S",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "systemctl suspend",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.system.cosmic-settings",
+            "icon": "tune",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "C",
+              "actions": [
+                {
+                  "type": "execute-command",
+                  "command": "cosmic-settings",
+                  "detached": true,
+                  "isolated": false
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.system.kando-settings",
+            "icon": "settings_applications",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "K",
+              "actions": [
+                {
+                  "type": "open-settings"
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "type": "submenu",
+        "name": "example-menu.cosmic.web-links.submenu",
+        "icon": "public",
+        "iconTheme": "material-symbols-rounded",
+        "openWorkflow": {
+          "quickSelectKey": "L",
+          "actions": []
+        },
+        "activateWorkflow": {
+          "quickSelectKey": "Backspace",
+          "actions": [
+            {
+              "type": "close-submenu"
+            }
+          ]
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.web-links.cosmic",
+            "icon": "system76",
+            "iconTheme": "simple-icons",
+            "selectWorkflow": {
+              "quickSelectKey": "C",
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://system76.com/cosmic"
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.web-links.kando-docs",
+            "icon": "menu_book",
+            "iconTheme": "material-symbols-rounded",
+            "selectWorkflow": {
+              "quickSelectKey": "D",
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://kando.menu"
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.web-links.kando-on-github",
+            "icon": "github",
+            "iconTheme": "simple-icons",
+            "selectWorkflow": {
+              "quickSelectKey": "H",
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://github.com/kando-menu/kando"
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.web-links.kando-on-kofi",
+            "icon": "kofi",
+            "iconTheme": "simple-icons",
+            "selectWorkflow": {
+              "quickSelectKey": "K",
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://ko-fi.com/schneegans"
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          },
+          {
+            "type": "button",
+            "name": "example-menu.cosmic.web-links.kando-on-discord",
+            "icon": "discord",
+            "iconTheme": "simple-icons",
+            "selectWorkflow": {
+              "quickSelectKey": "I",
+              "actions": [
+                {
+                  "type": "open-uri",
+                  "uri": "https://discord.gg/hZwbVSDkhy"
+                },
+                {
+                  "type": "close-menu"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "shortcut": "",
+  "shortcutID": "cosmic-menu",
+  "useFixedPosition": false,
+  "fixedMenuPosition": {
+    "x": 0.5,
+    "y": 0.5
+  }
+}
