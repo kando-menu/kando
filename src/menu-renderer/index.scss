@@ -101,6 +101,14 @@ body {
     }
   }
 
+  // Keep each node on the current selection path above the older branches next to it.
+  // Each transformed menu node creates its own stacking context, so this has to be
+  // applied at every step of the nested path rather than only to the active node.
+  .menu-node.parent > .menu-node.parent,
+  .menu-node.parent > .menu-node.active {
+    z-index: 100;
+  }
+
   // Connectors --------------------------------------------------------------------------
 
   // The connectors between the menu items are drawn as divs with a fixed height. Their
