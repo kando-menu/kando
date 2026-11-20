@@ -63,6 +63,14 @@ describe('general settings migration to V2', () => {
       expect(result.settings.middleMouseButtonBehavior).to.equal('close');
     });
 
+    it('keeps the toggle-shortcuts shortcut if it is already present', () => {
+      const result = loadGeneralSettings({
+        version: '3.0.1',
+        toggleShortcutsShortcut: 'Control+Shift+K',
+      });
+      expect(result.settings.toggleShortcutsShortcut).to.equal('Control+Shift+K');
+    });
+
     it('lets the new property win over the old one', () => {
       const result = loadGeneralSettings({
         version: '3.0.1',

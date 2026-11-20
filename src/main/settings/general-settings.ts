@@ -155,6 +155,9 @@ function migrateToGeneralSettingsV2(
   const middleMouseButtonBehavior = shape.middleMouseButtonBehavior.safeParse(
     raw.middleMouseButtonBehavior
   );
+  const toggleShortcutsShortcut = shape.toggleShortcutsShortcut.safeParse(
+    raw.toggleShortcutsShortcut
+  );
 
   // Parsing with the V2 schema drops the old rmbSelectsParent property.
   return GENERAL_SETTINGS_SCHEMA_V2.parse(
@@ -170,6 +173,10 @@ function migrateToGeneralSettingsV2(
       middleMouseButtonBehavior:
         raw.middleMouseButtonBehavior !== undefined && middleMouseButtonBehavior.success
           ? middleMouseButtonBehavior.data
+          : undefined,
+      toggleShortcutsShortcut:
+        raw.toggleShortcutsShortcut !== undefined && toggleShortcutsShortcut.success
+          ? toggleShortcutsShortcut.data
           : undefined,
     },
     { reportInput: true }
