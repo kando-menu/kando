@@ -109,6 +109,16 @@ body {
     z-index: 100;
   }
 
+  // Fade out older branches: the parents on the selection path and their siblings that
+  // are not part of the path. Opacity is applied only to the visual parts of these nodes
+  // (theme layers and icon container), not to the node itself, as that would also fade
+  // the nested nodes of the active path.
+  .menu-node.parent > :not(.menu-node):not(.connector),
+  .menu-node.parent > .menu-node.grandchild > :not(.menu-node):not(.connector) {
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+  }
+
   // Connectors --------------------------------------------------------------------------
 
   // The connectors between the menu items are drawn as divs with a fixed height. Their
