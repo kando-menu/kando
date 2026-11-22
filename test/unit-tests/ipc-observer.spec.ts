@@ -13,10 +13,10 @@ import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
 
-import * as IPCTypes from '../src/common/ipc/types';
-import { IPCServer } from '../src/common/ipc/ipc-server';
-import { MenuInteractionType } from '../src/common';
-import { IPCObserverClient } from '../src/common/ipc/ipc-observer-client';
+import * as IPCTypes from '../../src/common/ipc/types';
+import { IPCServer } from '../../src/common/ipc/ipc-server';
+import { MenuInteractionType } from '../../src/common';
+import { IPCObserverClient } from '../../src/common/ipc/ipc-observer-client';
 
 describe('IPC Observer Protocol', function () {
   const tmpDir = path.join(os.tmpdir(), 'kando_ipc_test');

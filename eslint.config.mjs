@@ -82,7 +82,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['test/**/*.spec.ts'],
+    files: ['test/unit-tests/**/*.spec.ts'],
     rules: {
       '@typescript-eslint/no-unused-expressions': 'off',
     },

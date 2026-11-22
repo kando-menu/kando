@@ -6,7 +6,7 @@
 
 import { expect } from 'chai';
 import DBus from 'dbus-native';
-import { DesktopPortal } from '../src/main/backends/linux/portals/desktop-portal';
+import { DesktopPortal } from '../../src/main/backends/linux/portals/desktop-portal';
 
 class TestPortal extends DesktopPortal {
   public initialize() {

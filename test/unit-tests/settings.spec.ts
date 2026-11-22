@@ -8,8 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-import { Settings } from '../src/main/settings';
-import { GENERAL_SETTINGS_SCHEMA } from '../src/common';
+import { Settings } from '../../src/main/settings';
+import { GENERAL_SETTINGS_SCHEMA } from '../../src/common';
 import { expect } from 'chai';
 import os from 'os';
 import path from 'path';

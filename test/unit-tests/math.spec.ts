@@ -18,7 +18,7 @@ import {
   getEquivalentAngleSmallerThan,
   getEquivalentAngleLargerThan,
   fixFixedAngles,
-} from '../src/common/math';
+} from '../../src/common/math';
 import { expect } from 'chai';
 
 describe('normalize', () => {

@@ -131,9 +131,7 @@ export abstract class InputMethod {
   }
 
   /**
-   * This event should be emitted whenever the menu should be closed. If the right-mouse-
-   * button-selects-parent option is set, this will not close the menu, but rather select
-   * the parent item.
+   * This event should be emitted whenever the menu should be closed.
    *
    * @param callback - This will be called when the menu should be closed.
    */

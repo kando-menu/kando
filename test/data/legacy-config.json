@@ -1,0 +1,10 @@
+{
+  "locale": "en",
+  "editorOptions": {
+    "showEditorButtonVisible": false
+  },
+  "menuOptions": {
+    "dragThreshold": 31,
+    "enableMarkingMode": false
+  }
+}

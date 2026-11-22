@@ -12,9 +12,9 @@ import { expect } from 'chai';
 import net from 'net';
 import { WebSocketServer } from 'ws';
 
-import { SendWebSocketMessageAction } from '../src/common';
-import { WORKFLOW_ACTION_SCHEMA_V2 } from '../src/common/settings-schemata/menu-settings-v2';
-import { execute } from '../src/main/actions/send-websocket-message';
+import { SendWebSocketMessageAction } from '../../src/common';
+import { WORKFLOW_ACTION_SCHEMA_V2 } from '../../src/common/settings-schemata/menu-settings-v2';
+import { execute } from '../../src/main/actions/send-websocket-message';
 
 function getUnusedPort(): Promise<number> {
   return new Promise((resolve, reject) => {

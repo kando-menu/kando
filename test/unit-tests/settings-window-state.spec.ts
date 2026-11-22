@@ -16,7 +16,7 @@ import { expect } from 'chai';
 import {
   SettingsWindowStateStore,
   fitWindowBoundsToWorkArea,
-} from '../src/main/settings/settings-window-state';
+} from '../../src/main/settings/settings-window-state';
 
 describe('SettingsWindowStateStore', () => {
   let directory: string;

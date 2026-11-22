@@ -8,8 +8,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: MIT
 
-export type { GeneralSettingsV1 as GeneralSettings } from './general-settings-v1';
-export { GENERAL_SETTINGS_SCHEMA_V1 as GENERAL_SETTINGS_SCHEMA } from './general-settings-v1';
+export type { GeneralSettingsV2 as GeneralSettings } from './general-settings-v2';
+export { GENERAL_SETTINGS_SCHEMA_V2 as GENERAL_SETTINGS_SCHEMA } from './general-settings-v2';
 
 export type {
   CloseMenuActionV2 as CloseMenuAction,

@@ -15,4 +15,11 @@ Here are some quick links to get you started:
 - [Compiling Kando from Source](https://kando.menu/compile-from-source/)
 - [Config-file Reference](https://kando.menu/config-files/)
 
+## Working from a checkout
+
+- [Development quick start](development.md): local setup, commands, and validation
+- [Full source compilation guide](https://kando.menu/compile-from-source/): platform-specific dependencies and detailed instructions
+- [Architecture overview](architecture.md): source map, process boundaries, and backends
+- [Agent instructions](../AGENTS.md): concise starting point for coding agents
+
 <p align="center"><img src ="img/hr.svg" /></p>

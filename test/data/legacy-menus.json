@@ -1,0 +1,24 @@
+{
+  "menus": [
+    {
+      "root": {
+        "type": "root",
+        "name": "Legacy Menu",
+        "icon": "home",
+        "iconTheme": "material-symbols-rounded",
+        "children": [
+          {
+            "type": "command",
+            "name": "Legacy action",
+            "icon": "terminal",
+            "iconTheme": "material-symbols-rounded",
+            "data": {
+              "command": "echo legacy"
+            }
+          }
+        ]
+      },
+      "centered": true
+    }
+  ]
+}

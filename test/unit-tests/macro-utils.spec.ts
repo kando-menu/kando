@@ -14,7 +14,7 @@ import {
   convertMacroToString,
   getMacroEventIndexAt,
   insertMacroEvent,
-} from '../src/settings-renderer/utils/macro-utils';
+} from '../../src/settings-renderer/utils/macro-utils';
 
 const KEY_A_DOWN = { type: 'keyDown' as const, key: 'KeyA', delay: 10 };
 const KEY_A_UP = { type: 'keyUp' as const, key: 'KeyA', delay: 10 };

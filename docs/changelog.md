@@ -24,6 +24,7 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 
 ### :tada: Added
 
+- The right and the middle mouse button can now be configured in the General Settings. Each can either do nothing, select the item like a left click, close the menu, or navigate up one level. This replaces the old "Right mouse button selects parent" checkbox; its value is migrated automatically. Also, the gamepad close button now always closes the menu; it used to go up one level if the old checkbox was enabled. Thanks to [@grujicdd](https://github.com/grujicdd) for this contribution!
 - Buttons, submenus, and the root item (its center) now have two new workflows: the scroll-up- and the scroll-down-workflow. They get executed when you scroll the mouse wheel while hovering over the item. This can be used, for instance, to change the volume or the brightness. Thanks to [Arslan-TR](https://github.com/Arslan-TR) for this contribution!
 - Added a new action type which can be used to **send messages to TCP servers**. This is useful for controlling applications which use Telnet or other simple line-based protocols. Thanks to [@TheNetherWatcher](https://github.com/TheNetherWatcher) for contributing this feature!
 - Added a backend for the [Umbriel](https://github.com/noctalia-dev/umbriel) Wayland compositor. Thanks to [@wl-chuang](https://github.com/wl-chuang) for the contribution!
@@ -31,10 +32,18 @@ The [Unreleased] section contains changes which are not released yet. If you wan
 ### :wrench: Changed
 
 - Recording a macro no longer clears the already recorded keys. New keys are now inserted at the cursor position, so a long macro can be recorded piece by piece. Thanks to [@emirmrkaljevic](https://github.com/emirmrkaljevic) for the contribution!
+- Updated many dependencies to their latest versions. Feel free to report any issues you encounter!
+- Many translation updates: **Thanks to all the contributors!**
 
 ### :bug: Fixed
 
 - Fixed an issue which caused the link to the config-file directory in the Backup & Restore page of the General-Settings Dialog to not work.
+- Corrupted settings files with invalid JSON are now backed up before Kando restores and uses default settings.
+- Fixed an issue on Windows where app and window conditions never matched for applications whose main window has an owner window (e.g. older Delphi VCL applications). The window picker in the menu settings also stayed empty for these applications. Thanks to [@sap1110](https://github.com/sap1110) for the fix!
+- Fixed the Open File action on Linux so that file paths containing characters like `$`, `"`, `'`, or a backtick are opened correctly instead of being interpreted by the shell. Thanks to [@ChandraChaan](https://github.com/ChandraChaan) for the fix!
+- Fixed an issue where the Kando menu-window would appear in the wrong position on certain Linux compositors by constraining a macOS resize/move fix to macOS only. Thanks to [@CoreParadox](https://github.com/CoreParadox) for the fix!
+- Fixed an issue on KDE Wayland where the remote-desktop permission dialog was shown on every login because the restore token returned by xdg-desktop-portal-kde was discarded. Thanks to [@rinaldosenofonte](https://github.com/rinaldosenofonte) for the fix!
+- Fixed an issue on macOS where opening a menu with the [AeroSpace](https://github.com/nikitabobko/AeroSpace) window manager switched to the workspace the menu was first opened on. The menu window is now truly borderless, so AeroSpace no longer manages it. Thanks to [@HarinKhakhi](https://github.com/HarinKhakhi) for the fix!
 
 ## [Kando 3.0.1](https://github.com/kando-menu/kando/releases/tag/v3.0.1)
 

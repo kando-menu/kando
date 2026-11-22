@@ -10,7 +10,7 @@
 
 import { expect } from 'chai';
 
-import { formatShortcutForDisplay } from '../src/common';
+import { formatShortcutForDisplay } from '../../src/common';
 
 describe('formatShortcutForDisplay', () => {
   it('should use native symbols for macOS modifiers', () => {

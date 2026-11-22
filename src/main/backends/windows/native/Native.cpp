@@ -115,8 +115,18 @@ std::string WStringToString(const std::wstring& wstr) {
   return str;
 }
 
-bool getWindowAppAndName(HWND hwnd, std::string& appName, std::string& windowName) {
-  if (!hwnd || !IsWindowVisible(hwnd) || GetWindow(hwnd, GW_OWNER) != nullptr) {
+// Retrieves the title and the executable name of the given window. If skipOwnedWindows is
+// true, windows with an owner (usually dialogs or tool windows) are ignored. This is used
+// when enumerating windows. For the foreground window, owned windows must not be skipped,
+// as some applications (e.g. older Delphi VCL applications) give their main window an
+// owner.
+bool getWindowAppAndName(
+    HWND hwnd, std::string& appName, std::string& windowName, bool skipOwnedWindows) {
+  if (!hwnd || !IsWindowVisible(hwnd)) {
+    return false;
+  }
+
+  if (skipOwnedWindows && GetWindow(hwnd, GW_OWNER) != nullptr) {
     return false;
   }
 
@@ -178,7 +188,7 @@ BOOL CALLBACK enumerateWindowsForList(HWND hwnd, LPARAM lParam) {
 
   std::string appName;
   std::string windowName;
-  if (getWindowAppAndName(hwnd, appName, windowName)) {
+  if (getWindowAppAndName(hwnd, appName, windowName, true)) {
     context->windows.emplace_back(appName, windowName);
   }
 
@@ -199,7 +209,7 @@ BOOL CALLBACK enumerateWindowsForFocus(HWND hwnd, LPARAM lParam) {
 
   std::string appName;
   std::string windowName;
-  if (!getWindowAppAndName(hwnd, appName, windowName)) {
+  if (!getWindowAppAndName(hwnd, appName, windowName, true)) {
     return TRUE;
   }
 
@@ -279,9 +289,17 @@ Napi::Value Native::getWMInfo(const Napi::CallbackInfo& info) {
 
   HWND foreground_window = GetForegroundWindow();
 
+  // Dialogs and tool windows report the visible window they belong to, so that conditions
+  // for the main window still apply while they are focused. Hidden owners are not used.
+  HWND owner = GetWindow(foreground_window, GW_OWNER);
+  while (owner && IsWindowVisible(owner)) {
+    foreground_window = owner;
+    owner             = GetWindow(foreground_window, GW_OWNER);
+  }
+
   std::string appName;
   std::string windowName;
-  getWindowAppAndName(foreground_window, appName, windowName);
+  getWindowAppAndName(foreground_window, appName, windowName, false);
 
   obj.Set("window", windowName);
   obj.Set("app", appName);

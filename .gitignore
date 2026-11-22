@@ -10,3 +10,6 @@ out
 bin
 .DS_Store
 .codegpt
+
+test-results
+playwright-report

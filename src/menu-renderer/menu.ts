@@ -334,6 +334,8 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
       this.settings.hoverModeNeedsConfirmation;
     this.pointerInput.triggerCenterClickOnKeyRelease =
       this.settings.triggerCenterClickOnKeyRelease;
+    this.pointerInput.rightMouseButtonBehavior = this.settings.rightMouseButtonBehavior;
+    this.pointerInput.middleMouseButtonBehavior = this.settings.middleMouseButtonBehavior;
 
     this.pointerInput.gestureDetector.minStrokeLength =
       this.settings.gestureMinStrokeLength;
@@ -376,11 +378,7 @@ export class Menu extends (EventEmitter as new () => TypedEventEmitter<MenuEvent
    */
   private initializeInput() {
     const onCloseMenu = () => {
-      if (this.settings.rmbSelectsParent) {
-        this.selectParent();
-      } else {
-        this.hide();
-      }
+      this.hide();
     };
 
     const onUpdateState = (state: InputState) => {

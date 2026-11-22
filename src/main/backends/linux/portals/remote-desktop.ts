@@ -179,8 +179,8 @@ export class RemoteDesktop extends DesktopPortal {
           'utf8'
         );
 
-        if (restoreToken.length == 36) {
-          options['restore_token'] = new DBus.Variant('s', restoreToken);
+        if (restoreToken.trim().length > 0) {
+          options['restore_token'] = new DBus.Variant('s', restoreToken.trim());
         }
       } catch {
         // Ignore errors.

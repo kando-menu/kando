@@ -169,7 +169,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * Creates a new settings object. If the settings file does not exist yet, the default
    * settings are used. If the settings file exists but does not contain all properties,
    * the missing properties are added from the default settings. If the settings file
-   * contains a syntax error, an exception is thrown.
+   * contains invalid JSON, the original file is backed up and defaults are restored.
    *
    * See documentation of the class for more details.
    *
@@ -380,10 +380,29 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
 
       return settings;
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if (
+        error &&
+        typeof error === 'object' &&
+        'code' in error &&
+        error.code === 'ENOENT'
+      ) {
         // The settings file does not exist yet. Create it.
         const defaultSettings = this.options.defaults();
         this.saveSettings(defaultSettings);
+        return defaultSettings;
+      } else if (error instanceof SyntaxError) {
+        console.error(`Corrupted ${this.options.name} file:`, error.message);
+        if (!this.createBackup('corrupted', {})) {
+          throw error;
+        }
+
+        const defaultSettings = this.options.defaults();
+        this.saveSettings(defaultSettings);
+        Notification.show({
+          title: `Corrupted ${this.options.name} discovered`,
+          message: `Defaults have been restored and a backup of the original file has been created in the backups folder.`,
+          type: 'error',
+        });
         return defaultSettings;
       } else {
         throw error;
@@ -440,7 +459,7 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
    * @param oldVersion The version of the app when the settings file was last modified.
    * @param contents The contents of the settings file to back up.
    */
-  private createBackup(oldVersion: string, contents: object) {
+  private createBackup(oldVersion: string, contents: object): boolean {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const fileName = this.options.file.replace(
       '.json',
@@ -457,8 +476,10 @@ export class Settings<T extends object> extends PropertyChangeEmitter<T> {
     try {
       fs.mkdirSync(backupDir, { recursive: true });
       fs.copyFileSync(this.filePath, backupFile);
+      return true;
     } catch (error) {
       this.handleWriteError(error.code, contents, fileName);
+      return false;
     }
   }
 
