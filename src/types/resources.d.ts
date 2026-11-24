@@ -468,6 +468,8 @@ export default interface Resources {
               "sound-theme-load-failed-warning": "Failed to load the following sound theme(s), most likely due to a version mismatch: {{themes}}",
               "system": "System",
               "title": "General Settings",
+              "toggle-shortcuts-shortcut": "Shortcut to toggle all shortcuts",
+              "toggle-shortcuts-shortcut-info": "This shortcut temporarily disables all other shortcuts of Kando or re-enables them, just like the corresponding entry in the tray menu. If a menu uses the same shortcut, this shortcut takes priority.",
               "top-left": "Top Left",
               "top-right": "Top Right",
               "transparent-dark": "Transparent Dark",

@@ -36,6 +36,15 @@ export const GENERAL_SETTINGS_SCHEMA_V2 = GENERAL_SETTINGS_SCHEMA_V1.omit({
   middleMouseButtonBehavior: z
     .enum(['nothing', 'close', 'select-parent', 'select'])
     .default('select'),
+
+  /**
+   * A global shortcut which temporarily disables all other shortcuts of Kando or
+   * re-enables them. This is the same as the corresponding entry in the tray menu. If a
+   * menu uses the same shortcut, this shortcut takes priority. This is only used on
+   * backends which support binding shortcuts directly. An empty string means no
+   * shortcut.
+   */
+  toggleShortcutsShortcut: z.string().default(''),
 });
 
 export type GeneralSettingsV2 = z.infer<typeof GENERAL_SETTINGS_SCHEMA_V2>;

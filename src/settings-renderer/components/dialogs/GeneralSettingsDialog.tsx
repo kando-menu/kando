@@ -28,6 +28,7 @@ import {
   SettingsCheckbox,
   SettingsDropdown,
   SettingsSpinbutton,
+  ShortcutPicker,
   Modal,
   Note,
   Swirl,
@@ -74,6 +75,9 @@ export default function GeneralSettingsDialog() {
     'triggerCenterClickOnKeyRelease'
   );
   const backend = useAppState((state) => state.backendInfo);
+  const [toggleShortcutsShortcut, setToggleShortcutsShortcut] = useGeneralSetting(
+    'toggleShortcutsShortcut'
+  );
   const [activeCategory, setActiveCategory] = React.useState(0);
   const [transitionDirection, setTransitionDirection] =
     React.useState<TransitionDirection>('down');
@@ -173,6 +177,25 @@ export default function GeneralSettingsDialog() {
             label={i18next.t('settings.general-settings-dialog.lazy-initialization')}
             settingsKey="lazyInitialization"
           />
+          {
+            // The shortcut for toggling all shortcuts is only available on backends which
+            // can bind shortcuts directly.
+            backend.supportsShortcuts && (
+              <ShortcutPicker
+                useModifiers
+                info={i18next.t(
+                  'settings.general-settings-dialog.toggle-shortcuts-shortcut-info'
+                )}
+                initialValue={toggleShortcutsShortcut}
+                label={i18next.t(
+                  'settings.general-settings-dialog.toggle-shortcuts-shortcut'
+                )}
+                mode="key-names"
+                recordingPlaceholder={i18next.t('settings.shortcut-recording')}
+                onChange={setToggleShortcutsShortcut}
+              />
+            )
+          }
           <h1>
             {i18next.t('settings.general-settings-dialog.settings-dialog-and-tray-icon')}
           </h1>

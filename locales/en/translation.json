@@ -132,6 +132,8 @@
             "black": "Black",
             "lazy-initialization-info": "If enabled, the menu window will only be created when the menu is opened for the first time. This will make the first opening of the menu a bit slower, but it may prevent issues when Kando is started too soon during login. Default is disabled.",
             "lazy-initialization": "Lazy initialization",
+            "toggle-shortcuts-shortcut": "Shortcut to toggle all shortcuts",
+            "toggle-shortcuts-shortcut-info": "This shortcut temporarily disables all other shortcuts of Kando or re-enables them, just like the corresponding entry in the tray menu. If a menu uses the same shortcut, this shortcut takes priority.",
             "enable-achievements-info": "If enabled, Kando will track your progress towards achievements.",
             "enable-achievements": "Track achievements",
             "enable-achievement-notifications-info": "If enabled, notifications are shown when achievements are unlocked.",
