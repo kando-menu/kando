@@ -11,6 +11,7 @@
 import { expect } from 'chai';
 
 import { loadGeneralSettings } from '../../src/main/settings/general-settings';
+import { GENERAL_SETTINGS_SCHEMA } from '../../src/common/settings-schemata';
 
 describe('general settings migration to V2', () => {
   describe('settings files without a version', () => {
@@ -142,6 +143,86 @@ describe('general settings migration to V2', () => {
     it('closes the menu on right click and selects on middle click', () => {
       const result = loadGeneralSettings({ version: '3.1.0' });
       expect(result.settings.rightMouseButtonBehavior).to.equal('close');
+      expect(result.settings.middleMouseButtonBehavior).to.equal('select');
+    });
+  });
+
+  describe('toggleShortcutsShortcut', () => {
+    const shortcut = 'Control+Shift+K';
+
+    it('keeps the value in a file without a version', () => {
+      const result = loadGeneralSettings({ toggleShortcutsShortcut: shortcut });
+      expect(result.settings.toggleShortcutsShortcut).to.equal(shortcut);
+    });
+
+    it('keeps the value in a file written by Kando 3.0.0', () => {
+      const result = loadGeneralSettings({
+        version: '3.0.0',
+        toggleShortcutsShortcut: shortcut,
+      });
+      expect(result.settings.toggleShortcutsShortcut).to.equal(shortcut);
+    });
+
+    it('keeps the value in a file written by Kando 3.1.0', () => {
+      const result = loadGeneralSettings({
+        version: '3.1.0',
+        toggleShortcutsShortcut: shortcut,
+      });
+      expect(result.settings.toggleShortcutsShortcut).to.equal(shortcut);
+    });
+
+    // This is the bug which was found on Linux: After restarting Kando, the value was
+    // lost, because the saved file was migrated again and dropped the new property.
+    it('keeps the value when the loaded settings are saved and loaded again', () => {
+      const first = loadGeneralSettings({
+        version: '3.0.1',
+        toggleShortcutsShortcut: shortcut,
+      });
+      const saved = JSON.parse(JSON.stringify(first.settings));
+      const second = loadGeneralSettings(saved);
+      const third = loadGeneralSettings(JSON.parse(JSON.stringify(second.settings)));
+
+      expect(second.settings.toggleShortcutsShortcut).to.equal(shortcut);
+      expect(third.settings.toggleShortcutsShortcut).to.equal(shortcut);
+    });
+
+    it('keeps an empty value empty', () => {
+      const result = loadGeneralSettings({
+        version: '3.0.1',
+        toggleShortcutsShortcut: '',
+      });
+      expect(result.settings.toggleShortcutsShortcut).to.equal('');
+    });
+
+    it('uses the schema default if the property is missing', () => {
+      const defaults = GENERAL_SETTINGS_SCHEMA.parse({});
+
+      for (const version of ['3.0.1', '3.1.0']) {
+        const result = loadGeneralSettings({ version });
+        expect(result.settings.toggleShortcutsShortcut).to.equal(
+          defaults.toggleShortcutsShortcut
+        );
+      }
+    });
+
+    it('falls back to the default if the value is invalid', () => {
+      const defaults = GENERAL_SETTINGS_SCHEMA.parse({});
+      const result = loadGeneralSettings({
+        version: '3.0.1',
+        toggleShortcutsShortcut: 42,
+      });
+      expect(result.settings.toggleShortcutsShortcut).to.equal(
+        defaults.toggleShortcutsShortcut
+      );
+    });
+
+    it('does not affect the mouse button settings', () => {
+      const result = loadGeneralSettings({
+        version: '3.0.1',
+        toggleShortcutsShortcut: shortcut,
+        rightMouseButtonBehavior: 'nothing',
+      });
+      expect(result.settings.rightMouseButtonBehavior).to.equal('nothing');
       expect(result.settings.middleMouseButtonBehavior).to.equal('select');
     });
   });
