@@ -22,10 +22,9 @@ const cx = classNames.bind(classes);
 
 import { useAppState, useMenuSettings, useMappedMenuProperties } from '../../state';
 
-import { Scrollbox, ThemedIcon, Swirl, Note, Button } from '../common';
+import { Scrollbox, ThemedIcon, Swirl, Note, Button, ShortcutLabel } from '../common';
 import CollectionDetails from './CollectionDetails';
 import { ensureUniqueKeys } from '../../utils';
-import { formatShortcutForDisplay } from '../../../common/shortcut';
 
 /** For rendering the menus, a list of these objects is created. */
 type RenderedMenu = {
@@ -92,7 +91,7 @@ export default function MenuList() {
   // of IRenderedMenu objects for this.
   let renderedMenus = menus.map((menu, index) => {
     const configuredShortcut = backend.supportsShortcuts
-      ? formatShortcutForDisplay(menu.shortcut, cIsMac)
+      ? menu.shortcut
       : menu.shortcutID;
     const shortcut = configuredShortcut || i18next.t('settings.not-bound');
     const renderedMenu: RenderedMenu = {
@@ -298,7 +297,13 @@ export default function MenuList() {
                     </div>
                     <div style={{ minWidth: 0, flexGrow: 1 }}>
                       <div className={classes.menuTitle}>{menu.name}</div>
-                      <div className={classes.menuSubtitle}>{menu.shortcut}</div>
+                      <div className={classes.menuSubtitle}>
+                        {backend.supportsShortcuts ? (
+                          <ShortcutLabel shortcut={menu.shortcut} />
+                        ) : (
+                          menu.shortcut
+                        )}
+                      </div>
                     </div>
 
                     <div className={classes.toolButtonContainer}>

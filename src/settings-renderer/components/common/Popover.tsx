@@ -32,6 +32,9 @@ type Props = {
   /** Where the popover should be positioned. Defaults to 'top'. */
   readonly position?: 'top' | 'bottom';
 
+  /** Flip or clamp large popovers to keep them inside the window. */
+  readonly useViewportBounds?: boolean;
+
   /** The popover target. It will be used to position the popover relative to it. */
   readonly children: React.ReactNode;
 };
@@ -47,7 +50,7 @@ type Props = {
  * @returns A popover element.
  */
 export default function Popover(props: Props) {
-  const { isVisible, position, onClose } = props;
+  const { isVisible, position, onClose, useViewportBounds } = props;
   const popoverContentRef = React.useRef(null);
   const popoverTriangleRef = React.useRef(null);
   const popoverTargetRef = React.useRef(null);
@@ -59,35 +62,61 @@ export default function Popover(props: Props) {
       return;
     }
 
-    // Position the popover above or below the target element.
-    const triangleSize = 10;
-    const windowPadding = 10;
-    const targetRect = popoverTargetRef.current.getBoundingClientRect();
-    const contentRect = popoverContentRef.current.getBoundingClientRect();
-    const xDiff = targetRect.left - contentRect.width / 2 + targetRect.width / 2;
+    const updatePosition = () => {
+      // Position the popover above or below the target element.
+      const triangleSize = 10;
+      const windowPadding = 10;
+      const targetRect = popoverTargetRef.current.getBoundingClientRect();
+      const contentRect = popoverContentRef.current.getBoundingClientRect();
+      const xDiff = targetRect.left - contentRect.width / 2 + targetRect.width / 2;
 
-    // Clamp to window bounds left and right.
-    const clampedXDiff = Math.max(
-      windowPadding,
-      Math.min(window.innerWidth - contentRect.width - windowPadding, xDiff)
-    );
+      // Clamp to window bounds left and right.
+      const clampedXDiff = Math.max(
+        windowPadding,
+        Math.min(window.innerWidth - contentRect.width - windowPadding, xDiff)
+      );
 
-    if (position === 'bottom') {
-      popoverTriangleRef.current.classList.add(classes.top);
-      popoverTriangleRef.current.classList.remove(classes.bottom);
-    } else {
-      popoverTriangleRef.current.classList.add(classes.bottom);
-      popoverTriangleRef.current.classList.remove(classes.top);
-    }
+      const fitsBelow =
+        targetRect.bottom + triangleSize + contentRect.height <=
+        window.innerHeight - windowPadding;
+      const fitsAbove =
+        targetRect.top - triangleSize - contentRect.height >= windowPadding;
+      const placeBelow = useViewportBounds
+        ? position === 'bottom'
+          ? fitsBelow || !fitsAbove
+          : !fitsAbove && fitsBelow
+        : position === 'bottom';
 
-    const yDiff =
-      position === 'bottom'
+      let yDiff = placeBelow
         ? targetRect.bottom + triangleSize
         : targetRect.top - contentRect.height - triangleSize;
 
-    popoverContentRef.current.style.top = `${yDiff}px`;
-    popoverContentRef.current.style.left = `${clampedXDiff}px`;
-    popoverTriangleRef.current.style.left = `${contentRect.width / 2 - triangleSize + xDiff - clampedXDiff}px`;
+      if (placeBelow) {
+        popoverTriangleRef.current.classList.add(classes.top);
+        popoverTriangleRef.current.classList.remove(classes.bottom);
+      } else {
+        popoverTriangleRef.current.classList.add(classes.bottom);
+        popoverTriangleRef.current.classList.remove(classes.top);
+      }
+
+      if (useViewportBounds) {
+        yDiff = Math.max(
+          windowPadding,
+          Math.min(window.innerHeight - contentRect.height - windowPadding, yDiff)
+        );
+        // If neither side fits, a centered overlay is more honest than a misplaced arrow.
+        popoverTriangleRef.current.style.display = fitsAbove || fitsBelow ? '' : 'none';
+      }
+      popoverContentRef.current.style.top = `${yDiff}px`;
+      popoverContentRef.current.style.left = `${clampedXDiff}px`;
+      popoverTriangleRef.current.style.left = `${contentRect.width / 2 - triangleSize + xDiff - clampedXDiff}px`;
+    };
+    updatePosition();
+    const observer = useViewportBounds ? new ResizeObserver(updatePosition) : null;
+    observer?.observe(popoverContentRef.current);
+    if (useViewportBounds) {
+      window.addEventListener('resize', updatePosition);
+    }
 
     // Set the flag if the pointer down occurred outside the popover and target.
     const handlePointerDown = (event: PointerEvent) => {
@@ -121,7 +150,7 @@ export default function Popover(props: Props) {
 
     // Get the first focusable element inside the popover when it becomes visible.
     const focusableElements = popoverContentRef.current?.querySelectorAll(
-      'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+      'a, button:not(:disabled), input:not(:disabled), textarea, select, [tabindex]:not([tabindex="-1"])'
     );
     const firstFocusableElement = focusableElements?.[0] as HTMLElement;
 
@@ -145,13 +174,15 @@ export default function Popover(props: Props) {
     const currentPopoverContent = popoverContentRef.current;
 
     return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', updatePosition);
       document.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('pointerup', handleClick);
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('focusin', handleFocusIn);
       FocusTrapManager.remove(currentPopoverContent);
     };
-  }, [onClose, isVisible, position]);
+  }, [onClose, isVisible, position, useViewportBounds]);
 
   return (
     <>

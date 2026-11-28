@@ -44,6 +44,9 @@ class Native : public Napi::Addon<Native> {
    */
   void simulateKey(const Napi::CallbackInfo& info);
 
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  Napi::Value isModifierPressed(const Napi::CallbackInfo& info);
+
   /**
    * This function is called when the getWMInfo function is called from JavaScript.
    * It returns the app and class of the currently active window, as well as the

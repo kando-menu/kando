@@ -12,6 +12,20 @@
 #define NATIVE_HPP
 
 #include <napi.h>
+#include <windows.h>
+
+#include <atomic>
+#include <mutex>
+#include <string>
+#include <unordered_set>
+#include <vector>
+
+struct SystemShortcutBinding {
+  std::string           shortcut;
+  uint32_t              keyCode;
+  uint32_t              modifierMask;
+  std::vector<uint32_t> sideModifiers;
+};
 
 /**
  * This class allows moving the mouse pointer, simulating key presses, and getting the
@@ -20,6 +34,7 @@
 class Native : public Napi::Addon<Native> {
  public:
   Native(Napi::Env env, Napi::Object exports);
+  virtual ~Native();
 
  private:
   /**
@@ -42,6 +57,21 @@ class Native : public Napi::Addon<Native> {
    *             number and a boolean.
    */
   void simulateKey(const Napi::CallbackInfo& info);
+
+  /** Returns whether a side-specific physical modifier key is currently pressed. */
+  Napi::Value isModifierPressed(const Napi::CallbackInfo& info);
+
+  /** Starts forwarding and suppressing all keyboard events. */
+  Napi::Value startKeyboardCapture(const Napi::CallbackInfo& info);
+
+  /** Stops forwarding and suppressing keyboard events. */
+  void stopKeyboardCapture(const Napi::CallbackInfo& info);
+
+  /** Replaces shortcuts which should be handled by the low-level hook. */
+  Napi::Value bindSystemShortcuts(const Napi::CallbackInfo& info);
+
+  /** Receives low-level keyboard events from Windows. */
+  static LRESULT CALLBACK keyboardHookCallback(int code, WPARAM message, LPARAM data);
 
   /**
    * This function is called when the getWMInfo function is called from JavaScript.
@@ -89,6 +119,38 @@ class Native : public Napi::Addon<Native> {
    * contain no arguments.
    */
   Napi::Value listInstalledApplications(const Napi::CallbackInfo& info);
+
+  /** The single native addon instance used by the static hook callback. */
+  static Native* sInstance;
+
+  /** Low-level keyboard hook used for exclusive shortcut recording. */
+  HHOOK mKeyboardHook = nullptr;
+
+  /** Whether keyboard events are currently forwarded to JavaScript and suppressed. */
+  std::atomic<bool> mKeyboardCaptureEnabled{false};
+
+  /** JavaScript callback receiving captured scan code and key state pairs. */
+  Napi::ThreadSafeFunction mKeyboardCaptureCallback;
+
+  /** Keys pressed during capture whose releases must also be suppressed. */
+  std::mutex                  mSuppressedKeysMutex;
+  std::unordered_set<uint32_t> mSuppressedKeys;
+
+  /** All physical keys currently held according to the low-level hook. */
+  std::unordered_set<uint32_t> mPressedKeys;
+
+  /** Shortcuts which Electron could not register with the operating system. */
+  std::vector<SystemShortcutBinding> mSystemShortcuts;
+
+  /** Standalone Windows keys which should not reach the shell. */
+  std::unordered_set<uint32_t> mSuppressedModifierKeys;
+
+  /** JavaScript callback invoked when a native system shortcut is pressed. */
+  std::atomic<bool>       mSystemShortcutCallbackEnabled{false};
+  Napi::ThreadSafeFunction mSystemShortcutCallback;
+
+  /** Shortcut key releases which must not be delivered to the system. */
+  std::unordered_set<uint32_t> mSuppressedShortcutKeys;
 };
 
 #endif // NATIVE_HPP
